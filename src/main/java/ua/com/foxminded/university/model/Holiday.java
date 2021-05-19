@@ -1,4 +1,4 @@
-package ua.com.foxminded.university;
+package ua.com.foxminded.university.model;
 
 import java.time.LocalDate;
 

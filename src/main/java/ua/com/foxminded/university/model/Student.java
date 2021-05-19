@@ -1,18 +1,17 @@
-package ua.com.foxminded.university;
+package ua.com.foxminded.university.model;
 
-import java.util.List;
+import java.time.LocalDate;
 
-public class Teacher {
+public class Student {
 
     private String firstName;
     private String lastName;
     private Gender gender;
-    private String degree;
-    private List<Subject> subjects;
+    private LocalDate birthDate;
+    private LocalDate entryYear;
     private String email;
     private String phoneNumber;
     private Address address;
-    private List<Vacation> vacations;
 
     public String getFirstName() {
 	return firstName;
@@ -38,20 +37,20 @@ public class Teacher {
 	this.gender = gender;
     }
 
-    public String getDegree() {
-	return degree;
+    public LocalDate getBirthDate() {
+	return birthDate;
     }
 
-    public void setDegree(String degree) {
-	this.degree = degree;
+    public void setBirthDate(LocalDate birthDate) {
+	this.birthDate = birthDate;
     }
 
-    public List<Subject> getSubjects() {
-	return subjects;
+    public LocalDate getEntryYear() {
+	return entryYear;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-	this.subjects = subjects;
+    public void setEntryYear(LocalDate entryYear) {
+	this.entryYear = entryYear;
     }
 
     public String getEmail() {
@@ -76,13 +75,5 @@ public class Teacher {
 
     public void setAddress(Address address) {
 	this.address = address;
-    }
-
-    public List<Vacation> getVacations() {
-	return vacations;
-    }
-
-    public void setVacations(List<Vacation> vacations) {
-	this.vacations = vacations;
     }
 }
