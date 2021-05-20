@@ -8,6 +8,14 @@ public class Address {
     private String city;
     private String streetAddress;
 
+    public Address(String country, String postalCode, String region, String city, String streetAddress) {
+	this.country = country;
+	this.postalCode = postalCode;
+	this.region = region;
+	this.city = city;
+	this.streetAddress = streetAddress;
+    }
+
     public String getCountry() {
 	return country;
     }
@@ -46,5 +54,10 @@ public class Address {
 
     public void setStreetAddress(String streetAddress) {
 	this.streetAddress = streetAddress;
+    }
+
+    @Override
+    public String toString() {
+	return this.postalCode + " " + this.country + ", " + this.region + ", " + this.city + ", " + this.streetAddress;
     }
 }

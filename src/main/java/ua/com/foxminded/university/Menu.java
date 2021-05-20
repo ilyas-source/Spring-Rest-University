@@ -2,6 +2,10 @@ package ua.com.foxminded.university;
 
 import java.util.Scanner;
 
+import ua.com.foxminded.university.handlers.TeacherHandler;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.University;
+
 public class Menu {
 
     private static final String CR = System.lineSeparator();
@@ -24,9 +28,12 @@ public class Menu {
 	    + "Enter choice or 0 to return:";
 
     Scanner scanner;
+    University university;
+    TeacherHandler teacherHandler;
 
-    public Menu() {
+    public Menu(University university) {
 	scanner = new Scanner(System.in);
+	this.university = university;
     }
 
     public void start(int menuEntryPoint) {
@@ -81,11 +88,13 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println("STUB Teachers list");
+	    for (Teacher teacher : university.getTeachers()) {
+		System.out.println(teacher);
+	    }
 	    start(2);
 	    break;
 	case 2:
-	    System.out.println("STUB Teacher creation");
+	    createTeacher();
 	    start(2);
 	    break;
 	case 3:

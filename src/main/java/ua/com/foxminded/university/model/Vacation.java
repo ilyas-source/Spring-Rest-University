@@ -7,6 +7,11 @@ public class Vacation {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    public Vacation(LocalDate startDate, LocalDate endDate) {
+	this.startDate = startDate;
+	this.endDate = endDate;
+    }
+
     public LocalDate getStartDate() {
 	return startDate;
     }
@@ -21,5 +26,10 @@ public class Vacation {
 
     public void setEndDate(LocalDate endDate) {
 	this.endDate = endDate;
+    }
+
+    @Override
+    public String toString() {
+	return startDate.toString() + "-" + endDate.toString();
     }
 }

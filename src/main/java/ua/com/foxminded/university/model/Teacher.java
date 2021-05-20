@@ -4,6 +4,8 @@ import java.util.List;
 
 public class Teacher {
 
+    private static final String CR = System.lineSeparator();
+
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -13,6 +15,19 @@ public class Teacher {
     private String phoneNumber;
     private Address address;
     private List<Vacation> vacations;
+
+    public Teacher(String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
+	    String phoneNumber, Address address, List<Vacation> vacations) {
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.gender = gender;
+	this.degree = degree;
+	this.subjects = subjects;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.address = address;
+	this.vacations = vacations;
+    }
 
     public String getFirstName() {
 	return firstName;
@@ -84,5 +99,13 @@ public class Teacher {
 
     public void setVacations(List<Vacation> vacations) {
 	this.vacations = vacations;
+    }
+
+    @Override
+    public String toString() {
+	return firstName + " " + lastName + ", " + gender + ", degree: " + degree + ", " + email + ", " + phoneNumber + CR
+		+ address + CR
+		+ "Subjects: " + subjects + CR
+		+ "Vacations:" + vacations;
     }
 }

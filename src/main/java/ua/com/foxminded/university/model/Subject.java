@@ -5,6 +5,12 @@ public class Subject {
     private String name;
     private String description;
 
+    public Subject(String name, String description) {
+	super();
+	this.name = name;
+	this.description = description;
+    }
+
     public String getName() {
 	return name;
     }
@@ -19,5 +25,10 @@ public class Subject {
 
     public void setDescription(String description) {
 	this.description = description;
+    }
+
+    @Override
+    public String toString() {
+	return this.name;
     }
 }
