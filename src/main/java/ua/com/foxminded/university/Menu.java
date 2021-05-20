@@ -2,7 +2,7 @@ package ua.com.foxminded.university;
 
 import java.util.Scanner;
 
-import ua.com.foxminded.university.handlers.TeacherHandler;
+import ua.com.foxminded.university.handlers.TeachersHandler;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
 
@@ -29,7 +29,7 @@ public class Menu {
 
     Scanner scanner;
     University university;
-    TeacherHandler teacherHandler;
+    TeachersHandler teachersHandler;
 
     public Menu(University university) {
 	scanner = new Scanner(System.in);
@@ -51,9 +51,9 @@ public class Menu {
 	case 0:
 	    System.out.println("Quitting.");
 	    System.exit(0);
-//	case 1:
-//	    printUniversity();
-//	    break;
+	case 1:
+	    System.out.println("STUB Print out whole university data");
+	    break;
 	case 2:
 	    System.out.println("Manage teachers:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
@@ -94,7 +94,7 @@ public class Menu {
 	    start(2);
 	    break;
 	case 2:
-	    createTeacher();
+	    teachersHandler.addTeacher(university);
 	    start(2);
 	    break;
 	case 3:
