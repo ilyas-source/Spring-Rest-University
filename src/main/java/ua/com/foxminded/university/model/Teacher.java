@@ -2,6 +2,8 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
+import ua.com.foxminded.university.handlers.SubjectsHandler;
+
 public class Teacher {
 
     private static final String CR = System.lineSeparator();
@@ -61,14 +63,6 @@ public class Teacher {
 	this.degree = degree;
     }
 
-    public List<Subject> getSubjects() {
-	return subjects;
-    }
-
-    public void setSubjects(List<Subject> subjects) {
-	this.subjects = subjects;
-    }
-
     public String getEmail() {
 	return email;
     }
@@ -99,6 +93,14 @@ public class Teacher {
 
     public void setVacations(List<Vacation> vacations) {
 	this.vacations = vacations;
+    }
+
+    public List<Subject> getSubjects() {
+	return subjects;
+    }
+
+    public void setSubjectIndexes(List<Subject> subjects) {
+	this.subjects = subjects;
     }
 
     @Override

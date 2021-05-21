@@ -21,7 +21,18 @@ public class UniversityPopulator {
     }
 
     public void populate() {
+	populateSubjects();
 	populateTeachers();
+    }
+
+    private void populateSubjects() {
+	List<Subject> subjects = new ArrayList<>();
+	subjects.add(new Subject("Economics", "Base economics"));
+	subjects.add(new Subject("Phylosophy", "Base phylosophy"));
+	subjects.add(new Subject("Chemistry", "Base chemistry"));
+	subjects.add(new Subject("Radiology", "Explore radiation"));
+
+	university.setSubjects(subjects);
     }
 
     private void populateTeachers() {

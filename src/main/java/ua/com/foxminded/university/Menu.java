@@ -2,14 +2,15 @@ package ua.com.foxminded.university;
 
 import java.util.Scanner;
 
+import ua.com.foxminded.university.handlers.SubjectsHandler;
 import ua.com.foxminded.university.handlers.TeachersHandler;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
 
 public class Menu {
 
+    public static final String DATE_FORMAT = "dd.mm.yyyy";
     private static final String CR = System.lineSeparator();
-
     private static final String MAIN_MENU_TEXT = "Main menu" + CR
 	    + "1. View full university contents" + CR
 	    + "2. Manage teachers" + CR
@@ -27,9 +28,10 @@ public class Menu {
 	    + "5. Delete" + CR
 	    + "Enter choice or 0 to return:";
 
-    Scanner scanner;
-    University university;
-    TeachersHandler teachersHandler;
+    private Scanner scanner;
+    private University university;
+    private TeachersHandler teachersHandler = new TeachersHandler();
+    private SubjectsHandler subjectsHandler = new SubjectsHandler();
 
     public Menu(University university) {
 	scanner = new Scanner(System.in);

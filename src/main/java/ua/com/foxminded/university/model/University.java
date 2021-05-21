@@ -10,6 +10,7 @@ public class University {
     private List<Group> groups;
     private List<Lecture> lectures;
     private List<Holiday> holidays;
+    private List<Subject> subjects;
 
     public String getName() {
 	return name;
@@ -57,5 +58,13 @@ public class University {
 
     public void setHolidays(List<Holiday> holidays) {
 	this.holidays = holidays;
+    }
+
+    public List<Subject> getSubjects() {
+	return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+	this.subjects = subjects;
     }
 }
