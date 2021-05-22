@@ -1,10 +1,9 @@
 package ua.com.foxminded.university.handlers;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import static ua.com.foxminded.university.Menu.*;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Address;
@@ -17,23 +16,18 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersHandler {
 
-    Scanner scanner = new Scanner(System.in);
-
     public void addTeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 	List<Subject> subjects;
 	List<Vacation> vacations;
 
-	System.out.println("Entering address.");
-	Address address = getAddressFromScanner();
+	System.out.println("Entering vacations.");
+	vacations = getVacationsFromScanner();
 
-	System.out.println("Assigning subjects.");
-	subjects = getSubjectsFromScanner(university);
-
-	System.out.print("First name: ");
+	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
 
-	System.out.print("last name: ");
+	System.out.print("Enter last name: ");
 	String lastName = scanner.nextLine();
 
 	System.out.println("Gender (M/F): ");
@@ -42,20 +36,39 @@ public class TeachersHandler {
 	System.out.println("Degree: (B)achelor/(M)aster/(D)octor: ");
 	Degree degree = getDegreeFromScanner();
 
-	System.out.println("Enter email:");
+	System.out.println("Email:");
 	String email = scanner.nextLine();
 
-	System.out.println("Enter phone:");
+	System.out.println("Phone:");
 	String phone = scanner.nextLine();
 
-	System.out.println("Enter vacations: ");
-	vacations = getVacationsFromScanner();
+	System.out.println("Entering address.");
+	Address address = getAddressFromScanner();
+
+	System.out.println("Assigning subjects.");
+	subjects = getSubjectsFromScanner(university);
 
 	Teacher teacher = new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
+
+	System.out.println("Adding teacher with the following parameters:");
+	System.out.println(teacher);
+
 	teachers.add(teacher);
 	university.setTeachers(teachers);
+    }
 
-	scanner.close();
+    private Address getAddressFromScanner() {
+	System.out.print("Country:");
+	String country = scanner.nextLine();
+	System.out.print("ZIP Code:");
+	String index = scanner.nextLine();
+	System.out.print("Region:");
+	String region = scanner.nextLine();
+	System.out.print("City:");
+	String city = scanner.nextLine();
+	System.out.print("Street Address:");
+	String streetAddress = scanner.nextLine();
+	return new Address(country, index, region, city, streetAddress);
     }
 
     private List<Subject> getSubjectsFromScanner(University university) {
@@ -65,12 +78,14 @@ public class TeachersHandler {
 	Boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
-	    System.out.println("Assigned subjects, if any:");
-	    SubjectsHandler.printOutSubjects(result);
+	    if (result.size() > 0) {
+		System.out.println("Assigned subjects:");
+		System.out.print(SubjectsHandler.getStringOfSubjects(result));
+	    }
 	    System.out.println("Enter a new subject number to add to this teacher:");
-	    SubjectsHandler.printOutSubjects(subjects);
+	    System.out.print(SubjectsHandler.getStringOfSubjects(subjects));
 	    correctEntry = false;
-	    int choice = readIntFromScanner();
+	    int choice = readNextInt();
 	    if (choice <= subjects.size()) {
 		Subject selected = subjects.get(choice);
 		if (result.contains(selected)) {
@@ -100,48 +115,20 @@ public class TeachersHandler {
     }
 
     private List<Vacation> getVacationsFromScanner() {
-	LocalDate startDate;
-	LocalDate endDate;
-	Vacation vacation = new Vacation();
+
 	List<Vacation> vacations = new ArrayList<Vacation>();
 	boolean finished = false;
 
 	while (!finished) {
-	    System.out.print("Enter vacation start date (" + Menu.DATE_FORMAT + "): ");
-	    startDate = getDateFromScanner();
-	    vacation.setStartDate(startDate);
-
-	    System.out.print("Enter vacation end date (" + Menu.DATE_FORMAT + "): ");
-	    endDate = getDateFromScanner();
-	    vacation.setEndDate(endDate);
-
+	    Vacation vacation = VacationsHandler.getVacationFromScanner();
 	    vacations.add(vacation);
-
-	    System.out.print("Add another vacation? (y/n): ");
+	    System.out.print("Done. Add another vacation? (y/n): ");
 	    String choice = scanner.nextLine().toLowerCase();
 	    if (choice != "y") {
 		finished = true;
 	    }
 	}
 	return vacations;
-    }
-
-    private LocalDate getDateFromScanner() {
-	LocalDate result = LocalDate.of(1900, 1, 1);
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Menu.DATE_FORMAT);
-
-	try {
-	    String line = scanner.nextLine();
-	    result = LocalDate.parse(line, formatter);
-	} catch (Exception e) {
-	    System.err.println("Invalid date value");
-	}
-	return result;
-    }
-
-    private Address getAddressFromScanner() {
-	// TODO Auto-generated method stub
-	return null;
     }
 
     private Degree getDegreeFromScanner() {
@@ -184,10 +171,12 @@ public class TeachersHandler {
 	}
     }
 
-    private int readIntFromScanner() {
-	while (!scanner.hasNextInt()) {
-	    scanner.next();
+    public static Object getStringOfTeachers(List<Teacher> teachers) {
+	StringBuilder result = new StringBuilder();
+	for (Teacher teacher : teachers) {
+	    result.append(teachers.indexOf(teacher) + ". " + teacher + CR);
 	}
-	return scanner.nextInt();
+	return result.toString();
     }
+
 }

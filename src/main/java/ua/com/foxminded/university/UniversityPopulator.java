@@ -21,6 +21,7 @@ public class UniversityPopulator {
     }
 
     public void populate() {
+	university.setName("Test University Foxminded");
 	populateSubjects();
 	populateTeachers();
     }
@@ -28,7 +29,7 @@ public class UniversityPopulator {
     private void populateSubjects() {
 	List<Subject> subjects = new ArrayList<>();
 	subjects.add(new Subject("Economics", "Base economics"));
-	subjects.add(new Subject("Phylosophy", "Base phylosophy"));
+	subjects.add(new Subject("Philosophy", "Base philosophy"));
 	subjects.add(new Subject("Chemistry", "Base chemistry"));
 	subjects.add(new Subject("Radiology", "Explore radiation"));
 

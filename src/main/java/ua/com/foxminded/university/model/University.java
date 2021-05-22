@@ -2,6 +2,10 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
+import ua.com.foxminded.university.handlers.TeachersHandler;
+
+import static ua.com.foxminded.university.Menu.*;
+
 public class University {
 
     private String name;
@@ -66,5 +70,32 @@ public class University {
 
     public void setSubjects(List<Subject> subjects) {
 	this.subjects = subjects;
+    }
+
+    @Override
+    public String toString() {
+	StringBuilder result = new StringBuilder();
+	result.append(FORMAT_DIVIDER);
+	result.append("University name: " + name + CR);
+	result.append(FORMAT_DIVIDER);
+	result.append("Teachers are:" + CR);
+	result.append(TeachersHandler.getStringOfTeachers(teachers));
+	result.append(FORMAT_DIVIDER);
+	result.append("Current student groups:" + CR);
+	result.append("Not yet implemented." + CR);
+	result.append(FORMAT_DIVIDER);
+	result.append("Subjects available to students:");
+	result.append(subjects + CR);
+	result.append(FORMAT_DIVIDER);
+	result.append("Classrooms list:" + CR);
+	result.append("Not yet implemented." + CR);
+	result.append(FORMAT_DIVIDER);
+	result.append("Scheduled lectures:" + CR);
+	result.append("Not yet implemented." + CR);
+	result.append(FORMAT_DIVIDER);
+	result.append("Holidays are:" + CR);
+	result.append("Not yet implemented." + CR);
+	result.append(FORMAT_DIVIDER);
+	return result.toString();
     }
 }

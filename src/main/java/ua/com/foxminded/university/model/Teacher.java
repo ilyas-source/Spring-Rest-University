@@ -3,10 +3,11 @@ package ua.com.foxminded.university.model;
 import java.util.List;
 
 import ua.com.foxminded.university.handlers.SubjectsHandler;
+import ua.com.foxminded.university.handlers.VacationsHandler;
+
+import static ua.com.foxminded.university.Menu.CR;
 
 public class Teacher {
-
-    private static final String CR = System.lineSeparator();
 
     private String firstName;
     private String lastName;
@@ -106,8 +107,8 @@ public class Teacher {
     @Override
     public String toString() {
 	return firstName + " " + lastName + ", " + gender + ", degree: " + degree + ", " + email + ", " + phoneNumber + CR
-		+ address + CR
-		+ "Subjects: " + subjects + CR
+		+ "Postal address: " + address + CR
+		+ "Subjects:" + subjects + CR
 		+ "Vacations:" + vacations;
     }
 }

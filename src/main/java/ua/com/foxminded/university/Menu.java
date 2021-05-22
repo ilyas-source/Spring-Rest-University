@@ -4,14 +4,14 @@ import java.util.Scanner;
 
 import ua.com.foxminded.university.handlers.SubjectsHandler;
 import ua.com.foxminded.university.handlers.TeachersHandler;
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
 
 public class Menu {
 
-    public static final String DATE_FORMAT = "dd.mm.yyyy";
-    private static final String CR = System.lineSeparator();
-    private static final String MAIN_MENU_TEXT = "Main menu" + CR
+    public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final String CR = System.lineSeparator();
+    public static final String FORMAT_DIVIDER = "----------------" + CR;
+    private static final String MAIN_MENU_TEXT = FORMAT_DIVIDER + "Main menu" + CR
 	    + "1. View full university contents" + CR
 	    + "2. Manage teachers" + CR
 	    + "3. Manage groups" + CR
@@ -28,13 +28,11 @@ public class Menu {
 	    + "5. Delete" + CR
 	    + "Enter choice or 0 to return:";
 
-    private Scanner scanner;
+    public static Scanner scanner = new Scanner(System.in);
     private University university;
     private TeachersHandler teachersHandler = new TeachersHandler();
-    private SubjectsHandler subjectsHandler = new SubjectsHandler();
 
     public Menu(University university) {
-	scanner = new Scanner(System.in);
 	this.university = university;
     }
 
@@ -52,32 +50,34 @@ public class Menu {
 	switch (menuChoice) {
 	case 0:
 	    System.out.println("Quitting.");
+	    scanner.close();
 	    System.exit(0);
 	case 1:
-	    System.out.println("STUB Print out whole university data");
+	    System.out.print(university.toString());
+	    start(0);
 	    break;
 	case 2:
-	    System.out.println("Manage teachers:" + CRUD_MENU_TEXT);
+	    System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
 	    manageTeachers(menuChoice);
 	    break;
 	case 3:
-	    System.out.println("Manage groups:" + CRUD_MENU_TEXT);
+	    System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
 	    manageGroups(menuChoice);
 	    break;
 	case 4:
-	    System.out.println("Manage subjects:" + CRUD_MENU_TEXT);
+	    System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
 	    manageSubjects(menuChoice);
 	    break;
 	case 5:
-	    System.out.println("Manage lectures:" + CRUD_MENU_TEXT);
+	    System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
 	    manageLectures(menuChoice);
 	    break;
 	case 6:
-	    System.out.println("Manage classrooms:" + CRUD_MENU_TEXT);
+	    System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
 	    menuChoice = readNextInt();
 	    manageClassrooms(menuChoice);
 	    break;
@@ -90,9 +90,7 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    for (Teacher teacher : university.getTeachers()) {
-		System.out.println(teacher);
-	    }
+	    System.out.println(TeachersHandler.getStringOfTeachers(university.getTeachers()));
 	    start(2);
 	    break;
 	case 2:
@@ -234,7 +232,7 @@ public class Menu {
 	}
     }
 
-    private int readNextInt() {
+    public static int readNextInt() {
 	while (!scanner.hasNextInt()) {
 	    scanner.next();
 	}
