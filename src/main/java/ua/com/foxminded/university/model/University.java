@@ -2,6 +2,9 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
+import ua.com.foxminded.university.handlers.ClassRoomsHandler;
+import ua.com.foxminded.university.handlers.GroupsHandler;
+import ua.com.foxminded.university.handlers.StudentsHandler;
 import ua.com.foxminded.university.handlers.TeachersHandler;
 
 import static ua.com.foxminded.university.Menu.*;
@@ -10,7 +13,8 @@ public class University {
 
     private String name;
     private List<Teacher> teachers;
-    private List<Classroom> classrooms;
+    private List<ClassRoom> classrooms;
+    private List<Student> students;
     private List<Group> groups;
     private List<Lecture> lectures;
     private List<Holiday> holidays;
@@ -32,11 +36,11 @@ public class University {
 	this.teachers = teachers;
     }
 
-    public List<Classroom> getClassrooms() {
+    public List<ClassRoom> getClassrooms() {
 	return classrooms;
     }
 
-    public void setClassrooms(List<Classroom> classrooms) {
+    public void setClassrooms(List<ClassRoom> classrooms) {
 	this.classrooms = classrooms;
     }
 
@@ -72,6 +76,14 @@ public class University {
 	this.subjects = subjects;
     }
 
+    public List<Student> getStudents() {
+	return students;
+    }
+
+    public void setStudents(List<Student> students) {
+	this.students = students;
+    }
+
     @Override
     public String toString() {
 	StringBuilder result = new StringBuilder();
@@ -81,14 +93,17 @@ public class University {
 	result.append("Teachers are:" + CR);
 	result.append(TeachersHandler.getStringOfTeachers(teachers));
 	result.append(FORMAT_DIVIDER);
+	result.append("Students are:" + CR);
+	result.append(StudentsHandler.getStringOfStudents(students));
+	result.append(FORMAT_DIVIDER);
 	result.append("Current student groups:" + CR);
-	result.append("Not yet implemented." + CR);
+	result.append(GroupsHandler.getStringOfGroups(groups));
 	result.append(FORMAT_DIVIDER);
 	result.append("Subjects available to students:");
 	result.append(subjects + CR);
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
-	result.append("Not yet implemented." + CR);
+	result.append(ClassRoomsHandler.getStringOfClassRooms(classrooms));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
 	result.append("Not yet implemented." + CR);

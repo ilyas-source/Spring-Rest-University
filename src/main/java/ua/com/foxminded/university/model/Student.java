@@ -2,6 +2,8 @@ package ua.com.foxminded.university.model;
 
 import java.time.LocalDate;
 
+import static ua.com.foxminded.university.Menu.*;
+
 public class Student {
 
     private String firstName;
@@ -12,6 +14,19 @@ public class Student {
     private String email;
     private String phoneNumber;
     private Address address;
+
+    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate entryYear, String email,
+	    String phoneNumber, Address address) {
+	super();
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.gender = gender;
+	this.birthDate = birthDate;
+	this.entryYear = entryYear;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.address = address;
+    }
 
     public String getFirstName() {
 	return firstName;
@@ -75,5 +90,16 @@ public class Student {
 
     public void setAddress(Address address) {
 	this.address = address;
+    }
+
+    @Override
+    public String toString() {
+	StringBuilder result = new StringBuilder();
+	result.append(firstName + " " + lastName + ", " + gender + ", born " + birthDate + ", admission year "
+		+ entryYear.getYear() + CR);
+	result.append("Mail: " + email + ", phone number " + phoneNumber + CR);
+	result.append("Postal address: " + address);
+
+	return result.toString();
     }
 }

@@ -2,6 +2,9 @@ package ua.com.foxminded.university;
 
 import java.util.Scanner;
 
+import ua.com.foxminded.university.handlers.ClassRoomsHandler;
+import ua.com.foxminded.university.handlers.GroupsHandler;
+import ua.com.foxminded.university.handlers.LecturesHandler;
 import ua.com.foxminded.university.handlers.SubjectsHandler;
 import ua.com.foxminded.university.handlers.TeachersHandler;
 import ua.com.foxminded.university.model.University;
@@ -21,16 +24,19 @@ public class Menu {
 	    + "Enter choice or 0 to quit:";
 
     private static final String CRUD_MENU_TEXT = CR
-	    + "1. View all" + CR
-	    + "2. Create" + CR
-	    + "3. Read" + CR
-	    + "4. Update" + CR
-	    + "5. Delete" + CR
+	    + "1. Create" + CR
+	    + "2. Read (all)" + CR
+	    + "3. Update" + CR
+	    + "4. Delete" + CR
 	    + "Enter choice or 0 to return:";
 
     public static Scanner scanner = new Scanner(System.in);
     private University university;
     private TeachersHandler teachersHandler = new TeachersHandler();
+    private GroupsHandler groupsHandler = new GroupsHandler();
+    private SubjectsHandler subjectsHandler = new SubjectsHandler();
+    private LecturesHandler lecturesHandler = new LecturesHandler();
+    private ClassRoomsHandler ClassRoomsHandler = new ClassRoomsHandler();
 
     public Menu(University university) {
 	this.university = university;
@@ -90,22 +96,18 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println(TeachersHandler.getStringOfTeachers(university.getTeachers()));
-	    start(2);
-	    break;
-	case 2:
 	    teachersHandler.addTeacher(university);
 	    start(2);
 	    break;
-	case 3:
-	    System.out.println("STUB Teacher viewing");
+	case 2:
+	    System.out.println(TeachersHandler.getStringOfTeachers(university.getTeachers()));
 	    start(2);
 	    break;
-	case 4:
+	case 3:
 	    System.out.println("STUB Teacher updating");
 	    start(2);
 	    break;
-	case 5:
+	case 4:
 	    System.out.println("STUB Teacher deletion");
 	    start(2);
 	    break;
@@ -119,28 +121,24 @@ public class Menu {
     private void manageGroups(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println("STUB Groups list");
+	    groupsHandler.addGroup(university);
 	    start(3);
 	    break;
 	case 2:
-	    System.out.println("STUB Group creation");
+	    System.out.println(GroupsHandler.getStringOfGroups(university.getGroups()));
 	    start(3);
 	    break;
 	case 3:
-	    System.out.println("STUB Group viewing");
-	    start(3);
-	    break;
-	case 4:
 	    System.out.println("STUB Group updating");
 	    start(3);
 	    break;
-	case 5:
+	case 4:
 	    System.out.println("STUB Group deletion");
 	    start(3);
 	    break;
 	default:
 	    System.out.println("Returning...");
-	    start(0);
+	    start(3);
 	    break;
 	}
     }

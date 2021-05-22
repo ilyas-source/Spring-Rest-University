@@ -10,7 +10,17 @@ public class Lecture {
     private List<Group> groups;
     private Subject subject;
     private Teacher teacher;
-    private Classroom classroom;
+    private ClassRoom classroom;
+
+    public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, ClassRoom classroom) {
+	super();
+	this.date = date;
+	this.time = time;
+	this.groups = groups;
+	this.subject = subject;
+	this.teacher = teacher;
+	this.classroom = classroom;
+    }
 
     public LocalDate getDate() {
 	return date;
@@ -52,11 +62,11 @@ public class Lecture {
 	this.teacher = teacher;
     }
 
-    public Classroom getClassroom() {
+    public ClassRoom getClassroom() {
 	return classroom;
     }
 
-    public void setClassroom(Classroom classroom) {
+    public void setClassroom(ClassRoom classroom) {
 	this.classroom = classroom;
     }
 }

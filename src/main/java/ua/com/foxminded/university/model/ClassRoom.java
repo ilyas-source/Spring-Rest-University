@@ -1,10 +1,16 @@
 package ua.com.foxminded.university.model;
 
-public class Classroom {
+public class ClassRoom {
 
     private Location location;
     private String name;
     private int capacity;
+
+    public ClassRoom(Location location, String name, int capacity) {
+	this.location = location;
+	this.name = name;
+	this.capacity = capacity;
+    }
 
     public Location getLocation() {
 	return location;
@@ -28,5 +34,10 @@ public class Classroom {
 
     public void setCapacity(int capacity) {
 	this.capacity = capacity;
+    }
+
+    @Override
+    public String toString() {
+	return name + ": " + location + ". Capacity: " + capacity;
     }
 }

@@ -6,6 +6,12 @@ public class Location {
     private int floor;
     private int roomNumber;
 
+    public Location(String building, int floor, int roomNumber) {
+	this.building = building;
+	this.floor = floor;
+	this.roomNumber = roomNumber;
+    }
+
     public String getBuilding() {
 	return building;
     }
@@ -28,5 +34,10 @@ public class Location {
 
     public void setRoomNumber(int roomNumber) {
 	this.roomNumber = roomNumber;
+    }
+
+    @Override
+    public String toString() {
+	return building + ", floor #" + floor + ", room " + roomNumber;
     }
 }

@@ -4,9 +4,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.com.foxminded.university.handlers.StudentsHandler;
 import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.ClassRoom;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
@@ -24,6 +30,63 @@ public class UniversityPopulator {
 	university.setName("Test University Foxminded");
 	populateSubjects();
 	populateTeachers();
+	populateStudents();
+	populateClassRooms();
+	populateGroups();
+	populateLectures();
+
+    }
+
+    private void populateStudents() {
+	List<Student> students = new ArrayList<>();
+	students.add(new Student("Ivan", "Petrov", Gender.MALE, LocalDate.of(1980, 11, 1),
+		LocalDate.of(2000, 1, 1), "qwe@rty.com", "123123123",
+		new Address("Russia", "450080", "Permskiy kray", "Perm", "Lenina 5")));
+
+	students.add(new Student("John", "Doe", Gender.MALE, LocalDate.of(1981, 11, 1),
+		LocalDate.of(2000, 1, 1), "qwe@qwe.com", "1231223",
+		new Address("USA", "90210", "California", "LA", "Grove St. 15")));
+
+	students.add(new Student("Janna", "D'Ark", Gender.FEMALE, LocalDate.of(1881, 11, 1),
+		LocalDate.of(2000, 1, 1), "qwe@no.fr", "1231223",
+		new Address("France", "21012", "Central", "Paris", "Rue 15")));
+
+	students.add(new Student("Mao", "Zedun", Gender.MALE, LocalDate.of(1921, 9, 14),
+		LocalDate.of(2000, 1, 1), "qwe@no.cn", "1145223",
+		new Address("China", "20121", "Guangdung", "Beijin", "Main St. 125")));
+
+	university.setStudents(students);
+    }
+
+    private void populateClassRooms() {
+	List<ClassRoom> classrooms = new ArrayList<>();
+
+	classrooms.add(new ClassRoom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
+	classrooms.add(new ClassRoom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
+
+	university.setClassrooms(classrooms);
+    }
+
+    private void populateGroups() {
+	List<Group> groups = new ArrayList<>();
+
+	List<Student> students = university.getStudents();
+
+	groups.add(new Group("AB-11", new ArrayList<>(List.of(students.get(0), students.get(1)))));
+	groups.add(new Group("ZI-08", new ArrayList<>(List.of(students.get(2), students.get(3)))));
+
+	university.setGroups(groups);
+    }
+
+    private void populateLectures() {
+	List<Lecture> lectures = new ArrayList<>();
+
+//	lectures.add(new Lecture(LocalDate.of(2000, 3, 8), 
+//		     new TimeRange(LocalTime.of(9, 0), LocalTime.of(10,0)),
+//		     null, null, null, null));
+
+	university.setLectures(lectures);
+
     }
 
     private void populateSubjects() {

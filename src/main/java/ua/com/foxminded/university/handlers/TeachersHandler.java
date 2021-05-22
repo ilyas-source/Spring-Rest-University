@@ -31,7 +31,7 @@ public class TeachersHandler {
 	String lastName = scanner.nextLine();
 
 	System.out.println("Gender (M/F): ");
-	Gender gender = getGenderFromScanner();
+	Gender gender = GenderHandler.getGenderFromScanner();
 
 	System.out.println("Degree: (B)achelor/(M)aster/(D)octor: ");
 	Degree degree = getDegreeFromScanner();
@@ -153,25 +153,7 @@ public class TeachersHandler {
 	}
     }
 
-    private Gender getGenderFromScanner() {
-	Boolean keepOn = true;
-	String choice = "";
-	while (keepOn) {
-	    choice = scanner.nextLine().toLowerCase();
-	    if (choice.equals("m") || choice.equals("f")) {
-		keepOn = false;
-	    } else {
-		System.out.println("Wrong input, try again:");
-	    }
-	}
-	if (choice == "m") {
-	    return Gender.MALE;
-	} else {
-	    return Gender.FEMALE;
-	}
-    }
-
-    public static Object getStringOfTeachers(List<Teacher> teachers) {
+    public static String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
 	for (Teacher teacher : teachers) {
 	    result.append(teachers.indexOf(teacher) + ". " + teacher + CR);
