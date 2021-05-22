@@ -4,6 +4,8 @@ import java.util.List;
 
 import ua.com.foxminded.university.handlers.ClassRoomsHandler;
 import ua.com.foxminded.university.handlers.GroupsHandler;
+import ua.com.foxminded.university.handlers.HolidaysHandler;
+import ua.com.foxminded.university.handlers.LecturesHandler;
 import ua.com.foxminded.university.handlers.StudentsHandler;
 import ua.com.foxminded.university.handlers.TeachersHandler;
 
@@ -106,10 +108,10 @@ public class University {
 	result.append(ClassRoomsHandler.getStringOfClassRooms(classrooms));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
-	result.append("Not yet implemented." + CR);
+	result.append(LecturesHandler.getStringOfLectures(lectures));
 	result.append(FORMAT_DIVIDER);
 	result.append("Holidays are:" + CR);
-	result.append("Not yet implemented." + CR);
+	result.append(HolidaysHandler.getStringOfHolidays(holidays));
 	result.append(FORMAT_DIVIDER);
 	return result.toString();
     }

@@ -7,6 +7,11 @@ public class Holiday {
     private LocalDate date;
     private String name;
 
+    public Holiday(LocalDate date, String name) {
+	this.date = date;
+	this.name = name;
+    }
+
     public LocalDate getDate() {
 	return date;
     }
@@ -21,5 +26,10 @@ public class Holiday {
 
     public void setName(String name) {
 	this.name = name;
+    }
+
+    @Override
+    public String toString() {
+	return date + ": " + name;
     }
 }

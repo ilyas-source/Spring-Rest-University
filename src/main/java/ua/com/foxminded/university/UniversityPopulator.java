@@ -1,20 +1,22 @@
 package ua.com.foxminded.university;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.StudentsHandler;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.ClassRoom;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.TimeRange;
 import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
@@ -34,7 +36,16 @@ public class UniversityPopulator {
 	populateClassRooms();
 	populateGroups();
 	populateLectures();
+	populateHolidays();
+    }
 
+    private void populateHolidays() {
+	List<Holiday> holidays = new ArrayList<>();
+	holidays.add(new Holiday(LocalDate.of(2000, 12, 25), "Christmas"));
+	holidays.add(new Holiday(LocalDate.of(2000, 10, 30), "Halloween"));
+	holidays.add(new Holiday(LocalDate.of(2000, 3, 8), "International women's day"));
+
+	university.setHolidays(holidays);
     }
 
     private void populateStudents() {
@@ -63,6 +74,7 @@ public class UniversityPopulator {
 
 	classrooms.add(new ClassRoom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
 	classrooms.add(new ClassRoom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
+	classrooms.add(new ClassRoom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
 
 	university.setClassrooms(classrooms);
     }
@@ -80,13 +92,22 @@ public class UniversityPopulator {
 
     private void populateLectures() {
 	List<Lecture> lectures = new ArrayList<>();
+	List<Group> groups = university.getGroups();
+	List<Subject> subjects = university.getSubjects();
+	List<Teacher> teachers = university.getTeachers();
+	List<ClassRoom> classRooms = university.getClassrooms();
 
-//	lectures.add(new Lecture(LocalDate.of(2000, 3, 8), 
-//		     new TimeRange(LocalTime.of(9, 0), LocalTime.of(10,0)),
-//		     null, null, null, null));
+	lectures.add(new Lecture(LocalDate.of(2000, 1, 1),
+		new TimeRange(LocalTime.of(9, 0), LocalTime.of(10, 0)),
+		new ArrayList<>(List.of(groups.get(0))),
+		subjects.get(0), teachers.get(0), classRooms.get(0)));
+
+	lectures.add(new Lecture(LocalDate.of(2000, 1, 2),
+		new TimeRange(LocalTime.of(10, 0), LocalTime.of(11, 0)),
+		new ArrayList<>(List.of(groups.get(1))),
+		subjects.get(1), teachers.get(1), classRooms.get(1)));
 
 	university.setLectures(lectures);
-
     }
 
     private void populateSubjects() {

@@ -3,6 +3,10 @@ package ua.com.foxminded.university.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import ua.com.foxminded.university.handlers.GroupsHandler;
+
+import static ua.com.foxminded.university.Menu.*;
+
 public class Lecture {
 
     private LocalDate date;
@@ -68,5 +72,17 @@ public class Lecture {
 
     public void setClassroom(ClassRoom classroom) {
 	this.classroom = classroom;
+    }
+
+    @Override
+    public String toString() {
+	StringBuilder result = new StringBuilder();
+
+	result.append("Lecture on " + subject.getName() + " will take place on " + date + ", from " + time.getStartTime() + " to "
+		+ time.getEndTime() + "." + CR);
+	result.append("Read by " + teacher.getFirstName() + " " + teacher.getLastName() + " in " + classroom.getName()
+		+ "." + CR);
+	result.append("Groups to attend:" + CR + GroupsHandler.getStringOfGroups(groups));
+	return result.toString();
     }
 }

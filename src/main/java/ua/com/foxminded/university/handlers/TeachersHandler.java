@@ -21,9 +21,7 @@ public class TeachersHandler {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 
-	System.out.println("Entering vacations.");
-	vacations = getVacationsFromScanner();
-
+	scanner.nextLine();
 	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
 
@@ -43,10 +41,13 @@ public class TeachersHandler {
 	String phone = scanner.nextLine();
 
 	System.out.println("Entering address.");
-	Address address = getAddressFromScanner();
+	Address address = AddressHandler.getAddressFromScanner();
 
 	System.out.println("Assigning subjects.");
 	subjects = getSubjectsFromScanner(university);
+
+	System.out.println("Entering vacations.");
+	vacations = getVacationsFromScanner();
 
 	Teacher teacher = new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
 
@@ -55,20 +56,6 @@ public class TeachersHandler {
 
 	teachers.add(teacher);
 	university.setTeachers(teachers);
-    }
-
-    private Address getAddressFromScanner() {
-	System.out.print("Country:");
-	String country = scanner.nextLine();
-	System.out.print("ZIP Code:");
-	String index = scanner.nextLine();
-	System.out.print("Region:");
-	String region = scanner.nextLine();
-	System.out.print("City:");
-	String city = scanner.nextLine();
-	System.out.print("Street Address:");
-	String streetAddress = scanner.nextLine();
-	return new Address(country, index, region, city, streetAddress);
     }
 
     private List<Subject> getSubjectsFromScanner(University university) {
@@ -159,6 +146,18 @@ public class TeachersHandler {
 	    result.append(teachers.indexOf(teacher) + ". " + teacher + CR);
 	}
 	return result.toString();
+    }
+
+    public static void updateATeacher(List<Teacher> teachers) {
+	System.out.println("Select a teacher to edit: ");
+	System.out.println(getStringOfTeachers(teachers));
+	int choice = Menu.readNextInt();
+	if (choice > teachers.size()) {
+	    System.out.println("No such teacher, returning...");
+	} else {
+	    Teacher teacher = teachers.get(choice);
+
+	}
     }
 
 }

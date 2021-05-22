@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.handlers;
 
-import static ua.com.foxminded.university.Menu.CR;
-
 import java.util.List;
 
 import ua.com.foxminded.university.model.Group;
@@ -16,7 +14,7 @@ public class GroupsHandler {
     public static String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
 	for (Group group : groups) {
-	    result.append(groups.indexOf(group) + ". " + group + CR);
+	    result.append(groups.indexOf(group) + ". " + group);
 	}
 	return result.toString();
     }

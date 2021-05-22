@@ -14,13 +14,14 @@ public class Menu {
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String CR = System.lineSeparator();
     public static final String FORMAT_DIVIDER = "----------------" + CR;
-    private static final String MAIN_MENU_TEXT = FORMAT_DIVIDER + "Main menu" + CR
+    private static final String MAIN_MENU_TEXT = "Main menu" + CR
 	    + "1. View full university contents" + CR
 	    + "2. Manage teachers" + CR
 	    + "3. Manage groups" + CR
 	    + "4. Manage subjects" + CR
 	    + "5. Manage lectures" + CR
 	    + "6. Manage classrooms" + CR
+	    + "7. Rename university" + CR
 	    + "Enter choice or 0 to quit:";
 
     private static final String CRUD_MENU_TEXT = CR
@@ -87,6 +88,10 @@ public class Menu {
 	    menuChoice = readNextInt();
 	    manageClassrooms(menuChoice);
 	    break;
+	case 7:
+	    scanner.nextLine();
+	    System.out.println("Enter new name for the university: ");
+	    university.setName(scanner.nextLine());
 	default:
 	    start(0);
 	    break;
@@ -104,7 +109,7 @@ public class Menu {
 	    start(2);
 	    break;
 	case 3:
-	    System.out.println("STUB Teacher updating");
+	    TeachersHandler.updateATeacher(university.getTeachers());
 	    start(2);
 	    break;
 	case 4:
