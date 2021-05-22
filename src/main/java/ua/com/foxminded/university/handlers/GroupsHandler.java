@@ -18,4 +18,19 @@ public class GroupsHandler {
 	}
 	return result.toString();
     }
+
+    public static void updateAGroup(University university) {
+	// TODO Auto-generated method stub
+
+    }
+
+    public static void deleteAGroup(University university) {
+	// TODO Auto-generated method stub
+
+    }
+
+    public static Group getGroupFromScanner(University university) {
+	// TODO Auto-generated method stub
+	return null;
+    }
 }

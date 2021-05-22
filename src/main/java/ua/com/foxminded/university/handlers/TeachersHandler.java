@@ -16,8 +16,7 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersHandler {
 
-    public void addTeacher(University university) {
-	List<Teacher> teachers = university.getTeachers();
+    public static Teacher getTeacherFromScanner(University university) {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 
@@ -49,16 +48,10 @@ public class TeachersHandler {
 	System.out.println("Entering vacations.");
 	vacations = getVacationsFromScanner();
 
-	Teacher teacher = new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
-
-	System.out.println("Adding teacher with the following parameters:");
-	System.out.println(teacher);
-
-	teachers.add(teacher);
-	university.setTeachers(teachers);
+	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
     }
 
-    private List<Subject> getSubjectsFromScanner(University university) {
+    private static List<Subject> getSubjectsFromScanner(University university) {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = university.getSubjects();
 	Boolean finished = false;
@@ -101,9 +94,9 @@ public class TeachersHandler {
 	return result;
     }
 
-    private List<Vacation> getVacationsFromScanner() {
+    private static List<Vacation> getVacationsFromScanner() {
 
-	List<Vacation> vacations = new ArrayList<Vacation>();
+	List<Vacation> vacations = new ArrayList<>();
 	boolean finished = false;
 
 	while (!finished) {
@@ -118,7 +111,7 @@ public class TeachersHandler {
 	return vacations;
     }
 
-    private Degree getDegreeFromScanner() {
+    private static Degree getDegreeFromScanner() {
 	Boolean keepOn = true;
 	String choice = "";
 
@@ -148,15 +141,32 @@ public class TeachersHandler {
 	return result.toString();
     }
 
-    public static void updateATeacher(List<Teacher> teachers) {
+    public static void updateATeacher(University university) {
+
+	List<Teacher> teachers = university.getTeachers();
+
 	System.out.println("Select a teacher to edit: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = Menu.readNextInt();
+	int choice = readNextInt();
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    Teacher teacher = teachers.get(choice);
+	    teachers.set(choice, getTeacherFromScanner(university));
+	    System.out.println("Overwrite successful.");
+	}
+    }
 
+    public static void DeleteATeacher(University university) {
+	List<Teacher> teachers = university.getTeachers();
+
+	System.out.println("Select a teacher to delete: ");
+	System.out.println(getStringOfTeachers(teachers));
+	int choice = readNextInt();
+	if (choice > teachers.size()) {
+	    System.out.println("No such teacher, returning...");
+	} else {
+	    teachers.remove(choice);
+	    System.out.println("Teacher deleted successfully.");
 	}
     }
 

@@ -1,10 +1,9 @@
 package ua.com.foxminded.university.handlers;
 
-import static ua.com.foxminded.university.Menu.*;
-
 import java.util.List;
 
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.University;
 
 public class LecturesHandler {
 
@@ -16,4 +15,18 @@ public class LecturesHandler {
 	return result.toString();
     }
 
+    public static Lecture getLectureFromScanner(University university) {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    public static void updateALecture(University university) {
+	// TODO Auto-generated method stub
+
+    }
+
+    public static void deleteALecture(University university) {
+	// TODO Auto-generated method stub
+
+    }
 }

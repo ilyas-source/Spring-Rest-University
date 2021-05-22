@@ -101,7 +101,7 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    teachersHandler.addTeacher(university);
+	    university.getTeachers().add(TeachersHandler.getTeacherFromScanner(university));
 	    start(2);
 	    break;
 	case 2:
@@ -109,11 +109,11 @@ public class Menu {
 	    start(2);
 	    break;
 	case 3:
-	    TeachersHandler.updateATeacher(university.getTeachers());
+	    TeachersHandler.updateATeacher(university);
 	    start(2);
 	    break;
 	case 4:
-	    System.out.println("STUB Teacher deletion");
+	    TeachersHandler.DeleteATeacher(university);
 	    start(2);
 	    break;
 	default:
@@ -126,7 +126,7 @@ public class Menu {
     private void manageGroups(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    groupsHandler.addGroup(university);
+	    university.getGroups().add(GroupsHandler.getGroupFromScanner(university));
 	    start(3);
 	    break;
 	case 2:
@@ -134,11 +134,11 @@ public class Menu {
 	    start(3);
 	    break;
 	case 3:
-	    System.out.println("STUB Group updating");
+	    GroupsHandler.updateAGroup(university);
 	    start(3);
 	    break;
 	case 4:
-	    System.out.println("STUB Group deletion");
+	    GroupsHandler.deleteAGroup(university);
 	    start(3);
 	    break;
 	default:
@@ -151,23 +151,19 @@ public class Menu {
     private void manageSubjects(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println("STUB Subjects list");
+	    university.getSubjects().add(SubjectsHandler.getSubjectFromScanner(university));
 	    start(4);
 	    break;
 	case 2:
-	    System.out.println("STUB Subject creation");
+	    System.out.println(SubjectsHandler.getStringOfSubjects(university.getSubjects()));
 	    start(4);
 	    break;
 	case 3:
-	    System.out.println("STUB Subject viewing");
+	    SubjectsHandler.updateASubject(university);
 	    start(4);
 	    break;
 	case 4:
-	    System.out.println("STUB Subject updating");
-	    start(4);
-	    break;
-	case 5:
-	    System.out.println("STUB Subject deletion");
+	    SubjectsHandler.deleteASubject(university);
 	    start(4);
 	    break;
 	default:
@@ -180,23 +176,19 @@ public class Menu {
     private void manageLectures(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println("STUB Lectures list");
+	    university.getLectures().add(LecturesHandler.getLectureFromScanner(university));
 	    start(5);
 	    break;
 	case 2:
-	    System.out.println("STUB Lecture creation");
+	    System.out.println(LecturesHandler.getStringOfLectures(university.getLectures()));
 	    start(5);
 	    break;
 	case 3:
-	    System.out.println("STUB Lecture viewing");
+	    LecturesHandler.updateALecture(university);
 	    start(5);
 	    break;
 	case 4:
-	    System.out.println("STUB Lecture updating");
-	    start(5);
-	    break;
-	case 5:
-	    System.out.println("STUB Lecture deletion");
+	    LecturesHandler.deleteALecture(university);
 	    start(5);
 	    break;
 	default:
@@ -209,24 +201,20 @@ public class Menu {
     private void manageClassrooms(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    System.out.println("STUB Classrooms list");
-	    start(6);
+	    university.getClassrooms().add(ClassRoomsHandler.getClassRoomFromScanner(university));
+	    start(5);
 	    break;
 	case 2:
-	    System.out.println("STUB Classroom creation");
-	    start(6);
+	    System.out.println(ClassRoomsHandler.getStringOfClassRooms(university.getClassrooms()));
+	    start(5);
 	    break;
 	case 3:
-	    System.out.println("STUB Classroom viewing");
-	    start(6);
+	    ClassRoomsHandler.updateAClassRoom(university);
+	    start(5);
 	    break;
 	case 4:
-	    System.out.println("STUB Classroom updating");
-	    start(6);
-	    break;
-	case 5:
-	    System.out.println("STUB Classroom deletion");
-	    start(6);
+	    ClassRoomsHandler.deleteAClassRoom(university);
+	    start(5);
 	    break;
 	default:
 	    System.out.println("Returning...");
