@@ -14,7 +14,7 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersHandler {
 
-    public static Teacher getTeacherFromScanner(University university) {
+    public static Teacher getNewTeacherFromScanner(University university) {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 
@@ -78,27 +78,47 @@ public class TeachersHandler {
 	return result.toString();
     }
 
+    public static Teacher selectOneTeacher(University university) {
+	List<Teacher> teachers = university.getTeachers();
+	Boolean correctEntry = false;
+	Teacher result = null;
+
+	while (!correctEntry) {
+	    System.out.println("Select a teacher: ");
+	    System.out.print(getStringOfTeachers(teachers));
+	    int choice = getIntFromScanner() - 1;
+	    if (choice <= teachers.size()) {
+		result = teachers.get(choice);
+		System.out.println("Success.");
+		correctEntry = true;
+	    } else {
+		System.out.println("No such object.");
+	    }
+	}
+	return result;
+    }
+
     public static void updateATeacher(University university) {
 
 	List<Teacher> teachers = university.getTeachers();
 
-	System.out.println("Select a teacher to edit: ");
+	System.out.println("Select a teacher to update: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = readNextInt() - 1;
+	int choice = getIntFromScanner() - 1;
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    teachers.set(choice, getTeacherFromScanner(university));
+	    teachers.set(choice, getNewTeacherFromScanner(university));
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public static void DeleteATeacher(University university) {
+    public static void deleteATeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 
 	System.out.println("Select a teacher to delete: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = readNextInt() - 1;
+	int choice = getIntFromScanner() - 1;
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {

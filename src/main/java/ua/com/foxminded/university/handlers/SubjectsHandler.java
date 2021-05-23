@@ -3,9 +3,7 @@ package ua.com.foxminded.university.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.com.foxminded.university.Menu.CR;
-import static ua.com.foxminded.university.Menu.readNextInt;
-import static ua.com.foxminded.university.Menu.scanner;
+import static ua.com.foxminded.university.Menu.*;
 
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
@@ -20,6 +18,26 @@ public class SubjectsHandler {
 	return result.toString();
     }
 
+    public static Subject selectOneSubject(University university) {
+	List<Subject> subjects = university.getSubjects();
+	Boolean correctEntry = false;
+	Subject result = null;
+
+	while (!correctEntry) {
+	    System.out.println("Select subject: ");
+	    System.out.print(getStringOfSubjects(subjects));
+	    int choice = getIntFromScanner() - 1;
+	    if (choice <= subjects.size()) {
+		result = subjects.get(choice);
+		System.out.println("Success.");
+		correctEntry = true;
+	    } else {
+		System.out.println("No such object.");
+	    }
+	}
+	return result;
+    }
+
     public static List<Subject> getSubjectsFromScanner(University university) {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = university.getSubjects();
@@ -27,15 +45,14 @@ public class SubjectsHandler {
 	Boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
-	    System.out.print("Finished:" + finished + ", correct entry:" + correctEntry + CR);
-	    if (result.size() > 0) {
+	    if (!result.isEmpty()) {
 		System.out.println("Assigned subjects:");
-		System.out.print(SubjectsHandler.getStringOfSubjects(result));
+		System.out.print(getStringOfSubjects(result));
 	    }
 	    System.out.print("Enter a new subject number to add to this teacher: " + CR);
-	    System.out.print(SubjectsHandler.getStringOfSubjects(subjects) + CR);
+	    System.out.print(getStringOfSubjects(subjects) + CR);
 	    correctEntry = false;
-	    int choice = readNextInt() - 1;
+	    int choice = getIntFromScanner() - 1;
 	    if (choice <= subjects.size()) {
 		Subject selected = subjects.get(choice);
 		if (result.contains(selected)) {
@@ -60,17 +77,40 @@ public class SubjectsHandler {
     }
 
     public static Subject getNewSubjectFromScanner(University university) {
-	// TODO Auto-generated method stub
-	return null;
+	System.out.print("Enter subject name: ");
+	String name = scanner.nextLine();
+	System.out.print("Enter description: ");
+	String description = scanner.nextLine();
+
+	return new Subject(name, description);
     }
 
     public static void updateASubject(University university) {
-	// TODO Auto-generated method stub
+	List<Subject> subjects = university.getSubjects();
 
+	System.out.println("Select a subject to update: ");
+	System.out.println(getStringOfSubjects(subjects));
+	int choice = getIntFromScanner() - 1;
+	if (choice > subjects.size()) {
+	    System.out.println("No such subject, returning...");
+	} else {
+	    subjects.set(choice, getNewSubjectFromScanner(university));
+	    System.out.println("Overwrite successful.");
+	}
     }
 
     public static void deleteASubject(University university) {
-	// TODO Auto-generated method stub
+	List<Subject> subjects = university.getSubjects();
 
+	System.out.println("Select a subject to delete: ");
+	System.out.println(getStringOfSubjects(subjects));
+	int choice = getIntFromScanner() - 1;
+	if (choice > subjects.size()) {
+	    System.out.println("No such subject, returning...");
+	} else {
+	    subjects.remove(choice);
+	    System.out.println("Subject deleted successfully.");
+	}
     }
+
 }

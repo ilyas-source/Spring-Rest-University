@@ -32,7 +32,7 @@ public class StudentsHandler {
 	    System.out.print("Enter a new student number to add: " + CR);
 	    System.out.print(StudentsHandler.getStringOfStudents(students) + CR);
 	    correctEntry = false;
-	    int choice = readNextInt() - 1;
+	    int choice = getIntFromScanner() - 1;
 	    if (choice <= students.size()) {
 		Student selected = students.get(choice);
 		if (result.contains(selected)) {

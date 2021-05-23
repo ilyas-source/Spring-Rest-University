@@ -9,9 +9,9 @@ public class LocationsHandler {
 	System.out.print("Enter building name: ");
 	String building = scanner.nextLine();
 	System.out.print("Enter floor number: ");
-	int floor = readNextInt();
+	int floor = getIntFromScanner();
 	System.out.print("Enter room number: ");
-	int roomNumber = readNextInt();
+	int roomNumber = getIntFromScanner();
 
 	return new Location(building, floor, roomNumber);
     }

@@ -23,5 +23,4 @@ public class GenderHandler {
 	    return Gender.FEMALE;
 	}
     }
-
 }

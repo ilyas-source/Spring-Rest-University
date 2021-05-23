@@ -1,5 +1,8 @@
 package ua.com.foxminded.university;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import ua.com.foxminded.university.handlers.ClassroomsHandler;
@@ -44,7 +47,7 @@ public class Menu {
 
 	if (menuEntryPoint == 0) {
 	    System.out.println(MAIN_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	} else {
 	    menuChoice = menuEntryPoint;
 	}
@@ -60,31 +63,30 @@ public class Menu {
 	    break;
 	case 2:
 	    System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	    manageTeachers(menuChoice);
 	    break;
 	case 3:
 	    System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	    manageGroups(menuChoice);
 	    break;
 	case 4:
 	    System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	    manageSubjects(menuChoice);
 	    break;
 	case 5:
 	    System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	    manageLectures(menuChoice);
 	    break;
 	case 6:
 	    System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
-	    menuChoice = readNextInt();
+	    menuChoice = getIntFromScanner();
 	    manageClassrooms(menuChoice);
 	    break;
 	case 7:
-	    scanner.nextLine();
 	    System.out.println("Enter new name for the university: ");
 	    university.setName(scanner.nextLine());
 	default:
@@ -96,7 +98,7 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getTeachers().add(TeachersHandler.getTeacherFromScanner(university));
+	    university.getTeachers().add(TeachersHandler.getNewTeacherFromScanner(university));
 	    start(2);
 	    break;
 	case 2:
@@ -108,7 +110,7 @@ public class Menu {
 	    start(2);
 	    break;
 	case 4:
-	    TeachersHandler.DeleteATeacher(university);
+	    TeachersHandler.deleteATeacher(university);
 	    start(2);
 	    break;
 	default:
@@ -171,7 +173,7 @@ public class Menu {
     private void manageLectures(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getLectures().add(LecturesHandler.getLectureFromScanner(university));
+	    university.getLectures().add(LecturesHandler.getNewLectureFromScanner(university));
 	    start(5);
 	    break;
 	case 2:
@@ -218,10 +220,46 @@ public class Menu {
 	}
     }
 
-    public static int readNextInt() {
+    public static int getIntFromScanner() {
 	while (!scanner.hasNextInt()) {
 	    scanner.next();
 	}
 	return Integer.parseInt(scanner.nextLine());
+    }
+
+    public static LocalDate getDateFromScanner() {
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+	LocalDate result = null;
+
+	Boolean correctEntry = false;
+	while (!correctEntry) {
+	    try {
+		String line = scanner.nextLine();
+		correctEntry = true;
+		result = LocalDate.parse(line, formatter);
+	    } catch (Exception e) {
+		e.printStackTrace();
+		correctEntry = false;
+	    }
+	}
+	return result;
+    }
+
+    public static LocalTime getTimeFromScanner() {
+	DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
+	LocalTime result = null;
+
+	Boolean correctEntry = false;
+	while (!correctEntry) {
+	    try {
+		String line = scanner.nextLine();
+		correctEntry = true;
+		result = LocalTime.parse(line, formatter);
+	    } catch (Exception e) {
+		e.printStackTrace();
+		correctEntry = false;
+	    }
+	}
+	return result;
     }
 }

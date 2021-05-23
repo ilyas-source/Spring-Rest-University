@@ -14,6 +14,7 @@ public class HolidaysHandler {
 	for (Holiday holiday : holidays) {
 	    result.append(holidays.indexOf(holiday) + 1).append(". " + holiday + CR);
 	}
+
 	return result.toString();
     }
 

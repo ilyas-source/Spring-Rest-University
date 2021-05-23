@@ -59,24 +59,4 @@ public class VacationsHandler {
 	}
 	return vacation;
     }
-
-    private static LocalDate getDateFromScanner() {
-	scanner = new Scanner(System.in);
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Menu.DATE_FORMAT);
-	LocalDate result = LocalDate.of(2000, 1, 1);
-
-	Boolean correctEntry = false;
-	while (!correctEntry) {
-	    try {
-		String line = scanner.nextLine();
-		correctEntry = true;
-		result = LocalDate.parse(line, formatter);
-	    } catch (Exception e) {
-		e.printStackTrace();
-		correctEntry = false;
-		System.exit(0);
-	    }
-	}
-	return result;
-    }
 }
