@@ -11,7 +11,7 @@ public class StudentsHandler {
     public static String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
 	for (Student student : students) {
-	    result.append(students.indexOf(student) + ". " + student + CR);
+	    result.append(students.indexOf(student) + 1).append(". " + student + CR);
 	}
 	return result.toString();
     }

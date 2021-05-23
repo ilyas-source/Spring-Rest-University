@@ -1,5 +1,7 @@
 package ua.com.foxminded.university;
 
+import static ua.com.foxminded.university.Menu.scanner;
+
 import java.util.Scanner;
 
 import ua.com.foxminded.university.handlers.ClassRoomsHandler;
@@ -33,11 +35,11 @@ public class Menu {
 
     public static Scanner scanner = new Scanner(System.in);
     private University university;
-    private TeachersHandler teachersHandler = new TeachersHandler();
-    private GroupsHandler groupsHandler = new GroupsHandler();
-    private SubjectsHandler subjectsHandler = new SubjectsHandler();
-    private LecturesHandler lecturesHandler = new LecturesHandler();
-    private ClassRoomsHandler ClassRoomsHandler = new ClassRoomsHandler();
+//    private TeachersHandler teachersHandler = new TeachersHandler();
+//    private GroupsHandler groupsHandler = new GroupsHandler();
+//    private SubjectsHandler subjectsHandler = new SubjectsHandler();
+//    private LecturesHandler lecturesHandler = new LecturesHandler();
+//    private ClassRoomsHandler ClassRoomsHandler = new ClassRoomsHandler();
 
     public Menu(University university) {
 	this.university = university;
@@ -151,7 +153,7 @@ public class Menu {
     private void manageSubjects(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getSubjects().add(SubjectsHandler.getSubjectFromScanner(university));
+	    university.getSubjects().add(SubjectsHandler.getNewSubjectFromScanner(university));
 	    start(4);
 	    break;
 	case 2:
@@ -202,19 +204,19 @@ public class Menu {
 	switch (menuChoice) {
 	case 1:
 	    university.getClassrooms().add(ClassRoomsHandler.getClassRoomFromScanner(university));
-	    start(5);
+	    start(6);
 	    break;
 	case 2:
 	    System.out.println(ClassRoomsHandler.getStringOfClassRooms(university.getClassrooms()));
-	    start(5);
+	    start(6);
 	    break;
 	case 3:
 	    ClassRoomsHandler.updateAClassRoom(university);
-	    start(5);
+	    start(6);
 	    break;
 	case 4:
 	    ClassRoomsHandler.deleteAClassRoom(university);
-	    start(5);
+	    start(6);
 	    break;
 	default:
 	    System.out.println("Returning...");
@@ -227,6 +229,6 @@ public class Menu {
 	while (!scanner.hasNextInt()) {
 	    scanner.next();
 	}
-	return scanner.nextInt();
+	return Integer.parseInt(scanner.nextLine());
     }
 }

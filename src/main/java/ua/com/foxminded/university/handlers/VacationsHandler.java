@@ -4,6 +4,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,12 +16,29 @@ public class VacationsHandler {
     public static String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
 	for (Vacation vacation : vacations) {
-	    result.append(vacations.indexOf(vacation) + ". " + vacation + CR);
+	    result.append(vacations.indexOf(vacation) + 1).append(". " + vacation + CR);
 	}
 	return result.toString();
     }
 
-    public static Vacation getVacationFromScanner() {
+    public static List<Vacation> getVacationsFromScanner() {
+
+	List<Vacation> vacations = new ArrayList<>();
+	boolean finished = false;
+
+	while (!finished) {
+	    Vacation vacation = VacationsHandler.getNewVacationFromScanner();
+	    vacations.add(vacation);
+	    System.out.print("Done. Add another vacation? (y/n): ");
+	    String choice = scanner.nextLine().toLowerCase();
+	    if (choice != "y") {
+		finished = true;
+	    }
+	}
+	return vacations;
+    }
+
+    public static Vacation getNewVacationFromScanner() {
 	Vacation vacation = new Vacation();
 	Boolean correctEntry = false;
 

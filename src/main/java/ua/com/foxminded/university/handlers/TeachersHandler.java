@@ -2,10 +2,8 @@ package ua.com.foxminded.university.handlers;
 
 import static ua.com.foxminded.university.Menu.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
@@ -20,7 +18,6 @@ public class TeachersHandler {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 
-	scanner.nextLine();
 	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
 
@@ -43,72 +40,12 @@ public class TeachersHandler {
 	Address address = AddressHandler.getAddressFromScanner();
 
 	System.out.println("Assigning subjects.");
-	subjects = getSubjectsFromScanner(university);
+	subjects = SubjectsHandler.getSubjectsFromScanner(university);
 
 	System.out.println("Entering vacations.");
-	vacations = getVacationsFromScanner();
+	vacations = VacationsHandler.getVacationsFromScanner();
 
 	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
-    }
-
-    private static List<Subject> getSubjectsFromScanner(University university) {
-	List<Subject> result = new ArrayList<>();
-	List<Subject> subjects = university.getSubjects();
-	Boolean finished = false;
-	Boolean correctEntry = false;
-
-	while (!(finished && correctEntry)) {
-	    if (result.size() > 0) {
-		System.out.println("Assigned subjects:");
-		System.out.print(SubjectsHandler.getStringOfSubjects(result));
-	    }
-	    System.out.println("Enter a new subject number to add to this teacher:");
-	    System.out.print(SubjectsHandler.getStringOfSubjects(subjects));
-	    correctEntry = false;
-	    int choice = readNextInt();
-	    if (choice <= subjects.size()) {
-		Subject selected = subjects.get(choice);
-		if (result.contains(selected)) {
-		    System.out.println("Subject already assigned to the teacher.");
-		} else {
-		    correctEntry = true;
-		    Subject subject = new Subject(selected.getName(), selected.getDescription());
-		    result.add(subject);
-		    System.out.println("Successfully added subject " + subject.getName());
-		}
-	    } else {
-		System.out.println("No such subject.");
-	    }
-	    if (!correctEntry) {
-		System.out.print("Wrong input.");
-	    }
-	    System.out.print("Add another? (y/n): ");
-	    scanner.nextLine();
-	    String entry = scanner.nextLine().toLowerCase();
-	    if (entry.equals("y")) {
-		finished = false;
-	    } else {
-		finished = true;
-	    }
-	}
-	return result;
-    }
-
-    private static List<Vacation> getVacationsFromScanner() {
-
-	List<Vacation> vacations = new ArrayList<>();
-	boolean finished = false;
-
-	while (!finished) {
-	    Vacation vacation = VacationsHandler.getVacationFromScanner();
-	    vacations.add(vacation);
-	    System.out.print("Done. Add another vacation? (y/n): ");
-	    String choice = scanner.nextLine().toLowerCase();
-	    if (choice != "y") {
-		finished = true;
-	    }
-	}
-	return vacations;
     }
 
     private static Degree getDegreeFromScanner() {
@@ -136,7 +73,7 @@ public class TeachersHandler {
     public static String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
 	for (Teacher teacher : teachers) {
-	    result.append(teachers.indexOf(teacher) + ". " + teacher + CR);
+	    result.append(teachers.indexOf(teacher) + 1).append(". " + teacher + CR);
 	}
 	return result.toString();
     }
@@ -147,7 +84,7 @@ public class TeachersHandler {
 
 	System.out.println("Select a teacher to edit: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = readNextInt();
+	int choice = readNextInt() - 1;
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
@@ -161,7 +98,7 @@ public class TeachersHandler {
 
 	System.out.println("Select a teacher to delete: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = readNextInt();
+	int choice = readNextInt() - 1;
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {

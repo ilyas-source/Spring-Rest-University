@@ -12,7 +12,7 @@ public class HolidaysHandler {
 	StringBuilder result = new StringBuilder();
 
 	for (Holiday holiday : holidays) {
-	    result.append(holidays.indexOf(holiday) + ". " + holiday + CR);
+	    result.append(holidays.indexOf(holiday) + 1).append(". " + holiday + CR);
 	}
 	return result.toString();
     }

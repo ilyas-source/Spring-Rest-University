@@ -14,7 +14,7 @@ public class GroupsHandler {
     public static String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
 	for (Group group : groups) {
-	    result.append(groups.indexOf(group) + ". " + group);
+	    result.append(groups.indexOf(group) + 1).append(". " + group);
 	}
 	return result.toString();
     }

@@ -10,7 +10,7 @@ public class LecturesHandler {
     public static String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
 	for (Lecture lecture : lectures) {
-	    result.append(lectures.indexOf(lecture) + ". " + lecture);
+	    result.append(lectures.indexOf(lecture) + 1).append(". " + lecture);
 	}
 	return result.toString();
     }
