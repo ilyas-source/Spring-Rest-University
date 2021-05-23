@@ -14,7 +14,7 @@ public class GenderHandler {
 	    if (choice.equals("m") || choice.equals("f")) {
 		keepOn = false;
 	    } else {
-		System.out.println("Wrong input, try again:");
+		System.out.print("Wrong input, try again: ");
 	    }
 	}
 	if (choice == "m") {

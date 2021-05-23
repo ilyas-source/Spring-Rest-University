@@ -14,9 +14,9 @@ public class Lecture {
     private List<Group> groups;
     private Subject subject;
     private Teacher teacher;
-    private ClassRoom classroom;
+    private Classroom classroom;
 
-    public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, ClassRoom classroom) {
+    public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
 	super();
 	this.date = date;
 	this.time = time;
@@ -66,11 +66,11 @@ public class Lecture {
 	this.teacher = teacher;
     }
 
-    public ClassRoom getClassroom() {
+    public Classroom getClassroom() {
 	return classroom;
     }
 
-    public void setClassroom(ClassRoom classroom) {
+    public void setClassroom(Classroom classroom) {
 	this.classroom = classroom;
     }
 

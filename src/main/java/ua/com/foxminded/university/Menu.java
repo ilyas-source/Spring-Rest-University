@@ -1,10 +1,8 @@
 package ua.com.foxminded.university;
 
-import static ua.com.foxminded.university.Menu.scanner;
-
 import java.util.Scanner;
 
-import ua.com.foxminded.university.handlers.ClassRoomsHandler;
+import ua.com.foxminded.university.handlers.ClassroomsHandler;
 import ua.com.foxminded.university.handlers.GroupsHandler;
 import ua.com.foxminded.university.handlers.LecturesHandler;
 import ua.com.foxminded.university.handlers.SubjectsHandler;
@@ -35,11 +33,6 @@ public class Menu {
 
     public static Scanner scanner = new Scanner(System.in);
     private University university;
-//    private TeachersHandler teachersHandler = new TeachersHandler();
-//    private GroupsHandler groupsHandler = new GroupsHandler();
-//    private SubjectsHandler subjectsHandler = new SubjectsHandler();
-//    private LecturesHandler lecturesHandler = new LecturesHandler();
-//    private ClassRoomsHandler ClassRoomsHandler = new ClassRoomsHandler();
 
     public Menu(University university) {
 	this.university = university;
@@ -128,7 +121,7 @@ public class Menu {
     private void manageGroups(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getGroups().add(GroupsHandler.getGroupFromScanner(university));
+	    university.getGroups().add(GroupsHandler.getNewGroupFromScanner(university));
 	    start(3);
 	    break;
 	case 2:
@@ -145,7 +138,7 @@ public class Menu {
 	    break;
 	default:
 	    System.out.println("Returning...");
-	    start(3);
+	    start(0);
 	    break;
 	}
     }
@@ -203,19 +196,19 @@ public class Menu {
     private void manageClassrooms(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getClassrooms().add(ClassRoomsHandler.getClassRoomFromScanner(university));
+	    university.getClassrooms().add(ClassroomsHandler.getNewClassroomFromScanner(university));
 	    start(6);
 	    break;
 	case 2:
-	    System.out.println(ClassRoomsHandler.getStringOfClassRooms(university.getClassrooms()));
+	    System.out.println(ClassroomsHandler.getStringOfClassrooms(university.getClassrooms()));
 	    start(6);
 	    break;
 	case 3:
-	    ClassRoomsHandler.updateAClassRoom(university);
+	    ClassroomsHandler.updateAClassroom(university);
 	    start(6);
 	    break;
 	case 4:
-	    ClassRoomsHandler.deleteAClassRoom(university);
+	    ClassroomsHandler.deleteAClassroom(university);
 	    start(6);
 	    break;
 	default:

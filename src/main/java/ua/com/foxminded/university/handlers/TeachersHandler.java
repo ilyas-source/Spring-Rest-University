@@ -37,7 +37,7 @@ public class TeachersHandler {
 	String phone = scanner.nextLine();
 
 	System.out.println("Entering address.");
-	Address address = AddressHandler.getAddressFromScanner();
+	Address address = AddressHandler.getNewAddressFromScanner();
 
 	System.out.println("Assigning subjects.");
 	subjects = SubjectsHandler.getSubjectsFromScanner(university);

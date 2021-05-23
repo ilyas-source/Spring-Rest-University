@@ -6,7 +6,7 @@ import ua.com.foxminded.university.model.Address;
 
 public class AddressHandler {
 
-    public static Address getAddressFromScanner() {
+    public static Address getNewAddressFromScanner() {
 	System.out.print("Country:");
 	String country = scanner.nextLine();
 	System.out.print("ZIP Code:");

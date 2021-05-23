@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ua.com.foxminded.university.model.Address;
-import ua.com.foxminded.university.model.ClassRoom;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
@@ -70,11 +70,11 @@ public class UniversityPopulator {
     }
 
     private void populateClassRooms() {
-	List<ClassRoom> classrooms = new ArrayList<>();
+	List<Classroom> classrooms = new ArrayList<>();
 
-	classrooms.add(new ClassRoom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
-	classrooms.add(new ClassRoom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
-	classrooms.add(new ClassRoom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
+	classrooms.add(new Classroom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
+	classrooms.add(new Classroom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
+	classrooms.add(new Classroom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
 
 	university.setClassrooms(classrooms);
     }
@@ -95,7 +95,7 @@ public class UniversityPopulator {
 	List<Group> groups = university.getGroups();
 	List<Subject> subjects = university.getSubjects();
 	List<Teacher> teachers = university.getTeachers();
-	List<ClassRoom> classRooms = university.getClassrooms();
+	List<Classroom> classRooms = university.getClassrooms();
 
 	lectures.add(new Lecture(LocalDate.of(2000, 1, 1),
 		new TimeRange(LocalTime.of(9, 0), LocalTime.of(10, 0)),

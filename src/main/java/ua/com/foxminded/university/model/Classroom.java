@@ -1,12 +1,12 @@
 package ua.com.foxminded.university.model;
 
-public class ClassRoom {
+public class Classroom {
 
     private Location location;
     private String name;
     private int capacity;
 
-    public ClassRoom(Location location, String name, int capacity) {
+    public Classroom(Location location, String name, int capacity) {
 	this.location = location;
 	this.name = name;
 	this.capacity = capacity;

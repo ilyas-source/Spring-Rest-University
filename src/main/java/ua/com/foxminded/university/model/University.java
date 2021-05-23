@@ -2,7 +2,7 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.ClassRoomsHandler;
+import ua.com.foxminded.university.handlers.ClassroomsHandler;
 import ua.com.foxminded.university.handlers.GroupsHandler;
 import ua.com.foxminded.university.handlers.HolidaysHandler;
 import ua.com.foxminded.university.handlers.LecturesHandler;
@@ -15,7 +15,7 @@ public class University {
 
     private String name;
     private List<Teacher> teachers;
-    private List<ClassRoom> classrooms;
+    private List<Classroom> classrooms;
     private List<Student> students;
     private List<Group> groups;
     private List<Lecture> lectures;
@@ -38,11 +38,11 @@ public class University {
 	this.teachers = teachers;
     }
 
-    public List<ClassRoom> getClassrooms() {
+    public List<Classroom> getClassrooms() {
 	return classrooms;
     }
 
-    public void setClassrooms(List<ClassRoom> classrooms) {
+    public void setClassrooms(List<Classroom> classrooms) {
 	this.classrooms = classrooms;
     }
 
@@ -105,7 +105,7 @@ public class University {
 	result.append(subjects + CR);
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
-	result.append(ClassRoomsHandler.getStringOfClassRooms(classrooms));
+	result.append(ClassroomsHandler.getStringOfClassrooms(classrooms));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
 	result.append(LecturesHandler.getStringOfLectures(lectures));

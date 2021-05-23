@@ -27,32 +27,28 @@ public class SubjectsHandler {
 	Boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
+	    System.out.print("Finished:" + finished + ", correct entry:" + correctEntry + CR);
 	    if (result.size() > 0) {
 		System.out.println("Assigned subjects:");
 		System.out.print(SubjectsHandler.getStringOfSubjects(result));
 	    }
-	    System.out.println("Enter a new subject number to add to this teacher:");
-	    System.out.print(SubjectsHandler.getStringOfSubjects(subjects));
+	    System.out.print("Enter a new subject number to add to this teacher: " + CR);
+	    System.out.print(SubjectsHandler.getStringOfSubjects(subjects) + CR);
 	    correctEntry = false;
-	    int choice = readNextInt();
+	    int choice = readNextInt() - 1;
 	    if (choice <= subjects.size()) {
 		Subject selected = subjects.get(choice);
 		if (result.contains(selected)) {
 		    System.out.println("Subject already assigned to the teacher.");
 		} else {
 		    correctEntry = true;
-		    Subject subject = new Subject(selected.getName(), selected.getDescription());
-		    result.add(subject);
-		    System.out.println("Successfully added subject " + subject.getName());
+		    result.add(new Subject(selected.getName(), selected.getDescription()));
+		    System.out.println("Success.");
 		}
 	    } else {
 		System.out.println("No such subject.");
 	    }
-	    if (!correctEntry) {
-		System.out.print("Wrong input.");
-	    }
 	    System.out.print("Add another? (y/n): ");
-	    scanner.nextLine();
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (entry.equals("y")) {
 		finished = false;
