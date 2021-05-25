@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.CR;
 
@@ -8,7 +8,7 @@ import ua.com.foxminded.university.model.Holiday;
 
 public class HolidaysMenu {
 
-    public static String getStringOfHolidays(List<Holiday> holidays) {
+    public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();
 
 	for (Holiday holiday : holidays) {

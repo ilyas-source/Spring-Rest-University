@@ -1,11 +1,11 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 import ua.com.foxminded.university.model.Location;
 
 public class LocationsMenu {
 
-    public static Location createLocation() {
+    public Location createLocation() {
 	System.out.print("Enter building name: ");
 	String building = scanner.nextLine();
 	System.out.print("Enter floor number: ");

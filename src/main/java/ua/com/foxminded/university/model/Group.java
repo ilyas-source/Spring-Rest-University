@@ -2,7 +2,7 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.StudentsMenu;
+import ua.com.foxminded.university.menu.StudentsMenu;
 
 import static ua.com.foxminded.university.Menu.*;
 

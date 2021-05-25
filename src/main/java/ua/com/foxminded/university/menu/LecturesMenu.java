@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +15,19 @@ import static ua.com.foxminded.university.Menu.*;
 
 public class LecturesMenu {
 
-    public static String getStringOfLectures(List<Lecture> lectures) {
+    private GroupsMenu groupsMenu;
+    private SubjectsMenu subjectsMenu;
+    private TeachersMenu teachersMenu;
+    private ClassroomsMenu classroomsMenu;
+
+    public LecturesMenu() {
+	this.groupsMenu = new GroupsMenu();
+	this.subjectsMenu = new SubjectsMenu();
+	this.teachersMenu = new TeachersMenu();
+	this.classroomsMenu = new ClassroomsMenu();
+    }
+
+    public String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
 	for (Lecture lecture : lectures) {
 	    result.append(lectures.indexOf(lecture) + 1).append(". " + lecture);
@@ -23,9 +35,22 @@ public class LecturesMenu {
 	return result.toString();
     }
 
-    public static Lecture createLecture(University university) {
+    public String getStringOfLecture(Lecture lecture) {
+
+	StringBuilder result = new StringBuilder();
+
+	result.append("Lecture on " + lecture.getSubject().getName() + " will take place on " + lecture.getDate() + ", from "
+		+ lecture.getTime().getStartTime() + " to " + lecture.getTime().getEndTime() + "." + CR);
+	result.append("Read by " + lecture.getTeacher().getFirstName() + " " + lecture.getTeacher().getLastName() + " in "
+		+ lecture.getClassroom().getName() + "." + CR);
+	result.append("Groups to attend:" + CR + groupsMenu.getStringOfGroups(lecture.getGroups()));
+	return result.toString();
+    }
+
+    public Lecture createLecture(University university) {
 	LocalTime startTime = null;
 	LocalTime endTime = null;
+
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
@@ -43,15 +68,15 @@ public class LecturesMenu {
 	    }
 	}
 
-	List<Group> groups = GroupsMenu.selectGroups(university);
-	Subject subject = SubjectsMenu.selectSubject(university);
-	Teacher teacher = TeachersMenu.selectTeacher(university);
-	Classroom classroom = ClassroomsMenu.selectClassroom(university);
+	List<Group> groups = groupsMenu.selectGroups(university);
+	Subject subject = subjectsMenu.selectSubject(university);
+	Teacher teacher = teachersMenu.selectTeacher(university);
+	Classroom classroom = classroomsMenu.selectClassroom(university);
 
 	return new Lecture(date, new TimeRange(startTime, endTime), groups, subject, teacher, classroom);
     }
 
-    public static void updateLecture(University university) {
+    public void updateLecture(University university) {
 
 	List<Lecture> lectures = university.getLectures();
 
@@ -66,7 +91,7 @@ public class LecturesMenu {
 	}
     }
 
-    public static void deleteLecture(University university) {
+    public void deleteLecture(University university) {
 	List<Lecture> lectures = university.getLectures();
 
 	System.out.println("Select a lecture to delete: ");

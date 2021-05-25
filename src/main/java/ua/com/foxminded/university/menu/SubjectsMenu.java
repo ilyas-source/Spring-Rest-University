@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import ua.com.foxminded.university.model.University;
 
 public class SubjectsMenu {
 
-    public static String getStringOfSubjects(List<Subject> subjects) {
+    public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
 	for (Subject subject : subjects) {
 	    result.append(subjects.indexOf(subject) + 1).append(". " + subject + CR);
@@ -18,7 +18,7 @@ public class SubjectsMenu {
 	return result.toString();
     }
 
-    public static Subject selectSubject(University university) {
+    public Subject selectSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 	Boolean correctEntry = false;
 	Subject result = null;
@@ -27,18 +27,18 @@ public class SubjectsMenu {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfSubjects(subjects));
 	    int choice = getIntFromScanner() - 1;
-	    if (choice <= subjects.size()) {
+	    if (choice > subjects.size()) {
+		System.out.println("No such object.");
+	    } else {
 		result = subjects.get(choice);
 		System.out.println("Success.");
 		correctEntry = true;
-	    } else {
-		System.out.println("No such object.");
 	    }
 	}
 	return result;
     }
 
-    public static List<Subject> selectSubjects(University university) {
+    public List<Subject> selectSubjects(University university) {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = university.getSubjects();
 	Boolean finished = false;
@@ -67,16 +67,14 @@ public class SubjectsMenu {
 	    }
 	    System.out.print("Add another? (y/n): ");
 	    String entry = scanner.nextLine().toLowerCase();
-	    if (entry.equals("y")) {
-		finished = false;
-	    } else {
+	    if (!entry.equals("y")) {
 		finished = true;
 	    }
 	}
 	return result;
     }
 
-    public static Subject createSubject(University university) {
+    public Subject createSubject(University university) {
 	System.out.print("Enter subject name: ");
 	String name = scanner.nextLine();
 	System.out.print("Enter description: ");
@@ -85,7 +83,7 @@ public class SubjectsMenu {
 	return new Subject(name, description);
     }
 
-    public static void updateSubject(University university) {
+    public void updateSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to update: ");
@@ -99,7 +97,7 @@ public class SubjectsMenu {
 	}
     }
 
-    public static void deleteSubject(University university) {
+    public void deleteSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to delete: ");

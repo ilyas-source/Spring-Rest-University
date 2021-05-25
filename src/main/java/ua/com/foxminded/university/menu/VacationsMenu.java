@@ -1,19 +1,16 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Vacation;
 
 public class VacationsMenu {
 
-    public static String getStringOfVacations(List<Vacation> vacations) {
+    public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
 	for (Vacation vacation : vacations) {
 	    result.append(vacations.indexOf(vacation) + 1).append(". " + vacation + CR);
@@ -21,13 +18,12 @@ public class VacationsMenu {
 	return result.toString();
     }
 
-    public static List<Vacation> createVacations() {
-
+    public List<Vacation> createVacations() {
 	List<Vacation> vacations = new ArrayList<>();
 	boolean finished = false;
 
 	while (!finished) {
-	    Vacation vacation = VacationsMenu.createVacation();
+	    Vacation vacation = createVacation();
 	    vacations.add(vacation);
 	    System.out.print("Done. Add another vacation? (y/n): ");
 	    String choice = scanner.nextLine().toLowerCase();
@@ -38,7 +34,7 @@ public class VacationsMenu {
 	return vacations;
     }
 
-    public static Vacation createVacation() {
+    public Vacation createVacation() {
 	Vacation vacation = new Vacation();
 	Boolean correctEntry = false;
 

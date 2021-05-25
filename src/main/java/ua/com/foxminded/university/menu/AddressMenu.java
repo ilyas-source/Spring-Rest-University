@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.scanner;
 

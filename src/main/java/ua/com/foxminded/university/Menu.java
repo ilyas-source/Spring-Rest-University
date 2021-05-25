@@ -5,11 +5,13 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-import ua.com.foxminded.university.handlers.ClassroomsMenu;
-import ua.com.foxminded.university.handlers.GroupsMenu;
-import ua.com.foxminded.university.handlers.LecturesMenu;
-import ua.com.foxminded.university.handlers.SubjectsMenu;
-import ua.com.foxminded.university.handlers.TeachersMenu;
+import ua.com.foxminded.university.menu.ClassroomsMenu;
+import ua.com.foxminded.university.menu.GroupsMenu;
+import ua.com.foxminded.university.menu.LecturesMenu;
+import ua.com.foxminded.university.menu.StudentsMenu;
+import ua.com.foxminded.university.menu.SubjectsMenu;
+import ua.com.foxminded.university.menu.TeachersMenu;
+import ua.com.foxminded.university.menu.UniversityMenu;
 import ua.com.foxminded.university.model.University;
 
 public class Menu {
@@ -35,10 +37,20 @@ public class Menu {
 	    + "Enter choice or 0 to return:";
 
     public static Scanner scanner = new Scanner(System.in);
+
+    private TeachersMenu teachersMenu;
+    private GroupsMenu groupsMenu;
+    private StudentsMenu studentsMenu;
+    private SubjectsMenu subjectsMenu;
+    private LecturesMenu lecturesMenu;
+    private UniversityMenu universityMenu;
+
     private University university;
 
     public Menu(University university) {
 	this.university = university;
+	this.universityMenu = new UniversityMenu();
+	this.teachersMenu = new TeachersMenu();
     }
 
     public void start(int menuEntryPoint) {
@@ -58,7 +70,7 @@ public class Menu {
 	    scanner.close();
 	    System.exit(0);
 	case 1:
-	    System.out.print(university.toString());
+	    universityMenu.printUniversity(university);
 	    start(0);
 	    break;
 	case 2:
@@ -98,19 +110,19 @@ public class Menu {
     private void manageTeachers(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getTeachers().add(TeachersMenu.createTeacher(university));
+	    university.getTeachers().add(teachersMenu.createTeacher(university));
 	    start(2);
 	    break;
 	case 2:
-	    System.out.println(TeachersMenu.getStringOfTeachers(university.getTeachers()));
+	    System.out.println(teachersMenu.getStringOfTeachers(university.getTeachers()));
 	    start(2);
 	    break;
 	case 3:
-	    TeachersMenu.updateTeacher(university);
+	    teachersMenu.updateTeacher(university);
 	    start(2);
 	    break;
 	case 4:
-	    TeachersMenu.deleteTeacher(university);
+	    teachersMenu.deleteTeacher(university);
 	    start(2);
 	    break;
 	default:
@@ -123,19 +135,19 @@ public class Menu {
     private void manageGroups(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getGroups().add(GroupsMenu.createGroup(university));
+	    university.getGroups().add(groupsMenu.createGroup(university));
 	    start(3);
 	    break;
 	case 2:
-	    System.out.println(GroupsMenu.getStringOfGroups(university.getGroups()));
+	    System.out.println(groupsMenu.getStringOfGroups(university.getGroups()));
 	    start(3);
 	    break;
 	case 3:
-	    GroupsMenu.updateGroup(university);
+	    groupsMenu.updateGroup(university);
 	    start(3);
 	    break;
 	case 4:
-	    GroupsMenu.deleteGroup(university);
+	    groupsMenu.deleteGroup(university);
 	    start(3);
 	    break;
 	default:
@@ -148,19 +160,19 @@ public class Menu {
     private void manageSubjects(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getSubjects().add(SubjectsMenu.createSubject(university));
+	    university.getSubjects().add(subjectsMenu.createSubject(university));
 	    start(4);
 	    break;
 	case 2:
-	    System.out.println(SubjectsMenu.getStringOfSubjects(university.getSubjects()));
+	    System.out.println(subjectsMenu.getStringOfSubjects(university.getSubjects()));
 	    start(4);
 	    break;
 	case 3:
-	    SubjectsMenu.updateSubject(university);
+	    subjectsMenu.updateSubject(university);
 	    start(4);
 	    break;
 	case 4:
-	    SubjectsMenu.deleteSubject(university);
+	    subjectsMenu.deleteSubject(university);
 	    start(4);
 	    break;
 	default:
@@ -173,19 +185,19 @@ public class Menu {
     private void manageLectures(int menuChoice) {
 	switch (menuChoice) {
 	case 1:
-	    university.getLectures().add(LecturesMenu.createLecture(university));
+	    university.getLectures().add(lecturesMenu.createLecture(university));
 	    start(5);
 	    break;
 	case 2:
-	    System.out.println(LecturesMenu.getStringOfLectures(university.getLectures()));
+	    System.out.println(lecturesMenu.getStringOfLectures(university.getLectures()));
 	    start(5);
 	    break;
 	case 3:
-	    LecturesMenu.updateLecture(university);
+	    lecturesMenu.updateLecture(university);
 	    start(5);
 	    break;
 	case 4:
-	    LecturesMenu.deleteLecture(university);
+	    lecturesMenu.deleteLecture(university);
 	    start(5);
 	    break;
 	default:
@@ -196,21 +208,22 @@ public class Menu {
     }
 
     private void manageClassrooms(int menuChoice) {
+	ClassroomsMenu classroomsMenu = new ClassroomsMenu();
 	switch (menuChoice) {
 	case 1:
-	    university.getClassrooms().add(ClassroomsMenu.createClassroom(university));
+	    university.getClassrooms().add(classroomsMenu.createClassroom(university));
 	    start(6);
 	    break;
 	case 2:
-	    System.out.println(ClassroomsMenu.getStringOfClassrooms(university.getClassrooms()));
+	    System.out.println(classroomsMenu.getStringOfClassrooms(university.getClassrooms()));
 	    start(6);
 	    break;
 	case 3:
-	    ClassroomsMenu.updateClassroom(university);
+	    classroomsMenu.updateClassroom(university);
 	    start(6);
 	    break;
 	case 4:
-	    ClassroomsMenu.deleteClassroom(university);
+	    classroomsMenu.deleteClassroom(university);
 	    start(6);
 	    break;
 	default:

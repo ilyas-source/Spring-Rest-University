@@ -1,12 +1,12 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import ua.com.foxminded.university.model.Gender;
 
 public class GenderMenu {
 
-    public static Gender getGenderFromScanner() {
+    public Gender getGenderFromScanner() {
 	Boolean keepOn = true;
 	String choice = "";
 	while (keepOn) {

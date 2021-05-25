@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,13 @@ import static ua.com.foxminded.university.Menu.*;
 
 public class GroupsMenu {
 
-    public static String getStringOfGroups(List<Group> groups) {
+    private StudentsMenu studentsMenu;
+
+    public GroupsMenu() {
+	this.studentsMenu = new StudentsMenu();
+    }
+
+    public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
 	for (Group group : groups) {
 	    result.append(groups.indexOf(group) + 1).append(". " + group);
@@ -19,16 +25,16 @@ public class GroupsMenu {
 	return result.toString();
     }
 
-    public static Group createGroup(University university) {
+    public Group createGroup(University university) {
 	System.out.print("Enter group name: ");
 	String name = scanner.nextLine();
 	System.out.println("Assigning students to this group. ");
-	List<Student> students = StudentsMenu.createStudent(university);
+	List<Student> students = studentsMenu.selectStudents(university);
 
 	return new Group(name, students);
     }
 
-    public static List<Group> selectGroups(University university) {
+    public List<Group> selectGroups(University university) {
 	List<Group> result = new ArrayList<>();
 	List<Group> groups = university.getGroups();
 	Boolean finished = false;
@@ -57,16 +63,14 @@ public class GroupsMenu {
 	    }
 	    System.out.print("Add another? (y/n): ");
 	    String entry = scanner.nextLine().toLowerCase();
-	    if (entry.equals("y")) {
-		finished = false;
-	    } else {
+	    if (!entry.equals("y")) {
 		finished = true;
 	    }
 	}
 	return result;
     }
 
-    public static void updateGroup(University university) {
+    public void updateGroup(University university) {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to update: ");
@@ -80,7 +84,7 @@ public class GroupsMenu {
 	}
     }
 
-    public static void deleteGroup(University university) {
+    public void deleteGroup(University university) {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to delete: ");

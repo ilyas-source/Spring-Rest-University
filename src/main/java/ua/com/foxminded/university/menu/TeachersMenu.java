@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -14,7 +14,17 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersMenu {
 
-    public static Teacher createTeacher(University university) {
+    private GenderMenu genderMenu;
+    private SubjectsMenu subjectsMenu;
+    private VacationsMenu vacationsMenu;
+
+    public TeachersMenu() {
+	this.genderMenu = new GenderMenu();
+	this.subjectsMenu = new SubjectsMenu();
+	this.vacationsMenu = new VacationsMenu();
+    }
+
+    public Teacher createTeacher(University university) {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 	AddressMenu addressMenu = new AddressMenu();
@@ -26,7 +36,7 @@ public class TeachersMenu {
 	String lastName = scanner.nextLine();
 
 	System.out.println("Gender (M/F): ");
-	Gender gender = GenderMenu.getGenderFromScanner();
+	Gender gender = genderMenu.getGenderFromScanner();
 
 	System.out.println("Degree: (B)achelor/(M)aster/(D)octor: ");
 	Degree degree = getDegree();
@@ -41,15 +51,15 @@ public class TeachersMenu {
 	Address address = addressMenu.createAddress();
 
 	System.out.println("Assigning subjects.");
-	subjects = SubjectsMenu.selectSubjects(university);
+	subjects = subjectsMenu.selectSubjects(university);
 
 	System.out.println("Entering vacations.");
-	vacations = VacationsMenu.createVacations();
+	vacations = vacationsMenu.createVacations();
 
 	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
     }
 
-    private static Degree getDegree() {
+    private Degree getDegree() {
 	Boolean keepOn = true;
 	String choice = "";
 
@@ -71,7 +81,7 @@ public class TeachersMenu {
 	}
     }
 
-    public static String getStringOfTeachers(List<Teacher> teachers) {
+    public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
 	for (Teacher teacher : teachers) {
 	    result.append(teachers.indexOf(teacher) + 1).append(". " + teacher + CR);
@@ -79,7 +89,7 @@ public class TeachersMenu {
 	return result.toString();
     }
 
-    public static Teacher selectTeacher(University university) {
+    public Teacher selectTeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 	Boolean correctEntry = false;
 	Teacher result = null;
@@ -99,7 +109,7 @@ public class TeachersMenu {
 	return result;
     }
 
-    public static void updateTeacher(University university) {
+    public void updateTeacher(University university) {
 
 	List<Teacher> teachers = university.getTeachers();
 
@@ -114,7 +124,7 @@ public class TeachersMenu {
 	}
     }
 
-    public static void deleteTeacher(University university) {
+    public void deleteTeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 
 	System.out.println("Select a teacher to delete: ");

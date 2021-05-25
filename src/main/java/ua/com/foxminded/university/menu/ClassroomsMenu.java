@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.handlers;
+package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -10,7 +10,13 @@ import ua.com.foxminded.university.model.University;
 
 public class ClassroomsMenu {
 
-    public static String getStringOfClassrooms(List<Classroom> classRooms) {
+    private LocationsMenu locationsMenu;
+
+    public ClassroomsMenu() {
+	this.locationsMenu = new LocationsMenu();
+    }
+
+    public String getStringOfClassrooms(List<Classroom> classRooms) {
 	StringBuilder result = new StringBuilder();
 	for (Classroom classRoom : classRooms) {
 	    result.append(classRooms.indexOf(classRoom) + 1).append(". " + classRoom + CR);
@@ -18,9 +24,9 @@ public class ClassroomsMenu {
 	return result.toString();
     }
 
-    public static Classroom createClassroom(University university) {
+    public Classroom createClassroom(University university) {
 	System.out.println("Entering new classroom location.");
-	Location location = LocationsMenu.createLocation();
+	Location location = locationsMenu.createLocation();
 	System.out.print("Classroom name: ");
 	String name = scanner.nextLine();
 	System.out.print("Classroom capacity, students: ");
@@ -29,7 +35,7 @@ public class ClassroomsMenu {
 	return new Classroom(location, name, capacity);
     }
 
-    public static Classroom selectClassroom(University university) {
+    public Classroom selectClassroom(University university) {
 	List<Classroom> classrooms = university.getClassrooms();
 	Boolean correctEntry = false;
 	Classroom result = null;
@@ -49,7 +55,7 @@ public class ClassroomsMenu {
 	return result;
     }
 
-    public static void updateClassroom(University university) {
+    public void updateClassroom(University university) {
 	List<Classroom> classrooms = university.getClassrooms();
 
 	System.out.println("Select a classroom to update: ");
@@ -63,7 +69,7 @@ public class ClassroomsMenu {
 	}
     }
 
-    public static void deleteClassroom(University university) {
+    public void deleteClassroom(University university) {
 	List<Classroom> classrooms = university.getClassrooms();
 
 	System.out.println("Select a classroom to delete: ");

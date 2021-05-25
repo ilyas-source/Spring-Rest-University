@@ -3,7 +3,7 @@ package ua.com.foxminded.university.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.GroupsMenu;
+import ua.com.foxminded.university.menu.GroupsMenu;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -15,6 +15,7 @@ public class Lecture {
     private Subject subject;
     private Teacher teacher;
     private Classroom classroom;
+    private GroupsMenu groupsMenu;
 
     public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
 	super();
@@ -72,17 +73,5 @@ public class Lecture {
 
     public void setClassroom(Classroom classroom) {
 	this.classroom = classroom;
-    }
-
-    @Override
-    public String toString() {
-	StringBuilder result = new StringBuilder();
-
-	result.append("Lecture on " + subject.getName() + " will take place on " + date + ", from " + time.getStartTime() + " to "
-		+ time.getEndTime() + "." + CR);
-	result.append("Read by " + teacher.getFirstName() + " " + teacher.getLastName() + " in " + classroom.getName()
-		+ "." + CR);
-	result.append("Groups to attend:" + CR + GroupsMenu.getStringOfGroups(groups));
-	return result.toString();
     }
 }
