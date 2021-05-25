@@ -103,12 +103,4 @@ public class Teacher {
     public void setSubjectIndexes(List<Subject> subjects) {
 	this.subjects = subjects;
     }
-
-    @Override
-    public String toString() {
-	return firstName + " " + lastName + ", " + gender + ", degree: " + degree + ", " + email + ", " + phoneNumber + CR
-		+ "Postal address: " + address + CR
-		+ "Subjects:" + subjects + CR
-		+ "Vacations:" + vacations;
-    }
 }

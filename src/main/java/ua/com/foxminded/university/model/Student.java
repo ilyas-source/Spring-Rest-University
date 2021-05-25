@@ -91,15 +91,4 @@ public class Student {
     public void setAddress(Address address) {
 	this.address = address;
     }
-
-    @Override
-    public String toString() {
-	StringBuilder result = new StringBuilder();
-	result.append(firstName + " " + lastName + ", " + gender + ", born " + birthDate + ", admission year "
-		+ entryYear.getYear() + CR);
-	result.append("Mail: " + email + ", phone number " + phoneNumber + CR);
-	result.append("Postal address: " + address);
-
-	return result.toString();
-    }
 }

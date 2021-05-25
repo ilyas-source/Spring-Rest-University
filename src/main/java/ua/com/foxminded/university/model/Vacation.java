@@ -30,9 +30,4 @@ public class Vacation {
     public void setEndDate(LocalDate endDate) {
 	this.endDate = endDate;
     }
-
-    @Override
-    public String toString() {
-	return startDate.toString() + "-" + endDate.toString();
-    }
 }

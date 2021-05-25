@@ -10,11 +10,28 @@ import ua.com.foxminded.university.model.University;
 
 public class StudentsMenu {
 
+    private AddressMenu addressMenu;
+
+    public StudentsMenu() {
+	this.addressMenu = new AddressMenu();
+    }
+
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
 	for (Student student : students) {
-	    result.append(students.indexOf(student) + 1).append(". " + student + CR);
+	    result.append(students.indexOf(student) + 1).append(". " + getStringFromStudent(student) + CR);
 	}
+	return result.toString();
+    }
+
+    public String getStringFromStudent(Student student) {
+
+	StringBuilder result = new StringBuilder();
+	result.append(student.getFirstName() + " " + student.getLastName() + ", " + student.getGender()
+		+ ", born " + student.getBirthDate() + ", admission year " + student.getEntryYear().getYear() + CR);
+	result.append("Mail: " + student.getEmail() + ", phone number " + student.getPhoneNumber() + CR);
+	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()));
+
 	return result.toString();
     }
 

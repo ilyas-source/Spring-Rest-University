@@ -20,7 +20,16 @@ public class GroupsMenu {
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
 	for (Group group : groups) {
-	    result.append(groups.indexOf(group) + 1).append(". " + group);
+	    result.append(groups.indexOf(group) + 1).append(". " + getStringFromGroup(group));
+	}
+	return result.toString();
+    }
+
+    public String getStringFromGroup(Group group) {
+	StringBuilder result = new StringBuilder();
+	result.append("Group " + group.getName() + ":" + CR);
+	for (Student student : group.getStudents()) {
+	    result.append(student.getFirstName() + " " + student.getLastName() + CR);
 	}
 	return result.toString();
     }

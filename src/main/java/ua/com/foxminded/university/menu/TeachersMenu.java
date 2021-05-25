@@ -17,11 +17,13 @@ public class TeachersMenu {
     private GenderMenu genderMenu;
     private SubjectsMenu subjectsMenu;
     private VacationsMenu vacationsMenu;
+    private AddressMenu addressMenu;
 
     public TeachersMenu() {
 	this.genderMenu = new GenderMenu();
 	this.subjectsMenu = new SubjectsMenu();
 	this.vacationsMenu = new VacationsMenu();
+	this.addressMenu = new AddressMenu();
     }
 
     public Teacher createTeacher(University university) {
@@ -84,9 +86,17 @@ public class TeachersMenu {
     public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
 	for (Teacher teacher : teachers) {
-	    result.append(teachers.indexOf(teacher) + 1).append(". " + teacher + CR);
+	    result.append(teachers.indexOf(teacher) + 1).append(". " + getStringFromTeacher(teacher) + CR);
 	}
 	return result.toString();
+    }
+
+    public String getStringFromTeacher(Teacher teacher) {
+	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
+		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
+		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
+		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
+		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 
     public Teacher selectTeacher(University university) {

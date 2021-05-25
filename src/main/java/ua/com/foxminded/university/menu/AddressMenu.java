@@ -19,4 +19,9 @@ public class AddressMenu {
 	String streetAddress = scanner.nextLine();
 	return new Address(country, index, region, city, streetAddress);
     }
+
+    public String getStringFromAddress(Address address) {
+	return address.getPostalCode() + " " + address.getCountry() + ", "
+		+ address.getRegion() + ", " + address.getCity() + ", " + address.getStreetAddress();
+    }
 }

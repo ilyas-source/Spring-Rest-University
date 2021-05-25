@@ -13,9 +13,13 @@ public class VacationsMenu {
     public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
 	for (Vacation vacation : vacations) {
-	    result.append(vacations.indexOf(vacation) + 1).append(". " + vacation + CR);
+	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringOfVacation(vacation) + CR);
 	}
 	return result.toString();
+    }
+
+    public String getStringOfVacation(Vacation vacation) {
+	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
     }
 
     public List<Vacation> createVacations() {

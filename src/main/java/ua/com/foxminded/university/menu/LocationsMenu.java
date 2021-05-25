@@ -16,4 +16,7 @@ public class LocationsMenu {
 	return new Location(building, floor, roomNumber);
     }
 
+    public String getStringFromLocation(Location location) {
+	return location.getBuilding() + ", floor #" + location.getFloor() + ", room " + location.getRoomNumber();
+    }
 }
