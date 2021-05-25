@@ -4,9 +4,9 @@ import static ua.com.foxminded.university.Menu.scanner;
 
 import ua.com.foxminded.university.model.Address;
 
-public class AddressHandler {
+public class AddressMenu {
 
-    public static Address getNewAddressFromScanner() {
+    public Address createAddress() {
 	System.out.print("Country:");
 	String country = scanner.nextLine();
 	System.out.print("ZIP Code:");

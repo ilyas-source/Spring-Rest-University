@@ -6,7 +6,7 @@ import java.util.List;
 
 import ua.com.foxminded.university.model.Holiday;
 
-public class HolidaysHandler {
+public class HolidaysMenu {
 
     public static String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();

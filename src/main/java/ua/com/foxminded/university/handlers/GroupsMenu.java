@@ -9,7 +9,7 @@ import ua.com.foxminded.university.model.University;
 
 import static ua.com.foxminded.university.Menu.*;
 
-public class GroupsHandler {
+public class GroupsMenu {
 
     public static String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
@@ -19,16 +19,16 @@ public class GroupsHandler {
 	return result.toString();
     }
 
-    public static Group getNewGroupFromScanner(University university) {
+    public static Group createGroup(University university) {
 	System.out.print("Enter group name: ");
 	String name = scanner.nextLine();
 	System.out.println("Assigning students to this group. ");
-	List<Student> students = StudentsHandler.getStudentsFromScanner(university);
+	List<Student> students = StudentsMenu.createStudent(university);
 
 	return new Group(name, students);
     }
 
-    public static List<Group> getGroupsFromScanner(University university) {
+    public static List<Group> selectGroups(University university) {
 	List<Group> result = new ArrayList<>();
 	List<Group> groups = university.getGroups();
 	Boolean finished = false;
@@ -66,7 +66,7 @@ public class GroupsHandler {
 	return result;
     }
 
-    public static void updateAGroup(University university) {
+    public static void updateGroup(University university) {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to update: ");
@@ -75,12 +75,12 @@ public class GroupsHandler {
 	if (choice > groups.size()) {
 	    System.out.println("No such group, returning...");
 	} else {
-	    groups.set(choice, getNewGroupFromScanner(university));
+	    groups.set(choice, createGroup(university));
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public static void deleteAGroup(University university) {
+    public static void deleteGroup(University university) {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to delete: ");

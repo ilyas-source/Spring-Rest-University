@@ -8,7 +8,7 @@ import static ua.com.foxminded.university.Menu.*;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
 
-public class SubjectsHandler {
+public class SubjectsMenu {
 
     public static String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
@@ -18,7 +18,7 @@ public class SubjectsHandler {
 	return result.toString();
     }
 
-    public static Subject selectOneSubject(University university) {
+    public static Subject selectSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 	Boolean correctEntry = false;
 	Subject result = null;
@@ -38,7 +38,7 @@ public class SubjectsHandler {
 	return result;
     }
 
-    public static List<Subject> getSubjectsFromScanner(University university) {
+    public static List<Subject> selectSubjects(University university) {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = university.getSubjects();
 	Boolean finished = false;
@@ -76,7 +76,7 @@ public class SubjectsHandler {
 	return result;
     }
 
-    public static Subject getNewSubjectFromScanner(University university) {
+    public static Subject createSubject(University university) {
 	System.out.print("Enter subject name: ");
 	String name = scanner.nextLine();
 	System.out.print("Enter description: ");
@@ -85,7 +85,7 @@ public class SubjectsHandler {
 	return new Subject(name, description);
     }
 
-    public static void updateASubject(University university) {
+    public static void updateSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to update: ");
@@ -94,12 +94,12 @@ public class SubjectsHandler {
 	if (choice > subjects.size()) {
 	    System.out.println("No such subject, returning...");
 	} else {
-	    subjects.set(choice, getNewSubjectFromScanner(university));
+	    subjects.set(choice, createSubject(university));
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public static void deleteASubject(University university) {
+    public static void deleteSubject(University university) {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to delete: ");

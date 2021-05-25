@@ -13,7 +13,7 @@ import ua.com.foxminded.university.model.TimeRange;
 import ua.com.foxminded.university.model.University;
 import static ua.com.foxminded.university.Menu.*;
 
-public class LecturesHandler {
+public class LecturesMenu {
 
     public static String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
@@ -23,7 +23,7 @@ public class LecturesHandler {
 	return result.toString();
     }
 
-    public static Lecture getNewLectureFromScanner(University university) {
+    public static Lecture createLecture(University university) {
 	LocalTime startTime = null;
 	LocalTime endTime = null;
 	System.out.print("Lecture date: ");
@@ -43,15 +43,15 @@ public class LecturesHandler {
 	    }
 	}
 
-	List<Group> groups = GroupsHandler.getGroupsFromScanner(university);
-	Subject subject = SubjectsHandler.selectOneSubject(university);
-	Teacher teacher = TeachersHandler.selectOneTeacher(university);
-	Classroom classroom = ClassroomsHandler.selectOneClassroom(university);
+	List<Group> groups = GroupsMenu.selectGroups(university);
+	Subject subject = SubjectsMenu.selectSubject(university);
+	Teacher teacher = TeachersMenu.selectTeacher(university);
+	Classroom classroom = ClassroomsMenu.selectClassroom(university);
 
 	return new Lecture(date, new TimeRange(startTime, endTime), groups, subject, teacher, classroom);
     }
 
-    public static void updateALecture(University university) {
+    public static void updateLecture(University university) {
 
 	List<Lecture> lectures = university.getLectures();
 
@@ -61,12 +61,12 @@ public class LecturesHandler {
 	if (choice > lectures.size()) {
 	    System.out.println("No such lecture, returning...");
 	} else {
-	    lectures.set(choice, getNewLectureFromScanner(university));
+	    lectures.set(choice, createLecture(university));
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public static void deleteALecture(University university) {
+    public static void deleteLecture(University university) {
 	List<Lecture> lectures = university.getLectures();
 
 	System.out.println("Select a lecture to delete: ");

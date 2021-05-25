@@ -3,7 +3,7 @@ package ua.com.foxminded.university.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.GroupsHandler;
+import ua.com.foxminded.university.handlers.GroupsMenu;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -82,7 +82,7 @@ public class Lecture {
 		+ time.getEndTime() + "." + CR);
 	result.append("Read by " + teacher.getFirstName() + " " + teacher.getLastName() + " in " + classroom.getName()
 		+ "." + CR);
-	result.append("Groups to attend:" + CR + GroupsHandler.getStringOfGroups(groups));
+	result.append("Groups to attend:" + CR + GroupsMenu.getStringOfGroups(groups));
 	return result.toString();
     }
 }

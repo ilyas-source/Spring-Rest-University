@@ -12,11 +12,12 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
-public class TeachersHandler {
+public class TeachersMenu {
 
-    public static Teacher getNewTeacherFromScanner(University university) {
+    public static Teacher createTeacher(University university) {
 	List<Subject> subjects;
 	List<Vacation> vacations;
+	AddressMenu addressMenu = new AddressMenu();
 
 	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
@@ -25,10 +26,10 @@ public class TeachersHandler {
 	String lastName = scanner.nextLine();
 
 	System.out.println("Gender (M/F): ");
-	Gender gender = GenderHandler.getGenderFromScanner();
+	Gender gender = GenderMenu.getGenderFromScanner();
 
 	System.out.println("Degree: (B)achelor/(M)aster/(D)octor: ");
-	Degree degree = getDegreeFromScanner();
+	Degree degree = getDegree();
 
 	System.out.println("Email:");
 	String email = scanner.nextLine();
@@ -37,18 +38,18 @@ public class TeachersHandler {
 	String phone = scanner.nextLine();
 
 	System.out.println("Entering address.");
-	Address address = AddressHandler.getNewAddressFromScanner();
+	Address address = addressMenu.createAddress();
 
 	System.out.println("Assigning subjects.");
-	subjects = SubjectsHandler.getSubjectsFromScanner(university);
+	subjects = SubjectsMenu.selectSubjects(university);
 
 	System.out.println("Entering vacations.");
-	vacations = VacationsHandler.getVacationsFromScanner();
+	vacations = VacationsMenu.createVacations();
 
 	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
     }
 
-    private static Degree getDegreeFromScanner() {
+    private static Degree getDegree() {
 	Boolean keepOn = true;
 	String choice = "";
 
@@ -78,7 +79,7 @@ public class TeachersHandler {
 	return result.toString();
     }
 
-    public static Teacher selectOneTeacher(University university) {
+    public static Teacher selectTeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 	Boolean correctEntry = false;
 	Teacher result = null;
@@ -98,7 +99,7 @@ public class TeachersHandler {
 	return result;
     }
 
-    public static void updateATeacher(University university) {
+    public static void updateTeacher(University university) {
 
 	List<Teacher> teachers = university.getTeachers();
 
@@ -108,12 +109,12 @@ public class TeachersHandler {
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    teachers.set(choice, getNewTeacherFromScanner(university));
+	    teachers.set(choice, createTeacher(university));
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public static void deleteATeacher(University university) {
+    public static void deleteTeacher(University university) {
 	List<Teacher> teachers = university.getTeachers();
 
 	System.out.println("Select a teacher to delete: ");

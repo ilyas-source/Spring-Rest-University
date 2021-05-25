@@ -8,7 +8,7 @@ import java.util.List;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.University;
 
-public class StudentsHandler {
+public class StudentsMenu {
 
     public static String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
@@ -18,7 +18,7 @@ public class StudentsHandler {
 	return result.toString();
     }
 
-    public static List<Student> getStudentsFromScanner(University university) {
+    public static List<Student> createStudent(University university) {
 	List<Student> result = new ArrayList<>();
 	List<Student> students = university.getStudents();
 	Boolean finished = false;
@@ -27,10 +27,10 @@ public class StudentsHandler {
 	while (!(finished && correctEntry)) {
 	    if (result.size() > 0) {
 		System.out.println("Assigned students:");
-		System.out.print(StudentsHandler.getStringOfStudents(result));
+		System.out.print(StudentsMenu.getStringOfStudents(result));
 	    }
 	    System.out.print("Enter a new student number to add: " + CR);
-	    System.out.print(StudentsHandler.getStringOfStudents(students) + CR);
+	    System.out.print(StudentsMenu.getStringOfStudents(students) + CR);
 	    correctEntry = false;
 	    int choice = getIntFromScanner() - 1;
 	    if (choice <= students.size()) {

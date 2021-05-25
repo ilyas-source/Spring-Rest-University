@@ -4,7 +4,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import ua.com.foxminded.university.model.Gender;
 
-public class GenderHandler {
+public class GenderMenu {
 
     public static Gender getGenderFromScanner() {
 	Boolean keepOn = true;

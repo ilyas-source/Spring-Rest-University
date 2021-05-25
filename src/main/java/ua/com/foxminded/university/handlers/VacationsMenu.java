@@ -11,7 +11,7 @@ import java.util.Scanner;
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Vacation;
 
-public class VacationsHandler {
+public class VacationsMenu {
 
     public static String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
@@ -21,13 +21,13 @@ public class VacationsHandler {
 	return result.toString();
     }
 
-    public static List<Vacation> getVacationsFromScanner() {
+    public static List<Vacation> createVacations() {
 
 	List<Vacation> vacations = new ArrayList<>();
 	boolean finished = false;
 
 	while (!finished) {
-	    Vacation vacation = VacationsHandler.getNewVacationFromScanner();
+	    Vacation vacation = VacationsMenu.createVacation();
 	    vacations.add(vacation);
 	    System.out.print("Done. Add another vacation? (y/n): ");
 	    String choice = scanner.nextLine().toLowerCase();
@@ -38,7 +38,7 @@ public class VacationsHandler {
 	return vacations;
     }
 
-    public static Vacation getNewVacationFromScanner() {
+    public static Vacation createVacation() {
 	Vacation vacation = new Vacation();
 	Boolean correctEntry = false;
 

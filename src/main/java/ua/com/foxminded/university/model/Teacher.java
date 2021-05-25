@@ -2,8 +2,8 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.SubjectsHandler;
-import ua.com.foxminded.university.handlers.VacationsHandler;
+import ua.com.foxminded.university.handlers.SubjectsMenu;
+import ua.com.foxminded.university.handlers.VacationsMenu;
 
 import static ua.com.foxminded.university.Menu.CR;
 

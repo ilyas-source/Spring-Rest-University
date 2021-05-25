@@ -2,12 +2,12 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
-import ua.com.foxminded.university.handlers.ClassroomsHandler;
-import ua.com.foxminded.university.handlers.GroupsHandler;
-import ua.com.foxminded.university.handlers.HolidaysHandler;
-import ua.com.foxminded.university.handlers.LecturesHandler;
-import ua.com.foxminded.university.handlers.StudentsHandler;
-import ua.com.foxminded.university.handlers.TeachersHandler;
+import ua.com.foxminded.university.handlers.ClassroomsMenu;
+import ua.com.foxminded.university.handlers.GroupsMenu;
+import ua.com.foxminded.university.handlers.HolidaysMenu;
+import ua.com.foxminded.university.handlers.LecturesMenu;
+import ua.com.foxminded.university.handlers.StudentsMenu;
+import ua.com.foxminded.university.handlers.TeachersMenu;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -93,25 +93,25 @@ public class University {
 	result.append("University name: " + name + CR);
 	result.append(FORMAT_DIVIDER);
 	result.append("Teachers are:" + CR);
-	result.append(TeachersHandler.getStringOfTeachers(teachers));
+	result.append(TeachersMenu.getStringOfTeachers(teachers));
 	result.append(FORMAT_DIVIDER);
 	result.append("Students are:" + CR);
-	result.append(StudentsHandler.getStringOfStudents(students));
+	result.append(StudentsMenu.getStringOfStudents(students));
 	result.append(FORMAT_DIVIDER);
 	result.append("Current student groups:" + CR);
-	result.append(GroupsHandler.getStringOfGroups(groups));
+	result.append(GroupsMenu.getStringOfGroups(groups));
 	result.append(FORMAT_DIVIDER);
 	result.append("Subjects available to students:");
 	result.append(subjects + CR);
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
-	result.append(ClassroomsHandler.getStringOfClassrooms(classrooms));
+	result.append(ClassroomsMenu.getStringOfClassrooms(classrooms));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
-	result.append(LecturesHandler.getStringOfLectures(lectures));
+	result.append(LecturesMenu.getStringOfLectures(lectures));
 	result.append(FORMAT_DIVIDER);
 	result.append("Holidays are:" + CR);
-	result.append(HolidaysHandler.getStringOfHolidays(holidays));
+	result.append(HolidaysMenu.getStringOfHolidays(holidays));
 	result.append(FORMAT_DIVIDER);
 	return result.toString();
     }
