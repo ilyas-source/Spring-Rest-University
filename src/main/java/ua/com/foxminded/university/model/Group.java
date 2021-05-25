@@ -8,7 +8,6 @@ public class Group {
     private List<Student> students;
 
     public Group(String name, List<Student> students) {
-	super();
 	this.name = name;
 	this.students = students;
     }

@@ -3,10 +3,6 @@ package ua.com.foxminded.university.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import ua.com.foxminded.university.menu.GroupsMenu;
-
-import static ua.com.foxminded.university.Menu.*;
-
 public class Lecture {
 
     private LocalDate date;
@@ -15,10 +11,8 @@ public class Lecture {
     private Subject subject;
     private Teacher teacher;
     private Classroom classroom;
-    private GroupsMenu groupsMenu;
 
     public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
-	super();
 	this.date = date;
 	this.time = time;
 	this.groups = groups;

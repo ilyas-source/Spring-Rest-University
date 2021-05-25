@@ -16,7 +16,8 @@ import ua.com.foxminded.university.model.University;
 
 public class Menu {
 
-    public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
+    public static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     public static final String CR = System.lineSeparator();
     public static final String FORMAT_DIVIDER = "----------------" + CR;
     private static final String MAIN_MENU_TEXT = "Main menu" + CR
@@ -26,6 +27,7 @@ public class Menu {
 	    + "4. Manage subjects" + CR
 	    + "5. Manage lectures" + CR
 	    + "6. Manage classrooms" + CR
+	    + "7. Manage students" + CR
 	    + "7. Rename university" + CR
 	    + "Enter choice or 0 to quit:";
 
@@ -36,7 +38,7 @@ public class Menu {
 	    + "4. Delete" + CR
 	    + "Enter choice or 0 to return:";
 
-    public static Scanner scanner = new Scanner(System.in);
+    public static final Scanner scanner = new Scanner(System.in);
 
     private TeachersMenu teachersMenu;
     private GroupsMenu groupsMenu;
@@ -44,6 +46,7 @@ public class Menu {
     private SubjectsMenu subjectsMenu;
     private LecturesMenu lecturesMenu;
     private UniversityMenu universityMenu;
+    private ClassroomsMenu classroomsMenu;
 
     private University university;
 
@@ -51,6 +54,11 @@ public class Menu {
 	this.university = university;
 	this.universityMenu = new UniversityMenu();
 	this.teachersMenu = new TeachersMenu();
+	this.groupsMenu = new GroupsMenu();
+	this.subjectsMenu = new SubjectsMenu();
+	this.lecturesMenu = new LecturesMenu();
+	this.classroomsMenu = new ClassroomsMenu();
+	this.studentsMenu = new StudentsMenu();
     }
 
     public void start(int menuEntryPoint) {
@@ -99,6 +107,11 @@ public class Menu {
 	    manageClassrooms(menuChoice);
 	    break;
 	case 7:
+	    System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
+	    menuChoice = getIntFromScanner();
+	    manageStudents(menuChoice);
+	    break;
+	case 8:
 	    System.out.println("Enter new name for the university: ");
 	    university.setName(scanner.nextLine());
 	default:
@@ -208,7 +221,6 @@ public class Menu {
     }
 
     private void manageClassrooms(int menuChoice) {
-	ClassroomsMenu classroomsMenu = new ClassroomsMenu();
 	switch (menuChoice) {
 	case 1:
 	    university.getClassrooms().add(classroomsMenu.createClassroom(university));
@@ -233,6 +245,31 @@ public class Menu {
 	}
     }
 
+    private void manageStudents(int menuChoice) {
+	switch (menuChoice) {
+	case 1:
+	    university.getStudents().add(studentsMenu.createStudent(university));
+	    start(7);
+	    break;
+	case 2:
+	    System.out.println(studentsMenu.getStringOfStudents(university.getStudents()));
+	    start(7);
+	    break;
+	case 3:
+	    studentsMenu.updateStudent(university);
+	    start(7);
+	    break;
+	case 4:
+	    studentsMenu.deleteStudent(university);
+	    start(7);
+	    break;
+	default:
+	    System.out.println("Returning...");
+	    start(0);
+	    break;
+	}
+    }
+
     public static int getIntFromScanner() {
 	while (!scanner.hasNextInt()) {
 	    scanner.next();
@@ -241,7 +278,7 @@ public class Menu {
     }
 
     public static LocalDate getDateFromScanner() {
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
 	LocalDate result = null;
 
 	Boolean correctEntry = false;
@@ -249,7 +286,7 @@ public class Menu {
 	    try {
 		String line = scanner.nextLine();
 		correctEntry = true;
-		result = LocalDate.parse(line, formatter);
+		result = LocalDate.parse(line, dateFormatter);
 	    } catch (Exception e) {
 		e.printStackTrace();
 		correctEntry = false;
@@ -259,7 +296,6 @@ public class Menu {
     }
 
     public static LocalTime getTimeFromScanner() {
-	DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_TIME;
 	LocalTime result = null;
 
 	Boolean correctEntry = false;
@@ -267,7 +303,7 @@ public class Menu {
 	    try {
 		String line = scanner.nextLine();
 		correctEntry = true;
-		result = LocalTime.parse(line, formatter);
+		result = LocalTime.parse(line, timeFormatter);
 	    } catch (Exception e) {
 		e.printStackTrace();
 		correctEntry = false;

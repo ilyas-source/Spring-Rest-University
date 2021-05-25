@@ -39,17 +39,16 @@ public class VacationsMenu {
     }
 
     public Vacation createVacation() {
-	Vacation vacation = new Vacation();
 	Boolean correctEntry = false;
+	LocalDate startDate = null;
+	LocalDate endDate = null;
 
 	while (!correctEntry) {
-	    System.out.print("Enter vacation start date (" + Menu.DATE_FORMAT + "): ");
-	    LocalDate startDate = getDateFromScanner();
-	    vacation.setStartDate(startDate);
+	    System.out.print("Enter vacation start date: ");
+	    startDate = Menu.getDateFromScanner();
 
-	    System.out.print("Enter vacation end date (" + Menu.DATE_FORMAT + "): ");
-	    LocalDate endDate = getDateFromScanner();
-	    vacation.setEndDate(endDate);
+	    System.out.print("Enter vacation end date: ");
+	    endDate = getDateFromScanner();
 
 	    if (endDate.isBefore(startDate)) {
 		System.out.println("Wrong entry, try again.");
@@ -57,6 +56,6 @@ public class VacationsMenu {
 		correctEntry = true;
 	    }
 	}
-	return vacation;
+	return new Vacation(startDate, endDate);
     }
 }

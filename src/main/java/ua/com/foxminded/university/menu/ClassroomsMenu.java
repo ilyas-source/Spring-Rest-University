@@ -16,12 +16,17 @@ public class ClassroomsMenu {
 	this.locationsMenu = new LocationsMenu();
     }
 
-    public String getStringOfClassrooms(List<Classroom> classRooms) {
+    public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();
-	for (Classroom classRoom : classRooms) {
-	    result.append(classRooms.indexOf(classRoom) + 1).append(". " + classRoom + CR);
+	for (Classroom classroom : classrooms) {
+	    result.append(classrooms.indexOf(classroom) + 1).append(". " + getStringFromClassroom(classroom) + CR);
 	}
 	return result.toString();
+    }
+
+    public String getStringFromClassroom(Classroom classroom) {
+	return classroom.getName() + ": " + locationsMenu.getStringFromLocation(classroom.getLocation()) + ". Capacity: "
+		+ classroom.getCapacity();
     }
 
     public Classroom createClassroom(University university) {

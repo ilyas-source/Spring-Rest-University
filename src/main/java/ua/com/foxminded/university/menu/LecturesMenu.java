@@ -30,7 +30,7 @@ public class LecturesMenu {
     public String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
 	for (Lecture lecture : lectures) {
-	    result.append(lectures.indexOf(lecture) + 1).append(". " + lecture);
+	    result.append(lectures.indexOf(lecture) + 1).append(". " + getStringOfLecture(lecture));
 	}
 	return result.toString();
     }

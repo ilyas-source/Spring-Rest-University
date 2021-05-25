@@ -12,6 +12,7 @@ public class UniversityMenu {
     LecturesMenu lecturesMenu;
     HolidaysMenu holidaysMenu;
     GroupsMenu groupsMenu;
+    SubjectsMenu subjectsMenu;
 
     public UniversityMenu() {
 	this.teachersMenu = new TeachersMenu();
@@ -20,6 +21,7 @@ public class UniversityMenu {
 	this.lecturesMenu = new LecturesMenu();
 	this.holidaysMenu = new HolidaysMenu();
 	this.classroomsMenu = new ClassroomsMenu();
+	this.subjectsMenu = new SubjectsMenu();
     }
 
     public void printUniversity(University university) {
@@ -36,8 +38,8 @@ public class UniversityMenu {
 	result.append("Current student groups:" + CR);
 	result.append(groupsMenu.getStringOfGroups(university.getGroups()));
 	result.append(FORMAT_DIVIDER);
-	result.append("Subjects available to students:");
-	result.append(university.getSubjects() + CR);
+	result.append("Subjects available to students:" + CR);
+	result.append(subjectsMenu.getStringOfSubjects(university.getSubjects()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
 	result.append(classroomsMenu.getStringOfClassrooms(university.getClassrooms()));

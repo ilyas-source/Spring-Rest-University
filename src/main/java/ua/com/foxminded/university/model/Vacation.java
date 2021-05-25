@@ -12,9 +12,6 @@ public class Vacation {
 	this.endDate = endDate;
     }
 
-    public Vacation() {
-    }
-
     public LocalDate getStartDate() {
 	return startDate;
     }

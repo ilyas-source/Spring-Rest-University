@@ -12,10 +12,14 @@ public class HolidaysMenu {
 	StringBuilder result = new StringBuilder();
 
 	for (Holiday holiday : holidays) {
-	    result.append(holidays.indexOf(holiday) + 1).append(". " + holiday + CR);
+	    result.append(holidays.indexOf(holiday) + 1).append(". " + getStringFromHoliday(holiday) + CR);
 	}
 
 	return result.toString();
+    }
+
+    public String getStringFromHoliday(Holiday holiday) {
+	return holiday.getDate() + ": " + holiday.getName();
     }
 
 }

@@ -27,9 +27,4 @@ public class Holiday {
     public void setName(String name) {
 	this.name = name;
     }
-
-    @Override
-    public String toString() {
-	return date + ": " + name;
-    }
 }

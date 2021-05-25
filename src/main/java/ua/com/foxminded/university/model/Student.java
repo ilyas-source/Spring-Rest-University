@@ -2,8 +2,6 @@ package ua.com.foxminded.university.model;
 
 import java.time.LocalDate;
 
-import static ua.com.foxminded.university.Menu.*;
-
 public class Student {
 
     private String firstName;
@@ -17,7 +15,6 @@ public class Student {
 
     public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate entryYear, String email,
 	    String phoneNumber, Address address) {
-	super();
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.gender = gender;

@@ -2,18 +2,24 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.University;
 
 public class StudentsMenu {
 
     private AddressMenu addressMenu;
+    private GenderMenu genderMenu;
 
     public StudentsMenu() {
 	this.addressMenu = new AddressMenu();
+	this.genderMenu = new GenderMenu();
     }
 
     public String getStringOfStudents(List<Student> students) {
@@ -33,6 +39,27 @@ public class StudentsMenu {
 	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()));
 
 	return result.toString();
+    }
+
+    public Student createStudent(University university) {
+	System.out.print("First name: ");
+	String firstName = scanner.nextLine();
+	System.out.print("Last name: ");
+	String lastName = scanner.nextLine();
+	System.out.print("Gender (m/f): ");
+	Gender gender = genderMenu.getGenderFromScanner();
+	System.out.print("Birth date: ");
+	LocalDate birthDate = Menu.getDateFromScanner();
+	System.out.print("Entry year: ");
+	LocalDate entryYear = LocalDate.of(getIntFromScanner(), 1, 1);
+	System.out.print("Email: ");
+	String email = scanner.nextLine();
+	System.out.print("Phone number: ");
+	String phone = scanner.nextLine();
+	System.out.println("Entering address. ");
+	Address address = addressMenu.createAddress();
+
+	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
     }
 
     public List<Student> selectStudents(University university) {
@@ -72,5 +99,33 @@ public class StudentsMenu {
 	    }
 	}
 	return result;
+    }
+
+    public void updateStudent(University university) {
+	List<Student> students = university.getStudents();
+
+	System.out.println("Select a student to update: ");
+	System.out.println(getStringOfStudents(students));
+	int choice = getIntFromScanner() - 1;
+	if (choice > students.size()) {
+	    System.out.println("No such student, returning...");
+	} else {
+	    students.set(choice, createStudent(university));
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
+    public void deleteStudent(University university) {
+	List<Student> students = university.getStudents();
+
+	System.out.println("Select a student to update: ");
+	System.out.println(getStringOfStudents(students));
+	int choice = getIntFromScanner() - 1;
+	if (choice > students.size()) {
+	    System.out.println("No such student, returning...");
+	} else {
+	    students.remove(choice);
+	    System.out.println("Student deleted successfully.");
+	}
     }
 }

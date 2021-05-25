@@ -13,9 +13,13 @@ public class SubjectsMenu {
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
 	for (Subject subject : subjects) {
-	    result.append(subjects.indexOf(subject) + 1).append(". " + subject + CR);
+	    result.append(subjects.indexOf(subject) + 1).append(". " + getStringFromSubject(subject) + CR);
 	}
 	return result.toString();
+    }
+
+    public String getStringFromSubject(Subject subject) {
+	return subject.getName() + ": " + subject.getDescription();
     }
 
     public Subject selectSubject(University university) {

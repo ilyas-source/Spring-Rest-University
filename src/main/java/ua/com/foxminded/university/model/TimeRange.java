@@ -8,7 +8,6 @@ public class TimeRange {
     private LocalTime endTime;
 
     public TimeRange(LocalTime startTime, LocalTime endTime) {
-	super();
 	this.startTime = startTime;
 	this.endTime = endTime;
     }

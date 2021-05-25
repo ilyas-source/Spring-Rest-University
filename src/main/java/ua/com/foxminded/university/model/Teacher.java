@@ -2,11 +2,6 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
-import ua.com.foxminded.university.menu.SubjectsMenu;
-import ua.com.foxminded.university.menu.VacationsMenu;
-
-import static ua.com.foxminded.university.Menu.CR;
-
 public class Teacher {
 
     private String firstName;
