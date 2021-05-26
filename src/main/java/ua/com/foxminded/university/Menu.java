@@ -13,7 +13,6 @@ import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
-import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.University;
 
 public class Menu {
@@ -66,7 +65,6 @@ public class Menu {
     }
 
     public void start(int menuEntryPoint) {
-
 	int menuChoice;
 
 	if (menuEntryPoint == 0) {
@@ -306,34 +304,25 @@ public class Menu {
 
     public static LocalDate getDateFromScanner() {
 	LocalDate result = null;
-	boolean correctEntry = false;
 
-	while (!correctEntry) {
-	    try {
-		String line = scanner.nextLine();
-		correctEntry = true;
-		result = LocalDate.parse(line, dateFormatter);
-	    } catch (Exception e) {
-		e.printStackTrace();
-		correctEntry = false;
-	    }
+	try {
+	    String line = scanner.nextLine();
+	    result = LocalDate.parse(line, dateFormatter);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
+
 	return result;
     }
 
     public static LocalTime getTimeFromScanner() {
 	LocalTime result = null;
 
-	boolean correctEntry = false;
-	while (!correctEntry) {
-	    try {
-		String line = scanner.nextLine();
-		correctEntry = true;
-		result = LocalTime.parse(line, timeFormatter);
-	    } catch (Exception e) {
-		e.printStackTrace();
-		correctEntry = false;
-	    }
+	try {
+	    String line = scanner.nextLine();
+	    result = LocalTime.parse(line, timeFormatter);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
 	return result;
     }

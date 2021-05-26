@@ -28,6 +28,8 @@ public class VacationsMenu {
 	List<Vacation> vacations = new ArrayList<>();
 	boolean finished = false;
 
+	System.out.println("Entering vacations.");
+
 	while (!finished) {
 	    Vacation vacation = createVacation();
 	    vacations.add(vacation);
@@ -41,23 +43,21 @@ public class VacationsMenu {
     }
 
     public Vacation createVacation() {
-	boolean correctEntry = false;
-	LocalDate startDate = null;
-	LocalDate endDate = null;
+	Vacation result = null;
 
-	while (!correctEntry) {
+	while (isNull(result)) {
 	    System.out.print("Enter vacation start date: ");
-	    startDate = Menu.getDateFromScanner();
+	    LocalDate startDate = Menu.getDateFromScanner();
 
 	    System.out.print("Enter vacation end date: ");
-	    endDate = getDateFromScanner();
+	    LocalDate endDate = getDateFromScanner();
 
 	    if (endDate.isBefore(startDate)) {
 		System.out.println("Wrong entry, try again.");
 	    } else {
-		correctEntry = true;
+		result = new Vacation(startDate, endDate);
 	    }
 	}
-	return new Vacation(startDate, endDate);
+	return result;
     }
 }

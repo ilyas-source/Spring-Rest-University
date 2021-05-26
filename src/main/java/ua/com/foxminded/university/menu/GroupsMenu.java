@@ -2,7 +2,6 @@ package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -22,6 +21,7 @@ public class GroupsMenu {
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
+
 	for (Group group : groups) {
 	    result.append(groups.indexOf(group) + 1).append(". " + getStringFromGroup(group));
 	}
@@ -30,6 +30,7 @@ public class GroupsMenu {
 
     public String getStringFromGroup(Group group) {
 	StringBuilder result = new StringBuilder();
+
 	result.append("Group " + group.getName() + ":" + CR);
 	for (Student student : group.getStudents()) {
 	    result.append(student.getFirstName() + " " + student.getLastName() + CR);
@@ -53,7 +54,7 @@ public class GroupsMenu {
 	boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
-	    if (result.size() > 0) {
+	    if (!result.isEmpty()) {
 		System.out.println("Assigned groups:");
 		System.out.print(getStringOfGroups(result));
 	    }

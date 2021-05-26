@@ -81,7 +81,6 @@ public class UniversityPopulator {
 
     private void populateGroups() {
 	List<Group> groups = new ArrayList<>();
-
 	List<Student> students = university.getStudents();
 
 	groups.add(new Group("AB-11", new ArrayList<>(List.of(students.get(0), students.get(1)))));

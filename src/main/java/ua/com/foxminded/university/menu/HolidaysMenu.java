@@ -22,7 +22,6 @@ public class HolidaysMenu {
 	for (Holiday holiday : holidays) {
 	    result.append(holidays.indexOf(holiday) + 1).append(". " + getStringFromHoliday(holiday) + CR);
 	}
-
 	return result.toString();
     }
 

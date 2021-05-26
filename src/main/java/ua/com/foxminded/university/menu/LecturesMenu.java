@@ -51,21 +51,20 @@ public class LecturesMenu {
     }
 
     public Lecture createLecture() {
-	LocalTime startTime = null;
-	LocalTime endTime = null;
-
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
-	while (isNull(date)) {
+	TimeRange timeRange = null;
+	while (isNull(timeRange)) {
 	    System.out.print("Lecture begin time: ");
-	    startTime = getTimeFromScanner();
+	    LocalTime startTime = getTimeFromScanner();
 	    System.out.print("Lecture end time: ");
-	    endTime = getTimeFromScanner();
+	    LocalTime endTime = getTimeFromScanner();
 	    if (endTime.isBefore(startTime)) {
 		System.out.println("Wrong entry, try again.");
 	    } else {
 		System.out.println("Success.");
+		timeRange = new TimeRange(startTime, endTime);
 	    }
 	}
 
@@ -74,7 +73,7 @@ public class LecturesMenu {
 	Teacher teacher = teachersMenu.selectTeacher();
 	Classroom classroom = classroomsMenu.selectClassroom();
 
-	return new Lecture(date, new TimeRange(startTime, endTime), groups, subject, teacher, classroom);
+	return new Lecture(date, timeRange, groups, subject, teacher, classroom);
     }
 
     public void updateLecture() {

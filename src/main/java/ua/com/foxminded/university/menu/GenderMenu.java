@@ -1,26 +1,29 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.scanner;
 
 import ua.com.foxminded.university.model.Gender;
 
 public class GenderMenu {
 
-    public Gender getGenderFromScanner() {
-	boolean keepOn = true;
-	String choice = "";
-	while (keepOn) {
-	    choice = scanner.nextLine().toLowerCase();
-	    if (choice.equals("m") || choice.equals("f")) {
-		keepOn = false;
-	    } else {
-		System.out.print("Wrong input, try again: ");
+    public Gender getGender() {
+	Gender result = null;
+
+	while (isNull(result)) {
+	    System.out.print("Gender (M/F): ");
+	    String choice = scanner.nextLine().toLowerCase();
+	    switch (choice) {
+	    case "m":
+		result = Gender.MALE;
+		break;
+	    case "f":
+		result = Gender.FEMALE;
+		break;
+	    default:
+		System.out.println("Wrong input, try again.");
 	    }
 	}
-	if (choice == "m") {
-	    return Gender.MALE;
-	} else {
-	    return Gender.FEMALE;
-	}
+	return result;
     }
 }

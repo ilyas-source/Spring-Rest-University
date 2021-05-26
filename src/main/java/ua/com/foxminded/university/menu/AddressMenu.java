@@ -7,6 +7,7 @@ import ua.com.foxminded.university.model.Address;
 public class AddressMenu {
 
     public Address createAddress() {
+	System.out.println("Entering address.");
 	System.out.print("Country:");
 	String country = scanner.nextLine();
 	System.out.print("ZIP Code:");
@@ -17,6 +18,7 @@ public class AddressMenu {
 	String city = scanner.nextLine();
 	System.out.print("Street Address:");
 	String streetAddress = scanner.nextLine();
+
 	return new Address(country, index, region, city, streetAddress);
     }
 

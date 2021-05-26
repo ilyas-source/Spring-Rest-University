@@ -5,7 +5,6 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Address;
@@ -15,10 +14,9 @@ import ua.com.foxminded.university.model.University;
 
 public class StudentsMenu {
 
+    private University university;
     private AddressMenu addressMenu = new AddressMenu();
     private GenderMenu genderMenu = new GenderMenu();
-
-    private University university;
 
     public StudentsMenu(University university) {
 	this.university = university;
@@ -33,7 +31,6 @@ public class StudentsMenu {
     }
 
     public String getStringFromStudent(Student student) {
-
 	StringBuilder result = new StringBuilder();
 	result.append(student.getFirstName() + " " + student.getLastName() + ", " + student.getGender()
 		+ ", born " + student.getBirthDate() + ", admission year " + student.getEntryYear().getYear() + CR);
@@ -48,8 +45,7 @@ public class StudentsMenu {
 	String firstName = scanner.nextLine();
 	System.out.print("Last name: ");
 	String lastName = scanner.nextLine();
-	System.out.print("Gender (m/f): ");
-	Gender gender = genderMenu.getGenderFromScanner();
+	Gender gender = genderMenu.getGender();
 	System.out.print("Birth date: ");
 	LocalDate birthDate = Menu.getDateFromScanner();
 	System.out.print("Entry year: ");
@@ -58,7 +54,6 @@ public class StudentsMenu {
 	String email = scanner.nextLine();
 	System.out.print("Phone number: ");
 	String phone = scanner.nextLine();
-	System.out.println("Entering address. ");
 	Address address = addressMenu.createAddress();
 
 	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
@@ -71,7 +66,7 @@ public class StudentsMenu {
 	boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
-	    if (result.size() > 0) {
+	    if (!result.isEmpty()) {
 		System.out.println("Assigned students:");
 		System.out.print(getStringOfStudents(result));
 	    }

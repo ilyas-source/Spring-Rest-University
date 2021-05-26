@@ -27,19 +27,13 @@ public class TeachersMenu {
     }
 
     public Teacher createTeacher() {
-	List<Subject> subjects;
-	List<Vacation> vacations;
-
 	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
 
 	System.out.print("Enter last name: ");
 	String lastName = scanner.nextLine();
 
-	System.out.println("Gender (M/F): ");
-	Gender gender = genderMenu.getGenderFromScanner();
-
-	System.out.println("Degree: (B)achelor/(M)aster/(D)octor: ");
+	Gender gender = genderMenu.getGender();
 	Degree degree = getDegree();
 
 	System.out.println("Email:");
@@ -48,38 +42,34 @@ public class TeachersMenu {
 	System.out.println("Phone:");
 	String phone = scanner.nextLine();
 
-	System.out.println("Entering address.");
 	Address address = addressMenu.createAddress();
-
-	System.out.println("Assigning subjects.");
-	subjects = subjectsMenu.selectSubjects();
-
-	System.out.println("Entering vacations.");
-	vacations = vacationsMenu.createVacations();
+	List<Subject> subjects = subjectsMenu.selectSubjects();
+	List<Vacation> vacations = vacationsMenu.createVacations();
 
 	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
     }
 
     private Degree getDegree() {
-	boolean keepOn = true;
-	String choice = "";
+	Degree degree = null;
 
-	while (keepOn) {
-	    choice = scanner.nextLine().toLowerCase();
-	    if (choice.equals("b") || choice.equals("m") || choice.equals("d")) {
-		keepOn = false;
-	    } else {
-		System.out.println("Wrong input, try again:");
+	while (isNull(degree)) {
+	    System.out.print("Degree: (B)achelor/(M)aster/(D)octor: ");
+	    String choice = scanner.nextLine().toLowerCase();
+	    switch (choice) {
+	    case "b":
+		degree = Degree.BACHELOR;
+		break;
+	    case "m":
+		degree = Degree.MASTER;
+		break;
+	    case "d":
+		degree = Degree.DOCTOR;
+		break;
+	    default:
+		System.out.println("Wrong input, try again.");
 	    }
 	}
-	switch (choice) {
-	case "b":
-	    return Degree.BACHELOR;
-	case "m":
-	    return Degree.MASTER;
-	default:
-	    return Degree.DOCTOR;
-	}
+	return degree;
     }
 
     public String getStringOfTeachers(List<Teacher> teachers) {

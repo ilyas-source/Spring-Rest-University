@@ -53,6 +53,8 @@ public class SubjectsMenu {
 	boolean finished = false;
 	boolean correctEntry = false;
 
+	System.out.println("Selecting subjects.");
+
 	while (!(finished && correctEntry)) {
 	    if (!result.isEmpty()) {
 		System.out.println("Assigned subjects:");
