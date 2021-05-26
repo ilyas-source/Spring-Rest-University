@@ -10,10 +10,11 @@ import ua.com.foxminded.university.model.University;
 
 public class ClassroomsMenu {
 
-    private LocationsMenu locationsMenu;
+    private LocationsMenu locationsMenu = new LocationsMenu();
+    private University university;
 
-    public ClassroomsMenu() {
-	this.locationsMenu = new LocationsMenu();
+    public ClassroomsMenu(University university) {
+	this.university = university;
     }
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
@@ -29,7 +30,7 @@ public class ClassroomsMenu {
 		+ classroom.getCapacity();
     }
 
-    public Classroom createClassroom(University university) {
+    public Classroom createClassroom() {
 	System.out.println("Entering new classroom location.");
 	Location location = locationsMenu.createLocation();
 	System.out.print("Classroom name: ");
@@ -40,7 +41,7 @@ public class ClassroomsMenu {
 	return new Classroom(location, name, capacity);
     }
 
-    public Classroom selectClassroom(University university) {
+    public Classroom selectClassroom() {
 	List<Classroom> classrooms = university.getClassrooms();
 	Boolean correctEntry = false;
 	Classroom result = null;
@@ -60,7 +61,7 @@ public class ClassroomsMenu {
 	return result;
     }
 
-    public void updateClassroom(University university) {
+    public void updateClassroom() {
 	List<Classroom> classrooms = university.getClassrooms();
 
 	System.out.println("Select a classroom to update: ");
@@ -69,12 +70,12 @@ public class ClassroomsMenu {
 	if (choice > classrooms.size()) {
 	    System.out.println("No such classroom, returning...");
 	} else {
-	    classrooms.set(choice, createClassroom(university));
+	    classrooms.set(choice, createClassroom());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteClassroom(University university) {
+    public void deleteClassroom() {
 	List<Classroom> classrooms = university.getClassrooms();
 
 	System.out.println("Select a classroom to delete: ");

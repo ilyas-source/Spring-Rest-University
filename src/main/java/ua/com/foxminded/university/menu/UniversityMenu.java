@@ -14,17 +14,20 @@ public class UniversityMenu {
     GroupsMenu groupsMenu;
     SubjectsMenu subjectsMenu;
 
-    public UniversityMenu() {
-	this.teachersMenu = new TeachersMenu();
-	this.studentsMenu = new StudentsMenu();
-	this.groupsMenu = new GroupsMenu();
-	this.lecturesMenu = new LecturesMenu();
-	this.holidaysMenu = new HolidaysMenu();
-	this.classroomsMenu = new ClassroomsMenu();
-	this.subjectsMenu = new SubjectsMenu();
+    University university;
+
+    public UniversityMenu(University university) {
+	this.university = university;
+	this.teachersMenu = new TeachersMenu(university);
+	this.studentsMenu = new StudentsMenu(university);
+	this.groupsMenu = new GroupsMenu(university);
+	this.lecturesMenu = new LecturesMenu(university);
+	this.holidaysMenu = new HolidaysMenu(university);
+	this.classroomsMenu = new ClassroomsMenu(university);
+	this.subjectsMenu = new SubjectsMenu(university);
     }
 
-    public void printUniversity(University university) {
+    public void printUniversity() {
 	StringBuilder result = new StringBuilder();
 	result.append(FORMAT_DIVIDER);
 	result.append("University name: " + university.getName() + CR);

@@ -14,12 +14,13 @@ import ua.com.foxminded.university.model.University;
 
 public class StudentsMenu {
 
-    private AddressMenu addressMenu;
-    private GenderMenu genderMenu;
+    private AddressMenu addressMenu = new AddressMenu();;
+    private GenderMenu genderMenu = new GenderMenu();;
 
-    public StudentsMenu() {
-	this.addressMenu = new AddressMenu();
-	this.genderMenu = new GenderMenu();
+    private University university;
+
+    public StudentsMenu(University university) {
+	this.university = university;
     }
 
     public String getStringOfStudents(List<Student> students) {
@@ -41,7 +42,7 @@ public class StudentsMenu {
 	return result.toString();
     }
 
-    public Student createStudent(University university) {
+    public Student createStudent() {
 	System.out.print("First name: ");
 	String firstName = scanner.nextLine();
 	System.out.print("Last name: ");
@@ -62,7 +63,7 @@ public class StudentsMenu {
 	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
     }
 
-    public List<Student> selectStudents(University university) {
+    public List<Student> selectStudents() {
 	List<Student> result = new ArrayList<>();
 	List<Student> students = university.getStudents();
 	Boolean finished = false;
@@ -101,7 +102,7 @@ public class StudentsMenu {
 	return result;
     }
 
-    public void updateStudent(University university) {
+    public void updateStudent() {
 	List<Student> students = university.getStudents();
 
 	System.out.println("Select a student to update: ");
@@ -110,12 +111,12 @@ public class StudentsMenu {
 	if (choice > students.size()) {
 	    System.out.println("No such student, returning...");
 	} else {
-	    students.set(choice, createStudent(university));
+	    students.set(choice, createStudent());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteStudent(University university) {
+    public void deleteStudent() {
 	List<Student> students = university.getStudents();
 
 	System.out.println("Select a student to update: ");

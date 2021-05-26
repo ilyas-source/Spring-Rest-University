@@ -14,19 +14,19 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersMenu {
 
-    private GenderMenu genderMenu;
+    private GenderMenu genderMenu = new GenderMenu();;
+    private VacationsMenu vacationsMenu = new VacationsMenu();
+    private AddressMenu addressMenu = new AddressMenu();
     private SubjectsMenu subjectsMenu;
-    private VacationsMenu vacationsMenu;
-    private AddressMenu addressMenu;
 
-    public TeachersMenu() {
-	this.genderMenu = new GenderMenu();
-	this.subjectsMenu = new SubjectsMenu();
-	this.vacationsMenu = new VacationsMenu();
-	this.addressMenu = new AddressMenu();
+    private University university;
+
+    public TeachersMenu(University university) {
+	this.university = university;
+	this.subjectsMenu = new SubjectsMenu(university);
     }
 
-    public Teacher createTeacher(University university) {
+    public Teacher createTeacher() {
 	List<Subject> subjects;
 	List<Vacation> vacations;
 	AddressMenu addressMenu = new AddressMenu();
@@ -53,7 +53,7 @@ public class TeachersMenu {
 	Address address = addressMenu.createAddress();
 
 	System.out.println("Assigning subjects.");
-	subjects = subjectsMenu.selectSubjects(university);
+	subjects = subjectsMenu.selectSubjects();
 
 	System.out.println("Entering vacations.");
 	vacations = vacationsMenu.createVacations();
@@ -99,7 +99,7 @@ public class TeachersMenu {
 		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 
-    public Teacher selectTeacher(University university) {
+    public Teacher selectTeacher() {
 	List<Teacher> teachers = university.getTeachers();
 	Boolean correctEntry = false;
 	Teacher result = null;
@@ -119,8 +119,7 @@ public class TeachersMenu {
 	return result;
     }
 
-    public void updateTeacher(University university) {
-
+    public void updateTeacher() {
 	List<Teacher> teachers = university.getTeachers();
 
 	System.out.println("Select a teacher to update: ");
@@ -129,12 +128,12 @@ public class TeachersMenu {
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    teachers.set(choice, createTeacher(university));
+	    teachers.set(choice, createTeacher());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteTeacher(University university) {
+    public void deleteTeacher() {
 	List<Teacher> teachers = university.getTeachers();
 
 	System.out.println("Select a teacher to delete: ");
@@ -147,5 +146,4 @@ public class TeachersMenu {
 	    System.out.println("Teacher deleted successfully.");
 	}
     }
-
 }

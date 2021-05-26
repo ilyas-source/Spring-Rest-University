@@ -20,11 +20,14 @@ public class LecturesMenu {
     private TeachersMenu teachersMenu;
     private ClassroomsMenu classroomsMenu;
 
-    public LecturesMenu() {
-	this.groupsMenu = new GroupsMenu();
-	this.subjectsMenu = new SubjectsMenu();
-	this.teachersMenu = new TeachersMenu();
-	this.classroomsMenu = new ClassroomsMenu();
+    private University university;
+
+    public LecturesMenu(University university) {
+	this.university = university;
+	this.groupsMenu = new GroupsMenu(university);
+	this.subjectsMenu = new SubjectsMenu(university);
+	this.teachersMenu = new TeachersMenu(university);
+	this.classroomsMenu = new ClassroomsMenu(university);
     }
 
     public String getStringOfLectures(List<Lecture> lectures) {
@@ -47,7 +50,7 @@ public class LecturesMenu {
 	return result.toString();
     }
 
-    public Lecture createLecture(University university) {
+    public Lecture createLecture() {
 	LocalTime startTime = null;
 	LocalTime endTime = null;
 
@@ -68,16 +71,15 @@ public class LecturesMenu {
 	    }
 	}
 
-	List<Group> groups = groupsMenu.selectGroups(university);
-	Subject subject = subjectsMenu.selectSubject(university);
-	Teacher teacher = teachersMenu.selectTeacher(university);
-	Classroom classroom = classroomsMenu.selectClassroom(university);
+	List<Group> groups = groupsMenu.selectGroups();
+	Subject subject = subjectsMenu.selectSubject();
+	Teacher teacher = teachersMenu.selectTeacher();
+	Classroom classroom = classroomsMenu.selectClassroom();
 
 	return new Lecture(date, new TimeRange(startTime, endTime), groups, subject, teacher, classroom);
     }
 
-    public void updateLecture(University university) {
-
+    public void updateLecture() {
 	List<Lecture> lectures = university.getLectures();
 
 	System.out.println("Select a lecture to update: ");
@@ -86,12 +88,12 @@ public class LecturesMenu {
 	if (choice > lectures.size()) {
 	    System.out.println("No such lecture, returning...");
 	} else {
-	    lectures.set(choice, createLecture(university));
+	    lectures.set(choice, createLecture());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteLecture(University university) {
+    public void deleteLecture() {
 	List<Lecture> lectures = university.getLectures();
 
 	System.out.println("Select a lecture to delete: ");

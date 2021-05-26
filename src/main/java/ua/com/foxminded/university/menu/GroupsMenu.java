@@ -12,9 +12,11 @@ import static ua.com.foxminded.university.Menu.*;
 public class GroupsMenu {
 
     private StudentsMenu studentsMenu;
+    private University university;
 
-    public GroupsMenu() {
-	this.studentsMenu = new StudentsMenu();
+    public GroupsMenu(University university) {
+	this.university = university;
+	this.studentsMenu = new StudentsMenu(university);
     }
 
     public String getStringOfGroups(List<Group> groups) {
@@ -34,16 +36,16 @@ public class GroupsMenu {
 	return result.toString();
     }
 
-    public Group createGroup(University university) {
+    public Group createGroup() {
 	System.out.print("Enter group name: ");
 	String name = scanner.nextLine();
 	System.out.println("Assigning students to this group. ");
-	List<Student> students = studentsMenu.selectStudents(university);
+	List<Student> students = studentsMenu.selectStudents();
 
 	return new Group(name, students);
     }
 
-    public List<Group> selectGroups(University university) {
+    public List<Group> selectGroups() {
 	List<Group> result = new ArrayList<>();
 	List<Group> groups = university.getGroups();
 	Boolean finished = false;
@@ -79,7 +81,7 @@ public class GroupsMenu {
 	return result;
     }
 
-    public void updateGroup(University university) {
+    public void updateGroup() {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to update: ");
@@ -88,12 +90,12 @@ public class GroupsMenu {
 	if (choice > groups.size()) {
 	    System.out.println("No such group, returning...");
 	} else {
-	    groups.set(choice, createGroup(university));
+	    groups.set(choice, createGroup());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteGroup(University university) {
+    public void deleteGroup() {
 	List<Group> groups = university.getGroups();
 
 	System.out.println("Select a group to delete: ");

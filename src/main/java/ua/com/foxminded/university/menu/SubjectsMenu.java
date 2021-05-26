@@ -10,6 +10,12 @@ import ua.com.foxminded.university.model.University;
 
 public class SubjectsMenu {
 
+    private University university;
+
+    public SubjectsMenu(University university) {
+	this.university = university;
+    }
+
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
 	for (Subject subject : subjects) {
@@ -22,7 +28,7 @@ public class SubjectsMenu {
 	return subject.getName() + ": " + subject.getDescription();
     }
 
-    public Subject selectSubject(University university) {
+    public Subject selectSubject() {
 	List<Subject> subjects = university.getSubjects();
 	Boolean correctEntry = false;
 	Subject result = null;
@@ -42,7 +48,7 @@ public class SubjectsMenu {
 	return result;
     }
 
-    public List<Subject> selectSubjects(University university) {
+    public List<Subject> selectSubjects() {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = university.getSubjects();
 	Boolean finished = false;
@@ -78,7 +84,7 @@ public class SubjectsMenu {
 	return result;
     }
 
-    public Subject createSubject(University university) {
+    public Subject createSubject() {
 	System.out.print("Enter subject name: ");
 	String name = scanner.nextLine();
 	System.out.print("Enter description: ");
@@ -87,7 +93,7 @@ public class SubjectsMenu {
 	return new Subject(name, description);
     }
 
-    public void updateSubject(University university) {
+    public void updateSubject() {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to update: ");
@@ -96,12 +102,12 @@ public class SubjectsMenu {
 	if (choice > subjects.size()) {
 	    System.out.println("No such subject, returning...");
 	} else {
-	    subjects.set(choice, createSubject(university));
+	    subjects.set(choice, createSubject());
 	    System.out.println("Overwrite successful.");
 	}
     }
 
-    public void deleteSubject(University university) {
+    public void deleteSubject() {
 	List<Subject> subjects = university.getSubjects();
 
 	System.out.println("Select a subject to delete: ");
