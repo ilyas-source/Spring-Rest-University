@@ -3,6 +3,7 @@ package ua.com.foxminded.university.menu;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.util.List;
+import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
@@ -14,12 +15,11 @@ import ua.com.foxminded.university.model.Vacation;
 
 public class TeachersMenu {
 
-    private GenderMenu genderMenu = new GenderMenu();;
+    private University university;
+    private GenderMenu genderMenu = new GenderMenu();
     private VacationsMenu vacationsMenu = new VacationsMenu();
     private AddressMenu addressMenu = new AddressMenu();
     private SubjectsMenu subjectsMenu;
-
-    private University university;
 
     public TeachersMenu(University university) {
 	this.university = university;
@@ -29,7 +29,6 @@ public class TeachersMenu {
     public Teacher createTeacher() {
 	List<Subject> subjects;
 	List<Vacation> vacations;
-	AddressMenu addressMenu = new AddressMenu();
 
 	System.out.print("Enter first name: ");
 	String firstName = scanner.nextLine();
@@ -62,7 +61,7 @@ public class TeachersMenu {
     }
 
     private Degree getDegree() {
-	Boolean keepOn = true;
+	boolean keepOn = true;
 	String choice = "";
 
 	while (keepOn) {
@@ -101,17 +100,15 @@ public class TeachersMenu {
 
     public Teacher selectTeacher() {
 	List<Teacher> teachers = university.getTeachers();
-	Boolean correctEntry = false;
 	Teacher result = null;
 
-	while (!correctEntry) {
+	while (isNull(result)) {
 	    System.out.println("Select a teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
-	    int choice = getIntFromScanner() - 1;
+	    int choice = getIntFromScanner();
 	    if (choice <= teachers.size()) {
-		result = teachers.get(choice);
+		result = teachers.get(choice - 1);
 		System.out.println("Success.");
-		correctEntry = true;
 	    } else {
 		System.out.println("No such object.");
 	    }
@@ -124,11 +121,11 @@ public class TeachersMenu {
 
 	System.out.println("Select a teacher to update: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    teachers.set(choice, createTeacher());
+	    teachers.set(choice - 1, createTeacher());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -138,11 +135,11 @@ public class TeachersMenu {
 
 	System.out.println("Select a teacher to delete: ");
 	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > teachers.size()) {
 	    System.out.println("No such teacher, returning...");
 	} else {
-	    teachers.remove(choice);
+	    teachers.remove(choice - 1);
 	    System.out.println("Teacher deleted successfully.");
 	}
     }

@@ -3,6 +3,7 @@ package ua.com.foxminded.university.menu;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
@@ -15,12 +16,11 @@ import static ua.com.foxminded.university.Menu.*;
 
 public class LecturesMenu {
 
+    private University university;
     private GroupsMenu groupsMenu;
     private SubjectsMenu subjectsMenu;
     private TeachersMenu teachersMenu;
     private ClassroomsMenu classroomsMenu;
-
-    private University university;
 
     public LecturesMenu(University university) {
 	this.university = university;
@@ -57,8 +57,7 @@ public class LecturesMenu {
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
-	Boolean correctEntry = false;
-	while (!correctEntry) {
+	while (isNull(date)) {
 	    System.out.print("Lecture begin time: ");
 	    startTime = getTimeFromScanner();
 	    System.out.print("Lecture end time: ");
@@ -66,7 +65,6 @@ public class LecturesMenu {
 	    if (endTime.isBefore(startTime)) {
 		System.out.println("Wrong entry, try again.");
 	    } else {
-		correctEntry = true;
 		System.out.println("Success.");
 	    }
 	}
@@ -84,11 +82,11 @@ public class LecturesMenu {
 
 	System.out.println("Select a lecture to update: ");
 	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > lectures.size()) {
 	    System.out.println("No such lecture, returning...");
 	} else {
-	    lectures.set(choice, createLecture());
+	    lectures.set(choice - 1, createLecture());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -98,11 +96,11 @@ public class LecturesMenu {
 
 	System.out.println("Select a lecture to delete: ");
 	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > lectures.size()) {
 	    System.out.println("No such lecture, returning...");
 	} else {
-	    lectures.remove(choice);
+	    lectures.remove(choice - 1);
 	    System.out.println("Lecture deleted successfully.");
 	}
     }

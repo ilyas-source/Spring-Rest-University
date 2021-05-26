@@ -5,6 +5,8 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Objects.isNull;
+
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Vacation;
 
@@ -39,7 +41,7 @@ public class VacationsMenu {
     }
 
     public Vacation createVacation() {
-	Boolean correctEntry = false;
+	boolean correctEntry = false;
 	LocalDate startDate = null;
 	LocalDate endDate = null;
 

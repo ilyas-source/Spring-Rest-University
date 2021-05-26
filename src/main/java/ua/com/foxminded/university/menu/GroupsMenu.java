@@ -2,6 +2,7 @@ package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -11,8 +12,8 @@ import static ua.com.foxminded.university.Menu.*;
 
 public class GroupsMenu {
 
-    private StudentsMenu studentsMenu;
     private University university;
+    private StudentsMenu studentsMenu;
 
     public GroupsMenu(University university) {
 	this.university = university;
@@ -48,8 +49,8 @@ public class GroupsMenu {
     public List<Group> selectGroups() {
 	List<Group> result = new ArrayList<>();
 	List<Group> groups = university.getGroups();
-	Boolean finished = false;
-	Boolean correctEntry = false;
+	boolean finished = false;
+	boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
 	    if (result.size() > 0) {
@@ -59,9 +60,9 @@ public class GroupsMenu {
 	    System.out.print("Enter a new group number to add to this lecture: " + CR);
 	    System.out.print(getStringOfGroups(groups) + CR);
 	    correctEntry = false;
-	    int choice = getIntFromScanner() - 1;
+	    int choice = getIntFromScanner();
 	    if (choice <= groups.size()) {
-		Group selected = groups.get(choice);
+		Group selected = groups.get(choice - 1);
 		if (result.contains(selected)) {
 		    System.out.println("Group already added to the lecture.");
 		} else {
@@ -86,11 +87,11 @@ public class GroupsMenu {
 
 	System.out.println("Select a group to update: ");
 	System.out.println(getStringOfGroups(groups));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > groups.size()) {
 	    System.out.println("No such group, returning...");
 	} else {
-	    groups.set(choice, createGroup());
+	    groups.set(choice - 1, createGroup());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -100,11 +101,11 @@ public class GroupsMenu {
 
 	System.out.println("Select a group to delete: ");
 	System.out.println(getStringOfGroups(groups));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > groups.size()) {
 	    System.out.println("No such group, returning...");
 	} else {
-	    groups.remove(choice);
+	    groups.remove(choice - 1);
 	    System.out.println("Group deleted successfully.");
 	}
     }

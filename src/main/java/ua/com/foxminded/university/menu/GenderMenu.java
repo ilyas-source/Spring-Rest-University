@@ -7,7 +7,7 @@ import ua.com.foxminded.university.model.Gender;
 public class GenderMenu {
 
     public Gender getGenderFromScanner() {
-	Boolean keepOn = true;
+	boolean keepOn = true;
 	String choice = "";
 	while (keepOn) {
 	    choice = scanner.nextLine().toLowerCase();

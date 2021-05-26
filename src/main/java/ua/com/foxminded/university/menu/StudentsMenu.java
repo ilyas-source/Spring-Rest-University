@@ -5,6 +5,7 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Address;
@@ -14,8 +15,8 @@ import ua.com.foxminded.university.model.University;
 
 public class StudentsMenu {
 
-    private AddressMenu addressMenu = new AddressMenu();;
-    private GenderMenu genderMenu = new GenderMenu();;
+    private AddressMenu addressMenu = new AddressMenu();
+    private GenderMenu genderMenu = new GenderMenu();
 
     private University university;
 
@@ -66,8 +67,8 @@ public class StudentsMenu {
     public List<Student> selectStudents() {
 	List<Student> result = new ArrayList<>();
 	List<Student> students = university.getStudents();
-	Boolean finished = false;
-	Boolean correctEntry = false;
+	boolean finished = false;
+	boolean correctEntry = false;
 
 	while (!(finished && correctEntry)) {
 	    if (result.size() > 0) {
@@ -77,11 +78,11 @@ public class StudentsMenu {
 	    System.out.print("Enter a new student number to add: " + CR);
 	    System.out.print(getStringOfStudents(students) + CR);
 	    correctEntry = false;
-	    int choice = getIntFromScanner() - 1;
+	    int choice = getIntFromScanner();
 	    if (choice > students.size()) {
 		System.out.println("No such student.");
 	    } else {
-		Student selected = students.get(choice);
+		Student selected = students.get(choice - 1);
 		if (result.contains(selected)) {
 		    System.out.println("Student already assigned to the group.");
 		} else {
@@ -107,11 +108,11 @@ public class StudentsMenu {
 
 	System.out.println("Select a student to update: ");
 	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > students.size()) {
 	    System.out.println("No such student, returning...");
 	} else {
-	    students.set(choice, createStudent());
+	    students.set(choice - 1, createStudent());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -121,11 +122,11 @@ public class StudentsMenu {
 
 	System.out.println("Select a student to update: ");
 	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > students.size()) {
 	    System.out.println("No such student, returning...");
 	} else {
-	    students.remove(choice);
+	    students.remove(choice - 1);
 	    System.out.println("Student deleted successfully.");
 	}
     }

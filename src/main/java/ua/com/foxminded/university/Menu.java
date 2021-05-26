@@ -43,6 +43,7 @@ public class Menu {
 
     public static final Scanner scanner = new Scanner(System.in);
 
+    private University university;
     private TeachersMenu teachersMenu;
     private GroupsMenu groupsMenu;
     private StudentsMenu studentsMenu;
@@ -51,8 +52,6 @@ public class Menu {
     private UniversityMenu universityMenu;
     private ClassroomsMenu classroomsMenu;
     private HolidaysMenu holidaysMenu;
-
-    private University university;
 
     public Menu(University university) {
 	this.university = university;
@@ -81,7 +80,7 @@ public class Menu {
 	case 0:
 	    System.out.println("Quitting.");
 	    scanner.close();
-	    System.exit(0);
+	    break;
 	case 1:
 	    universityMenu.printUniversity();
 	    start(0);
@@ -313,10 +312,9 @@ public class Menu {
     }
 
     public static LocalDate getDateFromScanner() {
-
 	LocalDate result = null;
+	boolean correctEntry = false;
 
-	Boolean correctEntry = false;
 	while (!correctEntry) {
 	    try {
 		String line = scanner.nextLine();
@@ -333,7 +331,7 @@ public class Menu {
     public static LocalTime getTimeFromScanner() {
 	LocalTime result = null;
 
-	Boolean correctEntry = false;
+	boolean correctEntry = false;
 	while (!correctEntry) {
 	    try {
 		String line = scanner.nextLine();

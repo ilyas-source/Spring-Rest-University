@@ -44,11 +44,11 @@ public class HolidaysMenu {
 
 	System.out.println("Select a holiday to update: ");
 	System.out.println(getStringOfHolidays(holidays));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > holidays.size()) {
 	    System.out.println("No such holiday, returning...");
 	} else {
-	    holidays.set(choice, createHoliday());
+	    holidays.set(choice - 1, createHoliday());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -58,11 +58,11 @@ public class HolidaysMenu {
 
 	System.out.println("Select a holiday to update: ");
 	System.out.println(getStringOfHolidays(holidays));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > holidays.size()) {
 	    System.out.println("No such holiday, returning...");
 	} else {
-	    holidays.remove(choice);
+	    holidays.remove(choice - 1);
 	    System.out.println("Holiday deleted successfully.");
 	}
     }

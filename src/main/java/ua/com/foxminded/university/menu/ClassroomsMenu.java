@@ -3,6 +3,7 @@ package ua.com.foxminded.university.menu;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.util.List;
+import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
@@ -43,17 +44,15 @@ public class ClassroomsMenu {
 
     public Classroom selectClassroom() {
 	List<Classroom> classrooms = university.getClassrooms();
-	Boolean correctEntry = false;
 	Classroom result = null;
 
-	while (!correctEntry) {
+	while (isNull(result)) {
 	    System.out.println("Select a classroom: ");
 	    System.out.print(getStringOfClassrooms(classrooms));
-	    int choice = getIntFromScanner() - 1;
+	    int choice = getIntFromScanner();
 	    if (choice <= classrooms.size()) {
-		result = classrooms.get(choice);
+		result = classrooms.get(choice - 1);
 		System.out.println("Success.");
-		correctEntry = true;
 	    } else {
 		System.out.println("No such classroom.");
 	    }
@@ -66,11 +65,11 @@ public class ClassroomsMenu {
 
 	System.out.println("Select a classroom to update: ");
 	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > classrooms.size()) {
 	    System.out.println("No such classroom, returning...");
 	} else {
-	    classrooms.set(choice, createClassroom());
+	    classrooms.set(choice - 1, createClassroom());
 	    System.out.println("Overwrite successful.");
 	}
     }
@@ -80,11 +79,11 @@ public class ClassroomsMenu {
 
 	System.out.println("Select a classroom to delete: ");
 	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner() - 1;
+	int choice = getIntFromScanner();
 	if (choice > classrooms.size()) {
 	    System.out.println("No such classroom, returning...");
 	} else {
-	    classrooms.remove(choice);
+	    classrooms.remove(choice - 1);
 	    System.out.println("Classroom deleted successfully.");
 	}
     }

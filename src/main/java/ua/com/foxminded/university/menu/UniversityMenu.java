@@ -6,24 +6,22 @@ import ua.com.foxminded.university.model.University;
 
 public class UniversityMenu {
 
-    TeachersMenu teachersMenu;
-    ClassroomsMenu classroomsMenu;
-    StudentsMenu studentsMenu;
-    LecturesMenu lecturesMenu;
-    HolidaysMenu holidaysMenu;
-    GroupsMenu groupsMenu;
-    SubjectsMenu subjectsMenu;
-
-    University university;
+    private University university;
+    private TeachersMenu teachersMenu;
+    private ClassroomsMenu classroomsMenu;
+    private StudentsMenu studentsMenu;
+    private LecturesMenu lecturesMenu;
+    private HolidaysMenu holidaysMenu;
+    private GroupsMenu groupsMenu;
+    private SubjectsMenu subjectsMenu;
 
     public UniversityMenu(University university) {
 	this.university = university;
-	this.teachersMenu = new TeachersMenu(university);
+	this.classroomsMenu = new ClassroomsMenu(university);
 	this.studentsMenu = new StudentsMenu(university);
-	this.groupsMenu = new GroupsMenu(university);
 	this.lecturesMenu = new LecturesMenu(university);
 	this.holidaysMenu = new HolidaysMenu(university);
-	this.classroomsMenu = new ClassroomsMenu(university);
+	this.groupsMenu = new GroupsMenu(university);
 	this.subjectsMenu = new SubjectsMenu(university);
     }
 
