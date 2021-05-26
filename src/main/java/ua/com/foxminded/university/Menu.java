@@ -86,42 +86,28 @@ public class Menu {
 	    start(0);
 	    break;
 	case 2:
-	    System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageTeachers(menuChoice);
+	    manageTeachers();
 	    break;
 	case 3:
-	    System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageGroups(menuChoice);
+	    manageGroups();
 	    break;
 	case 4:
-	    System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageSubjects(menuChoice);
+	    manageSubjects();
 	    break;
 	case 5:
-	    System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageLectures(menuChoice);
+	    manageLectures();
 	    break;
 	case 6:
-	    System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageClassrooms(menuChoice);
+	    manageClassrooms();
 	    break;
 	case 7:
-	    System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageStudents(menuChoice);
+	    manageStudents();
 	    break;
 	case 8:
 	    System.out.println("Enter new name for the university: ");
 	    university.setName(scanner.nextLine());
 	case 9:
-	    System.out.println(FORMAT_DIVIDER + "Manage university holidays:" + CRUD_MENU_TEXT);
-	    menuChoice = getIntFromScanner();
-	    manageHolidays(menuChoice);
+	    manageHolidays();
 	    break;
 	default:
 	    start(0);
@@ -129,8 +115,9 @@ public class Menu {
 	}
     }
 
-    private void manageTeachers(int menuChoice) {
-	switch (menuChoice) {
+    private void manageTeachers() {
+	System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getTeachers().add(teachersMenu.createTeacher());
 	    start(2);
@@ -154,8 +141,9 @@ public class Menu {
 	}
     }
 
-    private void manageGroups(int menuChoice) {
-	switch (menuChoice) {
+    private void manageGroups() {
+	System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getGroups().add(groupsMenu.createGroup());
 	    start(3);
@@ -179,8 +167,9 @@ public class Menu {
 	}
     }
 
-    private void manageSubjects(int menuChoice) {
-	switch (menuChoice) {
+    private void manageSubjects() {
+	System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getSubjects().add(subjectsMenu.createSubject());
 	    start(4);
@@ -204,8 +193,9 @@ public class Menu {
 	}
     }
 
-    private void manageLectures(int menuChoice) {
-	switch (menuChoice) {
+    private void manageLectures() {
+	System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getLectures().add(lecturesMenu.createLecture());
 	    start(5);
@@ -229,8 +219,9 @@ public class Menu {
 	}
     }
 
-    private void manageClassrooms(int menuChoice) {
-	switch (menuChoice) {
+    private void manageClassrooms() {
+	System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getClassrooms().add(classroomsMenu.createClassroom());
 	    start(6);
@@ -254,8 +245,9 @@ public class Menu {
 	}
     }
 
-    private void manageStudents(int menuChoice) {
-	switch (menuChoice) {
+    private void manageStudents() {
+	System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getStudents().add(studentsMenu.createStudent());
 	    start(7);
@@ -279,8 +271,9 @@ public class Menu {
 	}
     }
 
-    private void manageHolidays(int menuChoice) {
-	switch (menuChoice) {
+    private void manageHolidays() {
+	System.out.println(FORMAT_DIVIDER + "Manage holidays:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
 	case 1:
 	    university.getHolidays().add(holidaysMenu.createHoliday());
 	    start(9);

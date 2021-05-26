@@ -57,8 +57,8 @@ public class GroupsMenu {
 		System.out.println("Assigned groups:");
 		System.out.print(getStringOfGroups(result));
 	    }
-	    System.out.print("Enter a new group number to add to this lecture: " + CR);
-	    System.out.print(getStringOfGroups(groups) + CR);
+	    System.out.println("Enter a new group number to add to this lecture: ");
+	    System.out.print(getStringOfGroups(groups));
 	    correctEntry = false;
 	    int choice = getIntFromScanner();
 	    if (choice <= groups.size()) {
@@ -73,7 +73,7 @@ public class GroupsMenu {
 	    } else {
 		System.out.println("No such group.");
 	    }
-	    System.out.print("Add another? (y/n): ");
+	    System.out.print("Add another group? (y/n): ");
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (!entry.equals("y")) {
 		finished = true;

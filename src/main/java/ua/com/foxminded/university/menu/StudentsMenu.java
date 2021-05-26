@@ -75,8 +75,8 @@ public class StudentsMenu {
 		System.out.println("Assigned students:");
 		System.out.print(getStringOfStudents(result));
 	    }
-	    System.out.print("Enter a new student number to add: " + CR);
-	    System.out.print(getStringOfStudents(students) + CR);
+	    System.out.println("Enter a new student number to add: ");
+	    System.out.print(getStringOfStudents(students));
 	    correctEntry = false;
 	    int choice = getIntFromScanner();
 	    if (choice > students.size()) {
@@ -94,7 +94,7 @@ public class StudentsMenu {
 		    System.out.println("Success.");
 		}
 	    }
-	    System.out.print("Add another? (y/n): ");
+	    System.out.print("Add another student? (y/n): ");
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (!entry.equals("y")) {
 		finished = true;

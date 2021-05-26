@@ -58,8 +58,8 @@ public class SubjectsMenu {
 		System.out.println("Assigned subjects:");
 		System.out.print(getStringOfSubjects(result));
 	    }
-	    System.out.print("Enter a new subject number to add to this teacher: " + CR);
-	    System.out.print(getStringOfSubjects(subjects) + CR);
+	    System.out.println("Enter a new subject number to add to this teacher: ");
+	    System.out.print(getStringOfSubjects(subjects));
 	    correctEntry = false;
 	    int choice = getIntFromScanner();
 	    if (choice <= subjects.size()) {
@@ -74,7 +74,7 @@ public class SubjectsMenu {
 	    } else {
 		System.out.println("No such subject.");
 	    }
-	    System.out.print("Add another? (y/n): ");
+	    System.out.print("Add another subject? (y/n): ");
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (!entry.equals("y")) {
 		finished = true;
