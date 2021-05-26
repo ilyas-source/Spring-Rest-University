@@ -1,0 +1,63 @@
+package ua.com.foxminded.university.menu;
+
+import static ua.com.foxminded.university.Menu.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import static java.util.Objects.isNull;
+
+import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.model.Vacation;
+
+public class VacationsMenu {
+
+    public String getStringOfVacations(List<Vacation> vacations) {
+	StringBuilder result = new StringBuilder();
+	for (Vacation vacation : vacations) {
+	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringOfVacation(vacation) + CR);
+	}
+	return result.toString();
+    }
+
+    public String getStringOfVacation(Vacation vacation) {
+	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
+    }
+
+    public List<Vacation> createVacations() {
+	List<Vacation> vacations = new ArrayList<>();
+	boolean finished = false;
+
+	System.out.println("Entering vacations.");
+
+	while (!finished) {
+	    Vacation vacation = createVacation();
+	    vacations.add(vacation);
+	    System.out.print("Done. Add another vacation? (y/n): ");
+	    String choice = scanner.nextLine().toLowerCase();
+	    if (choice != "y") {
+		finished = true;
+	    }
+	}
+	return vacations;
+    }
+
+    public Vacation createVacation() {
+	Vacation result = null;
+
+	while (isNull(result)) {
+	    System.out.print("Enter vacation start date: ");
+	    LocalDate startDate = Menu.getDateFromScanner();
+
+	    System.out.print("Enter vacation end date: ");
+	    LocalDate endDate = getDateFromScanner();
+
+	    if (endDate.isBefore(startDate)) {
+		System.out.println("Wrong entry, try again.");
+	    } else {
+		result = new Vacation(startDate, endDate);
+	    }
+	}
+	return result;
+    }
+}

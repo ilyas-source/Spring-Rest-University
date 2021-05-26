@@ -1,0 +1,22 @@
+package ua.com.foxminded.university.menu;
+
+import static ua.com.foxminded.university.Menu.*;
+import ua.com.foxminded.university.model.Location;
+
+public class LocationsMenu {
+
+    public Location createLocation() {
+	System.out.print("Enter building name: ");
+	String building = scanner.nextLine();
+	System.out.print("Enter floor number: ");
+	int floor = getIntFromScanner();
+	System.out.print("Enter room number: ");
+	int roomNumber = getIntFromScanner();
+
+	return new Location(building, floor, roomNumber);
+    }
+
+    public String getStringFromLocation(Location location) {
+	return location.getBuilding() + ", floor #" + location.getFloor() + ", room " + location.getRoomNumber();
+    }
+}
