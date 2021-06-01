@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
@@ -19,9 +20,14 @@ public class AppConfig {
     Environment environment;
 
     private static final String URL = "url";
-    private static final String USER = "dbuser";
+    private static final String USER = "user";
     private static final String DRIVER = "driver";
-    private static final String PASSWORD = "dbpassword";
+    private static final String PASSWORD = "password";
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
+	return new JdbcTemplate(dataSource);
+    }
 
     @Bean
     DataSource dataSource() {

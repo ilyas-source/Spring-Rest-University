@@ -12,7 +12,7 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.mappers.*;
 
 @Component
-public class JDBCSubjectDAO implements SubjectDAO {
+public class JdbcSubjectDAO implements SubjectDAO {
 
     JdbcTemplate jdbcTemplate;
     SubjectMapper subjectMapper;
@@ -24,7 +24,7 @@ public class JDBCSubjectDAO implements SubjectDAO {
     private static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = ?";
 
     @Autowired
-    public JDBCSubjectDAO(JdbcTemplate jdbcTemplate, SubjectMapper subjectMapper) {
+    public JdbcSubjectDAO(JdbcTemplate jdbcTemplate, SubjectMapper subjectMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.subjectMapper = subjectMapper;
     }
