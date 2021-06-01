@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.dao;
 
-public interface GroupDAO {
+import ua.com.foxminded.university.model.Group;
+
+public interface GroupDAO extends GeneralDAO<Group> {
 
 }
