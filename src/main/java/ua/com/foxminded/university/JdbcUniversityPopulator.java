@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
@@ -27,14 +29,18 @@ import ua.com.foxminded.university.model.TimeRange;
 import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
-public class UniversityPopulator {
+@Component
+public class JdbcUniversityPopulator {
 
     private University university;
 
     @Autowired
     private DataSource dataSource;
 
-    public UniversityPopulator(University university) {
+    @Autowired
+    private JdbcSubjectDAO jdbcSubjectDAO;
+
+    public JdbcUniversityPopulator(University university) {
 	this.university = university;
     }
 
@@ -62,7 +68,10 @@ public class UniversityPopulator {
 	subjects.add(new Subject("Philosophy", "Base philosophy"));
 	subjects.add(new Subject("Chemistry", "Base chemistry"));
 	subjects.add(new Subject("Radiology", "Explore radiation"));
-	university.setSubjects(subjects);
+	for (Subject s : subjects) {
+	    jdbcSubjectDAO.create(s);
+	}
+
     }
 
     private void populateHolidays() {

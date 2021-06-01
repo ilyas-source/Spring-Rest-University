@@ -2,6 +2,9 @@ package ua.com.foxminded.university.model;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class University {
 
     private String name;

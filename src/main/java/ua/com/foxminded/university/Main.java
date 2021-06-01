@@ -4,26 +4,26 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ua.com.foxminded.university.dao.SubjectDAO;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.University;
 
 public class Main {
 
     public static void main(String[] args) {
 
 	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+	JdbcUniversityPopulator jdbcUniversityPopulator = context.getBean(JdbcUniversityPopulator.class);
+	jdbcUniversityPopulator.populate();
+
 	SubjectDAO subjectDAO = context.getBean(SubjectDAO.class);
 
 	for (Subject s : subjectDAO.findAll()) {
 	    System.out.println(s);
 	}
 
-	University university = new University();
-	UniversityPopulator universityPopulator = new UniversityPopulator(university);
-	universityPopulator.populate();
-
-	Menu menu = new Menu(university);
+	Menu menu = context.getBean(Menu.class);
 	menu.start(0);
 
+	System.out.println("Success.");
 	context.close();
     }
 

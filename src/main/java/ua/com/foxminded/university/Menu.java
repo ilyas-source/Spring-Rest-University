@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.menu.ClassroomsMenu;
 import ua.com.foxminded.university.menu.GroupsMenu;
 import ua.com.foxminded.university.menu.HolidaysMenu;
@@ -15,6 +17,7 @@ import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
 import ua.com.foxminded.university.model.University;
 
+@Component
 public class Menu {
 
     public static final DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;
