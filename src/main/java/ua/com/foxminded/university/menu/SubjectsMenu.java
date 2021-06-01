@@ -2,6 +2,9 @@ package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
 import static ua.com.foxminded.university.Menu.*;
@@ -9,6 +12,7 @@ import static ua.com.foxminded.university.Menu.*;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
 
+@Component
 public class SubjectsMenu {
 
     private University university;

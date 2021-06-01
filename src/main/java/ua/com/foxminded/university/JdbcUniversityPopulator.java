@@ -56,7 +56,6 @@ public class JdbcUniversityPopulator {
     }
 
     private void createEmptyDb(DataSource dataSource) {
-	System.out.println("Creating empty DB");
 	Resource resource = new ClassPathResource("schema.sql");
 	ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
 	databasePopulator.execute(dataSource);
