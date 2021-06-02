@@ -4,10 +4,14 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.University;
 
+@Component
 public class HolidaysMenu {
 
     private University university;

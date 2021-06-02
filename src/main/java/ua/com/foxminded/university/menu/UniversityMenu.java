@@ -2,8 +2,11 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.University;
 
+@Component
 public class UniversityMenu {
 
     private University university;

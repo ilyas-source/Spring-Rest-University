@@ -3,6 +3,9 @@ package ua.com.foxminded.university.menu;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Address;
@@ -13,6 +16,7 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
+@Component
 public class TeachersMenu {
 
     private University university;

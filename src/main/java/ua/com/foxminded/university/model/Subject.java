@@ -2,15 +2,16 @@ package ua.com.foxminded.university.model;
 
 public class Subject {
 
+    private int id;
     private String name;
     private String description;
+
+    public Subject() {
+    }
 
     public Subject(String name, String description) {
 	this.name = name;
 	this.description = description;
-    }
-
-    public Subject() {
     }
 
     public String getName() {
@@ -27,6 +28,14 @@ public class Subject {
 
     public void setDescription(String description) {
 	this.description = description;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     @Override

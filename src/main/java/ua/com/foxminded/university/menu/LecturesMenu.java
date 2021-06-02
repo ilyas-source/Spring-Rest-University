@@ -3,6 +3,9 @@ package ua.com.foxminded.university.menu;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
@@ -14,6 +17,7 @@ import ua.com.foxminded.university.model.TimeRange;
 import ua.com.foxminded.university.model.University;
 import static ua.com.foxminded.university.Menu.*;
 
+@Component
 public class LecturesMenu {
 
     private University university;

@@ -2,8 +2,11 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.scanner;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.Address;
 
+@Component
 public class AddressMenu {
 
     public Address createAddress() {

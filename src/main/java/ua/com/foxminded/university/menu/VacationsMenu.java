@@ -5,11 +5,15 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Vacation;
 
+@Component
 public class VacationsMenu {
 
     public String getStringOfVacations(List<Vacation> vacations) {

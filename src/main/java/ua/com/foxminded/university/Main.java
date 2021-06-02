@@ -11,7 +11,7 @@ public class Main {
 	jdbcUniversityPopulator.populate();
 
 	Menu menu = context.getBean(Menu.class);
-	menu.start(0);
+	menu.start(4);
 	context.close();
     }
 }

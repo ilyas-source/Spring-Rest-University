@@ -3,19 +3,15 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.*;
+import ua.com.foxminded.university.dao.jdbc.mappers.SubjectMapper;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.mappers.*;
 
 @Component
 public class JdbcSubjectDAO implements SubjectDAO {
-
-    JdbcTemplate jdbcTemplate;
-    SubjectMapper subjectMapper;
 
     private static final String CREATE_SUBJECT = "INSERT INTO subjects (name, description) VALUES (?, ?)";
     private static final String FIND_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE id = ?";
@@ -23,7 +19,9 @@ public class JdbcSubjectDAO implements SubjectDAO {
     private static final String UPDATE_SUBJECT = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = ?";
 
-    @Autowired
+    private final JdbcTemplate jdbcTemplate;
+    private final SubjectMapper subjectMapper;
+
     public JdbcSubjectDAO(JdbcTemplate jdbcTemplate, SubjectMapper subjectMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.subjectMapper = subjectMapper;
@@ -31,7 +29,19 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public void create(Subject subject) {
+
 	jdbcTemplate.update(CREATE_SUBJECT, subject.getName(), subject.getDescription());
+//	KeyHolder keyHolder = new GeneratedKeyHolder();
+//
+//	jdbcTemplate.update(connection -> {
+//	    PreparedStatement ps = connection
+//		    .prepareStatement(CREATE_SUBJECT);
+//	    ps.setString(1, subject.getName());
+//	    ps.setString(2, subject.getDescription());
+//	    return ps;
+//	}, keyHolder);
+//	int key = (int) keyHolder.getKey();
+//	subject.setId(key);
     }
 
     @Override

@@ -3,12 +3,15 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.University;
 
 import static ua.com.foxminded.university.Menu.*;
 
+@Component
 public class GroupsMenu {
 
     private University university;

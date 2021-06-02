@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.menu.ClassroomsMenu;
@@ -45,27 +46,36 @@ public class Menu {
 
     public static final Scanner scanner = new Scanner(System.in);
 
+    @Autowired
     private University university;
+    @Autowired
     private TeachersMenu teachersMenu;
+    @Autowired
     private GroupsMenu groupsMenu;
+    @Autowired
     private StudentsMenu studentsMenu;
+    @Autowired
     private SubjectsMenu subjectsMenu;
+    @Autowired
     private LecturesMenu lecturesMenu;
+    @Autowired
     private UniversityMenu universityMenu;
+    @Autowired
     private ClassroomsMenu classroomsMenu;
+    @Autowired
     private HolidaysMenu holidaysMenu;
 
-    public Menu(University university) {
-	this.university = university;
-	this.universityMenu = new UniversityMenu(university);
-	this.teachersMenu = new TeachersMenu(university);
-	this.groupsMenu = new GroupsMenu(university);
-	this.subjectsMenu = new SubjectsMenu(university);
-	this.lecturesMenu = new LecturesMenu(university);
-	this.classroomsMenu = new ClassroomsMenu(university);
-	this.studentsMenu = new StudentsMenu(university);
-	this.holidaysMenu = new HolidaysMenu(university);
-    }
+//    public Menu(University university) {
+//	this.university = university;
+//	this.universityMenu = new UniversityMenu(university);
+//	this.teachersMenu = new TeachersMenu(university);
+//	this.groupsMenu = new GroupsMenu(university);
+//	this.subjectsMenu = new SubjectsMenu(university);
+//	this.lecturesMenu = new LecturesMenu(university);
+//	this.classroomsMenu = new ClassroomsMenu(university);
+//	this.studentsMenu = new StudentsMenu(university);
+//	this.holidaysMenu = new HolidaysMenu(university);
+//    }
 
     public void start(int menuEntryPoint) {
 	int menuChoice;
@@ -176,7 +186,8 @@ public class Menu {
 	    start(4);
 	    break;
 	case 2:
-	    System.out.println(subjectsMenu.getStringOfSubjects(university.getSubjects()));
+	    // System.out.println(subjectsMenu.getStringOfSubjects(university.getSubjects()));
+	    subjectsMenu.printSubjects();
 	    start(4);
 	    break;
 	case 3:

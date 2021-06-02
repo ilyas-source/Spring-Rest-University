@@ -3,12 +3,14 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
 
@@ -16,6 +18,9 @@ import ua.com.foxminded.university.model.University;
 public class SubjectsMenu {
 
     private University university;
+
+    @Autowired
+    JdbcSubjectDAO jdbcSubjectDAO;
 
     public SubjectsMenu(University university) {
 	this.university = university;
@@ -124,6 +129,10 @@ public class SubjectsMenu {
 	    subjects.remove(choice - 1);
 	    System.out.println("Subject deleted successfully.");
 	}
+    }
+
+    public void printSubjects() {
+	System.out.println(getStringOfSubjects(jdbcSubjectDAO.findAll()));
     }
 
 }

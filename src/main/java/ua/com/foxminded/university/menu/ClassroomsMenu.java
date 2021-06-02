@@ -3,12 +3,16 @@ package ua.com.foxminded.university.menu;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.model.University;
 
+@Component
 public class ClassroomsMenu {
 
     private LocationsMenu locationsMenu = new LocationsMenu();
