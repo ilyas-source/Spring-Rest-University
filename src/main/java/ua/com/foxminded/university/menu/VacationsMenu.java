@@ -4,6 +4,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component
@@ -18,6 +20,7 @@ public class VacationsMenu {
 
     public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
+	vacations.sort(Comparator.comparing(Vacation::getId));
 	for (Vacation vacation : vacations) {
 	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringOfVacation(vacation) + CR);
 	}

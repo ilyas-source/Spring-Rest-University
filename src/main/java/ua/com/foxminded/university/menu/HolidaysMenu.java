@@ -3,11 +3,13 @@ package ua.com.foxminded.university.menu;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.University;
 
@@ -23,6 +25,7 @@ public class HolidaysMenu {
     public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();
 
+	holidays.sort(Comparator.comparing(Holiday::getId));
 	for (Holiday holiday : holidays) {
 	    result.append(holidays.indexOf(holiday) + 1).append(". " + getStringFromHoliday(holiday) + CR);
 	}

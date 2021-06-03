@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,73 @@ public class SubjectsMenu {
 
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
+	subjects.sort(Comparator.comparing(Subject::getId));
+
 	for (Subject subject : subjects) {
-	    result.append(subjects.indexOf(subject) + 1).append(". " + getStringFromSubject(subject) + CR);
+	    result.append(getStringFromSubject(subject) + CR);
 	}
 	return result.toString();
     }
 
     public String getStringFromSubject(Subject subject) {
-	return subject.getName() + ": " + subject.getDescription();
+	return subject.getId() + ". " + subject.getName() + ": " + subject.getDescription();
+    }
+
+    public void addSubject() {
+	jdbcSubjectDAO.create(createSubject());
+    }
+
+    public Subject createSubject() {
+	System.out.print("Enter subject name: ");
+	String name = scanner.nextLine();
+	System.out.print("Enter description: ");
+	String description = scanner.nextLine();
+
+	return new Subject(name, description);
+    }
+
+    public void printSubjects() {
+	System.out.println(getStringOfSubjects(jdbcSubjectDAO.findAll()));
+    }
+
+    public void updateSubject() {
+	List<Subject> subjects = jdbcSubjectDAO.findAll();
+
+	System.out.println("Select a subject to update: ");
+	System.out.println(getStringOfSubjects(subjects));
+	int choice = getIntFromScanner();
+	if (choice > subjects.size()) {
+	    System.out.println("No such subject, returning...");
+	} else {
+	    Subject subject = createSubject();
+	    subject.setId(choice);
+	    jdbcSubjectDAO.update(subject);
+
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
+    public void deleteSubject() {
+	List<Subject> subjects = jdbcSubjectDAO.findAll();
+
+	System.out.println("Select a subject to delete: ");
+	System.out.println(getStringOfSubjects(subjects));
+	int choice = getIntFromScanner();
+
+	boolean found = false;
+	for (Subject s : subjects) {
+	    if (choice == s.getId()) {
+		found = true;
+		break;
+	    }
+	}
+
+	if (!found) {
+	    System.out.println("No such subject, returning...");
+	} else {
+	    jdbcSubjectDAO.delete(choice);
+	    System.out.println("Deleted.");
+	}
     }
 
     public Subject selectSubject() {
@@ -93,46 +153,4 @@ public class SubjectsMenu {
 	}
 	return result;
     }
-
-    public Subject createSubject() {
-	System.out.print("Enter subject name: ");
-	String name = scanner.nextLine();
-	System.out.print("Enter description: ");
-	String description = scanner.nextLine();
-
-	return new Subject(name, description);
-    }
-
-    public void updateSubject() {
-	List<Subject> subjects = university.getSubjects();
-
-	System.out.println("Select a subject to update: ");
-	System.out.println(getStringOfSubjects(subjects));
-	int choice = getIntFromScanner();
-	if (choice > subjects.size()) {
-	    System.out.println("No such subject, returning...");
-	} else {
-	    subjects.set(choice - 1, createSubject());
-	    System.out.println("Overwrite successful.");
-	}
-    }
-
-    public void deleteSubject() {
-	List<Subject> subjects = university.getSubjects();
-
-	System.out.println("Select a subject to delete: ");
-	System.out.println(getStringOfSubjects(subjects));
-	int choice = getIntFromScanner();
-	if (choice > subjects.size()) {
-	    System.out.println("No such subject, returning...");
-	} else {
-	    subjects.remove(choice - 1);
-	    System.out.println("Subject deleted successfully.");
-	}
-    }
-
-    public void printSubjects() {
-	System.out.println(getStringOfSubjects(jdbcSubjectDAO.findAll()));
-    }
-
 }

@@ -2,6 +2,7 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ public class ClassroomsMenu {
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();
+	classrooms.sort(Comparator.comparing(Classroom::getId));
 	for (Classroom classroom : classrooms) {
 	    result.append(classrooms.indexOf(classroom) + 1).append(". " + getStringFromClassroom(classroom) + CR);
 	}

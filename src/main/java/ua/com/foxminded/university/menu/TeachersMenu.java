@@ -2,6 +2,7 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -28,6 +29,23 @@ public class TeachersMenu {
     public TeachersMenu(University university) {
 	this.university = university;
 	this.subjectsMenu = new SubjectsMenu(university);
+    }
+
+    public String getStringOfTeachers(List<Teacher> teachers) {
+	StringBuilder result = new StringBuilder();
+	teachers.sort(Comparator.comparing(Teacher::getId));
+	for (Teacher teacher : teachers) {
+	    result.append(teachers.indexOf(teacher) + 1).append(". " + getStringFromTeacher(teacher) + CR);
+	}
+	return result.toString();
+    }
+
+    public String getStringFromTeacher(Teacher teacher) {
+	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
+		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
+		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
+		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
+		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 
     public Teacher createTeacher() {
@@ -74,22 +92,6 @@ public class TeachersMenu {
 	    }
 	}
 	return degree;
-    }
-
-    public String getStringOfTeachers(List<Teacher> teachers) {
-	StringBuilder result = new StringBuilder();
-	for (Teacher teacher : teachers) {
-	    result.append(teachers.indexOf(teacher) + 1).append(". " + getStringFromTeacher(teacher) + CR);
-	}
-	return result.toString();
-    }
-
-    public String getStringFromTeacher(Teacher teacher) {
-	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
-		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
-		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
-		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
-		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 
     public Teacher selectTeacher() {

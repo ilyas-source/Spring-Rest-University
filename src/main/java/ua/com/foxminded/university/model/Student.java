@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class Student {
 
+    int id;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -23,6 +24,14 @@ public class Student {
 	this.email = email;
 	this.phoneNumber = phoneNumber;
 	this.address = address;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getFirstName() {

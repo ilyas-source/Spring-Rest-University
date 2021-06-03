@@ -4,12 +4,21 @@ import java.time.LocalTime;
 
 public class TimeRange {
 
+    int id;
     private LocalTime startTime;
     private LocalTime endTime;
 
     public TimeRange(LocalTime startTime, LocalTime endTime) {
 	this.startTime = startTime;
 	this.endTime = endTime;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public LocalTime getStartTime() {

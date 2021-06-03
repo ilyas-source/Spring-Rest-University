@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Lecture {
 
+    int id;
     private LocalDate date;
     private TimeRange time;
     private List<Group> groups;
@@ -19,6 +20,14 @@ public class Lecture {
 	this.subject = subject;
 	this.teacher = teacher;
 	this.classroom = classroom;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public LocalDate getDate() {

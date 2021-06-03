@@ -3,42 +3,36 @@ package ua.com.foxminded.university.dao.jdbc;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
+import ua.com.foxminded.university.dao.VacationDAO;
+import ua.com.foxminded.university.model.Vacation;
 
-import ua.com.foxminded.university.dao.GroupDAO;
-import ua.com.foxminded.university.model.Group;
-
-@Component
-public class JdbcGroupDAO implements GroupDAO {
+public class JdbcVacationDAO implements VacationDAO {
 
     @Override
-    public void create(Group e) {
+    public void create(Vacation e) {
 	// TODO Auto-generated method stub
-
     }
 
     @Override
-    public Optional<Group> findById(int id) {
+    public Optional<Vacation> findById(int id) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public List<Group> findAll() {
+    public List<Vacation> findAll() {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void update(Group e) {
+    public void update(Vacation e) {
 	// TODO Auto-generated method stub
-
     }
 
     @Override
     public void delete(int id) {
 	// TODO Auto-generated method stub
-
     }
 
 }

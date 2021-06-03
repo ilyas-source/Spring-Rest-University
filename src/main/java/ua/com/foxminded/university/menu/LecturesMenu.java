@@ -2,6 +2,7 @@ package ua.com.foxminded.university.menu;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -36,6 +38,7 @@ public class LecturesMenu {
 
     public String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
+	lectures.sort(Comparator.comparing(Lecture::getId));
 	for (Lecture lecture : lectures) {
 	    result.append(lectures.indexOf(lecture) + 1).append(". " + getStringOfLecture(lecture));
 	}

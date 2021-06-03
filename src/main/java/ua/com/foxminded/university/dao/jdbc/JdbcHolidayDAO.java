@@ -5,32 +5,32 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.GroupDAO;
-import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.dao.HolidayDAO;
+import ua.com.foxminded.university.model.Holiday;
 
 @Component
-public class JdbcGroupDAO implements GroupDAO {
+public class JdbcHolidayDAO implements HolidayDAO {
 
     @Override
-    public void create(Group e) {
+    public void create(Holiday e) {
 	// TODO Auto-generated method stub
 
     }
 
     @Override
-    public Optional<Group> findById(int id) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public List<Group> findAll() {
+    public Optional<Holiday> findById(int id) {
 	// TODO Auto-generated method stub
 	return null;
     }
 
     @Override
-    public void update(Group e) {
+    public List<Holiday> findAll() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    public void update(Holiday e) {
 	// TODO Auto-generated method stub
 
     }

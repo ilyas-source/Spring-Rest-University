@@ -1,9 +1,13 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.*;
@@ -29,19 +33,16 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public void create(Subject subject) {
+	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcTemplate.update(CREATE_SUBJECT, subject.getName(), subject.getDescription());
-//	KeyHolder keyHolder = new GeneratedKeyHolder();
-//
-//	jdbcTemplate.update(connection -> {
-//	    PreparedStatement ps = connection
-//		    .prepareStatement(CREATE_SUBJECT);
-//	    ps.setString(1, subject.getName());
-//	    ps.setString(2, subject.getDescription());
-//	    return ps;
-//	}, keyHolder);
-//	int key = (int) keyHolder.getKey();
-//	subject.setId(key);
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(CREATE_SUBJECT, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, subject.getName());
+	    ps.setString(2, subject.getDescription());
+	    return ps;
+	}, keyHolder);
+	subject.setId((int) keyHolder.getKeys().get("id"));
     }
 
     @Override
@@ -56,7 +57,17 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public void update(Subject subject) {
-	jdbcTemplate.update(UPDATE_SUBJECT, subject.getName(), subject.getDescription());
+	KeyHolder keyHolder = new GeneratedKeyHolder();
+
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(UPDATE_SUBJECT, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, subject.getName());
+	    ps.setString(2, subject.getDescription());
+	    ps.setInt(3, subject.getId());
+	    return ps;
+	}, keyHolder);
+	subject.setId((int) keyHolder.getKeys().get("id"));
     }
 
     @Override

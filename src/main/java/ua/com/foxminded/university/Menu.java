@@ -16,6 +16,7 @@ import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
 
 @Component
@@ -64,18 +65,6 @@ public class Menu {
     private ClassroomsMenu classroomsMenu;
     @Autowired
     private HolidaysMenu holidaysMenu;
-
-//    public Menu(University university) {
-//	this.university = university;
-//	this.universityMenu = new UniversityMenu(university);
-//	this.teachersMenu = new TeachersMenu(university);
-//	this.groupsMenu = new GroupsMenu(university);
-//	this.subjectsMenu = new SubjectsMenu(university);
-//	this.lecturesMenu = new LecturesMenu(university);
-//	this.classroomsMenu = new ClassroomsMenu(university);
-//	this.studentsMenu = new StudentsMenu(university);
-//	this.holidaysMenu = new HolidaysMenu(university);
-//    }
 
     public void start(int menuEntryPoint) {
 	int menuChoice;
@@ -182,11 +171,10 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getSubjects().add(subjectsMenu.createSubject());
+	    subjectsMenu.addSubject();
 	    start(4);
 	    break;
 	case 2:
-	    // System.out.println(subjectsMenu.getStringOfSubjects(university.getSubjects()));
 	    subjectsMenu.printSubjects();
 	    start(4);
 	    break;

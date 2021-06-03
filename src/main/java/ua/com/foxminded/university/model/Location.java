@@ -2,6 +2,7 @@ package ua.com.foxminded.university.model;
 
 public class Location {
 
+    int id;
     private String building;
     private int floor;
     private int roomNumber;
@@ -10,6 +11,14 @@ public class Location {
 	this.building = building;
 	this.floor = floor;
 	this.roomNumber = roomNumber;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getBuilding() {

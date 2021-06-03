@@ -4,6 +4,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.University;
 
@@ -27,6 +29,7 @@ public class StudentsMenu {
 
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
+	students.sort(Comparator.comparing(Student::getId));
 	for (Student student : students) {
 	    result.append(students.indexOf(student) + 1).append(". " + getStringFromStudent(student) + CR);
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Teacher {
 
+    int id;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -25,6 +26,14 @@ public class Teacher {
 	this.phoneNumber = phoneNumber;
 	this.address = address;
 	this.vacations = vacations;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getFirstName() {

@@ -1,12 +1,14 @@
 package ua.com.foxminded.university.menu;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.University;
 
 import static ua.com.foxminded.university.Menu.*;
@@ -24,7 +26,7 @@ public class GroupsMenu {
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
-
+	groups.sort(Comparator.comparing(Group::getId));
 	for (Group group : groups) {
 	    result.append(groups.indexOf(group) + 1).append(". " + getStringFromGroup(group));
 	}
