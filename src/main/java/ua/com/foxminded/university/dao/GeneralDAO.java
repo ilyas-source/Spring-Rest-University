@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface GeneralDAO<E> {
 
-    void create(E e);
+    void addToDb(E e);
 
     Optional<E> findById(int id);
 

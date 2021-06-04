@@ -2,11 +2,15 @@ package ua.com.foxminded.university.model;
 
 public class Address {
 
+    private int id;
     private String country;
     private String postalCode;
     private String region;
     private String city;
     private String streetAddress;
+
+    public Address() {
+    }
 
     public Address(String country, String postalCode, String region, String city, String streetAddress) {
 	this.country = country;
@@ -14,6 +18,14 @@ public class Address {
 	this.region = region;
 	this.city = city;
 	this.streetAddress = streetAddress;
+    }
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
     }
 
     public String getCountry() {

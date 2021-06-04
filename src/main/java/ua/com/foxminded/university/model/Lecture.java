@@ -13,6 +13,9 @@ public class Lecture {
     private Teacher teacher;
     private Classroom classroom;
 
+    public Lecture() {
+    }
+
     public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
 	this.date = date;
 	this.time = time;

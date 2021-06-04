@@ -15,6 +15,9 @@ public class Teacher {
     private Address address;
     private List<Vacation> vacations;
 
+    public Teacher() {
+    }
+
     public Teacher(String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
 	    String phoneNumber, Address address, List<Vacation> vacations) {
 	this.firstName = firstName;
@@ -104,7 +107,7 @@ public class Teacher {
 	return subjects;
     }
 
-    public void setSubjectIndexes(List<Subject> subjects) {
+    public void setSubjects(List<Subject> subjects) {
 	this.subjects = subjects;
     }
 }

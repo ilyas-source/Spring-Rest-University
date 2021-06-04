@@ -5,6 +5,7 @@ import static ua.com.foxminded.university.Menu.*;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
@@ -14,22 +15,19 @@ import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component
 public class TeachersMenu {
 
-    private University university;
-    private GenderMenu genderMenu = new GenderMenu();
-    private VacationsMenu vacationsMenu = new VacationsMenu();
-    private AddressMenu addressMenu = new AddressMenu();
+    @Autowired
+    private GenderMenu genderMenu;
+    @Autowired
+    private VacationsMenu vacationsMenu;
+    @Autowired
+    private AddressMenu addressMenu;
+    @Autowired
     private SubjectsMenu subjectsMenu;
-
-    public TeachersMenu(University university) {
-	this.university = university;
-	this.subjectsMenu = new SubjectsMenu(university);
-    }
 
     public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
@@ -94,49 +92,49 @@ public class TeachersMenu {
 	return degree;
     }
 
-    public Teacher selectTeacher() {
-	List<Teacher> teachers = university.getTeachers();
-	Teacher result = null;
-
-	while (isNull(result)) {
-	    System.out.println("Select a teacher: ");
-	    System.out.print(getStringOfTeachers(teachers));
-	    int choice = getIntFromScanner();
-	    if (choice <= teachers.size()) {
-		result = teachers.get(choice - 1);
-		System.out.println("Success.");
-	    } else {
-		System.out.println("No such object.");
-	    }
-	}
-	return result;
-    }
-
-    public void updateTeacher() {
-	List<Teacher> teachers = university.getTeachers();
-
-	System.out.println("Select a teacher to update: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	if (choice > teachers.size()) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    teachers.set(choice - 1, createTeacher());
-	    System.out.println("Overwrite successful.");
-	}
-    }
-
-    public void deleteTeacher() {
-	List<Teacher> teachers = university.getTeachers();
-
-	System.out.println("Select a teacher to delete: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	if (choice > teachers.size()) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    teachers.remove(choice - 1);
-	    System.out.println("Teacher deleted successfully.");
-	}
-    }
+//    public Teacher selectTeacher() {
+//	List<Teacher> teachers = university.getTeachers();
+//	Teacher result = null;
+//
+//	while (isNull(result)) {
+//	    System.out.println("Select a teacher: ");
+//	    System.out.print(getStringOfTeachers(teachers));
+//	    int choice = getIntFromScanner();
+//	    if (choice <= teachers.size()) {
+//		result = teachers.get(choice - 1);
+//		System.out.println("Success.");
+//	    } else {
+//		System.out.println("No such object.");
+//	    }
+//	}
+//	return result;
+//    }
+//
+//    public void updateTeacher() {
+//	List<Teacher> teachers = university.getTeachers();
+//
+//	System.out.println("Select a teacher to update: ");
+//	System.out.println(getStringOfTeachers(teachers));
+//	int choice = getIntFromScanner();
+//	if (choice > teachers.size()) {
+//	    System.out.println("No such teacher, returning...");
+//	} else {
+//	    teachers.set(choice - 1, createTeacher());
+//	    System.out.println("Overwrite successful.");
+//	}
+//    }
+//
+//    public void deleteTeacher() {
+//	List<Teacher> teachers = university.getTeachers();
+//
+//	System.out.println("Select a teacher to delete: ");
+//	System.out.println(getStringOfTeachers(teachers));
+//	int choice = getIntFromScanner();
+//	if (choice > teachers.size()) {
+//	    System.out.println("No such teacher, returning...");
+//	} else {
+//	    teachers.remove(choice - 1);
+//	    System.out.println("Teacher deleted successfully.");
+//	}
+//    }
 }

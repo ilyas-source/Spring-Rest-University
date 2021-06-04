@@ -8,6 +8,9 @@ public class Holiday {
     private LocalDate date;
     private String name;
 
+    public Holiday() {
+    }
+
     public Holiday(LocalDate date, String name) {
 	this.date = date;
 	this.name = name;

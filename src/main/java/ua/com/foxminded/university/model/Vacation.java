@@ -8,6 +8,9 @@ public class Vacation {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    public Vacation() {
+    }
+
     public Vacation(LocalDate startDate, LocalDate endDate) {
 	this.startDate = startDate;
 	this.endDate = endDate;

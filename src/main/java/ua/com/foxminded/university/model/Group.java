@@ -8,6 +8,9 @@ public class Group {
     private String name;
     private List<Student> students;
 
+    public Group() {
+    }
+
     public Group(String name, List<Student> students) {
 	this.name = name;
 	this.students = students;

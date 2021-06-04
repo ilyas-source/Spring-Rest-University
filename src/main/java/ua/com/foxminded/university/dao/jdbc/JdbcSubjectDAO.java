@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,27 +18,24 @@ import ua.com.foxminded.university.model.Subject;
 @Component
 public class JdbcSubjectDAO implements SubjectDAO {
 
-    private static final String CREATE_SUBJECT = "INSERT INTO subjects (name, description) VALUES (?, ?)";
-    private static final String FIND_SUBJECT_BY_ID = "SELECT * FROM subjects WHERE id = ?";
-    private static final String FIND_ALL_SUBJECTS = "SELECT * FROM subjects";
-    private static final String UPDATE_SUBJECT = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
-    private static final String DELETE_SUBJECT_BY_ID = "DELETE FROM subjects WHERE id = ?";
+    private static final String CREATE = "INSERT INTO subjects (name, description) VALUES (?, ?)";
+    private static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = ?";
+    private static final String FIND_ALL = "SELECT * FROM subjects";
+    private static final String UPDATE = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
+    private static final String DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SubjectMapper subjectMapper;
-
-    public JdbcSubjectDAO(JdbcTemplate jdbcTemplate, SubjectMapper subjectMapper) {
-	this.jdbcTemplate = jdbcTemplate;
-	this.subjectMapper = subjectMapper;
-    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SubjectMapper subjectMapper;
 
     @Override
-    public void create(Subject subject) {
+    public void addToDb(Subject subject) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
-		    .prepareStatement(CREATE_SUBJECT, Statement.RETURN_GENERATED_KEYS);
+		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setString(1, subject.getName());
 	    ps.setString(2, subject.getDescription());
 	    return ps;
@@ -47,12 +45,12 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public Optional<Subject> findById(int id) {
-	return Optional.of(jdbcTemplate.queryForObject(FIND_SUBJECT_BY_ID, subjectMapper, id));
+	return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, subjectMapper, id));
     }
 
     @Override
     public List<Subject> findAll() {
-	return jdbcTemplate.query(FIND_ALL_SUBJECTS, subjectMapper);
+	return jdbcTemplate.query(FIND_ALL, subjectMapper);
     }
 
     @Override
@@ -61,7 +59,7 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
-		    .prepareStatement(UPDATE_SUBJECT, Statement.RETURN_GENERATED_KEYS);
+		    .prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setString(1, subject.getName());
 	    ps.setString(2, subject.getDescription());
 	    ps.setInt(3, subject.getId());
@@ -72,7 +70,7 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public void delete(int id) {
-	jdbcTemplate.update(DELETE_SUBJECT_BY_ID, id);
+	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
 }

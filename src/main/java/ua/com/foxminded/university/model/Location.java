@@ -7,6 +7,9 @@ public class Location {
     private int floor;
     private int roomNumber;
 
+    public Location() {
+    }
+
     public Location(String building, int floor, int roomNumber) {
 	this.building = building;
 	this.floor = floor;

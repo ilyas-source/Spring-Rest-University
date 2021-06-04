@@ -14,6 +14,9 @@ public class Student {
     private String phoneNumber;
     private Address address;
 
+    public Student() {
+    }
+
     public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate entryYear, String email,
 	    String phoneNumber, Address address) {
 	this.firstName = firstName;

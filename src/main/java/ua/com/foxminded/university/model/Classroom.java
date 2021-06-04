@@ -7,6 +7,9 @@ public class Classroom {
     private String name;
     private int capacity;
 
+    public Classroom() {
+    }
+
     public Classroom(Location location, String name, int capacity) {
 	this.location = location;
 	this.name = name;

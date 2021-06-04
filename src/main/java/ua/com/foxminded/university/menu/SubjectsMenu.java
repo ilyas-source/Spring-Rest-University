@@ -3,6 +3,9 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,19 +16,12 @@ import static ua.com.foxminded.university.Menu.*;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.University;
 
 @Component
 public class SubjectsMenu {
 
-    private University university;
-
     @Autowired
     JdbcSubjectDAO jdbcSubjectDAO;
-
-    public SubjectsMenu(University university) {
-	this.university = university;
-    }
 
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
@@ -42,7 +38,7 @@ public class SubjectsMenu {
     }
 
     public void addSubject() {
-	jdbcSubjectDAO.create(createSubject());
+	jdbcSubjectDAO.addToDb(createSubject());
     }
 
     public Subject createSubject() {
@@ -83,8 +79,9 @@ public class SubjectsMenu {
 	int choice = getIntFromScanner();
 
 	boolean found = false;
+
 	for (Subject s : subjects) {
-	    if (choice == s.getId()) {
+	    if (s.getId() == choice) {
 		found = true;
 		break;
 	    }
@@ -99,7 +96,7 @@ public class SubjectsMenu {
     }
 
     public Subject selectSubject() {
-	List<Subject> subjects = university.getSubjects();
+	List<Subject> subjects = jdbcSubjectDAO.findAll();
 	Subject result = null;
 
 	while (isNull(result)) {
@@ -118,7 +115,7 @@ public class SubjectsMenu {
 
     public List<Subject> selectSubjects() {
 	List<Subject> result = new ArrayList<>();
-	List<Subject> subjects = university.getSubjects();
+	List<Subject> subjects = jdbcSubjectDAO.findAll();
 	boolean finished = false;
 	boolean correctEntry = false;
 

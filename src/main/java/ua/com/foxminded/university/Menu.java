@@ -17,7 +17,6 @@ import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.University;
 
 @Component
 public class Menu {
@@ -34,7 +33,6 @@ public class Menu {
 	    + "5. Manage lectures" + CR
 	    + "6. Manage classrooms" + CR
 	    + "7. Manage students" + CR
-	    + "8. Rename university" + CR
 	    + "9. Manage university holidays" + CR
 	    + "Enter choice or 0 to quit:";
 
@@ -47,8 +45,6 @@ public class Menu {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    @Autowired
-    private University university;
     @Autowired
     private TeachersMenu teachersMenu;
     @Autowired
@@ -82,7 +78,7 @@ public class Menu {
 	    scanner.close();
 	    break;
 	case 1:
-	    universityMenu.printUniversity();
+//	    universityMenu.printUniversity();
 	    start(0);
 	    break;
 	case 2:
@@ -103,9 +99,6 @@ public class Menu {
 	case 7:
 	    manageStudents();
 	    break;
-	case 8:
-	    System.out.println("Enter new name for the university: ");
-	    university.setName(scanner.nextLine());
 	case 9:
 	    manageHolidays();
 	    break;
@@ -119,19 +112,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getTeachers().add(teachersMenu.createTeacher());
+//	    university.getTeachers().add(teachersMenu.createTeacher());
 	    start(2);
 	    break;
 	case 2:
-	    System.out.println(teachersMenu.getStringOfTeachers(university.getTeachers()));
+//	    System.out.println(teachersMenu.getStringOfTeachers(university.getTeachers()));
 	    start(2);
 	    break;
 	case 3:
-	    teachersMenu.updateTeacher();
+//	    teachersMenu.updateTeacher();
 	    start(2);
 	    break;
 	case 4:
-	    teachersMenu.deleteTeacher();
+//	    teachersMenu.deleteTeacher();
 	    start(2);
 	    break;
 	default:
@@ -145,19 +138,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getGroups().add(groupsMenu.createGroup());
+//	    university.getGroups().add(groupsMenu.createGroup());
 	    start(3);
 	    break;
 	case 2:
-	    System.out.println(groupsMenu.getStringOfGroups(university.getGroups()));
+//	    System.out.println(groupsMenu.getStringOfGroups(university.getGroups()));
 	    start(3);
 	    break;
 	case 3:
-	    groupsMenu.updateGroup();
+//	    groupsMenu.updateGroup();
 	    start(3);
 	    break;
 	case 4:
-	    groupsMenu.deleteGroup();
+//	    groupsMenu.deleteGroup();
 	    start(3);
 	    break;
 	default:
@@ -197,11 +190,11 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getLectures().add(lecturesMenu.createLecture());
+	    lecturesMenu.addLecture();
 	    start(5);
 	    break;
 	case 2:
-	    System.out.println(lecturesMenu.getStringOfLectures(university.getLectures()));
+	    lecturesMenu.printLectures();
 	    start(5);
 	    break;
 	case 3:
@@ -223,11 +216,11 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getClassrooms().add(classroomsMenu.createClassroom());
+	    classroomsMenu.addClassroom();
 	    start(6);
 	    break;
 	case 2:
-	    System.out.println(classroomsMenu.getStringOfClassrooms(university.getClassrooms()));
+	    classroomsMenu.printClassrooms();
 	    start(6);
 	    break;
 	case 3:
@@ -249,19 +242,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getStudents().add(studentsMenu.createStudent());
+//	    university.getStudents().add(studentsMenu.createStudent());
 	    start(7);
 	    break;
 	case 2:
-	    System.out.println(studentsMenu.getStringOfStudents(university.getStudents()));
+//	    System.out.println(studentsMenu.getStringOfStudents(university.getStudents()));
 	    start(7);
 	    break;
 	case 3:
-	    studentsMenu.updateStudent();
+//	    studentsMenu.updateStudent();
 	    start(7);
 	    break;
 	case 4:
-	    studentsMenu.deleteStudent();
+//	    studentsMenu.deleteStudent();
 	    start(7);
 	    break;
 	default:
@@ -275,19 +268,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage holidays:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-	    university.getHolidays().add(holidaysMenu.createHoliday());
+//	    university.getHolidays().add(holidaysMenu.createHoliday());
 	    start(9);
 	    break;
 	case 2:
-	    System.out.println(holidaysMenu.getStringOfHolidays(university.getHolidays()));
+//	    System.out.println(holidaysMenu.getStringOfHolidays(university.getHolidays()));
 	    start(9);
 	    break;
 	case 3:
-	    holidaysMenu.updateHoliday();
+//	    holidaysMenu.updateHoliday();
 	    start(9);
 	    break;
 	case 4:
-	    holidaysMenu.deleteHoliday();
+//	    holidaysMenu.deleteHoliday();
 	    start(9);
 	    break;
 	default:

@@ -2,12 +2,17 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcLocationDAO;
 import ua.com.foxminded.university.model.Location;
 
 @Component
 public class LocationsMenu {
+
+    @Autowired
+    JdbcLocationDAO jdbcLocationDAO;
 
     public Location createLocation() {
 	System.out.print("Enter building name: ");

@@ -5,36 +5,30 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.TimeRange;
-import ua.com.foxminded.university.model.University;
 import static ua.com.foxminded.university.Menu.*;
 
 @Component
 public class LecturesMenu {
 
-    private University university;
+    @Autowired
     private GroupsMenu groupsMenu;
+    @Autowired
     private SubjectsMenu subjectsMenu;
+    @Autowired
     private TeachersMenu teachersMenu;
+    @Autowired
     private ClassroomsMenu classroomsMenu;
-
-    public LecturesMenu(University university) {
-	this.university = university;
-	this.groupsMenu = new GroupsMenu(university);
-	this.subjectsMenu = new SubjectsMenu(university);
-	this.teachersMenu = new TeachersMenu(university);
-	this.classroomsMenu = new ClassroomsMenu(university);
-    }
 
     public String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
@@ -57,57 +51,77 @@ public class LecturesMenu {
 	return result.toString();
     }
 
-    public Lecture createLecture() {
-	System.out.print("Lecture date: ");
-	LocalDate date = getDateFromScanner();
+    public void addLecture() {
+	// TODO Auto-generated method stub
 
-	TimeRange timeRange = null;
-	while (isNull(timeRange)) {
-	    System.out.print("Lecture begin time: ");
-	    LocalTime startTime = getTimeFromScanner();
-	    System.out.print("Lecture end time: ");
-	    LocalTime endTime = getTimeFromScanner();
-	    if (endTime.isBefore(startTime)) {
-		System.out.println("Wrong entry, try again.");
-	    } else {
-		System.out.println("Success.");
-		timeRange = new TimeRange(startTime, endTime);
-	    }
-	}
+    }
 
-	List<Group> groups = groupsMenu.selectGroups();
-	Subject subject = subjectsMenu.selectSubject();
-	Teacher teacher = teachersMenu.selectTeacher();
-	Classroom classroom = classroomsMenu.selectClassroom();
+    public void printLectures() {
+	// TODO Auto-generated method stub
 
-	return new Lecture(date, timeRange, groups, subject, teacher, classroom);
     }
 
     public void updateLecture() {
-	List<Lecture> lectures = university.getLectures();
+	// TODO Auto-generated method stub
 
-	System.out.println("Select a lecture to update: ");
-	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner();
-	if (choice > lectures.size()) {
-	    System.out.println("No such lecture, returning...");
-	} else {
-	    lectures.set(choice - 1, createLecture());
-	    System.out.println("Overwrite successful.");
-	}
     }
 
     public void deleteLecture() {
-	List<Lecture> lectures = university.getLectures();
+	// TODO Auto-generated method stub
 
-	System.out.println("Select a lecture to delete: ");
-	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner();
-	if (choice > lectures.size()) {
-	    System.out.println("No such lecture, returning...");
-	} else {
-	    lectures.remove(choice - 1);
-	    System.out.println("Lecture deleted successfully.");
-	}
     }
+
+//    public Lecture createLecture() {
+//	System.out.print("Lecture date: ");
+//	LocalDate date = getDateFromScanner();
+//
+//	TimeRange timeRange = null;
+//	while (isNull(timeRange)) {
+//	    System.out.print("Lecture begin time: ");
+//	    LocalTime startTime = getTimeFromScanner();
+//	    System.out.print("Lecture end time: ");
+//	    LocalTime endTime = getTimeFromScanner();
+//	    if (endTime.isBefore(startTime)) {
+//		System.out.println("Wrong entry, try again.");
+//	    } else {
+//		System.out.println("Success.");
+//		timeRange = new TimeRange(startTime, endTime);
+//	    }
+//	}
+
+//	List<Group> groups = groupsMenu.selectGroups();
+//	Subject subject = subjectsMenu.selectSubject();
+//	Teacher teacher = teachersMenu.selectTeacher();
+//	Classroom classroom = classroomsMenu.selectClassroom();
+//
+//	return new Lecture(date, timeRange, groups, subject, teacher, classroom);
+//    }
+
+//    public void updateLecture() {
+//	List<Lecture> lectures = university.getLectures();
+//
+//	System.out.println("Select a lecture to update: ");
+//	System.out.println(getStringOfLectures(lectures));
+//	int choice = getIntFromScanner();
+//	if (choice > lectures.size()) {
+//	    System.out.println("No such lecture, returning...");
+//	} else {
+//	    lectures.set(choice - 1, createLecture());
+//	    System.out.println("Overwrite successful.");
+//	}
+//    }
+//
+//    public void deleteLecture() {
+//	List<Lecture> lectures = university.getLectures();
+//
+//	System.out.println("Select a lecture to delete: ");
+//	System.out.println(getStringOfLectures(lectures));
+//	int choice = getIntFromScanner();
+//	if (choice > lectures.size()) {
+//	    System.out.println("No such lecture, returning...");
+//	} else {
+//	    lectures.remove(choice - 1);
+//	    System.out.println("Lecture deleted successfully.");
+//	}
+//    }
 }
