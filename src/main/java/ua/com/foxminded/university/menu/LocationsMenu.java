@@ -13,7 +13,7 @@ import ua.com.foxminded.university.model.Location;
 public class LocationsMenu {
 
     @Autowired
-    JdbcLocationDAO jdbcLocationDAO;
+    private JdbcLocationDAO jdbcLocationDAO;
 
     public Location createLocation() {
 	System.out.print("Enter building name: ");

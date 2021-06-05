@@ -6,13 +6,18 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
 import ua.com.foxminded.university.model.Holiday;
 
 @Component
 public class HolidaysMenu {
+
+    @Autowired
+    private JdbcHolidayDAO jdbcHolidayDAO;
 
     public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();
@@ -35,6 +40,10 @@ public class HolidaysMenu {
 	String name = scanner.nextLine();
 
 	return new Holiday(date, name);
+    }
+
+    public void printHolidays() {
+	System.out.println(getStringOfHolidays(jdbcHolidayDAO.findAll()));
     }
 
 //    public void updateHoliday() {

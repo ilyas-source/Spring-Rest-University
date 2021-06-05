@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Lecture;
@@ -23,6 +24,8 @@ public class StudentsMenu {
     private AddressMenu addressMenu;
     @Autowired
     private GenderMenu genderMenu;
+    @Autowired
+    private JdbcStudentDAO jdbcStudentDAO;
 
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
@@ -60,6 +63,10 @@ public class StudentsMenu {
 	Address address = addressMenu.createAddress();
 
 	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
+    }
+
+    public void printStudents() {
+	System.out.println(getStringOfStudents(jdbcStudentDAO.findAll()));
     }
 
 //    public List<Student> selectStudents() {

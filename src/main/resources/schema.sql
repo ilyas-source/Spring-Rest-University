@@ -73,7 +73,8 @@ degree DEGREE,
 email VARCHAR(255),
 phone VARCHAR(255),
 address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE,
-CONSTRAINT teachers_pkey PRIMARY KEY (id)
+CONSTRAINT teachers_pkey PRIMARY KEY (id),
+CONSTRAINT teachers_address_fkey FOREIGN KEY (address_id) REFERENCES addresses(id) ON DELETE CASCADE
 );
 
 CREATE TABLE lectures (

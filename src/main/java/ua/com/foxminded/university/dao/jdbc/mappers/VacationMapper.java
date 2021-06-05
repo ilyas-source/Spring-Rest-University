@@ -21,9 +21,10 @@ public class VacationMapper implements RowMapper<Vacation> {
     @Override
     public Vacation mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Vacation vacation = new Vacation();
-	vacation.setStartDate(null);
-	vacation.setEndDate(null);
+	vacation.setId(rs.getInt("id"));
+	vacation.setStartDate(rs.getDate("start_date").toLocalDate());
+	vacation.setEndDate(rs.getDate("end_date").toLocalDate());
+
 	return vacation;
     }
-
 }

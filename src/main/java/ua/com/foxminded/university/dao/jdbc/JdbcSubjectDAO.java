@@ -23,6 +23,7 @@ public class JdbcSubjectDAO implements SubjectDAO {
     private static final String FIND_ALL = "SELECT * FROM subjects";
     private static final String UPDATE = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
+    private static final String FIND_BY_TEACHER_ID = "SELECT * from teachers_subjects WHERE teacher_id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -55,22 +56,16 @@ public class JdbcSubjectDAO implements SubjectDAO {
 
     @Override
     public void update(Subject subject) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection
-		    .prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
-	    ps.setString(1, subject.getName());
-	    ps.setString(2, subject.getDescription());
-	    ps.setInt(3, subject.getId());
-	    return ps;
-	}, keyHolder);
-	subject.setId((int) keyHolder.getKeys().get("id"));
+	jdbcTemplate.update(UPDATE, subject.getName(), subject.getDescription(), subject.getId());
     }
 
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    public List<Subject> getSubjectsByTeacher(int id) {
+	return jdbcTemplate.query(FIND_BY_TEACHER_ID, subjectMapper, id);
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
@@ -17,6 +18,8 @@ public class GroupsMenu {
 
     @Autowired
     private StudentsMenu studentsMenu;
+    @Autowired
+    private JdbcGroupDAO jdbcGroupDAO;
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
@@ -35,6 +38,10 @@ public class GroupsMenu {
 	    result.append(student.getFirstName() + " " + student.getLastName() + CR);
 	}
 	return result.toString();
+    }
+
+    public void printGroups() {
+	System.out.println(getStringOfGroups(jdbcGroupDAO.findAll()));
     }
 
 //    public Group createGroup() {

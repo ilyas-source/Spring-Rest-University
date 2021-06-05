@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -29,7 +30,7 @@ public class JdbcClassroomDAO implements ClassroomDAO {
     private static final String CREATE = "INSERT INTO classrooms (location_id, name, capacity) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM classrooms WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM classrooms";
-    private static final String UPDATE_ = "UPDATE classrooms SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE classrooms SET location_id = ?, name = ?, capacity = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM classrooms WHERE id = ?";
 
     @Autowired
@@ -67,9 +68,8 @@ public class JdbcClassroomDAO implements ClassroomDAO {
     }
 
     @Override
-    public void update(Classroom e) {
-	// TODO Auto-generated method stub
-
+    public void update(Classroom c) {
+	jdbcTemplate.update(UPDATE, c.getLocation().getId(), c.getName(), c.getCapacity(), c.getId());
     }
 
     @Override

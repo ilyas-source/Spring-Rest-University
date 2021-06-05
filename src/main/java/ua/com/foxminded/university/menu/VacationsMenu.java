@@ -7,27 +7,32 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component
 public class VacationsMenu {
 
+    @Autowired
+    private JdbcVacationDAO jdbcVacationDAO;
+
     public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
 	vacations.sort(Comparator.comparing(Vacation::getId));
 	for (Vacation vacation : vacations) {
-	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringOfVacation(vacation) + CR);
+	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringFromVacation(vacation) + CR);
 	}
 	return result.toString();
     }
 
-    public String getStringOfVacation(Vacation vacation) {
+    public String getStringFromVacation(Vacation vacation) {
 	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
     }
 

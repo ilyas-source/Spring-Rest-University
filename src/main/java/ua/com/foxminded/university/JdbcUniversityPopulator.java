@@ -23,6 +23,8 @@ import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
+import ua.com.foxminded.university.menu.TeachersMenu;
+import ua.com.foxminded.university.menu.VacationsMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
@@ -62,12 +64,18 @@ public class JdbcUniversityPopulator {
     @Autowired
     private JdbcStudentDAO jdbcStudentDAO;
 
+    @Autowired
+    private TeachersMenu teachersMenu;
+    @Autowired
+    private VacationsMenu vacationsMenu;
+
     public void populate() {
 	createEmptyDb(dataSource);
 	populateAddresses();
 	populateSubjects();
 	populateVacations();
-//	populateTeachers();
+	populateAddresses();
+	populateTeachers();
 	populateStudents();
 	populateClassRooms();
 //	populateGroups();
@@ -79,16 +87,6 @@ public class JdbcUniversityPopulator {
 	Resource resource = new ClassPathResource("schema.sql");
 	ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
 	databasePopulator.execute(dataSource);
-    }
-
-    private void populateAddresses() {
-	List<Address> addresses = new ArrayList<>();
-	addresses.add(new Address("UK", "12345", "City-Of-Edinburgh", "Edinburgh", "Panmure House"));
-	addresses.add(new Address("Poland", "54321", "Central region", "Warsaw", "Urszuli Ledochowskiej 3"));
-
-	for (Address a : addresses) {
-	    jdbcAddressDAO.addToDb(a);
-	}
     }
 
     private void populateSubjects() {
@@ -109,9 +107,25 @@ public class JdbcUniversityPopulator {
 	vacations.add(new Vacation(LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01)));
 	vacations.add(new Vacation(LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15)));
 	vacations.add(new Vacation(LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01)));
+
 	for (Vacation v : vacations) {
 	    jdbcVacationDAO.addToDb(v);
 	}
+    }
+
+    private void populateAddresses() {
+	List<Address> addresses = new ArrayList<>();
+	addresses.add(new Address("UK", "12345", "City-Of-Edinburgh", "Edinburgh", "Panmure House"));
+	addresses.add(new Address("Poland", "54321", "Central region", "Warsaw", "Urszuli Ledochowskiej 3"));
+	addresses.add(new Address("Russia", "450080", "Permskiy kray", "Perm", "Lenina 5"));
+	addresses.add(new Address("USA", "90210", "California", "LA", "Grove St. 15"));
+	addresses.add(new Address("France", "21012", "Central", "Paris", "Rue 15"));
+	addresses.add(new Address("China", "20121", "Guangdung", "Beijin", "Main St. 125"));
+
+	for (Address a : addresses) {
+	    jdbcAddressDAO.addToDb(a);
+	}
+
     }
 
     private void populateTeachers() {
@@ -119,33 +133,33 @@ public class JdbcUniversityPopulator {
 	List<Vacation> vacations = jdbcVacationDAO.findAll();
 
 	List<Subject> subjects1 = new ArrayList<>();
+	subjects1.add(subjects.get(0));
 	subjects1.add(subjects.get(1));
-	subjects1.add(subjects.get(2));
 
 	List<Vacation> vacations1 = new ArrayList<>();
+	vacations1.add(vacations.get(0));
 	vacations1.add(vacations.get(1));
-	vacations1.add(vacations.get(2));
 
 	Teacher teacher = new Teacher("Adam", "Smith",
 		Gender.MALE, Degree.DOCTOR,
 		subjects1, "adam@smith.com", "+223322",
-		new Address("UK", "12345", "City-Of-Edinburgh", "Edinburgh", "Panmure House"),
+		jdbcAddressDAO.findById(1).orElse(null),
 		vacations1);
 
 	jdbcTeacherDAO.addToDb(teacher);
 
 	List<Subject> subjects2 = new ArrayList<>();
+	subjects1.add(subjects.get(2));
 	subjects1.add(subjects.get(3));
-	subjects1.add(subjects.get(4));
 
 	List<Vacation> vacations2 = new ArrayList<>();
+	vacations1.add(vacations.get(2));
 	vacations1.add(vacations.get(3));
-	vacations1.add(vacations.get(4));
 
 	teacher = new Teacher("Marie", "Curie",
 		Gender.FEMALE, Degree.MASTER,
 		subjects2, "marie@curie.com", "+322223",
-		new Address("Poland", "54321", "Central region", "Warsaw", "Urszuli Ledochowskiej 3"),
+		jdbcAddressDAO.findById(2).orElse(null),
 		vacations2);
 
 	jdbcTeacherDAO.addToDb(teacher);

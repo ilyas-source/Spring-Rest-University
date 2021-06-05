@@ -60,7 +60,9 @@ public class SubjectsMenu {
 	System.out.println("Select a subject to update: ");
 	System.out.println(getStringOfSubjects(subjects));
 	int choice = getIntFromScanner();
-	if (choice > subjects.size()) {
+	boolean found = checkIfIdExists(choice, subjects);
+
+	if (!found) {
 	    System.out.println("No such subject, returning...");
 	} else {
 	    Subject subject = createSubject();
@@ -78,14 +80,7 @@ public class SubjectsMenu {
 	System.out.println(getStringOfSubjects(subjects));
 	int choice = getIntFromScanner();
 
-	boolean found = false;
-
-	for (Subject s : subjects) {
-	    if (s.getId() == choice) {
-		found = true;
-		break;
-	    }
-	}
+	boolean found = checkIfIdExists(choice, subjects);
 
 	if (!found) {
 	    System.out.println("No such subject, returning...");
@@ -93,6 +88,18 @@ public class SubjectsMenu {
 	    jdbcSubjectDAO.delete(choice);
 	    System.out.println("Deleted.");
 	}
+    }
+
+    private boolean checkIfIdExists(int id, List<Subject> subjects) {
+	boolean found = false;
+
+	for (Subject s : subjects) {
+	    if (s.getId() == id) {
+		found = true;
+		break;
+	    }
+	}
+	return found;
     }
 
     public Subject selectSubject() {

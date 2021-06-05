@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
@@ -28,12 +29,14 @@ public class TeachersMenu {
     private AddressMenu addressMenu;
     @Autowired
     private SubjectsMenu subjectsMenu;
+    @Autowired
+    private JdbcTeacherDAO jdbcTeacherDAO;
 
     public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
 	teachers.sort(Comparator.comparing(Teacher::getId));
 	for (Teacher teacher : teachers) {
-	    result.append(teachers.indexOf(teacher) + 1).append(". " + getStringFromTeacher(teacher) + CR);
+	    result.append(teacher.getId()).append(". " + getStringFromTeacher(teacher) + CR);
 	}
 	return result.toString();
     }
@@ -44,6 +47,10 @@ public class TeachersMenu {
 		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
 		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
 		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
+    }
+
+    public void addTeacher() {
+	jdbcTeacherDAO.addToDb(createTeacher());
     }
 
     public Teacher createTeacher() {
@@ -90,6 +97,15 @@ public class TeachersMenu {
 	    }
 	}
 	return degree;
+    }
+
+    public void printTeachers() {
+	System.out.println(getStringOfTeachers(jdbcTeacherDAO.findAll()));
+    }
+
+    public void deleteTeacher() {
+	// TODO Auto-generated method stub
+
     }
 
 //    public Teacher selectTeacher() {

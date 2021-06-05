@@ -16,7 +16,6 @@ import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
-import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class Menu {
@@ -112,11 +111,11 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-//	    university.getTeachers().add(teachersMenu.createTeacher());
+	    teachersMenu.addTeacher();
 	    start(2);
 	    break;
 	case 2:
-//	    System.out.println(teachersMenu.getStringOfTeachers(university.getTeachers()));
+	    teachersMenu.printTeachers();
 	    start(2);
 	    break;
 	case 3:
@@ -124,7 +123,7 @@ public class Menu {
 	    start(2);
 	    break;
 	case 4:
-//	    teachersMenu.deleteTeacher();
+	    teachersMenu.deleteTeacher();
 	    start(2);
 	    break;
 	default:

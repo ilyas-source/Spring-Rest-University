@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.jdbc.JdbcLectureDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -29,6 +30,8 @@ public class LecturesMenu {
     private TeachersMenu teachersMenu;
     @Autowired
     private ClassroomsMenu classroomsMenu;
+    @Autowired
+    private JdbcLectureDAO jdbcLectureDAO;
 
     public String getStringOfLectures(List<Lecture> lectures) {
 	StringBuilder result = new StringBuilder();
@@ -57,8 +60,7 @@ public class LecturesMenu {
     }
 
     public void printLectures() {
-	// TODO Auto-generated method stub
-
+	System.out.println(getStringOfLectures(jdbcLectureDAO.findAll()));
     }
 
     public void updateLecture() {
