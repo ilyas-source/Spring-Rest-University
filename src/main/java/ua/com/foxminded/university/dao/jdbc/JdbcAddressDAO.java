@@ -31,7 +31,7 @@ public class JdbcAddressDAO implements AddressDAO {
     private static final String CREATE = "INSERT INTO addresses (country, postalcode, region, city, streetAddress) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM addresses WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM addresses";
-    private static final String UPDATE_ = "UPDATE addresses SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE addresses SET country = ?, postalcode = ?, region = ?, city = ?, streetAddress = ?, WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM addresses WHERE id = ?";
 
     @Autowired

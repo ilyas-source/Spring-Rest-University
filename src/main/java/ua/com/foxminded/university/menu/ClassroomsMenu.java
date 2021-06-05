@@ -44,7 +44,7 @@ public class ClassroomsMenu {
 
     public Classroom createClassroom() {
 	System.out.println("Entering new classroom location.");
-	Location location = locationsMenu.addLocationToDb();
+	Location location = locationsMenu.createLocation();
 	System.out.print("Classroom name: ");
 	String name = scanner.nextLine();
 	System.out.print("Classroom capacity, students: ");

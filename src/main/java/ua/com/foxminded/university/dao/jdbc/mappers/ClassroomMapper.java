@@ -29,6 +29,7 @@ public class ClassroomMapper implements RowMapper<Classroom> {
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Classroom classroom = new Classroom();
 	Location location = jdbcLocationDAO.findById(rs.getInt("location_id")).orElse(null);
+	classroom.setId(rs.getInt("id"));
 	classroom.setLocation(location);
 	classroom.setName(rs.getString("name"));
 	classroom.setCapacity(rs.getInt("capacity"));

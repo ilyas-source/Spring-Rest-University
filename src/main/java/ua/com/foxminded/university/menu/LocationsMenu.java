@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.menu;
 
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

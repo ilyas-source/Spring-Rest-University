@@ -186,16 +186,16 @@ public class JdbcUniversityPopulator {
     }
 
     private void populateClassRooms() {
-//	List<Classroom> classrooms = new ArrayList<>();
-//
-//	classrooms.add(new Classroom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
-//	classrooms.add(new Classroom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
-//	classrooms.add(new Classroom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
-//
-//	for (Classroom c : classrooms) {
-//	    jdbcClassroomDAO.create(c);
-//	}
 
+	List<Classroom> classrooms = new ArrayList<>();
+
+	classrooms.add(new Classroom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
+	classrooms.add(new Classroom(new Location("Chem building", 1, 12), "Small chemistry auditory", 30));
+	classrooms.add(new Classroom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
+
+	for (Classroom c : classrooms) {
+	    jdbcClassroomDAO.addToDb(c);
+	}
     }
 
     private void populateGroups() {
