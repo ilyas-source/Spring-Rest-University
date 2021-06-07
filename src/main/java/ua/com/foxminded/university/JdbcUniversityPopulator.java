@@ -146,6 +146,9 @@ public class JdbcUniversityPopulator {
 		jdbcAddressDAO.findById(1).orElse(null),
 		vacations1);
 
+	System.out.println("Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " has "
+		+ teacher.getSubjects().size() + " subjects.");
+
 	jdbcTeacherDAO.addToDb(teacher);
 
 	List<Subject> subjects2 = new ArrayList<>();

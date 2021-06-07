@@ -12,8 +12,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.TeacherDAO;
+import ua.com.foxminded.university.dao.jdbc.mappers.SubjectMapper;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
+import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 
 //CREATE TABLE teachers (
@@ -38,12 +41,26 @@ public class JdbcTeacherDAO implements TeacherDAO {
     private static final String UPDATE_ = "UPDATE teachers SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
+    private static final String FIND_ASSIGNED_SUBJECTS = "SELECT * FROM teachers_subjects WHERE teacher_id = ?";
+    private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM teachers_subjects WHERE teacher_id = ?";
+    private static final String ASSIGN_SUBJECT_TO_TEACHER = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private TeacherMapper teacherMapper;
     @Autowired
+    private SubjectMapper subjectMapper;
+    @Autowired
     private JdbcAddressDAO jdbcAddressDAO;
+    @Autowired
+    private JdbcSubjectDAO jdbcSubjectDAO;
+    @Autowired
+    private JdbcVacationDAO jdbcVacationDAO;
+    @Autowired
+    private SubjectsMenu subjectsMenu;
+    @Autowired
+    private TeachersMenu teachersMenu;
 
     @Override
     public void addToDb(Teacher teacher) {
@@ -63,7 +80,29 @@ public class JdbcTeacherDAO implements TeacherDAO {
 	    ps.setInt(7, teacher.getAddress().getId());
 	    return ps;
 	}, keyHolder);
+
 	teacher.setId((int) keyHolder.getKeys().get("id"));
+
+	clearAssignedSubjects(teacher);
+	for (Subject subject : teacher.getSubjects()) {
+	    assignSubjectToTeacher(subject, teacher);
+	}
+
+//	System.out.print("Assigned subjects are: ");
+//	System.out.println(subjectsMenu.getStringOfSubjects(findAssignedSubjects(teacher)));
+
+    }
+//
+//    private List<Subject> findAssignedSubjects(Teacher teacher) {
+//	return jdbcTemplate.query(FIND_ASSIGNED_SUBJECTS, subjectMapper, teacher.getId());
+//    }
+
+    private void clearAssignedSubjects(Teacher teacher) {
+	jdbcTemplate.update(CLEAR_ASSIGNED_SUBJECTS, teacher.getId());
+    }
+
+    private void assignSubjectToTeacher(Subject subject, Teacher teacher) {
+	jdbcTemplate.update(ASSIGN_SUBJECT_TO_TEACHER, teacher.getId(), subject.getId());
     }
 
     @Override
