@@ -39,7 +39,7 @@ public class StudentsMenu {
     public String getStringFromStudent(Student student) {
 	StringBuilder result = new StringBuilder();
 	result.append(student.getFirstName() + " " + student.getLastName() + ", " + student.getGender()
-		+ ", born " + student.getBirthDate() + ", admission year " + student.getEntryYear().getYear() + CR);
+		+ ", born " + student.getBirthDate() + ", " + CR);
 	result.append("Mail: " + student.getEmail() + ", phone number " + student.getPhoneNumber() + CR);
 	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()));
 

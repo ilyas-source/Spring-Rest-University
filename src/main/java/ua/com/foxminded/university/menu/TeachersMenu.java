@@ -42,12 +42,10 @@ public class TeachersMenu {
     }
 
     public String getStringFromTeacher(Teacher teacher) {
-	System.out.println("Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " has "
-		+ teacher.getSubjects().size() + " subjects.");
 	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
 		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
 		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
-		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
+		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects())
 		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 

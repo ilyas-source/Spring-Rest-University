@@ -146,18 +146,15 @@ public class JdbcUniversityPopulator {
 		jdbcAddressDAO.findById(1).orElse(null),
 		vacations1);
 
-	System.out.println("Teacher " + teacher.getFirstName() + " " + teacher.getLastName() + " has "
-		+ teacher.getSubjects().size() + " subjects.");
-
 	jdbcTeacherDAO.addToDb(teacher);
 
 	List<Subject> subjects2 = new ArrayList<>();
-	subjects1.add(subjects.get(2));
-	subjects1.add(subjects.get(3));
+	subjects2.add(subjects.get(2));
+	subjects2.add(subjects.get(3));
 
 	List<Vacation> vacations2 = new ArrayList<>();
-	vacations1.add(vacations.get(2));
-	vacations1.add(vacations.get(3));
+	vacations2.add(vacations.get(2));
+	vacations2.add(vacations.get(3));
 
 	teacher = new Teacher("Marie", "Curie",
 		Gender.FEMALE, Degree.MASTER,
@@ -183,19 +180,19 @@ public class JdbcUniversityPopulator {
 	List<Student> students = new ArrayList<>();
 	students.add(new Student("Ivan", "Petrov", Gender.MALE, LocalDate.of(1980, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@rty.com", "123123123",
-		new Address("Russia", "450080", "Permskiy kray", "Perm", "Lenina 5")));
+		jdbcAddressDAO.findById(3).orElse(null)));
 
 	students.add(new Student("John", "Doe", Gender.MALE, LocalDate.of(1981, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@qwe.com", "1231223",
-		new Address("USA", "90210", "California", "LA", "Grove St. 15")));
+		jdbcAddressDAO.findById(4).orElse(null)));
 
 	students.add(new Student("Janna", "D'Ark", Gender.FEMALE, LocalDate.of(1881, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@no.fr", "1231223",
-		new Address("France", "21012", "Central", "Paris", "Rue 15")));
+		jdbcAddressDAO.findById(5).orElse(null)));
 
 	students.add(new Student("Mao", "Zedun", Gender.MALE, LocalDate.of(1921, 9, 14),
 		LocalDate.of(2000, 1, 1), "qwe@no.cn", "1145223",
-		new Address("China", "20121", "Guangdung", "Beijin", "Main St. 125")));
+		jdbcAddressDAO.findById(6).orElse(null)));
 
 	for (Student s : students) {
 	    jdbcStudentDAO.addToDb(s);

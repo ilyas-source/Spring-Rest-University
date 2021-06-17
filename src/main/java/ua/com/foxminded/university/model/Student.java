@@ -9,7 +9,6 @@ public class Student {
     private String lastName;
     private Gender gender;
     private LocalDate birthDate;
-    private LocalDate entryYear;
     private String email;
     private String phoneNumber;
     private Address address;
@@ -23,7 +22,6 @@ public class Student {
 	this.lastName = lastName;
 	this.gender = gender;
 	this.birthDate = birthDate;
-	this.entryYear = entryYear;
 	this.email = email;
 	this.phoneNumber = phoneNumber;
 	this.address = address;
@@ -67,14 +65,6 @@ public class Student {
 
     public void setBirthDate(LocalDate birthDate) {
 	this.birthDate = birthDate;
-    }
-
-    public LocalDate getEntryYear() {
-	return entryYear;
-    }
-
-    public void setEntryYear(LocalDate entryYear) {
-	this.entryYear = entryYear;
     }
 
     public String getEmail() {

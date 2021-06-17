@@ -31,7 +31,8 @@ public class JdbcVacationDAO implements VacationDAO {
     private static final String FIND_ALL = "SELECT * FROM vacations";
     private static final String UPDATE_ = "UPDATE vacations SET name = ?, description = ? WHERE id = ?"; // todo
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
-    private static final String FIND_BY_TEACHER_ID = "SELECT * from teachers_vacations WHERE teacher_id = ?";
+    private static final String FIND_BY_TEACHER_ID = "SELECT v.id, v.start_date, v.end_date from teachers_vacations " +
+	    "AS t_v LEFT JOIN vacations AS v ON (t_v.vacation_id=v.id) WHERE t_v.teacher_id=?;";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

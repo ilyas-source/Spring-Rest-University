@@ -23,7 +23,8 @@ public class JdbcSubjectDAO implements SubjectDAO {
     private static final String FIND_ALL = "SELECT * FROM subjects";
     private static final String UPDATE = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
-    private static final String FIND_BY_TEACHER_ID = "SELECT * from teachers_subjects WHERE teacher_id = ?";
+    private static final String FIND_BY_TEACHER_ID = "SELECT s.id, s.name, s.description from teachers_subjects " +
+	    "AS t_s LEFT JOIN subjects AS s ON (t_s.subject_id=s.id) WHERE t_s.teacher_id=?;";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

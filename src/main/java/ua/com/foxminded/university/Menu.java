@@ -77,7 +77,7 @@ public class Menu {
 	    scanner.close();
 	    break;
 	case 1:
-//	    universityMenu.printUniversity();
+	    universityMenu.printUniversity();
 	    start(0);
 	    break;
 	case 2:
