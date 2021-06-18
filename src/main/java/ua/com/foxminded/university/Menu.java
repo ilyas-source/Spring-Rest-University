@@ -137,11 +137,11 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-//	    university.getGroups().add(groupsMenu.createGroup());
+	    groupsMenu.addGroup();
 	    start(3);
 	    break;
 	case 2:
-//	    System.out.println(groupsMenu.getStringOfGroups(university.getGroups()));
+	    groupsMenu.printGroups();
 	    start(3);
 	    break;
 	case 3:
@@ -149,7 +149,7 @@ public class Menu {
 	    start(3);
 	    break;
 	case 4:
-//	    groupsMenu.deleteGroup();
+	    groupsMenu.deleteGroup();
 	    start(3);
 	    break;
 	default:

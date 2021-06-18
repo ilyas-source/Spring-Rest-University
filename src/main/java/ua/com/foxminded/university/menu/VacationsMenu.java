@@ -20,14 +20,11 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class VacationsMenu {
 
-    @Autowired
-    private JdbcVacationDAO jdbcVacationDAO;
-
     public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
 	vacations.sort(Comparator.comparing(Vacation::getId));
 	for (Vacation vacation : vacations) {
-	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringFromVacation(vacation) + CR);
+	    result.append(vacation.getId()).append(". " + getStringFromVacation(vacation) + CR);
 	}
 	return result.toString();
     }

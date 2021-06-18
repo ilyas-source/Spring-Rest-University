@@ -12,12 +12,13 @@ public class Student {
     private String email;
     private String phoneNumber;
     private Address address;
+    private Group group;
 
     public Student() {
     }
 
     public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate entryYear, String email,
-	    String phoneNumber, Address address) {
+	    String phoneNumber, Address address, Group group) {
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.gender = gender;
@@ -25,6 +26,7 @@ public class Student {
 	this.email = email;
 	this.phoneNumber = phoneNumber;
 	this.address = address;
+	this.group = group;
     }
 
     public int getId() {
@@ -89,5 +91,13 @@ public class Student {
 
     public void setAddress(Address address) {
 	this.address = address;
+    }
+
+    public Group getGroup() {
+	return group;
+    }
+
+    public void setGroup(Group group) {
+	this.group = group;
     }
 }

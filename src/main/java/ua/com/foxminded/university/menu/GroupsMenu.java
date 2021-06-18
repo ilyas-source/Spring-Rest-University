@@ -1,23 +1,23 @@
 package ua.com.foxminded.university.menu;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.sound.midi.Soundbank;
+
+import static java.util.Objects.isNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Subject;
 import static ua.com.foxminded.university.Menu.*;
 
 @Component
 public class GroupsMenu {
 
-    @Autowired
-    private StudentsMenu studentsMenu;
     @Autowired
     private JdbcGroupDAO jdbcGroupDAO;
 
@@ -25,17 +25,7 @@ public class GroupsMenu {
 	StringBuilder result = new StringBuilder();
 	groups.sort(Comparator.comparing(Group::getId));
 	for (Group group : groups) {
-	    result.append(groups.indexOf(group) + 1).append(". " + getStringFromGroup(group));
-	}
-	return result.toString();
-    }
-
-    public String getStringFromGroup(Group group) {
-	StringBuilder result = new StringBuilder();
-
-	result.append("Group " + group.getName() + ":" + CR);
-	for (Student student : group.getStudents()) {
-	    result.append(student.getFirstName() + " " + student.getLastName() + CR);
+	    result.append(group.getId()).append(". " + group.getName()).append(CR);
 	}
 	return result.toString();
     }
@@ -44,14 +34,30 @@ public class GroupsMenu {
 	System.out.println(getStringOfGroups(jdbcGroupDAO.findAll()));
     }
 
-//    public Group createGroup() {
-//	System.out.print("Enter group name: ");
-//	String name = scanner.nextLine();
-//	System.out.println("Assigning students to this group. ");
-//	List<Student> students = studentsMenu.selectStudents();
-//
-//	return new Group(name, students);
-//    }
+    public Group addGroup() {
+	System.out.print("Enter group name: ");
+	String name = scanner.nextLine();
+	return new Group(name);
+    }
+
+    public Group selectGroup() {
+	List<Group> groups = jdbcGroupDAO.findAll();
+	Group result = null;
+	boolean correctEntry = false;
+	while (!correctEntry) {
+	    System.out.println("Select a group:");
+	    System.out.print(getStringOfGroups(groups));
+	    int choice = getIntFromScanner();
+	    Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such group, try again.");
+	    } else {
+		correctEntry = true;
+		result = selected;
+	    }
+	}
+	return result;
+    }
 
 //    public List<Group> selectGroups() {
 //	List<Group> result = new ArrayList<>();
@@ -103,18 +109,19 @@ public class GroupsMenu {
 //	}
 //    }
 //
-//    public void deleteGroup() {
-//	List<Group> groups = university.getGroups();
-//
-//	System.out.println("Select a group to delete: ");
-//	System.out.println(getStringOfGroups(groups));
-//	int choice = getIntFromScanner();
-//	if (choice > groups.size()) {
-//	    System.out.println("No such group, returning...");
-//	} else {
-//	    groups.remove(choice - 1);
-//	    System.out.println("Group deleted successfully.");
-//	}
-//    }
+    public void deleteGroup() {
+	List<Group> groups = jdbcGroupDAO.findAll();
 
+	System.out.println("Select a group to delete: ");
+	System.out.println(getStringOfGroups(groups));
+	int choice = getIntFromScanner();
+	Group group = jdbcGroupDAO.findById(choice).orElse(null);
+
+	if (isNull(group)) {
+	    System.out.println("No such group, returning...");
+	} else {
+	    jdbcGroupDAO.delete(choice);
+	    System.out.println("Group deleted successfully.");
+	}
+    }
 }

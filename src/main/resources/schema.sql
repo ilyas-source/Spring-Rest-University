@@ -93,7 +93,8 @@ gender GENDER,
 birth_date DATE,
 email VARCHAR(255),
 phone VARCHAR(255),
-address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE
+address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE,
+group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
 );
 
 CREATE TABLE vacations (
@@ -120,6 +121,6 @@ vacation_id INTEGER REFERENCES vacations(id) ON DELETE CASCADE
 CREATE TABLE lectures_groups
 (
 id SERIAL PRIMARY KEY,
-lesson_id INTEGER REFERENCES lectures(id) ON DELETE CASCADE,
+lecture_id INTEGER REFERENCES lectures(id) ON DELETE CASCADE,
 group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
 );

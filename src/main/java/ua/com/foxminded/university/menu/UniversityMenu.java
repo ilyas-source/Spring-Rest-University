@@ -57,7 +57,7 @@ public class UniversityMenu {
 	result.append("Students are:" + CR);
 	result.append(studentsMenu.getStringOfStudents(jdbcStudentDAO.findAll()));
 	result.append(FORMAT_DIVIDER);
-	result.append("Current student groups:" + CR);
+	result.append("Student groups:" + CR);
 	result.append(groupsMenu.getStringOfGroups(jdbcGroupDAO.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Subjects available to students:" + CR);

@@ -12,6 +12,7 @@ import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
@@ -103,11 +104,6 @@ public class TeachersMenu {
 	System.out.println(getStringOfTeachers(jdbcTeacherDAO.findAll()));
     }
 
-    public void deleteTeacher() {
-	// TODO Auto-generated method stub
-
-    }
-
 //    public Teacher selectTeacher() {
 //	List<Teacher> teachers = university.getTeachers();
 //	Teacher result = null;
@@ -140,17 +136,19 @@ public class TeachersMenu {
 //	}
 //    }
 //
-//    public void deleteTeacher() {
-//	List<Teacher> teachers = university.getTeachers();
-//
-//	System.out.println("Select a teacher to delete: ");
-//	System.out.println(getStringOfTeachers(teachers));
-//	int choice = getIntFromScanner();
-//	if (choice > teachers.size()) {
-//	    System.out.println("No such teacher, returning...");
-//	} else {
-//	    teachers.remove(choice - 1);
-//	    System.out.println("Teacher deleted successfully.");
-//	}
-//    }
+    public void deleteTeacher() {
+	List<Teacher> teachers = jdbcTeacherDAO.findAll();
+
+	System.out.println("Select a classroom to delete: ");
+	System.out.println(getStringOfTeachers(teachers));
+	int choice = getIntFromScanner();
+	Teacher teacher = jdbcTeacherDAO.findById(choice).orElse(null);
+
+	if (isNull(teacher)) {
+	    System.out.println("No such teacher, returning...");
+	} else {
+	    jdbcTeacherDAO.delete(choice);
+	    System.out.println("Teacher deleted successfully.");
+	}
+    }
 }

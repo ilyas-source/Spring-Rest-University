@@ -14,6 +14,7 @@ import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Student;
 
@@ -23,6 +24,8 @@ public class StudentsMenu {
     @Autowired
     private AddressMenu addressMenu;
     @Autowired
+    private GroupsMenu groupsMenu;
+    @Autowired
     private GenderMenu genderMenu;
     @Autowired
     private JdbcStudentDAO jdbcStudentDAO;
@@ -31,7 +34,7 @@ public class StudentsMenu {
 	StringBuilder result = new StringBuilder();
 	students.sort(Comparator.comparing(Student::getId));
 	for (Student student : students) {
-	    result.append(students.indexOf(student) + 1).append(". " + getStringFromStudent(student) + CR);
+	    result.append(student.getId()).append(". " + getStringFromStudent(student) + CR);
 	}
 	return result.toString();
     }
@@ -41,7 +44,8 @@ public class StudentsMenu {
 	result.append(student.getFirstName() + " " + student.getLastName() + ", " + student.getGender()
 		+ ", born " + student.getBirthDate() + ", " + CR);
 	result.append("Mail: " + student.getEmail() + ", phone number " + student.getPhoneNumber() + CR);
-	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()));
+	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()) + CR);
+	result.append("Assigned to group " + student.getGroup().getName());
 
 	return result.toString();
     }
@@ -61,8 +65,9 @@ public class StudentsMenu {
 	System.out.print("Phone number: ");
 	String phone = scanner.nextLine();
 	Address address = addressMenu.createAddress();
+	Group group = groupsMenu.selectGroup();
 
-	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
+	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address, group);
     }
 
     public void printStudents() {

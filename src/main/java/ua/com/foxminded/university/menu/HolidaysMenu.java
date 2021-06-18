@@ -24,7 +24,7 @@ public class HolidaysMenu {
 
 	holidays.sort(Comparator.comparing(Holiday::getId));
 	for (Holiday holiday : holidays) {
-	    result.append(holidays.indexOf(holiday) + 1).append(". " + getStringFromHoliday(holiday) + CR);
+	    result.append(holiday.getId()).append(". " + getStringFromHoliday(holiday) + CR);
 	}
 	return result.toString();
     }

@@ -28,14 +28,15 @@ import ua.com.foxminded.university.model.Teacher;
 //entry_year DATE,
 //email VARCHAR(255),
 //phone VARCHAR(255),
-//address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE
+//address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE,
+//group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
 //);
 
 @Component
 public class JdbcStudentDAO implements StudentDAO {
 
     private static final String CREATE = "INSERT INTO students (first_name, last_name, gender, birth_date," +
-	    " email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE_ = "UPDATE students SET name = ?, description = ? WHERE id = ?";
@@ -64,6 +65,7 @@ public class JdbcStudentDAO implements StudentDAO {
 	    ps.setString(5, student.getEmail());
 	    ps.setString(6, student.getPhoneNumber());
 	    ps.setInt(7, student.getAddress().getId());
+	    ps.setInt(8, student.getGroup().getId());
 	    return ps;
 	}, keyHolder);
 	student.setId((int) keyHolder.getKeys().get("id"));

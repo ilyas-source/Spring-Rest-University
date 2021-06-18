@@ -16,6 +16,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class SubjectsMenu {
@@ -60,12 +61,12 @@ public class SubjectsMenu {
 	System.out.println("Select a subject to update: ");
 	System.out.println(getStringOfSubjects(subjects));
 	int choice = getIntFromScanner();
-	boolean found = checkIfIdExists(choice, subjects);
+	Subject subject = jdbcSubjectDAO.findById(choice).orElse(null);
 
-	if (!found) {
+	if (isNull(subject)) {
 	    System.out.println("No such subject, returning...");
 	} else {
-	    Subject subject = createSubject();
+	    subject = createSubject();
 	    subject.setId(choice);
 	    jdbcSubjectDAO.update(subject);
 
@@ -79,27 +80,14 @@ public class SubjectsMenu {
 	System.out.println("Select a subject to delete: ");
 	System.out.println(getStringOfSubjects(subjects));
 	int choice = getIntFromScanner();
+	Subject subject = jdbcSubjectDAO.findById(choice).orElse(null);
 
-	boolean found = checkIfIdExists(choice, subjects);
-
-	if (!found) {
+	if (isNull(subject)) {
 	    System.out.println("No such subject, returning...");
 	} else {
 	    jdbcSubjectDAO.delete(choice);
-	    System.out.println("Deleted.");
+	    System.out.println("Subject deleted successfully.");
 	}
-    }
-
-    private boolean checkIfIdExists(int id, List<Subject> subjects) {
-	boolean found = false;
-
-	for (Subject s : subjects) {
-	    if (s.getId() == id) {
-		found = true;
-		break;
-	    }
-	}
-	return found;
     }
 
     public Subject selectSubject() {

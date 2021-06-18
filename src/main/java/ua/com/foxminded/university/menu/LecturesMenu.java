@@ -37,20 +37,22 @@ public class LecturesMenu {
 	StringBuilder result = new StringBuilder();
 	lectures.sort(Comparator.comparing(Lecture::getId));
 	for (Lecture lecture : lectures) {
-	    result.append(lectures.indexOf(lecture) + 1).append(". " + getStringOfLecture(lecture));
+	    result.append(lecture.getId()).append(". " + getStringFromLecture(lecture));
 	}
 	return result.toString();
     }
 
-    public String getStringOfLecture(Lecture lecture) {
-
+    public String getStringFromLecture(Lecture lecture) {
 	StringBuilder result = new StringBuilder();
 
 	result.append("Lecture on " + lecture.getSubject().getName() + " will take place on " + lecture.getDate() + ", from "
 		+ lecture.getTime().getStartTime() + " to " + lecture.getTime().getEndTime() + "." + CR);
 	result.append("Read by " + lecture.getTeacher().getFirstName() + " " + lecture.getTeacher().getLastName() + " in "
 		+ lecture.getClassroom().getName() + "." + CR);
-	result.append("Groups to attend:" + CR + groupsMenu.getStringOfGroups(lecture.getGroups()));
+
+	List<Group> groups = lecture.getGroups();
+
+	result.append("Groups to attend:" + CR + groupsMenu.getStringOfGroups(groups));
 	return result.toString();
     }
 

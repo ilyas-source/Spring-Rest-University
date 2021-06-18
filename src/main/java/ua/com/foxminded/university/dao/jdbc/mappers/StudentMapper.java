@@ -8,8 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 //CREATE TABLE students (
@@ -21,7 +23,8 @@ import ua.com.foxminded.university.model.Student;
 //entry_year DATE,
 //email VARCHAR(255),
 //phone VARCHAR(255),
-//address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE
+//address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE,
+//group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
 //);
 
 @Component
@@ -29,6 +32,8 @@ public class StudentMapper implements RowMapper<Student> {
 
     @Autowired
     JdbcAddressDAO jdbcAddressDAO;
+    @Autowired
+    JdbcGroupDAO jdbcGroupDAO;
 
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -45,6 +50,10 @@ public class StudentMapper implements RowMapper<Student> {
 	student.setPhoneNumber(rs.getString("phone"));
 	student.setLastName(rs.getString("last_name"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
+
+	Group group = jdbcGroupDAO.findById(rs.getInt("group_id")).orElse(null);
+	student.setGroup(group);
+
 	return student;
     }
 

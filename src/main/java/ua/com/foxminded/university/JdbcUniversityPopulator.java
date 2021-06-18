@@ -23,6 +23,7 @@ import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
+import ua.com.foxminded.university.menu.LecturesMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.VacationsMenu;
 import ua.com.foxminded.university.model.Address;
@@ -63,7 +64,6 @@ public class JdbcUniversityPopulator {
     private JdbcHolidayDAO jdbcHolidayDAO;
     @Autowired
     private JdbcStudentDAO jdbcStudentDAO;
-
     @Autowired
     private TeachersMenu teachersMenu;
     @Autowired
@@ -76,10 +76,10 @@ public class JdbcUniversityPopulator {
 	populateVacations();
 	populateAddresses();
 	populateTeachers();
+	populateGroups();
 	populateStudents();
 	populateClassRooms();
-//	populateGroups();
-//	populateLectures();
+	populateLectures();
 	populateHolidays();
     }
 
@@ -176,23 +176,41 @@ public class JdbcUniversityPopulator {
 	}
     }
 
+    private void populateGroups() {
+	List<Group> groups = new ArrayList<>();
+
+	groups.add(new Group("AB-11"));
+	groups.add(new Group("ZI-08"));
+
+	for (Group g : groups) {
+	    jdbcGroupDAO.addToDb(g);
+	}
+    }
+
     private void populateStudents() {
 	List<Student> students = new ArrayList<>();
+	List<Group> groups = jdbcGroupDAO.findAll();
+	List<Address> addresses = jdbcAddressDAO.findAll();
+
 	students.add(new Student("Ivan", "Petrov", Gender.MALE, LocalDate.of(1980, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@rty.com", "123123123",
-		jdbcAddressDAO.findById(3).orElse(null)));
+		addresses.get(2),
+		groups.get(0)));
 
 	students.add(new Student("John", "Doe", Gender.MALE, LocalDate.of(1981, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@qwe.com", "1231223",
-		jdbcAddressDAO.findById(4).orElse(null)));
+		addresses.get(3),
+		groups.get(1)));
 
 	students.add(new Student("Janna", "D'Ark", Gender.FEMALE, LocalDate.of(1881, 11, 1),
 		LocalDate.of(2000, 1, 1), "qwe@no.fr", "1231223",
-		jdbcAddressDAO.findById(5).orElse(null)));
+		addresses.get(4),
+		groups.get(0)));
 
 	students.add(new Student("Mao", "Zedun", Gender.MALE, LocalDate.of(1921, 9, 14),
 		LocalDate.of(2000, 1, 1), "qwe@no.cn", "1145223",
-		jdbcAddressDAO.findById(6).orElse(null)));
+		addresses.get(5),
+		groups.get(1)));
 
 	for (Student s : students) {
 	    jdbcStudentDAO.addToDb(s);
@@ -200,7 +218,6 @@ public class JdbcUniversityPopulator {
     }
 
     private void populateClassRooms() {
-
 	List<Classroom> classrooms = new ArrayList<>();
 
 	classrooms.add(new Classroom(new Location("Phys building", 2, 22), "Big physics auditory", 500));
@@ -212,18 +229,6 @@ public class JdbcUniversityPopulator {
 	}
     }
 
-    private void populateGroups() {
-	List<Student> students = jdbcStudentDAO.findAll();
-	List<Group> groups = new ArrayList<>();
-
-	groups.add(new Group("AB-11", new ArrayList<>(List.of(students.get(1), students.get(2)))));
-	groups.add(new Group("ZI-08", new ArrayList<>(List.of(students.get(3), students.get(4)))));
-
-	for (Group g : groups) {
-	    jdbcGroupDAO.addToDb(g);
-	}
-    }
-
     private void populateLectures() {
 	List<Lecture> lectures = new ArrayList<>();
 	List<Group> groups = jdbcGroupDAO.findAll();
@@ -231,15 +236,18 @@ public class JdbcUniversityPopulator {
 	List<Teacher> teachers = jdbcTeacherDAO.findAll();
 	List<Classroom> classRooms = jdbcClassroomDAO.findAll();
 
-	lectures.add(new Lecture(LocalDate.of(2000, 1, 1),
+	Lecture lecture1 = new Lecture(LocalDate.of(2000, 1, 1),
 		new TimeRange(LocalTime.of(9, 0), LocalTime.of(10, 0)),
-		new ArrayList<>(List.of(groups.get(0))),
-		subjects.get(0), teachers.get(0), classRooms.get(0)));
+		new ArrayList<>(List.of(groups.get(0), groups.get(1))),
+		subjects.get(0), teachers.get(0), classRooms.get(0));
 
-	lectures.add(new Lecture(LocalDate.of(2000, 1, 2),
+	Lecture lecture2 = new Lecture(LocalDate.of(2000, 1, 2),
 		new TimeRange(LocalTime.of(10, 0), LocalTime.of(11, 0)),
-		new ArrayList<>(List.of(groups.get(1))),
-		subjects.get(1), teachers.get(1), classRooms.get(1)));
+		new ArrayList<>(List.of(groups.get(0), groups.get(1))),
+		subjects.get(1), teachers.get(1), classRooms.get(1));
+
+	lectures.add(lecture1);
+	lectures.add(lecture2);
 
 	for (Lecture l : lectures) {
 	    jdbcLectureDAO.addToDb(l);

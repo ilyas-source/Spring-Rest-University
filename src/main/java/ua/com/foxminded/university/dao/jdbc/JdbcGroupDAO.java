@@ -1,25 +1,34 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.GroupDAO;
 import ua.com.foxminded.university.dao.jdbc.mappers.GroupMapper;
 import ua.com.foxminded.university.dao.jdbc.mappers.HolidayMapper;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class JdbcGroupDAO implements GroupDAO {
 
-    private static final String CREATE_ = "INSERT INTO groups (name, description) VALUES (?, ?)";
+    private static final String CREATE = "INSERT INTO groups (name) VALUES (?)";
     private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM groups";
     private static final String UPDATE_ = "UPDATE groups SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
+    private static final String ASSIGN_GROUP_TO_LECTURE = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
+    private static final String FIND_BY_LECTURE_ID = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
+	    "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -27,9 +36,24 @@ public class JdbcGroupDAO implements GroupDAO {
     private GroupMapper groupMapper;
 
     @Override
-    public void addToDb(Group e) {
-	// TODO Auto-generated method stub
+    public void addToDb(Group group) {
+	List<Group> groups = findAll();
+	if (!groups.contains(group)) {
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
 
+	    jdbcTemplate.update(connection -> {
+		PreparedStatement ps = connection
+			.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+		ps.setString(1, group.getName());
+		return ps;
+	    }, keyHolder);
+	    group.setId((int) keyHolder.getKeys().get("id"));
+	}
+
+    }
+
+    public List<Group> findByLectureId(int lectureId) {
+	return jdbcTemplate.query(FIND_BY_LECTURE_ID, groupMapper, lectureId);
     }
 
     @Override
@@ -53,4 +77,10 @@ public class JdbcGroupDAO implements GroupDAO {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    public void assignGroupsToLecture(Lecture lecture) {
+	List<Group> groups = lecture.getGroups();
+	for (Group group : groups) {
+	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
+	}
+    }
 }

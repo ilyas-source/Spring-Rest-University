@@ -80,11 +80,6 @@ public class ClassroomsMenu {
 
     }
 
-    public void deleteClassroom() {
-	// TODO Auto-generated method stub
-
-    }
-
 //    public void updateClassroom() {
 //	List<Classroom> classrooms = university.getClassrooms();
 //
@@ -99,17 +94,19 @@ public class ClassroomsMenu {
 //	}
 //    }
 
-//    public void deleteClassroom() {
-//	List<Classroom> classrooms = university.getClassrooms();
-//
-//	System.out.println("Select a classroom to delete: ");
-//	System.out.println(getStringOfClassrooms(classrooms));
-//	int choice = getIntFromScanner();
-//	if (choice > classrooms.size()) {
-//	    System.out.println("No such classroom, returning...");
-//	} else {
-//	    classrooms.remove(choice - 1);
-//	    System.out.println("Classroom deleted successfully.");
-//	}
-//    }
+    public void deleteClassroom() {
+	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
+
+	System.out.println("Select a classroom to delete: ");
+	System.out.println(getStringOfClassrooms(classrooms));
+	int choice = getIntFromScanner();
+	Classroom classroom = jdbcClassroomDAO.findById(choice).orElse(null);
+
+	if (isNull(classroom)) {
+	    System.out.println("No such classroom, returning...");
+	} else {
+	    jdbcClassroomDAO.delete(choice);
+	    System.out.println("Classroom deleted successfully.");
+	}
+    }
 }
