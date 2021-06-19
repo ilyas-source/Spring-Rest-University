@@ -122,20 +122,24 @@ public class TeachersMenu {
 //	return result;
 //    }
 //
-//    public void updateTeacher() {
-//	List<Teacher> teachers = university.getTeachers();
-//
-//	System.out.println("Select a teacher to update: ");
-//	System.out.println(getStringOfTeachers(teachers));
-//	int choice = getIntFromScanner();
-//	if (choice > teachers.size()) {
-//	    System.out.println("No such teacher, returning...");
-//	} else {
-//	    teachers.set(choice - 1, createTeacher());
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
-//
+    public void updateTeacher() {
+	List<Teacher> teachers = jdbcTeacherDAO.findAll();
+
+	System.out.println("Select a teacher to update: ");
+	System.out.println(getStringOfTeachers(teachers));
+	int choice = getIntFromScanner();
+	Teacher selected = jdbcTeacherDAO.findById(choice).orElse(null);
+
+	if (isNull(selected)) {
+	    System.out.println("No such teacher, returning...");
+	} else {
+	    Teacher newTeacher = createTeacher();
+	    newTeacher.setId(selected.getId());
+	    jdbcTeacherDAO.update(newTeacher);
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
     public void deleteTeacher() {
 	List<Teacher> teachers = jdbcTeacherDAO.findAll();
 

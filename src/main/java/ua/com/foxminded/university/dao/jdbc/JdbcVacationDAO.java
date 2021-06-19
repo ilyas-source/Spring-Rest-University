@@ -29,7 +29,7 @@ public class JdbcVacationDAO implements VacationDAO {
     private static final String CREATE = "INSERT INTO vacations (start_date, end_date) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM vacations WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM vacations";
-    private static final String UPDATE_ = "UPDATE vacations SET name = ?, description = ? WHERE id = ?"; // todo
+    private static final String UPDATE = "UPDATE vacations SET start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT v.id, v.start_date, v.end_date from teachers_vacations " +
 	    "AS t_v LEFT JOIN vacations AS v ON (t_v.vacation_id=v.id) WHERE t_v.teacher_id=?;";
@@ -64,8 +64,8 @@ public class JdbcVacationDAO implements VacationDAO {
     }
 
     @Override
-    public void update(Vacation e) {
-	// TODO Auto-generated method stub
+    public void update(Vacation vacation) {
+	jdbcTemplate.update(UPDATE, vacation.getStartDate(), vacation.getEndDate(), vacation.getId());
     }
 
     @Override

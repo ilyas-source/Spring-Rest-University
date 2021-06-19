@@ -39,7 +39,8 @@ public class JdbcTeacherDAO implements TeacherDAO {
 	    + "email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM teachers";
-    private static final String UPDATE_ = "UPDATE teachers SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE teachers SET first_name = ?, last_name = ?, gender = ?, " +
+	    "degree = ?, email = ?, phone = ?, address_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
     private static final String FIND_ASSIGNED_SUBJECTS = "SELECT * FROM teachers_subjects WHERE teacher_id = ?";
@@ -125,9 +126,10 @@ public class JdbcTeacherDAO implements TeacherDAO {
     }
 
     @Override
-    public void update(Teacher e) {
-	// TODO Auto-generated method stub
-
+    public void update(Teacher teacher) {
+	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(), teacher.getGender().name(),
+		teacher.getDegree().name(),
+		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(), teacher.getId());
     }
 
     @Override

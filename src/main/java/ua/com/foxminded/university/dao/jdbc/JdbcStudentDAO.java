@@ -39,7 +39,8 @@ public class JdbcStudentDAO implements StudentDAO {
 	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
-    private static final String UPDATE_ = "UPDATE students SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
+	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
 
     @Autowired
@@ -82,9 +83,9 @@ public class JdbcStudentDAO implements StudentDAO {
     }
 
     @Override
-    public void update(Student e) {
-	// TODO Auto-generated method stub
-
+    public void update(Student student) {
+	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(), student.getGender(), student.getBirthDate(),
+		student.getEmail(), student.getPhoneNumber(), student.getAddress(), student.getGroup(), student.getId());
     }
 
     @Override

@@ -119,7 +119,7 @@ public class Menu {
 	    start(2);
 	    break;
 	case 3:
-//	    teachersMenu.updateTeacher();
+	    teachersMenu.updateTeacher();
 	    start(2);
 	    break;
 	case 4:

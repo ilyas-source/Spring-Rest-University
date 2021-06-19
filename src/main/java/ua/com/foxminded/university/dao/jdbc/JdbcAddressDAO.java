@@ -66,9 +66,9 @@ public class JdbcAddressDAO implements AddressDAO {
     }
 
     @Override
-    public void update(Address a) {
-	jdbcTemplate.update(UPDATE, a.getCountry(), a.getPostalCode(), a.getRegion(), a.getCity(), a.getStreetAddress(),
-		a.getId());
+    public void update(Address address) {
+	jdbcTemplate.update(UPDATE, address.getCountry(), address.getPostalCode(), address.getRegion(), address.getCity(), address.getStreetAddress(),
+		address.getId());
     }
 
     @Override

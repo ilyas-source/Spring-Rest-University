@@ -34,7 +34,8 @@ public class JdbcLectureDAO implements LectureDAO {
 	    "classroom_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
-    private static final String UPDATE_ = "UPDATE lectures SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE lectures SET name = ?, begin_time = ?, end time = ?, " +
+	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM lectures WHERE id = ?";
 
     @Autowired
@@ -79,9 +80,9 @@ public class JdbcLectureDAO implements LectureDAO {
     }
 
     @Override
-    public void update(Lecture e) {
-	// TODO Auto-generated method stub
-
+    public void update(Lecture lecture) {
+	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTime().getStartTime(), lecture.getTime().getEndTime(),
+		lecture.getSubject().getId(), lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
     }
 
     @Override

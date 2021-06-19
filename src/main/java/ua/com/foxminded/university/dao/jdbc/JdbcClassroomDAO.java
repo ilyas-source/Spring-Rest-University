@@ -68,8 +68,8 @@ public class JdbcClassroomDAO implements ClassroomDAO {
     }
 
     @Override
-    public void update(Classroom c) {
-	jdbcTemplate.update(UPDATE, c.getLocation().getId(), c.getName(), c.getCapacity(), c.getId());
+    public void update(Classroom classroom) {
+	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(), classroom.getId());
     }
 
     @Override

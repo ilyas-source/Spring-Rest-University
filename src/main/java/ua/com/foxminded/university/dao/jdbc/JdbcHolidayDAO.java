@@ -64,8 +64,8 @@ public class JdbcHolidayDAO implements HolidayDAO {
     }
 
     @Override
-    public void update(Holiday e) {
-	// TODO Auto-generated method stub
+    public void update(Holiday holiday) {
+	jdbcTemplate.update(UPDATE, holiday.getDate(), holiday.getName(), holiday.getId());
     }
 
     @Override

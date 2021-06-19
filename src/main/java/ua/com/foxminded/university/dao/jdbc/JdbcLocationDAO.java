@@ -30,7 +30,7 @@ public class JdbcLocationDAO implements LocationDAO {
     private static final String CREATE = "INSERT INTO locations (building, floor, room_number) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM locations WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM locations";
-    private static final String UPDATE = "UPDATE locations SET name = ?, description = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE locations SET building = ?, floor = ?, room_number = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM locations WHERE id = ?";
 
     @Autowired
@@ -65,9 +65,8 @@ public class JdbcLocationDAO implements LocationDAO {
     }
 
     @Override
-    public void update(Location e) {
-	// TODO Auto-generated method stub
-
+    public void update(Location location) {
+	jdbcTemplate.update(UPDATE, location.getBuilding(), location.getFloor(), location.getRoomNumber(), location.getId());
     }
 
     @Override

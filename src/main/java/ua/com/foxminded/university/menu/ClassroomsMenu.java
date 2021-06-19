@@ -76,7 +76,7 @@ public class ClassroomsMenu {
     }
 
     public void updateClassroom() {
-	// TODO Auto-generated method stub
+	jdbcClassroomDAO.update(null);
 
     }
 
