@@ -131,7 +131,7 @@ public class SubjectsMenu {
 		    System.out.println("Subject already assigned to the teacher.");
 		} else {
 		    correctEntry = true;
-		    result.add(new Subject(selected.getName(), selected.getDescription()));
+		    result.add(new Subject(selected.getId(), selected.getName(), selected.getDescription()));
 		    System.out.println("Success.");
 		}
 	    } else {

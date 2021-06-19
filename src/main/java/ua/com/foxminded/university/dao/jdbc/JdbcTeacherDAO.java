@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sound.midi.Soundbank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -39,11 +41,8 @@ public class JdbcTeacherDAO implements TeacherDAO {
 	    + "email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM teachers";
-    private static final String UPDATE = "UPDATE teachers SET first_name = ?, last_name = ?, gender = ?, " +
-	    "degree = ?, email = ?, phone = ?, address_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
-    private static final String FIND_ASSIGNED_SUBJECTS = "SELECT * FROM teachers_subjects WHERE teacher_id = ?";
     private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM teachers_subjects WHERE teacher_id = ?";
     private static final String ASSIGN_SUBJECT = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 
@@ -55,17 +54,9 @@ public class JdbcTeacherDAO implements TeacherDAO {
     @Autowired
     private TeacherMapper teacherMapper;
     @Autowired
-    private SubjectMapper subjectMapper;
-    @Autowired
     private JdbcAddressDAO jdbcAddressDAO;
     @Autowired
-    private JdbcSubjectDAO jdbcSubjectDAO;
-    @Autowired
     private JdbcVacationDAO jdbcVacationDAO;
-    @Autowired
-    private SubjectsMenu subjectsMenu;
-    @Autowired
-    private TeachersMenu teachersMenu;
 
     @Override
     public void addToDb(Teacher teacher) {
@@ -87,6 +78,35 @@ public class JdbcTeacherDAO implements TeacherDAO {
 	}, keyHolder);
 
 	teacher.setId((int) keyHolder.getKeys().get("id"));
+
+	clearAssignedSubjects(teacher);
+	for (Subject subject : teacher.getSubjects()) {
+	    assignSubject(subject, teacher);
+	}
+
+	clearAssignedVacations(teacher);
+	for (Vacation vacation : teacher.getVacations()) {
+	    jdbcVacationDAO.addToDb(vacation);
+	    assignVacation(vacation, teacher);
+	}
+    }
+
+    @Override
+    public void update(Teacher teacher) {
+	jdbcAddressDAO.addToDb(teacher.getAddress());
+
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(CREATE, Statement.NO_GENERATED_KEYS);
+	    ps.setString(1, teacher.getFirstName());
+	    ps.setString(2, teacher.getLastName());
+	    ps.setObject(3, teacher.getGender(), java.sql.Types.OTHER);
+	    ps.setObject(4, teacher.getDegree(), java.sql.Types.OTHER);
+	    ps.setString(5, teacher.getEmail());
+	    ps.setString(6, teacher.getPhoneNumber());
+	    ps.setInt(7, teacher.getAddress().getId());
+	    return ps;
+	});
 
 	clearAssignedSubjects(teacher);
 	for (Subject subject : teacher.getSubjects()) {
@@ -123,13 +143,6 @@ public class JdbcTeacherDAO implements TeacherDAO {
     @Override
     public List<Teacher> findAll() {
 	return jdbcTemplate.query(FIND_ALL, teacherMapper);
-    }
-
-    @Override
-    public void update(Teacher teacher) {
-	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(), teacher.getGender().name(),
-		teacher.getDegree().name(),
-		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(), teacher.getId());
     }
 
     @Override
