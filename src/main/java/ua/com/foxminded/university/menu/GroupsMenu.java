@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Teacher;
+
 import static ua.com.foxminded.university.Menu.*;
 
 @Component
@@ -34,7 +36,11 @@ public class GroupsMenu {
 	System.out.println(getStringOfGroups(jdbcGroupDAO.findAll()));
     }
 
-    public Group addGroup() {
+    public void addGroup() {
+	jdbcGroupDAO.addToDb(createGroup());
+    }
+
+    public Group createGroup() {
 	System.out.print("Enter group name: ");
 	String name = scanner.nextLine();
 	return new Group(name);
@@ -95,20 +101,24 @@ public class GroupsMenu {
 //	return result;
 //    }
 //
-//    public void updateGroup() {
-//	List<Group> groups = university.getGroups();
-//
-//	System.out.println("Select a group to update: ");
-//	System.out.println(getStringOfGroups(groups));
-//	int choice = getIntFromScanner();
-//	if (choice > groups.size()) {
-//	    System.out.println("No such group, returning...");
-//	} else {
-//	    groups.set(choice - 1, createGroup());
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
-//
+    public void updateGroup() {
+	List<Group> groups = jdbcGroupDAO.findAll();
+
+	System.out.println("Select a group to update: ");
+	System.out.println(getStringOfGroups(groups));
+	int choice = getIntFromScanner();
+	Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+
+	if (isNull(selected)) {
+	    System.out.println("No such group, returning...");
+	} else {
+	    Group newGroup = createGroup();
+	    newGroup.setId(selected.getId());
+	    jdbcGroupDAO.update(newGroup);
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
     public void deleteGroup() {
 	List<Group> groups = jdbcGroupDAO.findAll();
 

@@ -38,11 +38,11 @@ public class JdbcClassroomDAO implements ClassroomDAO {
     @Autowired
     private ClassroomMapper classroomMapper;
     @Autowired
-    private JdbcLocationDAO JdbcLocationDAO;
+    private JdbcLocationDAO jdbcLocationDAO;
 
     @Override
     public void addToDb(Classroom classroom) {
-	JdbcLocationDAO.addToDb(classroom.getLocation());
+	jdbcLocationDAO.addToDb(classroom.getLocation());
 
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -69,7 +69,9 @@ public class JdbcClassroomDAO implements ClassroomDAO {
 
     @Override
     public void update(Classroom classroom) {
-	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(), classroom.getId());
+	jdbcLocationDAO.addToDb(classroom.getLocation());
+	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
+		classroom.getId());
     }
 
     @Override

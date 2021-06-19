@@ -13,6 +13,7 @@ import static java.util.Objects.isNull;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class ClassroomsMenu {
@@ -76,23 +77,22 @@ public class ClassroomsMenu {
     }
 
     public void updateClassroom() {
-	jdbcClassroomDAO.update(null);
+	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
 
+	System.out.println("Select a classroom to update: ");
+	System.out.println(getStringOfClassrooms(classrooms));
+	int choice = getIntFromScanner();
+	Classroom selected = jdbcClassroomDAO.findById(choice).orElse(null);
+
+	if (isNull(selected)) {
+	    System.out.println("No such classroom, returning...");
+	} else {
+	    Classroom newClassroom = createClassroom();
+	    newClassroom.setId(selected.getId());
+	    jdbcClassroomDAO.update(newClassroom);
+	    System.out.println("Overwrite successful.");
+	}
     }
-
-//    public void updateClassroom() {
-//	List<Classroom> classrooms = university.getClassrooms();
-//
-//	System.out.println("Select a classroom to update: ");
-//	System.out.println(getStringOfClassrooms(classrooms));
-//	int choice = getIntFromScanner();
-//	if (choice > classrooms.size()) {
-//	    System.out.println("No such classroom, returning...");
-//	} else {
-//	    classrooms.set(choice - 1, createClassroom());
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
 
     public void deleteClassroom() {
 	List<Classroom> classrooms = jdbcClassroomDAO.findAll();

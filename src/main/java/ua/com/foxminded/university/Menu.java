@@ -145,7 +145,7 @@ public class Menu {
 	    start(3);
 	    break;
 	case 3:
-//	    groupsMenu.updateGroup();
+	    groupsMenu.updateGroup();
 	    start(3);
 	    break;
 	case 4:
