@@ -43,8 +43,8 @@ public class VacationsMenu {
 	    Vacation vacation = createVacation();
 	    vacations.add(vacation);
 	    System.out.print("Done. Add another vacation? (y/n): ");
-	    String choice = scanner.nextLine().toLowerCase();
-	    if (choice != "y") {
+	    String entry = scanner.nextLine().toLowerCase();
+	    if (!entry.equals("y")) {
 		finished = true;
 	    }
 	}
@@ -56,7 +56,7 @@ public class VacationsMenu {
 
 	while (isNull(result)) {
 	    System.out.print("Enter vacation start date: ");
-	    LocalDate startDate = Menu.getDateFromScanner();
+	    LocalDate startDate = getDateFromScanner();
 
 	    System.out.print("Enter vacation end date: ");
 	    LocalDate endDate = getDateFromScanner();

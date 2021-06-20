@@ -305,19 +305,20 @@ public class Menu {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-
 	return result;
     }
 
     public static LocalTime getTimeFromScanner() {
 	LocalTime result = null;
 
-	try {
-	    String line = scanner.nextLine();
-	    result = LocalTime.parse(line, timeFormatter);
-	} catch (Exception e) {
-	    e.printStackTrace();
+	while (true) {
+	    try {
+		String line = scanner.nextLine();
+		result = LocalTime.parse(line, timeFormatter);
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	    return result;
 	}
-	return result;
     }
 }
