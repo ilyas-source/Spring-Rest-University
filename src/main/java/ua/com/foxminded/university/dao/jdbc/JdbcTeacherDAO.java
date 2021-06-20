@@ -39,6 +39,8 @@ public class JdbcTeacherDAO implements TeacherDAO {
 
     private static final String CREATE = "INSERT INTO teachers (first_name, last_name, gender, degree, "
 	    + "email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE teachers SET first_name = ?, last_name = ?, gender = ?, " +
+	    " degree = ?, email = ?, phone = ?, address_id = ? WHERE id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM teachers";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
@@ -97,7 +99,7 @@ public class JdbcTeacherDAO implements TeacherDAO {
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
-		    .prepareStatement(CREATE, Statement.NO_GENERATED_KEYS);
+		    .prepareStatement(UPDATE, Statement.NO_GENERATED_KEYS);
 	    ps.setString(1, teacher.getFirstName());
 	    ps.setString(2, teacher.getLastName());
 	    ps.setObject(3, teacher.getGender(), java.sql.Types.OTHER);
@@ -105,6 +107,7 @@ public class JdbcTeacherDAO implements TeacherDAO {
 	    ps.setString(5, teacher.getEmail());
 	    ps.setString(6, teacher.getPhoneNumber());
 	    ps.setInt(7, teacher.getAddress().getId());
+	    ps.setInt(8, teacher.getId());
 	    return ps;
 	});
 
@@ -115,6 +118,7 @@ public class JdbcTeacherDAO implements TeacherDAO {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
+	    jdbcVacationDAO.addToDb(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }

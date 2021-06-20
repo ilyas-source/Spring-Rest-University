@@ -98,10 +98,11 @@ public class SubjectsMenu {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfSubjects(subjects));
 	    int choice = getIntFromScanner();
-	    if (choice > subjects.size()) {
-		System.out.println("No such object.");
+	    Subject selected = jdbcSubjectDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such subject.");
 	    } else {
-		result = subjects.get(choice - 1);
+		result = selected;
 		System.out.println("Success.");
 	    }
 	}

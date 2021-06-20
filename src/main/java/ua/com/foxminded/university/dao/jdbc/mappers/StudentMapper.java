@@ -20,7 +20,6 @@ import ua.com.foxminded.university.model.Student;
 //last_name VARCHAR(255),
 //gender GENDER,
 //birth_date DATE,
-//entry_year DATE,
 //email VARCHAR(255),
 //phone VARCHAR(255),
 //address_id INTEGER REFERENCES addresses(id) ON DELETE CASCADE,

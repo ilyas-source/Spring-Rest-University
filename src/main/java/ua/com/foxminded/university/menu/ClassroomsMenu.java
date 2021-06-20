@@ -13,7 +13,7 @@ import static java.util.Objects.isNull;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class ClassroomsMenu {
@@ -55,19 +55,20 @@ public class ClassroomsMenu {
     }
 
     public Classroom selectClassroom() {
-//	List<Classroom> classrooms = university.getClassrooms();
+	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
 	Classroom result = null;
 
 	while (isNull(result)) {
-	    System.out.println("Select a classroom: ");
-//	    System.out.print(getStringOfClassrooms(classrooms));
-//	    int choice = getIntFromScanner();
-//	    if (choice <= classrooms.size()) {
-//		result = classrooms.get(choice - 1);
-//		System.out.println("Success.");
-//	    } else {
-//		System.out.println("No such classroom.");
-//	    }
+	    System.out.println("Select subject: ");
+	    System.out.print(getStringOfClassrooms(classrooms));
+	    int choice = getIntFromScanner();
+	    Classroom selected = jdbcClassroomDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such subject.");
+	    } else {
+		result = selected;
+		System.out.println("Success.");
+	    }
 	}
 	return result;
     }

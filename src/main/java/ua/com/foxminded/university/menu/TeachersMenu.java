@@ -104,24 +104,25 @@ public class TeachersMenu {
 	System.out.println(getStringOfTeachers(jdbcTeacherDAO.findAll()));
     }
 
-//    public Teacher selectTeacher() {
-//	List<Teacher> teachers = university.getTeachers();
-//	Teacher result = null;
-//
-//	while (isNull(result)) {
-//	    System.out.println("Select a teacher: ");
-//	    System.out.print(getStringOfTeachers(teachers));
-//	    int choice = getIntFromScanner();
-//	    if (choice <= teachers.size()) {
-//		result = teachers.get(choice - 1);
-//		System.out.println("Success.");
-//	    } else {
-//		System.out.println("No such object.");
-//	    }
-//	}
-//	return result;
-//    }
-//
+    public Teacher selectTeacher() {
+	List<Teacher> teachers = jdbcTeacherDAO.findAll();
+	Teacher result = null;
+
+	while (isNull(result)) {
+	    System.out.println("Select teacher: ");
+	    System.out.print(getStringOfTeachers(teachers));
+	    int choice = getIntFromScanner();
+	    Teacher selected = jdbcTeacherDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such teacher.");
+	    } else {
+		result = selected;
+		System.out.println("Success.");
+	    }
+	}
+	return result;
+    }
+
     public void updateTeacher() {
 	List<Teacher> teachers = jdbcTeacherDAO.findAll();
 

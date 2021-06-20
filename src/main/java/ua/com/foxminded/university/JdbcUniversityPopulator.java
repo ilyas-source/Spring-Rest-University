@@ -193,24 +193,16 @@ public class JdbcUniversityPopulator {
 	List<Address> addresses = jdbcAddressDAO.findAll();
 
 	students.add(new Student("Ivan", "Petrov", Gender.MALE, LocalDate.of(1980, 11, 1),
-		LocalDate.of(2000, 1, 1), "qwe@rty.com", "123123123",
-		addresses.get(2),
-		groups.get(0)));
+		"qwe@rty.com", "123123123", addresses.get(2), groups.get(0)));
 
 	students.add(new Student("John", "Doe", Gender.MALE, LocalDate.of(1981, 11, 1),
-		LocalDate.of(2000, 1, 1), "qwe@qwe.com", "1231223",
-		addresses.get(3),
-		groups.get(1)));
+		"qwe@qwe.com", "1231223", addresses.get(3), groups.get(1)));
 
 	students.add(new Student("Janna", "D'Ark", Gender.FEMALE, LocalDate.of(1881, 11, 1),
-		LocalDate.of(2000, 1, 1), "qwe@no.fr", "1231223",
-		addresses.get(4),
-		groups.get(0)));
+		"qwe@no.fr", "1231223", addresses.get(4), groups.get(0)));
 
 	students.add(new Student("Mao", "Zedun", Gender.MALE, LocalDate.of(1921, 9, 14),
-		LocalDate.of(2000, 1, 1), "qwe@no.cn", "1145223",
-		addresses.get(5),
-		groups.get(1)));
+		"qwe@no.cn", "1145223", addresses.get(5), groups.get(1)));
 
 	for (Student s : students) {
 	    jdbcStudentDAO.addToDb(s);

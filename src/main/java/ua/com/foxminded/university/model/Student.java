@@ -17,7 +17,7 @@ public class Student {
     public Student() {
     }
 
-    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, LocalDate entryYear, String email,
+    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
 	    String phoneNumber, Address address, Group group) {
 	this.firstName = firstName;
 	this.lastName = lastName;

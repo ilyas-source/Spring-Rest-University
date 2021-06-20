@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.menu;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -65,42 +66,44 @@ public class GroupsMenu {
 	return result;
     }
 
-//    public List<Group> selectGroups() {
-//	List<Group> result = new ArrayList<>();
-//	List<Group> groups = university.getGroups();
-//	boolean finished = false;
-//	boolean correctEntry = false;
-//
-//	while (!(finished && correctEntry)) {
-//	    if (!result.isEmpty()) {
-//		System.out.println("Assigned groups:");
-//		System.out.print(getStringOfGroups(result));
-//	    }
-//	    System.out.println("Enter a new group number to add to this lecture: ");
-//	    System.out.print(getStringOfGroups(groups));
-//	    correctEntry = false;
-//	    int choice = getIntFromScanner();
-//	    if (choice <= groups.size()) {
-//		Group selected = groups.get(choice - 1);
-//		if (result.contains(selected)) {
-//		    System.out.println("Group already added to the lecture.");
-//		} else {
-//		    correctEntry = true;
-//		    result.add(new Group(selected.getName(), selected.getStudents()));
-//		    System.out.println("Success.");
-//		}
-//	    } else {
-//		System.out.println("No such group.");
-//	    }
-//	    System.out.print("Add another group? (y/n): ");
-//	    String entry = scanner.nextLine().toLowerCase();
-//	    if (!entry.equals("y")) {
-//		finished = true;
-//	    }
-//	}
-//	return result;
-//    }
-//
+    public List<Group> selectGroups() {
+	List<Group> result = new ArrayList<>();
+	List<Group> groups = jdbcGroupDAO.findAll();
+	boolean finished = false;
+	boolean correctEntry = false;
+
+	while (!(finished && correctEntry)) {
+	    if (!result.isEmpty()) {
+		System.out.println("Assigned groups:");
+		System.out.print(getStringOfGroups(result));
+	    }
+	    System.out.println("Enter a new group number to add to this lecture: ");
+	    System.out.print(getStringOfGroups(groups));
+	    correctEntry = false;
+	    int choice = getIntFromScanner();
+	    Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+
+	    if (isNull(selected)) {
+		System.out.println("No such group.");
+	    } else {
+		if (result.contains(selected)) {
+		    System.out.println("Group already added to the lecture.");
+		} else {
+		    correctEntry = true;
+		    result.add(new Group(selected.getId(), selected.getName()));
+		    System.out.println("Success.");
+		}
+	    }
+
+	    System.out.print("Add another group? (y/n): ");
+	    String entry = scanner.nextLine().toLowerCase();
+	    if (!entry.equals("y")) {
+		finished = true;
+	    }
+	}
+	return result;
+    }
+
     public void updateGroup() {
 	List<Group> groups = jdbcGroupDAO.findAll();
 

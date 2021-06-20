@@ -241,19 +241,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-//	    university.getStudents().add(studentsMenu.createStudent());
+	    studentsMenu.addStudent();
 	    start(7);
 	    break;
 	case 2:
-//	    System.out.println(studentsMenu.getStringOfStudents(university.getStudents()));
+	    studentsMenu.printStudents();
 	    start(7);
 	    break;
 	case 3:
-//	    studentsMenu.updateStudent();
+	    studentsMenu.updateStudent();
 	    start(7);
 	    break;
 	case 4:
-//	    studentsMenu.deleteStudent();
+	    studentsMenu.deleteStudent();
 	    start(7);
 	    break;
 	default:

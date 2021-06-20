@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class StudentsMenu {
@@ -50,6 +52,10 @@ public class StudentsMenu {
 	return result.toString();
     }
 
+    public void addStudent() {
+	jdbcStudentDAO.addToDb(createStudent());
+    }
+
     public Student createStudent() {
 	System.out.print("First name: ");
 	String firstName = scanner.nextLine();
@@ -58,8 +64,6 @@ public class StudentsMenu {
 	Gender gender = genderMenu.getGender();
 	System.out.print("Birth date: ");
 	LocalDate birthDate = Menu.getDateFromScanner();
-	System.out.print("Entry year: ");
-	LocalDate entryYear = LocalDate.of(getIntFromScanner(), 1, 1);
 	System.out.print("Email: ");
 	String email = scanner.nextLine();
 	System.out.print("Phone number: ");
@@ -67,7 +71,7 @@ public class StudentsMenu {
 	Address address = addressMenu.createAddress();
 	Group group = groupsMenu.selectGroup();
 
-	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address, group);
+	return new Student(firstName, lastName, gender, birthDate, email, phone, address, group);
     }
 
     public void printStudents() {
@@ -113,31 +117,37 @@ public class StudentsMenu {
 //	return result;
 //    }
 //
-//    public void updateStudent() {
-//	List<Student> students = university.getStudents();
-//
-//	System.out.println("Select a student to update: ");
-//	System.out.println(getStringOfStudents(students));
-//	int choice = getIntFromScanner();
-//	if (choice > students.size()) {
-//	    System.out.println("No such student, returning...");
-//	} else {
-//	    students.set(choice - 1, createStudent());
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
-//
-//    public void deleteStudent() {
-//	List<Student> students = university.getStudents();
-//
-//	System.out.println("Select a student to update: ");
-//	System.out.println(getStringOfStudents(students));
-//	int choice = getIntFromScanner();
-//	if (choice > students.size()) {
-//	    System.out.println("No such student, returning...");
-//	} else {
-//	    students.remove(choice - 1);
-//	    System.out.println("Student deleted successfully.");
-//	}
-//    }
+    public void updateStudent() {
+	List<Student> students = jdbcStudentDAO.findAll();
+
+	System.out.println("Select a student to update: ");
+	System.out.println(getStringOfStudents(students));
+	int choice = getIntFromScanner();
+	Student selected = jdbcStudentDAO.findById(choice).orElse(null);
+
+	if (isNull(selected)) {
+	    System.out.println("No such student, returning...");
+	} else {
+	    Student newStudent = createStudent();
+	    newStudent.setId(selected.getId());
+	    jdbcStudentDAO.update(newStudent);
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
+    public void deleteStudent() {
+	List<Student> students = jdbcStudentDAO.findAll();
+
+	System.out.println("Select a student to delete: ");
+	System.out.println(getStringOfStudents(students));
+	int choice = getIntFromScanner();
+	Student student = jdbcStudentDAO.findById(choice).orElse(null);
+
+	if (isNull(student)) {
+	    System.out.println("No such student, returning...");
+	} else {
+	    jdbcStudentDAO.delete(choice);
+	    System.out.println("Student deleted successfully.");
+	}
+    }
 }

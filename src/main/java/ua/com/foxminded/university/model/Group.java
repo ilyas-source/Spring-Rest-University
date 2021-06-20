@@ -12,6 +12,11 @@ public class Group {
 	this.name = name;
     }
 
+    public Group(Integer id, String name) {
+	this.id = id;
+	this.name = name;
+    }
+
     public int getId() {
 	return id;
     }
