@@ -20,34 +20,6 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 class JdbcAddressDAOTest {
 
-    @Autowired
-    private DataSource dataSource;
-    @Autowired
-    private JdbcAddressDAO jdbcAddressDAO;
-    @Autowired
-    private IDatabaseTester databaseTester;
-    @Autowired
-    private JdbcDatabaseTester jdbcDatabaseTester;
-
-    public JdbcAddressDAOTest() {
-
-    }
-
-    @BeforeAll
-    public static void createEmptyDb(DataSource dataSource) {
-	Resource resource = new ClassPathResource("schema.sql");
-	ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator(resource);
-	databasePopulator.execute(dataSource);
-    }
-
-    @BeforeEach
-    void fillTables() throws Exception {
-//	databaseTester = new JdbcDatabaseTester(JDBC_DRIVER, databaseConnector.getConnection().getMetaData().getURL());
-	databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
-	databaseTester.setDataSet(readDataSet());
-	databaseTester.onSetup();
-    }
-
     @Test
     void addToDb_shouldAddress_() {
 	fail("Not yet implemented");
@@ -71,11 +43,5 @@ class JdbcAddressDAOTest {
     @Test
     void testDelete() {
 	fail("Not yet implemented");
-    }
-
-    private IDataSet readDataSet() throws Exception {
-	ClassLoader classLoader = getClass().getClassLoader();
-	String file = classLoader.getResource("testdata.xml").getFile();
-	return new FlatXmlDataSetBuilder().build(new FileInputStream(file));
     }
 }
