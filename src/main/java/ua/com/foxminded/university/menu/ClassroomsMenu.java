@@ -13,6 +13,7 @@ import static java.util.Objects.isNull;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class ClassroomsMenu {
@@ -72,41 +73,20 @@ public class ClassroomsMenu {
 	return result;
     }
 
-    public void printClassrooms() {
-	System.out.println(getStringOfClassrooms(jdbcClassroomDAO.findAll()));
-    }
-
     public void updateClassroom() {
-	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
-
-	System.out.println("Select a classroom to update: ");
-	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner();
-	Classroom selected = jdbcClassroomDAO.findById(choice).orElse(null);
-
-	if (isNull(selected)) {
-	    System.out.println("No such classroom, returning...");
-	} else {
-	    Classroom newClassroom = createClassroom();
-	    newClassroom.setId(selected.getId());
-	    jdbcClassroomDAO.update(newClassroom);
-	    System.out.println("Overwrite successful.");
-	}
+	Classroom oldClassroom = selectClassroom();
+	Classroom newClassroom = createClassroom();
+	newClassroom.setId(oldClassroom.getId());
+	jdbcClassroomDAO.update(newClassroom);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteClassroom() {
-	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
+	jdbcClassroomDAO.delete(selectClassroom().getId());
+	System.out.println("Classroom deleted successfully.");
+    }
 
-	System.out.println("Select a classroom to delete: ");
-	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner();
-	Classroom classroom = jdbcClassroomDAO.findById(choice).orElse(null);
-
-	if (isNull(classroom)) {
-	    System.out.println("No such classroom, returning...");
-	} else {
-	    jdbcClassroomDAO.delete(choice);
-	    System.out.println("Classroom deleted successfully.");
-	}
+    public void printClassrooms() {
+	System.out.println(getStringOfClassrooms(jdbcClassroomDAO.findAll()));
     }
 }

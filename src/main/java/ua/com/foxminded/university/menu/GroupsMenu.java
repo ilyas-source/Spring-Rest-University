@@ -72,7 +72,6 @@ public class GroupsMenu {
 		System.out.print(getStringOfGroups(result));
 	    }
 	    Group selected = selectGroup();
-
 	    if (result.contains(selected)) {
 		System.out.println("Group already added to the lecture.");
 	    } else {
