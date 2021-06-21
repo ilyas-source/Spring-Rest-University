@@ -63,7 +63,6 @@ public class GroupsMenu {
 
     public List<Group> selectGroups() {
 	List<Group> result = new ArrayList<>();
-	List<Group> groups = jdbcGroupDAO.findAll();
 	boolean finished = false;
 	boolean correctEntry = false;
 
@@ -72,22 +71,14 @@ public class GroupsMenu {
 		System.out.println("Assigned groups:");
 		System.out.print(getStringOfGroups(result));
 	    }
-	    System.out.println("Enter a new group number to add to this lecture: ");
-	    System.out.print(getStringOfGroups(groups));
-	    correctEntry = false;
-	    int choice = getIntFromScanner();
-	    Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+	    Group selected = selectGroup();
 
-	    if (isNull(selected)) {
-		System.out.println("No such group.");
+	    if (result.contains(selected)) {
+		System.out.println("Group already added to the lecture.");
 	    } else {
-		if (result.contains(selected)) {
-		    System.out.println("Group already added to the lecture.");
-		} else {
-		    correctEntry = true;
-		    result.add(new Group(selected.getId(), selected.getName()));
-		    System.out.println("Success.");
-		}
+		correctEntry = true;
+		result.add(new Group(selected.getId(), selected.getName()));
+		System.out.println("Success.");
 	    }
 
 	    System.out.print("Add another group? (y/n): ");
