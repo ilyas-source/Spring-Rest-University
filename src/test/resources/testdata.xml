@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<ADDRESSES id='1' country='UK' postalCode='12345'
+		region='City-Of-Edinburgh' city='Edinburgh'
+		streetAddress='Panmure House' />
+	<ADDRESSES id='2' country='Poland' postalCode='54321'
+		region='Central region' city='Warsaw'
+		streetAddress='Urszuli Ledochowskiej 3' />
+	<ADDRESSES id='3' country='Russia' postalCode='450080'
+		region='Permskiy kray' city='Perm' streetAddress='Lenina 5' />
+	<ADDRESSES id='4' country='USA' postalCode='90210'
+		region='California' city='LA' streetAddress='Grove St. 15' />
+	<ADDRESSES id='5' country='France' postalCode='21012'
+		region='Central' city='Paris' streetAddress='Rue 15' />
+	<ADDRESSES id='6' country='China' postalCode='20121'
+		region='Guangdung' city='Beijin' streetAddress='Main St. 125' />
+</dataset>

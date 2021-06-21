@@ -267,19 +267,19 @@ public class Menu {
 	System.out.println(FORMAT_DIVIDER + "Manage holidays:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
-//	    university.getHolidays().add(holidaysMenu.createHoliday());
+	    holidaysMenu.addHoliday();
 	    start(9);
 	    break;
 	case 2:
-//	    System.out.println(holidaysMenu.getStringOfHolidays(university.getHolidays()));
+	    holidaysMenu.printHolidays();
 	    start(9);
 	    break;
 	case 3:
-//	    holidaysMenu.updateHoliday();
+	    holidaysMenu.updateHoliday();
 	    start(9);
 	    break;
 	case 4:
-//	    holidaysMenu.deleteHoliday();
+	    holidaysMenu.deleteHoliday();
 	    start(9);
 	    break;
 	default:

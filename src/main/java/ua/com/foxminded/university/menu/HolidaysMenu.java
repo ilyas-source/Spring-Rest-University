@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
 import ua.com.foxminded.university.model.Holiday;
+import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class HolidaysMenu {
@@ -46,32 +48,43 @@ public class HolidaysMenu {
 	System.out.println(getStringOfHolidays(jdbcHolidayDAO.findAll()));
     }
 
-//    public void updateHoliday() {
-//	List<Holiday> holidays = university.getHolidays();
-//
-//	System.out.println("Select a holiday to update: ");
-//	System.out.println(getStringOfHolidays(holidays));
-//	int choice = getIntFromScanner();
-//	if (choice > holidays.size()) {
-//	    System.out.println("No such holiday, returning...");
-//	} else {
-//	    holidays.set(choice - 1, createHoliday());
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
-//
-//    public void deleteHoliday() {
-//	List<Holiday> holidays = university.getHolidays();
-//
-//	System.out.println("Select a holiday to update: ");
-//	System.out.println(getStringOfHolidays(holidays));
-//	int choice = getIntFromScanner();
-//	if (choice > holidays.size()) {
-//	    System.out.println("No such holiday, returning...");
-//	} else {
-//	    holidays.remove(choice - 1);
-//	    System.out.println("Holiday deleted successfully.");
-//	}
-//    }
+    public void updateHoliday() {
+	List<Holiday> holidays = jdbcHolidayDAO.findAll();
+
+	System.out.println("Select a holiday to update: ");
+	System.out.println(getStringOfHolidays(holidays));
+	int choice = getIntFromScanner();
+	Holiday holiday = jdbcHolidayDAO.findById(choice).orElse(null);
+
+	if (isNull(holiday)) {
+	    System.out.println("No such holiday, returning...");
+	} else {
+	    holiday = createHoliday();
+	    holiday.setId(choice);
+	    jdbcHolidayDAO.update(holiday);
+
+	    System.out.println("Overwrite successful.");
+	}
+    }
+
+    public void deleteHoliday() {
+	List<Holiday> holidays = jdbcHolidayDAO.findAll();
+
+	System.out.println("Select a holiday to delete: ");
+	System.out.println(getStringOfHolidays(holidays));
+	int choice = getIntFromScanner();
+	Holiday holiday = jdbcHolidayDAO.findById(choice).orElse(null);
+
+	if (isNull(holiday)) {
+	    System.out.println("No such holiday, returning...");
+	} else {
+	    jdbcHolidayDAO.delete(choice);
+	    System.out.println("Subject deleted successfully.");
+	}
+    }
+
+    public void addHoliday() {
+	jdbcHolidayDAO.addToDb(createHoliday());
+    }
 
 }

@@ -3,7 +3,6 @@ package ua.com.foxminded.university;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -23,9 +22,6 @@ import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
-import ua.com.foxminded.university.menu.LecturesMenu;
-import ua.com.foxminded.university.menu.TeachersMenu;
-import ua.com.foxminded.university.menu.VacationsMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
@@ -45,7 +41,6 @@ public class JdbcUniversityPopulator {
 
     @Autowired
     private DataSource dataSource;
-
     @Autowired
     private JdbcAddressDAO jdbcAddressDAO;
     @Autowired
@@ -64,10 +59,6 @@ public class JdbcUniversityPopulator {
     private JdbcHolidayDAO jdbcHolidayDAO;
     @Autowired
     private JdbcStudentDAO jdbcStudentDAO;
-    @Autowired
-    private TeachersMenu teachersMenu;
-    @Autowired
-    private VacationsMenu vacationsMenu;
 
     public void populate() {
 	createEmptyDb(dataSource);
