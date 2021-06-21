@@ -134,5 +134,4 @@ public class TeachersMenu {
 	jdbcTeacherDAO.delete(selectTeacher().getId());
 	System.out.println("Teacher deleted successfully.");
     }
-
 }
