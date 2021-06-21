@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.Menu;
 import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
 import ua.com.foxminded.university.model.Holiday;
-import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class HolidaysMenu {

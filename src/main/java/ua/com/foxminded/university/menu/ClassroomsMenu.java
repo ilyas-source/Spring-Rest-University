@@ -13,7 +13,6 @@ import static java.util.Objects.isNull;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class ClassroomsMenu {

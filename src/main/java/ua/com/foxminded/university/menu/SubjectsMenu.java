@@ -3,10 +3,6 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +12,6 @@ import static ua.com.foxminded.university.Menu.*;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class SubjectsMenu {

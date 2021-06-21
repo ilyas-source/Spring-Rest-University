@@ -71,5 +71,4 @@ public class JdbcSubjectDAO implements SubjectDAO {
     public List<Subject> getSubjectsByTeacher(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, subjectMapper, id);
     }
-
 }

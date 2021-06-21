@@ -4,7 +4,6 @@ import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -16,9 +15,7 @@ import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class StudentsMenu {
@@ -78,45 +75,6 @@ public class StudentsMenu {
 	System.out.println(getStringOfStudents(jdbcStudentDAO.findAll()));
     }
 
-//    public List<Student> selectStudents() {
-//	List<Student> result = new ArrayList<>();
-//	List<Student> students = university.getStudents();
-//	boolean finished = false;
-//	boolean correctEntry = false;
-//
-//	while (!(finished && correctEntry)) {
-//	    if (!result.isEmpty()) {
-//		System.out.println("Assigned students:");
-//		System.out.print(getStringOfStudents(result));
-//	    }
-//	    System.out.println("Enter a new student number to add: ");
-//	    System.out.print(getStringOfStudents(students));
-//	    correctEntry = false;
-//	    int choice = getIntFromScanner();
-//	    if (choice > students.size()) {
-//		System.out.println("No such student.");
-//	    } else {
-//		Student selected = students.get(choice - 1);
-//		if (result.contains(selected)) {
-//		    System.out.println("Student already assigned to the group.");
-//		} else {
-//		    correctEntry = true;
-//		    result.add(new Student(selected.getFirstName(), selected.getLastName(),
-//			    selected.getGender(), selected.getBirthDate(),
-//			    selected.getEntryYear(), selected.getEmail(),
-//			    selected.getPhoneNumber(), selected.getAddress()));
-//		    System.out.println("Success.");
-//		}
-//	    }
-//	    System.out.print("Add another student? (y/n): ");
-//	    String entry = scanner.nextLine().toLowerCase();
-//	    if (!entry.equals("y")) {
-//		finished = true;
-//	    }
-//	}
-//	return result;
-//    }
-//
     public void updateStudent() {
 	List<Student> students = jdbcStudentDAO.findAll();
 

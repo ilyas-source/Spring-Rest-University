@@ -7,14 +7,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
-import ua.com.foxminded.university.Menu;
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component

@@ -12,7 +12,6 @@ import static java.util.Objects.isNull;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
 import ua.com.foxminded.university.model.Address;
-import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;

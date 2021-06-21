@@ -4,18 +4,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.sound.midi.Soundbank;
-
 import static java.util.Objects.isNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
-import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Teacher;
-
 import static ua.com.foxminded.university.Menu.*;
 
 @Component

@@ -18,5 +18,4 @@ public class GroupMapper implements RowMapper<Group> {
 	group.setName(rs.getString("name"));
 	return group;
     }
-
 }

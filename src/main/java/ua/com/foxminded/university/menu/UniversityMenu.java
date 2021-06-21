@@ -2,8 +2,6 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
-import java.awt.print.PrinterAbortException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
