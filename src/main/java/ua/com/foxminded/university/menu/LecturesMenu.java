@@ -90,37 +90,35 @@ public class LecturesMenu {
 	return new Lecture(date, timeRange, groups, subject, teacher, classroom);
     }
 
-    public void updateLecture() {
+    public Lecture selectLecture() {
 	List<Lecture> lectures = jdbcLectureDAO.findAll();
+	Lecture result = null;
 
-	System.out.println("Select a lecture to update: ");
-	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner();
-	Lecture selected = jdbcLectureDAO.findById(choice).orElse(null);
-
-	if (isNull(selected)) {
-	    System.out.println("No such lecture, returning...");
-	} else {
-	    Lecture newLecture = createLecture();
-	    newLecture.setId(selected.getId());
-	    jdbcLectureDAO.update(newLecture);
-	    System.out.println("Overwrite successful.");
+	while (isNull(result)) {
+	    System.out.println("Select lecture: ");
+	    System.out.print(getStringOfLectures(lectures));
+	    int choice = getIntFromScanner();
+	    Lecture selected = jdbcLectureDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such lecture.");
+	    } else {
+		result = selected;
+		System.out.println("Success.");
+	    }
 	}
+	return result;
+    }
+
+    public void updateLecture() {
+	Lecture oldLecture = selectLecture();
+	Lecture newLecture = createLecture();
+	newLecture.setId(oldLecture.getId());
+	jdbcLectureDAO.update(newLecture);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteLecture() {
-	List<Lecture> lectures = jdbcLectureDAO.findAll();
-
-	System.out.println("Select a lecture to delete: ");
-	System.out.println(getStringOfLectures(lectures));
-	int choice = getIntFromScanner();
-	Lecture lecture = jdbcLectureDAO.findById(choice).orElse(null);
-
-	if (isNull(lecture)) {
-	    System.out.println("No such lecture, returning...");
-	} else {
-	    jdbcLectureDAO.delete(choice);
-	    System.out.println("Lecture deleted successfully.");
-	}
+	jdbcLectureDAO.delete(selectLecture().getId());
+	System.out.println("Lecture deleted successfully.");
     }
 }

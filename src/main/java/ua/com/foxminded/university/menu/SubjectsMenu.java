@@ -51,38 +51,16 @@ public class SubjectsMenu {
     }
 
     public void updateSubject() {
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
-
-	System.out.println("Select a subject to update: ");
-	System.out.println(getStringOfSubjects(subjects));
-	int choice = getIntFromScanner();
-	Subject subject = jdbcSubjectDAO.findById(choice).orElse(null);
-
-	if (isNull(subject)) {
-	    System.out.println("No such subject, returning...");
-	} else {
-	    subject = createSubject();
-	    subject.setId(choice);
-	    jdbcSubjectDAO.update(subject);
-
-	    System.out.println("Overwrite successful.");
-	}
+	Subject oldSubject = selectSubject();
+	Subject newSubject = createSubject();
+	newSubject.setId(oldSubject.getId());
+	jdbcSubjectDAO.update(newSubject);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteSubject() {
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
-
-	System.out.println("Select a subject to delete: ");
-	System.out.println(getStringOfSubjects(subjects));
-	int choice = getIntFromScanner();
-	Subject subject = jdbcSubjectDAO.findById(choice).orElse(null);
-
-	if (isNull(subject)) {
-	    System.out.println("No such subject, returning...");
-	} else {
-	    jdbcSubjectDAO.delete(choice);
-	    System.out.println("Subject deleted successfully.");
-	}
+	jdbcSubjectDAO.delete(selectSubject().getId());
+	System.out.println("Subject deleted successfully.");
     }
 
     public Subject selectSubject() {

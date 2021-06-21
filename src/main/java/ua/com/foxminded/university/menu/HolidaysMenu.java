@@ -47,39 +47,36 @@ public class HolidaysMenu {
 	System.out.println(getStringOfHolidays(jdbcHolidayDAO.findAll()));
     }
 
-    public void updateHoliday() {
+    public Holiday selectHoliday() {
 	List<Holiday> holidays = jdbcHolidayDAO.findAll();
+	Holiday result = null;
 
-	System.out.println("Select a holiday to update: ");
-	System.out.println(getStringOfHolidays(holidays));
-	int choice = getIntFromScanner();
-	Holiday holiday = jdbcHolidayDAO.findById(choice).orElse(null);
-
-	if (isNull(holiday)) {
-	    System.out.println("No such holiday, returning...");
-	} else {
-	    holiday = createHoliday();
-	    holiday.setId(choice);
-	    jdbcHolidayDAO.update(holiday);
-
-	    System.out.println("Overwrite successful.");
+	while (isNull(result)) {
+	    System.out.println("Select holiday: ");
+	    System.out.print(getStringOfHolidays(holidays));
+	    int choice = getIntFromScanner();
+	    Holiday selected = jdbcHolidayDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such holiday.");
+	    } else {
+		result = selected;
+		System.out.println("Success.");
+	    }
 	}
+	return result;
+    }
+
+    public void updateHoliday() {
+	Holiday oldHoliday = selectHoliday();
+	Holiday newHoliday = createHoliday();
+	newHoliday.setId(oldHoliday.getId());
+	jdbcHolidayDAO.update(newHoliday);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteHoliday() {
-	List<Holiday> holidays = jdbcHolidayDAO.findAll();
-
-	System.out.println("Select a holiday to delete: ");
-	System.out.println(getStringOfHolidays(holidays));
-	int choice = getIntFromScanner();
-	Holiday holiday = jdbcHolidayDAO.findById(choice).orElse(null);
-
-	if (isNull(holiday)) {
-	    System.out.println("No such holiday, returning...");
-	} else {
-	    jdbcHolidayDAO.delete(choice);
-	    System.out.println("Subject deleted successfully.");
-	}
+	jdbcHolidayDAO.delete(selectHoliday().getId());
+	System.out.println("Holiday deleted successfully.");
     }
 
     public void addHoliday() {

@@ -90,36 +90,49 @@ public class GroupsMenu {
     }
 
     public void updateGroup() {
-	List<Group> groups = jdbcGroupDAO.findAll();
-
-	System.out.println("Select a group to update: ");
-	System.out.println(getStringOfGroups(groups));
-	int choice = getIntFromScanner();
-	Group selected = jdbcGroupDAO.findById(choice).orElse(null);
-
-	if (isNull(selected)) {
-	    System.out.println("No such group, returning...");
-	} else {
-	    Group newGroup = createGroup();
-	    newGroup.setId(selected.getId());
-	    jdbcGroupDAO.update(newGroup);
-	    System.out.println("Overwrite successful.");
-	}
+	Group oldGroup = selectGroup();
+	Group newGroup = createGroup();
+	newGroup.setId(oldGroup.getId());
+	jdbcGroupDAO.update(newGroup);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteGroup() {
-	List<Group> groups = jdbcGroupDAO.findAll();
-
-	System.out.println("Select a group to delete: ");
-	System.out.println(getStringOfGroups(groups));
-	int choice = getIntFromScanner();
-	Group group = jdbcGroupDAO.findById(choice).orElse(null);
-
-	if (isNull(group)) {
-	    System.out.println("No such group, returning...");
-	} else {
-	    jdbcGroupDAO.delete(choice);
-	    System.out.println("Group deleted successfully.");
-	}
+	jdbcGroupDAO.delete(selectGroup().getId());
+	System.out.println("Group deleted successfully.");
     }
+
+//    public void updateGroup() {
+//	List<Group> groups = jdbcGroupDAO.findAll();
+//
+//	System.out.println("Select a group to update: ");
+//	System.out.println(getStringOfGroups(groups));
+//	int choice = getIntFromScanner();
+//	Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+//
+//	if (isNull(selected)) {
+//	    System.out.println("No such group, returning...");
+//	} else {
+//	    Group newGroup = createGroup();
+//	    newGroup.setId(selected.getId());
+//	    jdbcGroupDAO.update(newGroup);
+//	    System.out.println("Overwrite successful.");
+//	}
+//    }
+//
+//    public void deleteGroup() {
+//	List<Group> groups = jdbcGroupDAO.findAll();
+//
+//	System.out.println("Select a group to delete: ");
+//	System.out.println(getStringOfGroups(groups));
+//	int choice = getIntFromScanner();
+//	Group group = jdbcGroupDAO.findById(choice).orElse(null);
+//
+//	if (isNull(group)) {
+//	    System.out.println("No such group, returning...");
+//	} else {
+//	    jdbcGroupDAO.delete(choice);
+//	    System.out.println("Group deleted successfully.");
+//	}
+//    }
 }

@@ -75,37 +75,35 @@ public class StudentsMenu {
 	System.out.println(getStringOfStudents(jdbcStudentDAO.findAll()));
     }
 
-    public void updateStudent() {
+    public Student selectStudent() {
 	List<Student> students = jdbcStudentDAO.findAll();
+	Student result = null;
 
-	System.out.println("Select a student to update: ");
-	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner();
-	Student selected = jdbcStudentDAO.findById(choice).orElse(null);
-
-	if (isNull(selected)) {
-	    System.out.println("No such student, returning...");
-	} else {
-	    Student newStudent = createStudent();
-	    newStudent.setId(selected.getId());
-	    jdbcStudentDAO.update(newStudent);
-	    System.out.println("Overwrite successful.");
+	while (isNull(result)) {
+	    System.out.println("Select student: ");
+	    System.out.print(getStringOfStudents(students));
+	    int choice = getIntFromScanner();
+	    Student selected = jdbcStudentDAO.findById(choice).orElse(null);
+	    if (isNull(selected)) {
+		System.out.println("No such student.");
+	    } else {
+		result = selected;
+		System.out.println("Success.");
+	    }
 	}
+	return result;
+    }
+
+    public void updateStudent() {
+	Student oldStudent = selectStudent();
+	Student newStudent = createStudent();
+	newStudent.setId(oldStudent.getId());
+	jdbcStudentDAO.update(newStudent);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteStudent() {
-	List<Student> students = jdbcStudentDAO.findAll();
-
-	System.out.println("Select a student to delete: ");
-	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner();
-	Student student = jdbcStudentDAO.findById(choice).orElse(null);
-
-	if (isNull(student)) {
-	    System.out.println("No such student, returning...");
-	} else {
-	    jdbcStudentDAO.delete(choice);
-	    System.out.println("Student deleted successfully.");
-	}
+	jdbcStudentDAO.delete(selectStudent().getId());
+	System.out.println("Student deleted successfully.");
     }
 }
