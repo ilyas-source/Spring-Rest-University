@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -56,7 +57,11 @@ public class JdbcGroupDAO implements GroupDAO {
 
     @Override
     public Optional<Group> findById(int id) {
-	return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, groupMapper, id));
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, groupMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override

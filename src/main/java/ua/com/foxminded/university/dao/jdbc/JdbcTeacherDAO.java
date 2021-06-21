@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -124,7 +125,11 @@ public class JdbcTeacherDAO implements TeacherDAO {
 
     @Override
     public Optional<Teacher> findById(int id) {
-	return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, teacherMapper, id));
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, teacherMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override
