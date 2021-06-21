@@ -123,36 +123,16 @@ public class TeachersMenu {
     }
 
     public void updateTeacher() {
-	List<Teacher> teachers = jdbcTeacherDAO.findAll();
-
-	System.out.println("Select a teacher to update: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	Teacher selected = jdbcTeacherDAO.findById(choice).orElse(null);
-
-	if (isNull(selected)) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    Teacher newTeacher = createTeacher();
-	    newTeacher.setId(selected.getId());
-	    jdbcTeacherDAO.update(newTeacher);
-	    System.out.println("Overwrite successful.");
-	}
+	Teacher oldTeacher = selectTeacher();
+	Teacher newTeacher = createTeacher();
+	newTeacher.setId(oldTeacher.getId());
+	jdbcTeacherDAO.update(newTeacher);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteTeacher() {
-	List<Teacher> teachers = jdbcTeacherDAO.findAll();
-
-	System.out.println("Select a classroom to delete: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	Teacher teacher = jdbcTeacherDAO.findById(choice).orElse(null);
-
-	if (isNull(teacher)) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    jdbcTeacherDAO.delete(choice);
-	    System.out.println("Teacher deleted successfully.");
-	}
+	jdbcTeacherDAO.delete(selectTeacher().getId());
+	System.out.println("Teacher deleted successfully.");
     }
+
 }
