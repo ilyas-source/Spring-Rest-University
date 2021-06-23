@@ -37,14 +37,14 @@ public class JdbcTeacherDao implements TeacherDao {
     private JdbcTemplate jdbcTemplate;
     private TeacherMapper teacherMapper;
     private JdbcAddressDao jdbcAddressDao;
-    private JdbcVacationDao jdbcVacationDao;
+    private JdbcSubjectDao jdbcSubjectDao;
 
     public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, JdbcAddressDao jdbcAddressDao,
-	    JdbcVacationDao jdbcVacationDao) {
+	    JdbcSubjectDao jdbcSubjectDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.teacherMapper = teacherMapper;
 	this.jdbcAddressDao = jdbcAddressDao;
-	this.jdbcVacationDao = jdbcVacationDao;
+	this.jdbcSubjectDao = jdbcSubjectDao;
     }
 
     @Override
@@ -68,12 +68,10 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	teacher.setId((int) keyHolder.getKeys().get("id"));
 
-	clearAssignedSubjects(teacher);
 	for (Subject subject : teacher.getSubjects()) {
 	    assignSubject(subject, teacher);
 	}
 
-	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
 	    assignVacation(vacation, teacher);
 	}
@@ -104,7 +102,6 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDao.create(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }
