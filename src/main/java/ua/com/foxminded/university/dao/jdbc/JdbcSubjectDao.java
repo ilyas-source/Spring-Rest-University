@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,10 +26,13 @@ public class JdbcSubjectDao implements SubjectDao {
     private static final String FIND_BY_TEACHER_ID = "SELECT s.id, s.name, s.description from teachers_subjects " +
 	    "AS t_s LEFT JOIN subjects AS s ON (t_s.subject_id=s.id) WHERE t_s.teacher_id=?;";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private SubjectMapper subjectMapper;
+
+    public JdbcSubjectDao(JdbcTemplate jdbcTemplate, SubjectMapper subjectMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.subjectMapper = subjectMapper;
+    }
 
     @Override
     public void addToDb(Subject subject) {

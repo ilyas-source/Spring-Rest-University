@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,16 +24,19 @@ public class JdbcClassroomDao implements ClassroomDao {
     private static final String UPDATE = "UPDATE classrooms SET location_id = ?, name = ?, capacity = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM classrooms WHERE id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ClassroomMapper classroomMapper;
-    @Autowired
-    private JdbcLocationDao jdbcLocationDAO;
+    private JdbcLocationDao jdbcLocationDao;
+
+    public JdbcClassroomDao(JdbcTemplate jdbcTemplate, ClassroomMapper classroomMapper, JdbcLocationDao jdbcLocationDao) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.classroomMapper = classroomMapper;
+	this.jdbcLocationDao = jdbcLocationDao;
+    }
 
     @Override
     public void addToDb(Classroom classroom) {
-	jdbcLocationDAO.addToDb(classroom.getLocation());
+	jdbcLocationDao.addToDb(classroom.getLocation());
 
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -65,7 +67,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     @Override
     public void update(Classroom classroom) {
-	jdbcLocationDAO.addToDb(classroom.getLocation());
+	jdbcLocationDao.addToDb(classroom.getLocation());
 	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
 		classroom.getId());
     }

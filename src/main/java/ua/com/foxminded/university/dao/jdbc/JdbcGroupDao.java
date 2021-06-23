@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -29,10 +28,13 @@ public class JdbcGroupDao implements GroupDao {
     private static final String FIND_BY_LECTURE_ID = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
 	    "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private GroupMapper groupMapper;
+
+    public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.groupMapper = groupMapper;
+    }
 
     @Override
     public void addToDb(Group group) {

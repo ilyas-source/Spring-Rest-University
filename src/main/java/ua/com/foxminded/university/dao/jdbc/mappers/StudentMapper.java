@@ -16,12 +16,12 @@ import ua.com.foxminded.university.model.Student;
 @Component
 public class StudentMapper implements RowMapper<Student> {
 
-    private JdbcAddressDao jdbcAddressDAO;
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcAddressDao jdbcAddressDao;
+    private JdbcGroupDao jdbcGroupDao;
 
-    public StudentMapper(JdbcAddressDao jdbcAddressDAO, JdbcGroupDao jdbcGroupDAO) {
-	this.jdbcAddressDAO = jdbcAddressDAO;
-	this.jdbcGroupDAO = jdbcGroupDAO;
+    public StudentMapper(JdbcAddressDao jdbcAddressDao, JdbcGroupDao jdbcGroupDao) {
+	this.jdbcAddressDao = jdbcAddressDao;
+	this.jdbcGroupDao = jdbcGroupDao;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class StudentMapper implements RowMapper<Student> {
 
 	student.setId(rs.getInt("id"));
 
-	Address address = jdbcAddressDAO.findById(rs.getInt("address_id")).orElse(null);
+	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElse(null);
 	student.setAddress(address);
 
 	student.setBirthDate(rs.getDate("birth_date").toLocalDate());
@@ -40,7 +40,7 @@ public class StudentMapper implements RowMapper<Student> {
 	student.setLastName(rs.getString("last_name"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
 
-	Group group = jdbcGroupDAO.findById(rs.getInt("group_id")).orElse(null);
+	Group group = jdbcGroupDao.findById(rs.getInt("group_id")).orElse(null);
 	student.setGroup(group);
 
 	return student;

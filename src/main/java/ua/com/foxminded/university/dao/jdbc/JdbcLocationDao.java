@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,10 +24,13 @@ public class JdbcLocationDao implements LocationDao {
     private static final String UPDATE = "UPDATE locations SET building = ?, floor = ?, room_number = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM locations WHERE id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private LocationMapper locationMapper;
+
+    public JdbcLocationDao(JdbcTemplate jdbcTemplate, LocationMapper locationMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.locationMapper = locationMapper;
+    }
 
     @Override
     public void addToDb(Location location) {

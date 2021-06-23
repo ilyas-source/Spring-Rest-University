@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,10 +26,13 @@ public class JdbcVacationDao implements VacationDao {
     private static final String FIND_BY_TEACHER_ID = "SELECT v.id, v.start_date, v.end_date from teachers_vacations " +
 	    "AS t_v LEFT JOIN vacations AS v ON (t_v.vacation_id=v.id) WHERE t_v.teacher_id=?;";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private VacationMapper vacationMapper;
+
+    public JdbcVacationDao(JdbcTemplate jdbcTemplate, VacationMapper vacationMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.vacationMapper = vacationMapper;
+    }
 
     @Override
     public void addToDb(Vacation vacation) {

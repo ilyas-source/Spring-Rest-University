@@ -42,23 +42,23 @@ public class JdbcUniversityPopulator {
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private JdbcAddressDao jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDao;
     @Autowired
-    private JdbcSubjectDao jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDao;
     @Autowired
-    private JdbcVacationDao jdbcVacationDAO;
+    private JdbcVacationDao jdbcVacationDao;
     @Autowired
-    private JdbcClassroomDao jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDao;
     @Autowired
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDao;
     @Autowired
-    private JdbcLectureDao jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDao;
     @Autowired
-    private JdbcTeacherDao jdbcTeacherDAO;
+    private JdbcTeacherDao jdbcTeacherDao;
     @Autowired
-    private JdbcHolidayDao jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDao;
     @Autowired
-    private JdbcStudentDao jdbcStudentDAO;
+    private JdbcStudentDao jdbcStudentDao;
 
     public void populate() {
 	createEmptyDb(dataSource);
@@ -88,7 +88,7 @@ public class JdbcUniversityPopulator {
 	subjects.add(new Subject("Radiology", "Explore radiation"));
 
 	for (Subject s : subjects) {
-	    jdbcSubjectDAO.addToDb(s);
+	    jdbcSubjectDao.addToDb(s);
 	}
     }
 
@@ -100,7 +100,7 @@ public class JdbcUniversityPopulator {
 	vacations.add(new Vacation(LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01)));
 
 	for (Vacation v : vacations) {
-	    jdbcVacationDAO.addToDb(v);
+	    jdbcVacationDao.addToDb(v);
 	}
     }
 
@@ -114,14 +114,14 @@ public class JdbcUniversityPopulator {
 	addresses.add(new Address("China", "20121", "Guangdung", "Beijin", "Main St. 125"));
 
 	for (Address a : addresses) {
-	    jdbcAddressDAO.addToDb(a);
+	    jdbcAddressDao.addToDb(a);
 	}
 
     }
 
     private void populateTeachers() {
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
-	List<Vacation> vacations = jdbcVacationDAO.findAll();
+	List<Subject> subjects = jdbcSubjectDao.findAll();
+	List<Vacation> vacations = jdbcVacationDao.findAll();
 
 	List<Subject> subjects1 = new ArrayList<>();
 	subjects1.add(subjects.get(0));
@@ -134,10 +134,10 @@ public class JdbcUniversityPopulator {
 	Teacher teacher = new Teacher("Adam", "Smith",
 		Gender.MALE, Degree.DOCTOR,
 		subjects1, "adam@smith.com", "+223322",
-		jdbcAddressDAO.findById(1).orElse(null),
+		jdbcAddressDao.findById(1).orElse(null),
 		vacations1);
 
-	jdbcTeacherDAO.addToDb(teacher);
+	jdbcTeacherDao.addToDb(teacher);
 
 	List<Subject> subjects2 = new ArrayList<>();
 	subjects2.add(subjects.get(2));
@@ -150,10 +150,10 @@ public class JdbcUniversityPopulator {
 	teacher = new Teacher("Marie", "Curie",
 		Gender.FEMALE, Degree.MASTER,
 		subjects2, "marie@curie.com", "+322223",
-		jdbcAddressDAO.findById(2).orElse(null),
+		jdbcAddressDao.findById(2).orElse(null),
 		vacations2);
 
-	jdbcTeacherDAO.addToDb(teacher);
+	jdbcTeacherDao.addToDb(teacher);
     }
 
     private void populateHolidays() {
@@ -163,7 +163,7 @@ public class JdbcUniversityPopulator {
 	holidays.add(new Holiday(LocalDate.of(2000, 3, 8), "International women's day"));
 
 	for (Holiday h : holidays) {
-	    jdbcHolidayDAO.addToDb(h);
+	    jdbcHolidayDao.addToDb(h);
 	}
     }
 
@@ -174,14 +174,14 @@ public class JdbcUniversityPopulator {
 	groups.add(new Group("ZI-08"));
 
 	for (Group g : groups) {
-	    jdbcGroupDAO.addToDb(g);
+	    jdbcGroupDao.addToDb(g);
 	}
     }
 
     private void populateStudents() {
 	List<Student> students = new ArrayList<>();
-	List<Group> groups = jdbcGroupDAO.findAll();
-	List<Address> addresses = jdbcAddressDAO.findAll();
+	List<Group> groups = jdbcGroupDao.findAll();
+	List<Address> addresses = jdbcAddressDao.findAll();
 
 	students.add(new Student("Ivan", "Petrov", Gender.MALE, LocalDate.of(1980, 11, 1),
 		"qwe@rty.com", "123123123", addresses.get(2), groups.get(0)));
@@ -196,7 +196,7 @@ public class JdbcUniversityPopulator {
 		"qwe@no.cn", "1145223", addresses.get(5), groups.get(1)));
 
 	for (Student s : students) {
-	    jdbcStudentDAO.addToDb(s);
+	    jdbcStudentDao.addToDb(s);
 	}
     }
 
@@ -208,16 +208,16 @@ public class JdbcUniversityPopulator {
 	classrooms.add(new Classroom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
 
 	for (Classroom c : classrooms) {
-	    jdbcClassroomDAO.addToDb(c);
+	    jdbcClassroomDao.addToDb(c);
 	}
     }
 
     private void populateLectures() {
 	List<Lecture> lectures = new ArrayList<>();
-	List<Group> groups = jdbcGroupDAO.findAll();
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
-	List<Teacher> teachers = jdbcTeacherDAO.findAll();
-	List<Classroom> classRooms = jdbcClassroomDAO.findAll();
+	List<Group> groups = jdbcGroupDao.findAll();
+	List<Subject> subjects = jdbcSubjectDao.findAll();
+	List<Teacher> teachers = jdbcTeacherDao.findAll();
+	List<Classroom> classRooms = jdbcClassroomDao.findAll();
 
 	Lecture lecture1 = new Lecture(LocalDate.of(2000, 1, 1),
 		new TimeRange(LocalTime.of(9, 0), LocalTime.of(10, 0)),
@@ -233,7 +233,7 @@ public class JdbcUniversityPopulator {
 	lectures.add(lecture2);
 
 	for (Lecture l : lectures) {
-	    jdbcLectureDAO.addToDb(l);
+	    jdbcLectureDao.addToDb(l);
 	}
     }
 }

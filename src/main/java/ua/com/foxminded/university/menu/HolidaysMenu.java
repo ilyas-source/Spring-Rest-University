@@ -18,7 +18,7 @@ import ua.com.foxminded.university.model.Holiday;
 public class HolidaysMenu {
 
     @Autowired
-    private JdbcHolidayDao jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDao;
 
     public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();
@@ -44,18 +44,18 @@ public class HolidaysMenu {
     }
 
     public void printHolidays() {
-	System.out.println(getStringOfHolidays(jdbcHolidayDAO.findAll()));
+	System.out.println(getStringOfHolidays(jdbcHolidayDao.findAll()));
     }
 
     public Holiday selectHoliday() {
-	List<Holiday> holidays = jdbcHolidayDAO.findAll();
+	List<Holiday> holidays = jdbcHolidayDao.findAll();
 	Holiday result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select holiday: ");
 	    System.out.print(getStringOfHolidays(holidays));
 	    int choice = getIntFromScanner();
-	    Holiday selected = jdbcHolidayDAO.findById(choice).orElse(null);
+	    Holiday selected = jdbcHolidayDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such holiday.");
 	    } else {
@@ -70,17 +70,17 @@ public class HolidaysMenu {
 	Holiday oldHoliday = selectHoliday();
 	Holiday newHoliday = createHoliday();
 	newHoliday.setId(oldHoliday.getId());
-	jdbcHolidayDAO.update(newHoliday);
+	jdbcHolidayDao.update(newHoliday);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteHoliday() {
-	jdbcHolidayDAO.delete(selectHoliday().getId());
+	jdbcHolidayDao.delete(selectHoliday().getId());
 	System.out.println("Holiday deleted successfully.");
     }
 
     public void addHoliday() {
-	jdbcHolidayDAO.addToDb(createHoliday());
+	jdbcHolidayDao.addToDb(createHoliday());
     }
 
 }

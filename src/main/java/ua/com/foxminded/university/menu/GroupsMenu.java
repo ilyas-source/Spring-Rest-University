@@ -17,7 +17,7 @@ import static ua.com.foxminded.university.Menu.*;
 public class GroupsMenu {
 
     @Autowired
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDao;
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
@@ -29,11 +29,11 @@ public class GroupsMenu {
     }
 
     public void printGroups() {
-	System.out.println(getStringOfGroups(jdbcGroupDAO.findAll()));
+	System.out.println(getStringOfGroups(jdbcGroupDao.findAll()));
     }
 
     public void addGroup() {
-	jdbcGroupDAO.addToDb(createGroup());
+	jdbcGroupDao.addToDb(createGroup());
     }
 
     public Group createGroup() {
@@ -43,14 +43,14 @@ public class GroupsMenu {
     }
 
     public Group selectGroup() {
-	List<Group> groups = jdbcGroupDAO.findAll();
+	List<Group> groups = jdbcGroupDao.findAll();
 	Group result = null;
 	boolean correctEntry = false;
 	while (!correctEntry) {
 	    System.out.println("Select a group:");
 	    System.out.print(getStringOfGroups(groups));
 	    int choice = getIntFromScanner();
-	    Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+	    Group selected = jdbcGroupDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such group, try again.");
 	    } else {
@@ -93,45 +93,45 @@ public class GroupsMenu {
 	Group oldGroup = selectGroup();
 	Group newGroup = createGroup();
 	newGroup.setId(oldGroup.getId());
-	jdbcGroupDAO.update(newGroup);
+	jdbcGroupDao.update(newGroup);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteGroup() {
-	jdbcGroupDAO.delete(selectGroup().getId());
+	jdbcGroupDao.delete(selectGroup().getId());
 	System.out.println("Group deleted successfully.");
     }
 
 //    public void updateGroup() {
-//	List<Group> groups = jdbcGroupDAO.findAll();
+//	List<Group> groups = jdbcGroupDao.findAll();
 //
 //	System.out.println("Select a group to update: ");
 //	System.out.println(getStringOfGroups(groups));
 //	int choice = getIntFromScanner();
-//	Group selected = jdbcGroupDAO.findById(choice).orElse(null);
+//	Group selected = jdbcGroupDao.findById(choice).orElse(null);
 //
 //	if (isNull(selected)) {
 //	    System.out.println("No such group, returning...");
 //	} else {
 //	    Group newGroup = createGroup();
 //	    newGroup.setId(selected.getId());
-//	    jdbcGroupDAO.update(newGroup);
+//	    jdbcGroupDao.update(newGroup);
 //	    System.out.println("Overwrite successful.");
 //	}
 //    }
 //
 //    public void deleteGroup() {
-//	List<Group> groups = jdbcGroupDAO.findAll();
+//	List<Group> groups = jdbcGroupDao.findAll();
 //
 //	System.out.println("Select a group to delete: ");
 //	System.out.println(getStringOfGroups(groups));
 //	int choice = getIntFromScanner();
-//	Group group = jdbcGroupDAO.findById(choice).orElse(null);
+//	Group group = jdbcGroupDao.findById(choice).orElse(null);
 //
 //	if (isNull(group)) {
 //	    System.out.println("No such group, returning...");
 //	} else {
-//	    jdbcGroupDAO.delete(choice);
+//	    jdbcGroupDao.delete(choice);
 //	    System.out.println("Group deleted successfully.");
 //	}
 //    }

@@ -21,7 +21,7 @@ public class ClassroomsMenu {
     @Autowired
     private LocationsMenu locationsMenu;
     @Autowired
-    private JdbcClassroomDao jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDao;
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();
@@ -40,7 +40,7 @@ public class ClassroomsMenu {
     }
 
     public void addClassroom() {
-	jdbcClassroomDAO.addToDb(createClassroom());
+	jdbcClassroomDao.addToDb(createClassroom());
     }
 
     public Classroom createClassroom() {
@@ -55,14 +55,14 @@ public class ClassroomsMenu {
     }
 
     public Classroom selectClassroom() {
-	List<Classroom> classrooms = jdbcClassroomDAO.findAll();
+	List<Classroom> classrooms = jdbcClassroomDao.findAll();
 	Classroom result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfClassrooms(classrooms));
 	    int choice = getIntFromScanner();
-	    Classroom selected = jdbcClassroomDAO.findById(choice).orElse(null);
+	    Classroom selected = jdbcClassroomDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such subject.");
 	    } else {
@@ -77,16 +77,16 @@ public class ClassroomsMenu {
 	Classroom oldClassroom = selectClassroom();
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());
-	jdbcClassroomDAO.update(newClassroom);
+	jdbcClassroomDao.update(newClassroom);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteClassroom() {
-	jdbcClassroomDAO.delete(selectClassroom().getId());
+	jdbcClassroomDao.delete(selectClassroom().getId());
 	System.out.println("Classroom deleted successfully.");
     }
 
     public void printClassrooms() {
-	System.out.println(getStringOfClassrooms(jdbcClassroomDAO.findAll()));
+	System.out.println(getStringOfClassrooms(jdbcClassroomDao.findAll()));
     }
 }

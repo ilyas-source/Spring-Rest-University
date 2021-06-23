@@ -27,7 +27,7 @@ public class StudentsMenu {
     @Autowired
     private GenderMenu genderMenu;
     @Autowired
-    private JdbcStudentDao jdbcStudentDAO;
+    private JdbcStudentDao jdbcStudentDao;
 
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
@@ -50,7 +50,7 @@ public class StudentsMenu {
     }
 
     public void addStudent() {
-	jdbcStudentDAO.addToDb(createStudent());
+	jdbcStudentDao.addToDb(createStudent());
     }
 
     public Student createStudent() {
@@ -72,18 +72,18 @@ public class StudentsMenu {
     }
 
     public void printStudents() {
-	System.out.println(getStringOfStudents(jdbcStudentDAO.findAll()));
+	System.out.println(getStringOfStudents(jdbcStudentDao.findAll()));
     }
 
     public Student selectStudent() {
-	List<Student> students = jdbcStudentDAO.findAll();
+	List<Student> students = jdbcStudentDao.findAll();
 	Student result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select student: ");
 	    System.out.print(getStringOfStudents(students));
 	    int choice = getIntFromScanner();
-	    Student selected = jdbcStudentDAO.findById(choice).orElse(null);
+	    Student selected = jdbcStudentDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such student.");
 	    } else {
@@ -98,12 +98,12 @@ public class StudentsMenu {
 	Student oldStudent = selectStudent();
 	Student newStudent = createStudent();
 	newStudent.setId(oldStudent.getId());
-	jdbcStudentDAO.update(newStudent);
+	jdbcStudentDao.update(newStudent);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteStudent() {
-	jdbcStudentDAO.delete(selectStudent().getId());
+	jdbcStudentDao.delete(selectStudent().getId());
 	System.out.println("Student deleted successfully.");
     }
 }

@@ -25,7 +25,7 @@ public class LecturesMenu {
     @Autowired
     private GroupsMenu groupsMenu;
     @Autowired
-    private JdbcLectureDao jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDao;
     @Autowired
     private SubjectsMenu subjectsMenu;
     @Autowired
@@ -57,11 +57,11 @@ public class LecturesMenu {
     }
 
     public void addLecture() {
-	jdbcLectureDAO.addToDb(createLecture());
+	jdbcLectureDao.addToDb(createLecture());
     }
 
     public void printLectures() {
-	System.out.println(getStringOfLectures(jdbcLectureDAO.findAll()));
+	System.out.println(getStringOfLectures(jdbcLectureDao.findAll()));
     }
 
     public Lecture createLecture() {
@@ -91,14 +91,14 @@ public class LecturesMenu {
     }
 
     public Lecture selectLecture() {
-	List<Lecture> lectures = jdbcLectureDAO.findAll();
+	List<Lecture> lectures = jdbcLectureDao.findAll();
 	Lecture result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select lecture: ");
 	    System.out.print(getStringOfLectures(lectures));
 	    int choice = getIntFromScanner();
-	    Lecture selected = jdbcLectureDAO.findById(choice).orElse(null);
+	    Lecture selected = jdbcLectureDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such lecture.");
 	    } else {
@@ -113,12 +113,12 @@ public class LecturesMenu {
 	Lecture oldLecture = selectLecture();
 	Lecture newLecture = createLecture();
 	newLecture.setId(oldLecture.getId());
-	jdbcLectureDAO.update(newLecture);
+	jdbcLectureDao.update(newLecture);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteLecture() {
-	jdbcLectureDAO.delete(selectLecture().getId());
+	jdbcLectureDao.delete(selectLecture().getId());
 	System.out.println("Lecture deleted successfully.");
     }
 }

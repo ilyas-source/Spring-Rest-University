@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -27,18 +26,21 @@ public class JdbcStudentDao implements StudentDao {
 	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private StudentMapper studentMapper;
-    @Autowired
-    private JdbcAddressDao jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDao;
+
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentMapper studentMapper, JdbcAddressDao jdbcAddressDao) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.studentMapper = studentMapper;
+	this.jdbcAddressDao = jdbcAddressDao;
+    }
 
     @Override
     public void addToDb(Student student) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcAddressDAO.addToDb(student.getAddress());
+	jdbcAddressDao.addToDb(student.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -58,7 +60,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public void update(Student student) {
-	jdbcAddressDAO.addToDb(student.getAddress());
+	jdbcAddressDao.addToDb(student.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection

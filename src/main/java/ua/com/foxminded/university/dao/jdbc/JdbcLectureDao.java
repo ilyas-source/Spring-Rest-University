@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -28,12 +27,15 @@ public class JdbcLectureDao implements LectureDao {
     private static final String DELETE_BY_ID = "DELETE FROM lectures WHERE id = ?";
     private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM lectures_groups WHERE lecture_id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private LectureMapper lectureMapper;
-    @Autowired
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDao;
+
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao jdbcGroupDao) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.lectureMapper = lectureMapper;
+	this.jdbcGroupDao = jdbcGroupDao;
+    }
 
     @Override
     public void addToDb(Lecture lecture) {
@@ -53,7 +55,7 @@ public class JdbcLectureDao implements LectureDao {
 
 	lecture.setId((int) keyHolder.getKeys().get("id"));
 
-	jdbcGroupDAO.assignGroupsToLecture(lecture);
+	jdbcGroupDao.assignGroupsToLecture(lecture);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class JdbcLectureDao implements LectureDao {
 	}, keyHolder);
 
 	clearAssignedSubjects(lecture);
-	jdbcGroupDAO.assignGroupsToLecture(lecture);
+	jdbcGroupDao.assignGroupsToLecture(lecture);
     }
 
     private void clearAssignedSubjects(Lecture lecture) {

@@ -32,43 +32,43 @@ public class UniversityMenu {
     private SubjectsMenu subjectsMenu;
 
     @Autowired
-    private JdbcTeacherDao jdbcTeacherDAO;
+    private JdbcTeacherDao jdbcTeacherDao;
     @Autowired
-    private JdbcStudentDao jdbcStudentDAO;
+    private JdbcStudentDao jdbcStudentDao;
     @Autowired
-    private JdbcSubjectDao jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDao;
     @Autowired
-    private JdbcClassroomDao jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDao;
     @Autowired
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDao;
     @Autowired
-    private JdbcLectureDao jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDao;
     @Autowired
-    private JdbcHolidayDao jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDao;
 
     public void printUniversity() {
 	StringBuilder result = new StringBuilder();
 	result.append(FORMAT_DIVIDER);
 	result.append("Teachers are:" + CR);
-	result.append(teachersMenu.getStringOfTeachers(jdbcTeacherDAO.findAll()));
+	result.append(teachersMenu.getStringOfTeachers(jdbcTeacherDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Students are:" + CR);
-	result.append(studentsMenu.getStringOfStudents(jdbcStudentDAO.findAll()));
+	result.append(studentsMenu.getStringOfStudents(jdbcStudentDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Student groups:" + CR);
-	result.append(groupsMenu.getStringOfGroups(jdbcGroupDAO.findAll()));
+	result.append(groupsMenu.getStringOfGroups(jdbcGroupDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Subjects available to students:" + CR);
-	result.append(subjectsMenu.getStringOfSubjects(jdbcSubjectDAO.findAll()));
+	result.append(subjectsMenu.getStringOfSubjects(jdbcSubjectDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
-	result.append(classroomsMenu.getStringOfClassrooms(jdbcClassroomDAO.findAll()));
+	result.append(classroomsMenu.getStringOfClassrooms(jdbcClassroomDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
-	result.append(lecturesMenu.getStringOfLectures(jdbcLectureDAO.findAll()));
+	result.append(lecturesMenu.getStringOfLectures(jdbcLectureDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Holidays are:" + CR);
-	result.append(holidaysMenu.getStringOfHolidays(jdbcHolidayDAO.findAll()));
+	result.append(holidaysMenu.getStringOfHolidays(jdbcHolidayDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	System.out.println(result.toString());
     }

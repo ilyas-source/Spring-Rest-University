@@ -20,15 +20,14 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
 
-    private JdbcAddressDao jdbcAddressDAO;
-    private JdbcSubjectDao jdbcSubjectDAO;
-    private JdbcVacationDao jdbcVacationDAO;
+    private JdbcAddressDao jdbcAddressDao;
+    private JdbcSubjectDao jdbcSubjectDao;
+    private JdbcVacationDao jdbcVacationDao;
 
-    public TeacherMapper(JdbcAddressDao jdbcAddressDAO, JdbcSubjectDao jdbcSubjectDAO, JdbcVacationDao jdbcVacationDAO) {
-	super();
-	this.jdbcAddressDAO = jdbcAddressDAO;
-	this.jdbcSubjectDAO = jdbcSubjectDAO;
-	this.jdbcVacationDAO = jdbcVacationDAO;
+    public TeacherMapper(JdbcAddressDao jdbcAddressDao, JdbcSubjectDao jdbcSubjectDao, JdbcVacationDao jdbcVacationDao) {
+	this.jdbcAddressDao = jdbcAddressDao;
+	this.jdbcSubjectDao = jdbcSubjectDao;
+	this.jdbcVacationDao = jdbcVacationDao;
     }
 
     @Override
@@ -43,13 +42,13 @@ public class TeacherMapper implements RowMapper<Teacher> {
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
 	teacher.setDegree(Degree.valueOf(rs.getString("degree")));
 
-	Address address = jdbcAddressDAO.findById(rs.getInt("address_id")).orElse(null);
+	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElse(null);
 	teacher.setAddress(address);
 
-	List<Subject> subjects = jdbcSubjectDAO.getSubjectsByTeacher(teacher.getId());
+	List<Subject> subjects = jdbcSubjectDao.getSubjectsByTeacher(teacher.getId());
 	teacher.setSubjects(subjects);
 
-	List<Vacation> vacations = jdbcVacationDAO.getVacationsByTeacher(teacher.getId());
+	List<Vacation> vacations = jdbcVacationDao.getVacationsByTeacher(teacher.getId());
 	teacher.setVacations(vacations);
 	return teacher;
     }

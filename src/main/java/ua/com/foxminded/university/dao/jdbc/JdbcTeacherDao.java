@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,20 +34,24 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String CLEAR_ASSIGNED_VACATIONS = "DELETE FROM teachers_vacations WHERE teacher_id = ?";
     private static final String ASSIGN_VACATION = "INSERT INTO teachers_vacations (teacher_id, vacation_id) VALUES (?, ?)";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private TeacherMapper teacherMapper;
-    @Autowired
-    private JdbcAddressDao jdbcAddressDAO;
-    @Autowired
-    private JdbcVacationDao jdbcVacationDAO;
+    private JdbcAddressDao jdbcAddressDao;
+    private JdbcVacationDao jdbcVacationDao;
+
+    public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, JdbcAddressDao jdbcAddressDao,
+	    JdbcVacationDao jdbcVacationDao) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.teacherMapper = teacherMapper;
+	this.jdbcAddressDao = jdbcAddressDao;
+	this.jdbcVacationDao = jdbcVacationDao;
+    }
 
     @Override
     public void addToDb(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcAddressDAO.addToDb(teacher.getAddress());
+	jdbcAddressDao.addToDb(teacher.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -72,14 +75,14 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDAO.addToDb(vacation);
+	    jdbcVacationDao.addToDb(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }
 
     @Override
     public void update(Teacher teacher) {
-	jdbcAddressDAO.addToDb(teacher.getAddress());
+	jdbcAddressDao.addToDb(teacher.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -102,7 +105,7 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDAO.addToDb(vacation);
+	    jdbcVacationDao.addToDb(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }

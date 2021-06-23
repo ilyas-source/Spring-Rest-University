@@ -18,7 +18,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
-class JdbcAddressDAOTest {
+class JdbcAddressDaoTest {
 
     @Test
     void addToDb_shouldAddress_() {

@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,10 +24,13 @@ public class JdbcHolidayDao implements HolidayDao {
     private static final String UPDATE = "UPDATE holidays SET date = ?, name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM holidays WHERE id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private HolidayMapper holidayMapper;
+
+    public JdbcHolidayDao(JdbcTemplate jdbcTemplate, HolidayMapper holidayMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.holidayMapper = holidayMapper;
+    }
 
     @Override
     public void addToDb(Holiday holiday) {

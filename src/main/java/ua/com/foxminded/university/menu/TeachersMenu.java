@@ -30,7 +30,7 @@ public class TeachersMenu {
     @Autowired
     private SubjectsMenu subjectsMenu;
     @Autowired
-    private JdbcTeacherDao jdbcTeacherDAO;
+    private JdbcTeacherDao jdbcTeacherDao;
 
     public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();
@@ -50,7 +50,7 @@ public class TeachersMenu {
     }
 
     public void addTeacher() {
-	jdbcTeacherDAO.addToDb(createTeacher());
+	jdbcTeacherDao.addToDb(createTeacher());
     }
 
     public Teacher createTeacher() {
@@ -63,10 +63,10 @@ public class TeachersMenu {
 	Gender gender = genderMenu.getGender();
 	Degree degree = getDegree();
 
-	System.out.println("Email:");
+	System.out.print("Email:");
 	String email = scanner.nextLine();
 
-	System.out.println("Phone:");
+	System.out.print("Phone:");
 	String phone = scanner.nextLine();
 
 	Address address = addressMenu.createAddress();
@@ -100,18 +100,18 @@ public class TeachersMenu {
     }
 
     public void printTeachers() {
-	System.out.println(getStringOfTeachers(jdbcTeacherDAO.findAll()));
+	System.out.println(getStringOfTeachers(jdbcTeacherDao.findAll()));
     }
 
     public Teacher selectTeacher() {
-	List<Teacher> teachers = jdbcTeacherDAO.findAll();
+	List<Teacher> teachers = jdbcTeacherDao.findAll();
 	Teacher result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
 	    int choice = getIntFromScanner();
-	    Teacher selected = jdbcTeacherDAO.findById(choice).orElse(null);
+	    Teacher selected = jdbcTeacherDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such teacher.");
 	    } else {
@@ -126,12 +126,12 @@ public class TeachersMenu {
 	Teacher oldTeacher = selectTeacher();
 	Teacher newTeacher = createTeacher();
 	newTeacher.setId(oldTeacher.getId());
-	jdbcTeacherDAO.update(newTeacher);
+	jdbcTeacherDao.update(newTeacher);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteTeacher() {
-	jdbcTeacherDAO.delete(selectTeacher().getId());
+	jdbcTeacherDao.delete(selectTeacher().getId());
 	System.out.println("Teacher deleted successfully.");
     }
 }

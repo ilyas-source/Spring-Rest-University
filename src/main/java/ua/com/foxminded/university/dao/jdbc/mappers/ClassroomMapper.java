@@ -13,16 +13,16 @@ import ua.com.foxminded.university.model.Location;
 @Component
 public class ClassroomMapper implements RowMapper<Classroom> {
 
-    private JdbcLocationDao jdbcLocationDAO;
+    private JdbcLocationDao jdbcLocationDao;
 
     public ClassroomMapper(JdbcLocationDao jdbcLocationDao) {
-	this.jdbcLocationDAO = jdbcLocationDao;
+	this.jdbcLocationDao = jdbcLocationDao;
     }
 
     @Override
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Classroom classroom = new Classroom();
-	Location location = jdbcLocationDAO.findById(rs.getInt("location_id")).orElse(null);
+	Location location = jdbcLocationDao.findById(rs.getInt("location_id")).orElse(null);
 	classroom.setId(rs.getInt("id"));
 	classroom.setLocation(location);
 	classroom.setName(rs.getString("name"));

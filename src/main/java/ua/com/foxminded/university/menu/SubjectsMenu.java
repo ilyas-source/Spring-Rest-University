@@ -17,7 +17,7 @@ import ua.com.foxminded.university.model.Subject;
 public class SubjectsMenu {
 
     @Autowired
-    JdbcSubjectDao jdbcSubjectDAO;
+    JdbcSubjectDao jdbcSubjectDao;
 
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();
@@ -34,7 +34,7 @@ public class SubjectsMenu {
     }
 
     public void addSubject() {
-	jdbcSubjectDAO.addToDb(createSubject());
+	jdbcSubjectDao.addToDb(createSubject());
     }
 
     public Subject createSubject() {
@@ -47,31 +47,31 @@ public class SubjectsMenu {
     }
 
     public void printSubjects() {
-	System.out.println(getStringOfSubjects(jdbcSubjectDAO.findAll()));
+	System.out.println(getStringOfSubjects(jdbcSubjectDao.findAll()));
     }
 
     public void updateSubject() {
 	Subject oldSubject = selectSubject();
 	Subject newSubject = createSubject();
 	newSubject.setId(oldSubject.getId());
-	jdbcSubjectDAO.update(newSubject);
+	jdbcSubjectDao.update(newSubject);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteSubject() {
-	jdbcSubjectDAO.delete(selectSubject().getId());
+	jdbcSubjectDao.delete(selectSubject().getId());
 	System.out.println("Subject deleted successfully.");
     }
 
     public Subject selectSubject() {
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
+	List<Subject> subjects = jdbcSubjectDao.findAll();
 	Subject result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfSubjects(subjects));
 	    int choice = getIntFromScanner();
-	    Subject selected = jdbcSubjectDAO.findById(choice).orElse(null);
+	    Subject selected = jdbcSubjectDao.findById(choice).orElse(null);
 	    if (isNull(selected)) {
 		System.out.println("No such subject.");
 	    } else {
@@ -84,7 +84,7 @@ public class SubjectsMenu {
 
     public List<Subject> selectSubjects() {
 	List<Subject> result = new ArrayList<>();
-	List<Subject> subjects = jdbcSubjectDAO.findAll();
+	List<Subject> subjects = jdbcSubjectDao.findAll();
 	boolean finished = false;
 	boolean correctEntry = false;
 

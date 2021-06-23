@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,10 +24,13 @@ public class JdbcAddressDao implements AddressDao {
     private static final String UPDATE = "UPDATE addresses SET country = ?, postalcode = ?, region = ?, city = ?, streetAddress = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM addresses WHERE id = ?";
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private AddressMapper addressMapper;
+
+    public JdbcAddressDao(JdbcTemplate jdbcTemplate, AddressMapper addressMapper) {
+	this.jdbcTemplate = jdbcTemplate;
+	this.addressMapper = addressMapper;
+    }
 
     public void addToDb(Address address) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -71,5 +73,4 @@ public class JdbcAddressDao implements AddressDao {
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
-
 }

@@ -44,22 +44,26 @@ public class Menu {
 
     public static final Scanner scanner = new Scanner(System.in);
 
-    @Autowired
     private TeachersMenu teachersMenu;
-    @Autowired
     private GroupsMenu groupsMenu;
-    @Autowired
     private StudentsMenu studentsMenu;
-    @Autowired
     private SubjectsMenu subjectsMenu;
-    @Autowired
     private LecturesMenu lecturesMenu;
-    @Autowired
     private UniversityMenu universityMenu;
-    @Autowired
     private ClassroomsMenu classroomsMenu;
-    @Autowired
     private HolidaysMenu holidaysMenu;
+
+    public Menu(TeachersMenu teachersMenu, GroupsMenu groupsMenu, StudentsMenu studentsMenu, SubjectsMenu subjectsMenu,
+	    LecturesMenu lecturesMenu, UniversityMenu universityMenu, ClassroomsMenu classroomsMenu, HolidaysMenu holidaysMenu) {
+	this.teachersMenu = teachersMenu;
+	this.groupsMenu = groupsMenu;
+	this.studentsMenu = studentsMenu;
+	this.subjectsMenu = subjectsMenu;
+	this.lecturesMenu = lecturesMenu;
+	this.universityMenu = universityMenu;
+	this.classroomsMenu = classroomsMenu;
+	this.holidaysMenu = holidaysMenu;
+    }
 
     public void start(int menuEntryPoint) {
 	int menuChoice;

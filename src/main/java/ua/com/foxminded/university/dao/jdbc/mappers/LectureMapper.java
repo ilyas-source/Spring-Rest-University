@@ -21,17 +21,17 @@ import ua.com.foxminded.university.model.TimeRange;
 @Component
 public class LectureMapper implements RowMapper<Lecture> {
 
-    private JdbcSubjectDao jdbcSubjectDAO;
-    private JdbcTeacherDao jdbcTeacherDAO;
-    private JdbcClassroomDao jdbcClassroomDAO;
-    private JdbcGroupDao jdbcGroupDAO;
+    private JdbcSubjectDao jdbcSubjectDao;
+    private JdbcTeacherDao jdbcTeacherDao;
+    private JdbcClassroomDao jdbcClassroomDao;
+    private JdbcGroupDao jdbcGroupDao;
 
-    public LectureMapper(JdbcSubjectDao jdbcSubjectDAO, JdbcTeacherDao jdbcTeacherDAO, JdbcClassroomDao jdbcClassroomDAO,
-	    JdbcGroupDao jdbcGroupDAO) {
-	this.jdbcSubjectDAO = jdbcSubjectDAO;
-	this.jdbcTeacherDAO = jdbcTeacherDAO;
-	this.jdbcClassroomDAO = jdbcClassroomDAO;
-	this.jdbcGroupDAO = jdbcGroupDAO;
+    public LectureMapper(JdbcSubjectDao jdbcSubjectDao, JdbcTeacherDao jdbcTeacherDao, JdbcClassroomDao jdbcClassroomDao,
+	    JdbcGroupDao jdbcGroupDao) {
+	this.jdbcSubjectDao = jdbcSubjectDao;
+	this.jdbcTeacherDao = jdbcTeacherDao;
+	this.jdbcClassroomDao = jdbcClassroomDao;
+	this.jdbcGroupDao = jdbcGroupDao;
     }
 
     @Override
@@ -39,18 +39,18 @@ public class LectureMapper implements RowMapper<Lecture> {
 	Lecture lecture = new Lecture();
 	lecture.setId(rs.getInt("id"));
 
-	Classroom classroom = jdbcClassroomDAO.findById(rs.getInt("classroom_id")).orElse(null);
+	Classroom classroom = jdbcClassroomDao.findById(rs.getInt("classroom_id")).orElse(null);
 	lecture.setClassroom(classroom);
 
 	lecture.setDate(rs.getDate("date").toLocalDate());
 
-	List<Group> groups = jdbcGroupDAO.findByLectureId(rs.getInt("id"));
+	List<Group> groups = jdbcGroupDao.findByLectureId(rs.getInt("id"));
 	lecture.setGroups(groups);
 
-	Subject subject = jdbcSubjectDAO.findById(rs.getInt("subject_id")).orElse(null);
+	Subject subject = jdbcSubjectDao.findById(rs.getInt("subject_id")).orElse(null);
 	lecture.setSubject(subject);
 
-	Teacher teacher = jdbcTeacherDAO.findById(rs.getInt("teacher_id")).orElse(null);
+	Teacher teacher = jdbcTeacherDao.findById(rs.getInt("teacher_id")).orElse(null);
 	lecture.setTeacher(teacher);
 
 	LocalTime beginTime = rs.getTime("begin_time").toLocalTime();
