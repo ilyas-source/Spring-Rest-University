@@ -88,7 +88,7 @@ public class JdbcUniversityPopulator {
 	subjects.add(new Subject("Radiology", "Explore radiation"));
 
 	for (Subject s : subjects) {
-	    jdbcSubjectDao.addToDb(s);
+	    jdbcSubjectDao.create(s);
 	}
     }
 
@@ -100,7 +100,7 @@ public class JdbcUniversityPopulator {
 	vacations.add(new Vacation(LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01)));
 
 	for (Vacation v : vacations) {
-	    jdbcVacationDao.addToDb(v);
+	    jdbcVacationDao.create(v);
 	}
     }
 
@@ -114,7 +114,7 @@ public class JdbcUniversityPopulator {
 	addresses.add(new Address("China", "20121", "Guangdung", "Beijin", "Main St. 125"));
 
 	for (Address a : addresses) {
-	    jdbcAddressDao.addToDb(a);
+	    jdbcAddressDao.create(a);
 	}
 
     }
@@ -137,7 +137,7 @@ public class JdbcUniversityPopulator {
 		jdbcAddressDao.findById(1).orElse(null),
 		vacations1);
 
-	jdbcTeacherDao.addToDb(teacher);
+	jdbcTeacherDao.create(teacher);
 
 	List<Subject> subjects2 = new ArrayList<>();
 	subjects2.add(subjects.get(2));
@@ -153,7 +153,7 @@ public class JdbcUniversityPopulator {
 		jdbcAddressDao.findById(2).orElse(null),
 		vacations2);
 
-	jdbcTeacherDao.addToDb(teacher);
+	jdbcTeacherDao.create(teacher);
     }
 
     private void populateHolidays() {
@@ -163,7 +163,7 @@ public class JdbcUniversityPopulator {
 	holidays.add(new Holiday(LocalDate.of(2000, 3, 8), "International women's day"));
 
 	for (Holiday h : holidays) {
-	    jdbcHolidayDao.addToDb(h);
+	    jdbcHolidayDao.create(h);
 	}
     }
 
@@ -174,7 +174,7 @@ public class JdbcUniversityPopulator {
 	groups.add(new Group("ZI-08"));
 
 	for (Group g : groups) {
-	    jdbcGroupDao.addToDb(g);
+	    jdbcGroupDao.create(g);
 	}
     }
 
@@ -196,7 +196,7 @@ public class JdbcUniversityPopulator {
 		"qwe@no.cn", "1145223", addresses.get(5), groups.get(1)));
 
 	for (Student s : students) {
-	    jdbcStudentDao.addToDb(s);
+	    jdbcStudentDao.create(s);
 	}
     }
 
@@ -208,7 +208,7 @@ public class JdbcUniversityPopulator {
 	classrooms.add(new Classroom(new Location("Chem building", 2, 12), "Chemistry laboratory", 15));
 
 	for (Classroom c : classrooms) {
-	    jdbcClassroomDao.addToDb(c);
+	    jdbcClassroomDao.create(c);
 	}
     }
 
@@ -233,7 +233,7 @@ public class JdbcUniversityPopulator {
 	lectures.add(lecture2);
 
 	for (Lecture l : lectures) {
-	    jdbcLectureDao.addToDb(l);
+	    jdbcLectureDao.create(l);
 	}
     }
 }

@@ -35,7 +35,7 @@ public class JdbcVacationDao implements VacationDao {
     }
 
     @Override
-    public void addToDb(Vacation vacation) {
+    public void create(Vacation vacation) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {

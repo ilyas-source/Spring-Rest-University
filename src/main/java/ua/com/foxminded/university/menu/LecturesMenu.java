@@ -60,7 +60,7 @@ public class LecturesMenu {
     }
 
     public void addLecture() {
-	jdbcLectureDao.addToDb(createLecture());
+	jdbcLectureDao.create(createLecture());
     }
 
     public void printLectures() {

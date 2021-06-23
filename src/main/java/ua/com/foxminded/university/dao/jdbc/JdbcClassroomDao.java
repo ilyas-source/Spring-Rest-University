@@ -35,8 +35,8 @@ public class JdbcClassroomDao implements ClassroomDao {
     }
 
     @Override
-    public void addToDb(Classroom classroom) {
-	jdbcLocationDao.addToDb(classroom.getLocation());
+    public void create(Classroom classroom) {
+	jdbcLocationDao.create(classroom.getLocation());
 
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -67,7 +67,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     @Override
     public void update(Classroom classroom) {
-	jdbcLocationDao.addToDb(classroom.getLocation());
+	jdbcLocationDao.create(classroom.getLocation());
 	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
 		classroom.getId());
     }

@@ -41,7 +41,7 @@ public class ClassroomsMenu {
     }
 
     public void addClassroom() {
-	jdbcClassroomDao.addToDb(createClassroom());
+	jdbcClassroomDao.create(createClassroom());
     }
 
     public Classroom createClassroom() {

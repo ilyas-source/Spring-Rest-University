@@ -38,7 +38,7 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
-    public void addToDb(Lecture lecture) {
+    public void create(Lecture lecture) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {

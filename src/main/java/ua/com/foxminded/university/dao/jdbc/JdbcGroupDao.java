@@ -37,7 +37,7 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public void addToDb(Group group) {
+    public void create(Group group) {
 	List<Group> groups = findAll();
 	if (!groups.contains(group)) {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();

@@ -35,7 +35,7 @@ public class JdbcSubjectDao implements SubjectDao {
     }
 
     @Override
-    public void addToDb(Subject subject) {
+    public void create(Subject subject) {
 	List<Subject> subjects = findAll();
 	if (!subjects.contains(subject)) {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();

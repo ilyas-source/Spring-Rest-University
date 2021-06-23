@@ -48,10 +48,10 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    public void addToDb(Teacher teacher) {
+    public void create(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcAddressDao.addToDb(teacher.getAddress());
+	jdbcAddressDao.create(teacher.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -75,14 +75,14 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDao.addToDb(vacation);
+	    jdbcVacationDao.create(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }
 
     @Override
     public void update(Teacher teacher) {
-	jdbcAddressDao.addToDb(teacher.getAddress());
+	jdbcAddressDao.create(teacher.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -105,7 +105,7 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDao.addToDb(vacation);
+	    jdbcVacationDao.create(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }

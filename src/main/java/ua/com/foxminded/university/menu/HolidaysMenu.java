@@ -82,7 +82,7 @@ public class HolidaysMenu {
     }
 
     public void addHoliday() {
-	jdbcHolidayDao.addToDb(createHoliday());
+	jdbcHolidayDao.create(createHoliday());
     }
 
 }

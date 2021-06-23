@@ -33,7 +33,7 @@ public class JdbcLocationDao implements LocationDao {
     }
 
     @Override
-    public void addToDb(Location location) {
+    public void create(Location location) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {

@@ -36,7 +36,7 @@ public class SubjectsMenu {
     }
 
     public void addSubject() {
-	jdbcSubjectDao.addToDb(createSubject());
+	jdbcSubjectDao.create(createSubject());
     }
 
     public Subject createSubject() {

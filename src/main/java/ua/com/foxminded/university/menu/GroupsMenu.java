@@ -35,7 +35,7 @@ public class GroupsMenu {
     }
 
     public void addGroup() {
-	jdbcGroupDao.addToDb(createGroup());
+	jdbcGroupDao.create(createGroup());
     }
 
     public Group createGroup() {

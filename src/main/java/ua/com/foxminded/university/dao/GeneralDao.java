@@ -3,15 +3,15 @@ package ua.com.foxminded.university.dao;
 import java.util.List;
 import java.util.Optional;
 
-public interface GeneralDao<E> {
+public interface GeneralDao<T> {
 
-    void addToDb(E e);
+    void create(T object);
 
-    Optional<E> findById(int id);
+    Optional<T> findById(int id);
 
-    List<E> findAll();
+    List<T> findAll();
 
-    void update(E e);
+    void update(T object);
 
     void delete(int id);
 }

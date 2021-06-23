@@ -33,7 +33,7 @@ public class JdbcHolidayDao implements HolidayDao {
     }
 
     @Override
-    public void addToDb(Holiday holiday) {
+    public void create(Holiday holiday) {
 	List<Holiday> holidays = findAll();
 	if (!holidays.contains(holiday)) {
 	    KeyHolder keyHolder = new GeneratedKeyHolder();

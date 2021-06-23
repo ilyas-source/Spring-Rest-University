@@ -37,10 +37,10 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public void addToDb(Student student) {
+    public void create(Student student) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcAddressDao.addToDb(student.getAddress());
+	jdbcAddressDao.create(student.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -60,7 +60,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public void update(Student student) {
-	jdbcAddressDao.addToDb(student.getAddress());
+	jdbcAddressDao.create(student.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection

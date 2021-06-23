@@ -21,11 +21,13 @@ public class StudentsMenu {
 
     private AddressMenu addressMenu;
     private GroupsMenu groupsMenu;
+    private GenderMenu genderMenu;
     private JdbcStudentDao jdbcStudentDao;
 
-    public StudentsMenu(AddressMenu addressMenu, GroupsMenu groupsMenu, JdbcStudentDao jdbcStudentDao) {
+    public StudentsMenu(AddressMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, JdbcStudentDao jdbcStudentDao) {
 	this.addressMenu = addressMenu;
 	this.groupsMenu = groupsMenu;
+	this.genderMenu = genderMenu;
 	this.jdbcStudentDao = jdbcStudentDao;
     }
 
@@ -50,7 +52,7 @@ public class StudentsMenu {
     }
 
     public void addStudent() {
-	jdbcStudentDao.addToDb(createStudent());
+	jdbcStudentDao.create(createStudent());
     }
 
     public Student createStudent() {

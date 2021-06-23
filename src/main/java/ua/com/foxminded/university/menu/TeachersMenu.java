@@ -53,7 +53,7 @@ public class TeachersMenu {
     }
 
     public void addTeacher() {
-	jdbcTeacherDao.addToDb(createTeacher());
+	jdbcTeacherDao.create(createTeacher());
     }
 
     public Teacher createTeacher() {

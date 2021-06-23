@@ -32,7 +32,7 @@ public class JdbcAddressDao implements AddressDao {
 	this.addressMapper = addressMapper;
     }
 
-    public void addToDb(Address address) {
+    public void create(Address address) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
