@@ -3,7 +3,6 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
@@ -16,8 +15,11 @@ import ua.com.foxminded.university.model.Subject;
 @Component
 public class SubjectsMenu {
 
-    @Autowired
     JdbcSubjectDao jdbcSubjectDao;
+
+    public SubjectsMenu(JdbcSubjectDao jdbcSubjectDao) {
+	this.jdbcSubjectDao = jdbcSubjectDao;
+    }
 
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();

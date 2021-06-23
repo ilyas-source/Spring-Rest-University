@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
@@ -17,8 +16,11 @@ import ua.com.foxminded.university.model.Holiday;
 @Component
 public class HolidaysMenu {
 
-    @Autowired
     private JdbcHolidayDao jdbcHolidayDao;
+
+    public HolidaysMenu(JdbcHolidayDao jdbcHolidayDao) {
+	this.jdbcHolidayDao = jdbcHolidayDao;
+    }
 
     public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();

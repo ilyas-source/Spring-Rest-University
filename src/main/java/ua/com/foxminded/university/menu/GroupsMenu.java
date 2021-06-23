@@ -6,7 +6,6 @@ import java.util.List;
 
 import static java.util.Objects.isNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
@@ -16,8 +15,11 @@ import static ua.com.foxminded.university.Menu.*;
 @Component
 public class GroupsMenu {
 
-    @Autowired
     private JdbcGroupDao jdbcGroupDao;
+
+    public GroupsMenu(JdbcGroupDao jdbcGroupDao) {
+	this.jdbcGroupDao = jdbcGroupDao;
+    }
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();
@@ -101,38 +103,4 @@ public class GroupsMenu {
 	jdbcGroupDao.delete(selectGroup().getId());
 	System.out.println("Group deleted successfully.");
     }
-
-//    public void updateGroup() {
-//	List<Group> groups = jdbcGroupDao.findAll();
-//
-//	System.out.println("Select a group to update: ");
-//	System.out.println(getStringOfGroups(groups));
-//	int choice = getIntFromScanner();
-//	Group selected = jdbcGroupDao.findById(choice).orElse(null);
-//
-//	if (isNull(selected)) {
-//	    System.out.println("No such group, returning...");
-//	} else {
-//	    Group newGroup = createGroup();
-//	    newGroup.setId(selected.getId());
-//	    jdbcGroupDao.update(newGroup);
-//	    System.out.println("Overwrite successful.");
-//	}
-//    }
-//
-//    public void deleteGroup() {
-//	List<Group> groups = jdbcGroupDao.findAll();
-//
-//	System.out.println("Select a group to delete: ");
-//	System.out.println(getStringOfGroups(groups));
-//	int choice = getIntFromScanner();
-//	Group group = jdbcGroupDao.findById(choice).orElse(null);
-//
-//	if (isNull(group)) {
-//	    System.out.println("No such group, returning...");
-//	} else {
-//	    jdbcGroupDao.delete(choice);
-//	    System.out.println("Group deleted successfully.");
-//	}
-//    }
 }

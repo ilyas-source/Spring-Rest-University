@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
@@ -20,14 +19,15 @@ import ua.com.foxminded.university.model.Student;
 @Component
 public class StudentsMenu {
 
-    @Autowired
     private AddressMenu addressMenu;
-    @Autowired
     private GroupsMenu groupsMenu;
-    @Autowired
-    private GenderMenu genderMenu;
-    @Autowired
     private JdbcStudentDao jdbcStudentDao;
+
+    public StudentsMenu(AddressMenu addressMenu, GroupsMenu groupsMenu, JdbcStudentDao jdbcStudentDao) {
+	this.addressMenu = addressMenu;
+	this.groupsMenu = groupsMenu;
+	this.jdbcStudentDao = jdbcStudentDao;
+    }
 
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();

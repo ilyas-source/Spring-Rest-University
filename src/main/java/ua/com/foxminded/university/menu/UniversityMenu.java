@@ -2,7 +2,6 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
@@ -16,35 +15,41 @@ import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 @Component
 public class UniversityMenu {
 
-    @Autowired
     private TeachersMenu teachersMenu;
-    @Autowired
     private ClassroomsMenu classroomsMenu;
-    @Autowired
     private StudentsMenu studentsMenu;
-    @Autowired
     private LecturesMenu lecturesMenu;
-    @Autowired
     private HolidaysMenu holidaysMenu;
-    @Autowired
     private GroupsMenu groupsMenu;
-    @Autowired
     private SubjectsMenu subjectsMenu;
-
-    @Autowired
     private JdbcTeacherDao jdbcTeacherDao;
-    @Autowired
     private JdbcStudentDao jdbcStudentDao;
-    @Autowired
     private JdbcSubjectDao jdbcSubjectDao;
-    @Autowired
     private JdbcClassroomDao jdbcClassroomDao;
-    @Autowired
     private JdbcGroupDao jdbcGroupDao;
-    @Autowired
     private JdbcLectureDao jdbcLectureDao;
-    @Autowired
     private JdbcHolidayDao jdbcHolidayDao;
+
+    public UniversityMenu(TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, StudentsMenu studentsMenu,
+	    LecturesMenu lecturesMenu, HolidaysMenu holidaysMenu, GroupsMenu groupsMenu, SubjectsMenu subjectsMenu,
+	    JdbcTeacherDao jdbcTeacherDao, JdbcStudentDao jdbcStudentDao, JdbcSubjectDao jdbcSubjectDao,
+	    JdbcClassroomDao jdbcClassroomDao, JdbcGroupDao jdbcGroupDao, JdbcLectureDao jdbcLectureDao,
+	    JdbcHolidayDao jdbcHolidayDao) {
+	this.teachersMenu = teachersMenu;
+	this.classroomsMenu = classroomsMenu;
+	this.studentsMenu = studentsMenu;
+	this.lecturesMenu = lecturesMenu;
+	this.holidaysMenu = holidaysMenu;
+	this.groupsMenu = groupsMenu;
+	this.subjectsMenu = subjectsMenu;
+	this.jdbcTeacherDao = jdbcTeacherDao;
+	this.jdbcStudentDao = jdbcStudentDao;
+	this.jdbcSubjectDao = jdbcSubjectDao;
+	this.jdbcClassroomDao = jdbcClassroomDao;
+	this.jdbcGroupDao = jdbcGroupDao;
+	this.jdbcLectureDao = jdbcLectureDao;
+	this.jdbcHolidayDao = jdbcHolidayDao;
+    }
 
     public void printUniversity() {
 	StringBuilder result = new StringBuilder();

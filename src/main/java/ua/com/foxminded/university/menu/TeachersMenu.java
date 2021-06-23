@@ -5,7 +5,6 @@ import static ua.com.foxminded.university.Menu.*;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
@@ -21,16 +20,20 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class TeachersMenu {
 
-    @Autowired
     private GenderMenu genderMenu;
-    @Autowired
     private VacationsMenu vacationsMenu;
-    @Autowired
     private AddressMenu addressMenu;
-    @Autowired
     private SubjectsMenu subjectsMenu;
-    @Autowired
     private JdbcTeacherDao jdbcTeacherDao;
+
+    public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressMenu addressMenu, SubjectsMenu subjectsMenu,
+	    JdbcTeacherDao jdbcTeacherDao) {
+	this.genderMenu = genderMenu;
+	this.vacationsMenu = vacationsMenu;
+	this.addressMenu = addressMenu;
+	this.subjectsMenu = subjectsMenu;
+	this.jdbcTeacherDao = jdbcTeacherDao;
+    }
 
     public String getStringOfTeachers(List<Teacher> teachers) {
 	StringBuilder result = new StringBuilder();

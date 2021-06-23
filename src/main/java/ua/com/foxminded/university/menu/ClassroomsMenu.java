@@ -5,7 +5,6 @@ import static ua.com.foxminded.university.Menu.*;
 import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
@@ -13,15 +12,17 @@ import static java.util.Objects.isNull;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class ClassroomsMenu {
 
-    @Autowired
     private LocationsMenu locationsMenu;
-    @Autowired
     private JdbcClassroomDao jdbcClassroomDao;
+
+    public ClassroomsMenu(LocationsMenu locationsMenu, JdbcClassroomDao jdbcClassroomDao) {
+	this.locationsMenu = locationsMenu;
+	this.jdbcClassroomDao = jdbcClassroomDao;
+    }
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();
