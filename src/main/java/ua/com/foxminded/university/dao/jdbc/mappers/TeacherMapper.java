@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +20,16 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
 
-    @Autowired
     private JdbcAddressDao jdbcAddressDAO;
-    @Autowired
     private JdbcSubjectDao jdbcSubjectDAO;
-    @Autowired
     private JdbcVacationDao jdbcVacationDAO;
+
+    public TeacherMapper(JdbcAddressDao jdbcAddressDAO, JdbcSubjectDao jdbcSubjectDAO, JdbcVacationDao jdbcVacationDAO) {
+	super();
+	this.jdbcAddressDAO = jdbcAddressDAO;
+	this.jdbcSubjectDAO = jdbcSubjectDAO;
+	this.jdbcVacationDAO = jdbcVacationDAO;
+    }
 
     @Override
     public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {

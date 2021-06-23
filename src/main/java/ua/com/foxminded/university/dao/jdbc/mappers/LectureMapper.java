@@ -1,13 +1,9 @@
 package ua.com.foxminded.university.dao.jdbc.mappers;
 
-import java.security.PublicKey;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.Flow.Publisher;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
