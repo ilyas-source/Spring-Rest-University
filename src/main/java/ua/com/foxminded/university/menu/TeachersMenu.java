@@ -75,9 +75,12 @@ public class TeachersMenu {
 
 	Address address = addressMenu.createAddress();
 	List<Subject> subjects = subjectsMenu.selectSubjects();
-	List<Vacation> vacations = vacationsMenu.createVacations();
 
-	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
+	Teacher result = new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address);
+	List<Vacation> vacations = vacationsMenu.createVacationsFor(result);
+	result.setVacations(vacations);
+
+	return result;
     }
 
     private Degree getDegree() {

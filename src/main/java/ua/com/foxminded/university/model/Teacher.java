@@ -19,7 +19,7 @@ public class Teacher {
     }
 
     public Teacher(String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
-	    String phoneNumber, Address address, List<Vacation> vacations) {
+	    String phoneNumber, Address address) {
 	this.firstName = firstName;
 	this.lastName = lastName;
 	this.gender = gender;
@@ -28,7 +28,6 @@ public class Teacher {
 	this.email = email;
 	this.phoneNumber = phoneNumber;
 	this.address = address;
-	this.vacations = vacations;
     }
 
     public int getId() {

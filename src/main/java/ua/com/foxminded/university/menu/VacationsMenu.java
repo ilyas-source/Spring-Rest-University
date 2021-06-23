@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component
@@ -29,32 +30,30 @@ public class VacationsMenu {
 	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
     }
 
-    public List<Vacation> createVacations() {
-	List<Vacation> vacations = new ArrayList<>();
+    public List<Vacation> createVacationsFor(Teacher teacher) {
+	List<Vacation> result = new ArrayList<>();
 	boolean finished = false;
-
-	System.out.println("Entering vacations.");
-
 	while (!finished) {
-	    Vacation vacation = createVacation();
-	    vacations.add(vacation);
-	    System.out.print("Done. Add another vacation? (y/n): ");
+	    System.out.println("Add new vacation for " + teacher.getFirstName() + " " + teacher.getLastName() + "? (y/n):");
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (!entry.equals("y")) {
 		finished = true;
+	    } else {
+		Vacation vacation = createVacation();
+		result.add(new Vacation(teacher, vacation.getStartDate(), vacation.getEndDate()));
 	    }
 	}
-	return vacations;
+	return result;
     }
 
-    public Vacation createVacation() {
+    private Vacation createVacation() {
 	Vacation result = null;
 
 	while (isNull(result)) {
-	    System.out.print("Enter vacation start date: ");
+	    System.out.print("Start date: ");
 	    LocalDate startDate = getDateFromScanner();
 
-	    System.out.print("Enter vacation end date: ");
+	    System.out.print("End date: ");
 	    LocalDate endDate = getDateFromScanner();
 
 	    if (endDate.isBefore(startDate)) {

@@ -12,23 +12,17 @@ INSERT INTO subjects (name, description) VALUES
 ('Chemistry', 'Base chemistry'),
 ('Radiology', 'Explore radiation');
 
-INSERT INTO vacations (start_date, end_date) VALUES 
-('2000-01-01', '2000-02-01'),
-('2000-05-01', '2000-06-01'),
-('2000-01-15', '2000-02-15'),
-('2000-06-01', '2000-07-01');
-
 INSERT INTO teachers (first_name, last_name, gender, degree, email, phone, address_id) VALUES
 ('Adam', 'Smith', 'MALE', 'DOCTOR', 'adam@smith.com', '+223322', 1),
 ('Marie', 'Curie', 'FEMALE', 'MASTER' ,'marie@curie.com', '+322223', 2);
 
-INSERT INTO teachers_subjects(teacher_id, subject_id) VALUES
-(1, 1),
-(1, 2),
-(2, 3),
-(2, 4);
+INSERT INTO vacations (teacher_id, start_date, end_date) VALUES 
+(1, '2000-01-01', '2000-02-01'),
+(1, '2000-05-01', '2000-06-01'),
+(2, '2000-01-15', '2000-02-15'),
+(2, '2000-06-01', '2000-07-01');
 
-INSERT INTO teachers_vacations (teacher_id, vacation_id) VALUES
+INSERT INTO teachers_subjects(teacher_id, subject_id) VALUES
 (1, 1),
 (1, 2),
 (2, 3),

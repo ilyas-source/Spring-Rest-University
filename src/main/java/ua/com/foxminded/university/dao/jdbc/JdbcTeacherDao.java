@@ -31,8 +31,8 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM teachers_subjects WHERE teacher_id = ?";
     private static final String ASSIGN_SUBJECT = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 
-    private static final String CLEAR_ASSIGNED_VACATIONS = "DELETE FROM teachers_vacations WHERE teacher_id = ?";
-    private static final String ASSIGN_VACATION = "INSERT INTO teachers_vacations (teacher_id, vacation_id) VALUES (?, ?)";
+    private static final String CLEAR_ASSIGNED_VACATIONS = "DELETE FROM vacations WHERE teacher_id = ?";
+    private static final String ASSIGN_VACATION = "INSERT INTO vacations (teacher_id, start_date, end_date) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private TeacherMapper teacherMapper;
@@ -75,7 +75,6 @@ public class JdbcTeacherDao implements TeacherDao {
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
-	    jdbcVacationDao.create(vacation);
 	    assignVacation(vacation, teacher);
 	}
     }
@@ -123,7 +122,7 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     private void assignVacation(Vacation vacation, Teacher teacher) {
-	jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(), vacation.getId());
+	jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());
     }
 
     @Override
