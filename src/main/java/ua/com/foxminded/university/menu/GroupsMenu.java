@@ -3,6 +3,7 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -52,12 +53,12 @@ public class GroupsMenu {
 	    System.out.println("Select a group:");
 	    System.out.print(getStringOfGroups(groups));
 	    int choice = getIntFromScanner();
-	    Group selected = jdbcGroupDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Group> selectedGroup = jdbcGroupDao.findById(choice);
+	    if (selectedGroup.isEmpty()) {
 		System.out.println("No such group, try again.");
 	    } else {
 		correctEntry = true;
-		result = selected;
+		result = selectedGroup.get();
 	    }
 	}
 	return result;

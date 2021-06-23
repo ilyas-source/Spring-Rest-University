@@ -42,7 +42,7 @@ public class TeacherMapper implements RowMapper<Teacher> {
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
 	teacher.setDegree(Degree.valueOf(rs.getString("degree")));
 
-	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElse(null);
+	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElseThrow();
 	teacher.setAddress(address);
 
 	List<Subject> subjects = jdbcSubjectDao.getSubjectsByTeacher(teacher.getId());

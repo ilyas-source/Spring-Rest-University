@@ -6,6 +6,7 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -57,11 +58,11 @@ public class HolidaysMenu {
 	    System.out.println("Select holiday: ");
 	    System.out.print(getStringOfHolidays(holidays));
 	    int choice = getIntFromScanner();
-	    Holiday selected = jdbcHolidayDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Holiday> selectedHoliday = jdbcHolidayDao.findById(choice);
+	    if (selectedHoliday.isEmpty()) {
 		System.out.println("No such holiday.");
 	    } else {
-		result = selected;
+		result = selectedHoliday.get();
 		System.out.println("Success.");
 	    }
 	}

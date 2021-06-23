@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
 import static java.util.Objects.isNull;
 
 import org.springframework.stereotype.Component;
@@ -101,11 +103,11 @@ public class LecturesMenu {
 	    System.out.println("Select lecture: ");
 	    System.out.print(getStringOfLectures(lectures));
 	    int choice = getIntFromScanner();
-	    Lecture selected = jdbcLectureDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Lecture> selectedLecture = jdbcLectureDao.findById(choice);
+	    if (isNull(selectedLecture.isEmpty())) {
 		System.out.println("No such lecture.");
 	    } else {
-		result = selected;
+		result = selectedLecture.get();
 		System.out.println("Success.");
 	    }
 	}

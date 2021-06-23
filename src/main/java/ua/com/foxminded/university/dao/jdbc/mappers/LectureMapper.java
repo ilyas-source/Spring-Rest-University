@@ -39,7 +39,7 @@ public class LectureMapper implements RowMapper<Lecture> {
 	Lecture lecture = new Lecture();
 	lecture.setId(rs.getInt("id"));
 
-	Classroom classroom = jdbcClassroomDao.findById(rs.getInt("classroom_id")).orElse(null);
+	Classroom classroom = jdbcClassroomDao.findById(rs.getInt("classroom_id")).orElseThrow();
 	lecture.setClassroom(classroom);
 
 	lecture.setDate(rs.getDate("date").toLocalDate());
@@ -47,10 +47,10 @@ public class LectureMapper implements RowMapper<Lecture> {
 	List<Group> groups = jdbcGroupDao.findByLectureId(rs.getInt("id"));
 	lecture.setGroups(groups);
 
-	Subject subject = jdbcSubjectDao.findById(rs.getInt("subject_id")).orElse(null);
+	Subject subject = jdbcSubjectDao.findById(rs.getInt("subject_id")).orElseThrow();
 	lecture.setSubject(subject);
 
-	Teacher teacher = jdbcTeacherDao.findById(rs.getInt("teacher_id")).orElse(null);
+	Teacher teacher = jdbcTeacherDao.findById(rs.getInt("teacher_id")).orElseThrow();
 	lecture.setTeacher(teacher);
 
 	LocalTime beginTime = rs.getTime("begin_time").toLocalTime();

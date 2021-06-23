@@ -3,6 +3,8 @@ package ua.com.foxminded.university.menu;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
@@ -73,11 +75,11 @@ public class SubjectsMenu {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfSubjects(subjects));
 	    int choice = getIntFromScanner();
-	    Subject selected = jdbcSubjectDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Subject> selectedSubject = jdbcSubjectDao.findById(choice);
+	    if (selectedSubject.isEmpty()) {
 		System.out.println("No such subject.");
 	    } else {
-		result = selected;
+		result = selectedSubject.get();
 		System.out.println("Success.");
 	    }
 	}

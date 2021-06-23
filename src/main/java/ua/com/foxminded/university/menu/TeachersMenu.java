@@ -4,6 +4,7 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -114,11 +115,11 @@ public class TeachersMenu {
 	    System.out.println("Select teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
 	    int choice = getIntFromScanner();
-	    Teacher selected = jdbcTeacherDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Teacher> selectedTeacher = jdbcTeacherDao.findById(choice);
+	    if (selectedTeacher.isEmpty()) {
 		System.out.println("No such teacher.");
 	    } else {
-		result = selected;
+		result = selectedTeacher.get();
 		System.out.println("Success.");
 	    }
 	}

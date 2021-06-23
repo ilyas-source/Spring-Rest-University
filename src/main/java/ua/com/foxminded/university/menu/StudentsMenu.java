@@ -6,6 +6,7 @@ import static ua.com.foxminded.university.Menu.*;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -85,11 +86,11 @@ public class StudentsMenu {
 	    System.out.println("Select student: ");
 	    System.out.print(getStringOfStudents(students));
 	    int choice = getIntFromScanner();
-	    Student selected = jdbcStudentDao.findById(choice).orElse(null);
-	    if (isNull(selected)) {
+	    Optional<Student> selectedStudent = jdbcStudentDao.findById(choice);
+	    if (selectedStudent.isEmpty()) {
 		System.out.println("No such student.");
 	    } else {
-		result = selected;
+		result = selectedStudent.get();
 		System.out.println("Success.");
 	    }
 	}

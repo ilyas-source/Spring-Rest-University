@@ -30,7 +30,7 @@ public class StudentMapper implements RowMapper<Student> {
 
 	student.setId(rs.getInt("id"));
 
-	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElse(null);
+	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElseThrow();
 	student.setAddress(address);
 
 	student.setBirthDate(rs.getDate("birth_date").toLocalDate());
@@ -40,7 +40,7 @@ public class StudentMapper implements RowMapper<Student> {
 	student.setLastName(rs.getString("last_name"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
 
-	Group group = jdbcGroupDao.findById(rs.getInt("group_id")).orElse(null);
+	Group group = jdbcGroupDao.findById(rs.getInt("group_id")).orElseThrow();
 	student.setGroup(group);
 
 	return student;
