@@ -1,9 +1,12 @@
 package ua.com.foxminded.university.dao.jdbc.mappers;
 
+import java.security.PublicKey;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.concurrent.Flow.Publisher;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -22,17 +25,18 @@ import ua.com.foxminded.university.model.TimeRange;
 @Component
 public class LectureMapper implements RowMapper<Lecture> {
 
-    @Autowired
-    JdbcSubjectDao jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDAO;
+    private JdbcTeacherDao jdbcTeacherDAO;
+    private JdbcClassroomDao jdbcClassroomDAO;
+    private JdbcGroupDao jdbcGroupDAO;
 
-    @Autowired
-    JdbcTeacherDao jdbcTeacherDAO;
-
-    @Autowired
-    JdbcClassroomDao jdbcClassroomDAO;
-
-    @Autowired
-    JdbcGroupDao jdbcGroupDAO;
+    public LectureMapper(JdbcSubjectDao jdbcSubjectDAO, JdbcTeacherDao jdbcTeacherDAO, JdbcClassroomDao jdbcClassroomDAO,
+	    JdbcGroupDao jdbcGroupDAO) {
+	this.jdbcSubjectDAO = jdbcSubjectDAO;
+	this.jdbcTeacherDAO = jdbcTeacherDAO;
+	this.jdbcClassroomDAO = jdbcClassroomDAO;
+	this.jdbcGroupDAO = jdbcGroupDAO;
+    }
 
     @Override
     public Lecture mapRow(ResultSet rs, int rowNum) throws SQLException {

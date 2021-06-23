@@ -18,9 +18,9 @@ import ua.com.foxminded.university.model.Student;
 public class StudentMapper implements RowMapper<Student> {
 
     @Autowired
-    JdbcAddressDao jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    JdbcGroupDao jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDAO;
 
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {

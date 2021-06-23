@@ -22,11 +22,11 @@ import ua.com.foxminded.university.model.Vacation;
 public class TeacherMapper implements RowMapper<Teacher> {
 
     @Autowired
-    JdbcAddressDao jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    JdbcSubjectDao jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDAO;
     @Autowired
-    JdbcVacationDao jdbcVacationDAO;
+    private JdbcVacationDao jdbcVacationDAO;
 
     @Override
     public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {

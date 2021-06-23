@@ -15,7 +15,7 @@ import ua.com.foxminded.university.model.Location;
 public class ClassroomMapper implements RowMapper<Classroom> {
 
     @Autowired
-    JdbcLocationDao jdbcLocationDAO;
+    private JdbcLocationDao jdbcLocationDAO;
 
     @Override
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {
