@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,7 +43,8 @@ public class LectureMapper implements RowMapper<Lecture> {
 	Classroom classroom = jdbcClassroomDao.findById(rs.getInt("classroom_id")).orElseThrow();
 	lecture.setClassroom(classroom);
 
-	lecture.setDate(rs.getDate("date").toLocalDate());
+	LocalDate date = rs.getObject("date", LocalDate.class);
+	lecture.setDate(date);
 
 	List<Group> groups = jdbcGroupDao.findByLectureId(rs.getInt("id"));
 	lecture.setGroups(groups);

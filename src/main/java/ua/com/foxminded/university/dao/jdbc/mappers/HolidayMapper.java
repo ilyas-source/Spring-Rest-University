@@ -3,6 +3,7 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 import java.sql.ResultSet;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,8 @@ public class HolidayMapper implements RowMapper<Holiday> {
 	Holiday holiday = new Holiday();
 	holiday.setId(rs.getInt("id"));
 	holiday.setName(rs.getString("name"));
-	holiday.setDate(rs.getDate("date").toLocalDate());
+	LocalDate date = rs.getObject("date", LocalDate.class);
+	holiday.setDate(date);
 
 	return holiday;
     }

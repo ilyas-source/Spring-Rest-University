@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -32,8 +33,8 @@ public class StudentMapper implements RowMapper<Student> {
 
 	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElseThrow();
 	student.setAddress(address);
-
-	student.setBirthDate(rs.getDate("birth_date").toLocalDate());
+	LocalDate birthDate = rs.getObject("birth_date", LocalDate.class);
+	student.setBirthDate(birthDate);
 	student.setEmail(rs.getString("email"));
 	student.setFirstName(rs.getString("first_name"));
 	student.setPhoneNumber(rs.getString("phone"));
