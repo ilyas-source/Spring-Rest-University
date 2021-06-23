@@ -2,6 +2,6 @@ package ua.com.foxminded.university.dao;
 
 import ua.com.foxminded.university.model.Lecture;
 
-public interface LectureDAO extends GeneralDAO<Lecture> {
+public interface LectureDao extends GeneralDao<Lecture> {
 
 }

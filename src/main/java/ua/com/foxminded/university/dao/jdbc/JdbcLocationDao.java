@@ -12,12 +12,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.LocationDAO;
+import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LocationMapper;
 import ua.com.foxminded.university.model.Location;
 
 @Component
-public class JdbcLocationDAO implements LocationDAO {
+public class JdbcLocationDao implements LocationDao {
 
     private static final String CREATE = "INSERT INTO locations (building, floor, room_number) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM locations WHERE id = ?";

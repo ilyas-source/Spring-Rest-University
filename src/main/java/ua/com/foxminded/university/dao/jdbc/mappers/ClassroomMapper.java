@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcLocationDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
@@ -15,7 +15,7 @@ import ua.com.foxminded.university.model.Location;
 public class ClassroomMapper implements RowMapper<Classroom> {
 
     @Autowired
-    JdbcLocationDAO jdbcLocationDAO;
+    JdbcLocationDao jdbcLocationDAO;
 
     @Override
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {

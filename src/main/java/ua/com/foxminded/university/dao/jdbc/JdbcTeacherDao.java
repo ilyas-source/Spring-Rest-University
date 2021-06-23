@@ -12,14 +12,14 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.TeacherDAO;
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component
-public class JdbcTeacherDAO implements TeacherDAO {
+public class JdbcTeacherDao implements TeacherDao {
 
     private static final String CREATE = "INSERT INTO teachers (first_name, last_name, gender, degree, "
 	    + "email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -40,9 +40,9 @@ public class JdbcTeacherDAO implements TeacherDAO {
     @Autowired
     private TeacherMapper teacherMapper;
     @Autowired
-    private JdbcAddressDAO jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    private JdbcVacationDAO jdbcVacationDAO;
+    private JdbcVacationDao jdbcVacationDAO;
 
     @Override
     public void addToDb(Teacher teacher) {

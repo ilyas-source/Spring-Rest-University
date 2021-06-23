@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
@@ -18,9 +18,9 @@ import ua.com.foxminded.university.model.Student;
 public class StudentMapper implements RowMapper<Student> {
 
     @Autowired
-    JdbcAddressDAO jdbcAddressDAO;
+    JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    JdbcGroupDAO jdbcGroupDAO;
+    JdbcGroupDao jdbcGroupDAO;
 
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {

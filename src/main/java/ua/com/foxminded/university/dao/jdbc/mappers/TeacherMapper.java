@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
@@ -22,11 +22,11 @@ import ua.com.foxminded.university.model.Vacation;
 public class TeacherMapper implements RowMapper<Teacher> {
 
     @Autowired
-    JdbcAddressDAO jdbcAddressDAO;
+    JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    JdbcSubjectDAO jdbcSubjectDAO;
+    JdbcSubjectDao jdbcSubjectDAO;
     @Autowired
-    JdbcVacationDAO jdbcVacationDAO;
+    JdbcVacationDao jdbcVacationDAO;
 
     @Override
     public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {

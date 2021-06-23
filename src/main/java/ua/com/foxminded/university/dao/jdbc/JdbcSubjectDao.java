@@ -17,7 +17,7 @@ import ua.com.foxminded.university.dao.jdbc.mappers.SubjectMapper;
 import ua.com.foxminded.university.model.Subject;
 
 @Component
-public class JdbcSubjectDAO implements SubjectDAO {
+public class JdbcSubjectDao implements SubjectDao {
 
     private static final String CREATE = "INSERT INTO subjects (name, description) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = ?";

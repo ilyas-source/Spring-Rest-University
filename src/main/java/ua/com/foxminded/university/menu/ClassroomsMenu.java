@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.model.Teacher;
@@ -21,7 +21,7 @@ public class ClassroomsMenu {
     @Autowired
     private LocationsMenu locationsMenu;
     @Autowired
-    private JdbcClassroomDAO jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDAO;
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();

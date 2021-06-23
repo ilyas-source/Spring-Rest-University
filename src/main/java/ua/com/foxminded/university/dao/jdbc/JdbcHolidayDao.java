@@ -12,12 +12,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.HolidayDAO;
+import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.HolidayMapper;
 import ua.com.foxminded.university.model.Holiday;
 
 @Component
-public class JdbcHolidayDAO implements HolidayDAO {
+public class JdbcHolidayDao implements HolidayDao {
 
     private static final String CREATE = "INSERT INTO holidays (date, name) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM holidays WHERE id = ?";

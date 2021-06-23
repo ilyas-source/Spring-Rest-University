@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -23,16 +23,16 @@ import ua.com.foxminded.university.model.TimeRange;
 public class LectureMapper implements RowMapper<Lecture> {
 
     @Autowired
-    JdbcSubjectDAO jdbcSubjectDAO;
+    JdbcSubjectDao jdbcSubjectDAO;
 
     @Autowired
-    JdbcTeacherDAO jdbcTeacherDAO;
+    JdbcTeacherDao jdbcTeacherDAO;
 
     @Autowired
-    JdbcClassroomDAO jdbcClassroomDAO;
+    JdbcClassroomDao jdbcClassroomDAO;
 
     @Autowired
-    JdbcGroupDAO jdbcGroupDAO;
+    JdbcGroupDao jdbcGroupDAO;
 
     @Override
     public Lecture mapRow(ResultSet rs, int rowNum) throws SQLException {

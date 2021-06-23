@@ -12,12 +12,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.LectureDAO;
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Lecture;
 
 @Component
-public class JdbcLectureDAO implements LectureDAO {
+public class JdbcLectureDao implements LectureDao {
 
     private static final String CREATE = "INSERT INTO lectures (date, begin_time, end_time, subject_id, teacher_id, " +
 	    "classroom_id) VALUES (?, ?, ?, ?, ?, ?)";
@@ -33,7 +33,7 @@ public class JdbcLectureDAO implements LectureDAO {
     @Autowired
     private LectureMapper lectureMapper;
     @Autowired
-    private JdbcGroupDAO jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDAO;
 
     @Override
     public void addToDb(Lecture lecture) {

@@ -12,12 +12,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.ClassroomDAO;
+import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.model.Classroom;
 
 @Component
-public class JdbcClassroomDAO implements ClassroomDAO {
+public class JdbcClassroomDao implements ClassroomDao {
 
     private static final String CREATE = "INSERT INTO classrooms (location_id, name, capacity) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM classrooms WHERE id = ?";
@@ -30,7 +30,7 @@ public class JdbcClassroomDAO implements ClassroomDAO {
     @Autowired
     private ClassroomMapper classroomMapper;
     @Autowired
-    private JdbcLocationDAO jdbcLocationDAO;
+    private JdbcLocationDao jdbcLocationDAO;
 
     @Override
     public void addToDb(Classroom classroom) {

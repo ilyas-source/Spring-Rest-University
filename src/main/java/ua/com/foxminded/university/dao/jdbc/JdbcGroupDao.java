@@ -12,13 +12,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.GroupDAO;
+import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.GroupMapper;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 
 @Component
-public class JdbcGroupDAO implements GroupDAO {
+public class JdbcGroupDao implements GroupDao {
 
     private static final String CREATE = "INSERT INTO groups (name) VALUES (?)";
     private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";

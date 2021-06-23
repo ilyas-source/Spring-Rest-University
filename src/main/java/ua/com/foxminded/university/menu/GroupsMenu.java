@@ -9,7 +9,7 @@ import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 import static ua.com.foxminded.university.Menu.*;
 
@@ -17,7 +17,7 @@ import static ua.com.foxminded.university.Menu.*;
 public class GroupsMenu {
 
     @Autowired
-    private JdbcGroupDAO jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDAO;
 
     public String getStringOfGroups(List<Group> groups) {
 	StringBuilder result = new StringBuilder();

@@ -9,7 +9,7 @@ import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -25,7 +25,7 @@ public class LecturesMenu {
     @Autowired
     private GroupsMenu groupsMenu;
     @Autowired
-    private JdbcLectureDAO jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDAO;
     @Autowired
     private SubjectsMenu subjectsMenu;
     @Autowired

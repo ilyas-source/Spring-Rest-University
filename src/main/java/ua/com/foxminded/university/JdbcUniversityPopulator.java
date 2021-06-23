@@ -13,15 +13,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
@@ -42,23 +42,23 @@ public class JdbcUniversityPopulator {
     @Autowired
     private DataSource dataSource;
     @Autowired
-    private JdbcAddressDAO jdbcAddressDAO;
+    private JdbcAddressDao jdbcAddressDAO;
     @Autowired
-    private JdbcSubjectDAO jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDAO;
     @Autowired
-    private JdbcVacationDAO jdbcVacationDAO;
+    private JdbcVacationDao jdbcVacationDAO;
     @Autowired
-    private JdbcClassroomDAO jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDAO;
     @Autowired
-    private JdbcGroupDAO jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDAO;
     @Autowired
-    private JdbcLectureDAO jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDAO;
     @Autowired
-    private JdbcTeacherDAO jdbcTeacherDAO;
+    private JdbcTeacherDao jdbcTeacherDAO;
     @Autowired
-    private JdbcHolidayDAO jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDAO;
     @Autowired
-    private JdbcStudentDAO jdbcStudentDAO;
+    private JdbcStudentDao jdbcStudentDAO;
 
     public void populate() {
 	createEmptyDb(dataSource);

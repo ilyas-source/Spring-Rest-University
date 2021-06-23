@@ -5,13 +5,13 @@ import static ua.com.foxminded.university.Menu.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 
 @Component
 public class UniversityMenu {
@@ -32,19 +32,19 @@ public class UniversityMenu {
     private SubjectsMenu subjectsMenu;
 
     @Autowired
-    private JdbcTeacherDAO jdbcTeacherDAO;
+    private JdbcTeacherDao jdbcTeacherDAO;
     @Autowired
-    private JdbcStudentDAO jdbcStudentDAO;
+    private JdbcStudentDao jdbcStudentDAO;
     @Autowired
-    private JdbcSubjectDAO jdbcSubjectDAO;
+    private JdbcSubjectDao jdbcSubjectDAO;
     @Autowired
-    private JdbcClassroomDAO jdbcClassroomDAO;
+    private JdbcClassroomDao jdbcClassroomDAO;
     @Autowired
-    private JdbcGroupDAO jdbcGroupDAO;
+    private JdbcGroupDao jdbcGroupDAO;
     @Autowired
-    private JdbcLectureDAO jdbcLectureDAO;
+    private JdbcLectureDao jdbcLectureDAO;
     @Autowired
-    private JdbcHolidayDAO jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDAO;
 
     public void printUniversity() {
 	StringBuilder result = new StringBuilder();

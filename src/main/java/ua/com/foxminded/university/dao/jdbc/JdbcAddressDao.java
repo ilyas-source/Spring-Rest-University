@@ -12,12 +12,12 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.AddressDAO;
+import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.AddressMapper;
 import ua.com.foxminded.university.model.Address;
 
 @Component
-public class JdbcAddressDAO implements AddressDAO {
+public class JdbcAddressDao implements AddressDao {
 
     private static final String CREATE = "INSERT INTO addresses (country, postalcode, region, city, streetAddress) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM addresses WHERE id = ?";

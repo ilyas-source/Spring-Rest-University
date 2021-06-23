@@ -10,14 +10,14 @@ import static java.util.Objects.isNull;
 
 import static ua.com.foxminded.university.Menu.*;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class SubjectsMenu {
 
     @Autowired
-    JdbcSubjectDAO jdbcSubjectDAO;
+    JdbcSubjectDao jdbcSubjectDAO;
 
     public String getStringOfSubjects(List<Subject> subjects) {
 	StringBuilder result = new StringBuilder();

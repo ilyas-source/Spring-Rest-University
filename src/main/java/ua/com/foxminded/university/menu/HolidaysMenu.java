@@ -11,14 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDAO;
+import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
 import ua.com.foxminded.university.model.Holiday;
 
 @Component
 public class HolidaysMenu {
 
     @Autowired
-    private JdbcHolidayDAO jdbcHolidayDAO;
+    private JdbcHolidayDao jdbcHolidayDAO;
 
     public String getStringOfHolidays(List<Holiday> holidays) {
 	StringBuilder result = new StringBuilder();
