@@ -2,7 +2,7 @@ package ua.com.foxminded.university.model;
 
 public class Location {
 
-    int id;
+    private int id;
     private String building;
     private int floor;
     private int roomNumber;

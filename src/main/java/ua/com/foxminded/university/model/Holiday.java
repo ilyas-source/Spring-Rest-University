@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Holiday {
 
-    int id;
+    private int id;
     private LocalDate date;
     private String name;
 

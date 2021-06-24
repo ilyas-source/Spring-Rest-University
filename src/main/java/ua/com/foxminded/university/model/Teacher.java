@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Teacher {
 
-    int id;
+    private int id;
     private String firstName;
     private String lastName;
     private Gender gender;

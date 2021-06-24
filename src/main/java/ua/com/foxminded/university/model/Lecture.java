@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Lecture {
 
-    int id;
+    private int id;
     private LocalDate date;
     private TimeRange time;
     private List<Group> groups;

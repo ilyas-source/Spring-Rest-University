@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -30,6 +32,13 @@ public class JdbcAddressDao implements AddressDao {
     public JdbcAddressDao(JdbcTemplate jdbcTemplate, AddressMapper addressMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.addressMapper = addressMapper;
+    }
+
+    public JdbcAddressDao() {
+    }
+
+    public void SetDataSource(DataSource dataSource) {
+	jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public void create(Address address) {

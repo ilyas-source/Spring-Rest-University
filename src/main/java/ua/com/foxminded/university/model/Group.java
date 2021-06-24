@@ -2,7 +2,7 @@ package ua.com.foxminded.university.model;
 
 public class Group {
 
-    int id;
+    private int id;
     private String name;
 
     public Group() {

@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 public class TimeRange {
 
-    int id;
+    private int id;
     private LocalTime startTime;
     private LocalTime endTime;
 
