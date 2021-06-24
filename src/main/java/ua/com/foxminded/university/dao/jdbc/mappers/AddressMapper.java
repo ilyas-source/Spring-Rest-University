@@ -20,6 +20,7 @@ public class AddressMapper implements RowMapper<Address> {
 	address.setRegion(rs.getString("region"));
 	address.setCity(rs.getString("city"));
 	address.setStreetAddress(rs.getString("streetAddress"));
+
 	return address;
     }
 }

@@ -18,12 +18,8 @@ public class VacationMapper implements RowMapper<Vacation> {
     public Vacation mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Vacation vacation = new Vacation();
 	vacation.setId(rs.getInt("id"));
-
-	LocalDate startDate = rs.getObject("start_date", LocalDate.class);
-	LocalDate endDate = rs.getObject("end_date", LocalDate.class);
-
-	vacation.setStartDate(startDate);
-	vacation.setEndDate(endDate);
+	vacation.setStartDate(rs.getObject("start_date", LocalDate.class));
+	vacation.setEndDate(rs.getObject("end_date", LocalDate.class));
 
 	return vacation;
     }

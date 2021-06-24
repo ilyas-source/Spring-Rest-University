@@ -9,9 +9,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
-import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @Component
@@ -30,19 +28,14 @@ public class StudentMapper implements RowMapper<Student> {
 	Student student = new Student();
 
 	student.setId(rs.getInt("id"));
-
-	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElseThrow();
-	student.setAddress(address);
-	LocalDate birthDate = rs.getObject("birth_date", LocalDate.class);
-	student.setBirthDate(birthDate);
+	jdbcAddressDao.findById(rs.getInt("address_id")).ifPresent(student::setAddress);
+	student.setBirthDate(rs.getObject("birth_date", LocalDate.class));
 	student.setEmail(rs.getString("email"));
 	student.setFirstName(rs.getString("first_name"));
 	student.setPhoneNumber(rs.getString("phone"));
 	student.setLastName(rs.getString("last_name"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
-
-	Group group = jdbcGroupDao.findById(rs.getInt("group_id")).orElseThrow();
-	student.setGroup(group);
+	jdbcGroupDao.findById(rs.getInt("group_id")).ifPresent(student::setGroup);
 
 	return student;
     }

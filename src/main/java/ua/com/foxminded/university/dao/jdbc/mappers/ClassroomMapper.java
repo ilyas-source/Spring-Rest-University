@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Location;
 
 @Component
 public class ClassroomMapper implements RowMapper<Classroom> {
@@ -22,9 +21,9 @@ public class ClassroomMapper implements RowMapper<Classroom> {
     @Override
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Classroom classroom = new Classroom();
-	Location location = jdbcLocationDao.findById(rs.getInt("location_id")).orElseThrow();
+
 	classroom.setId(rs.getInt("id"));
-	classroom.setLocation(location);
+	jdbcLocationDao.findById(rs.getInt("location_id")).ifPresent(classroom::setLocation);
 	classroom.setName(rs.getString("name"));
 	classroom.setCapacity(rs.getInt("capacity"));
 	return classroom;

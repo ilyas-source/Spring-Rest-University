@@ -40,20 +40,11 @@ public class LectureMapper implements RowMapper<Lecture> {
 	Lecture lecture = new Lecture();
 	lecture.setId(rs.getInt("id"));
 
-	Classroom classroom = jdbcClassroomDao.findById(rs.getInt("classroom_id")).orElseThrow();
-	lecture.setClassroom(classroom);
-
-	LocalDate date = rs.getObject("date", LocalDate.class);
-	lecture.setDate(date);
-
-	List<Group> groups = jdbcGroupDao.findByLectureId(rs.getInt("id"));
-	lecture.setGroups(groups);
-
-	Subject subject = jdbcSubjectDao.findById(rs.getInt("subject_id")).orElseThrow();
-	lecture.setSubject(subject);
-
-	Teacher teacher = jdbcTeacherDao.findById(rs.getInt("teacher_id")).orElseThrow();
-	lecture.setTeacher(teacher);
+	jdbcClassroomDao.findById(rs.getInt("classroom_id")).ifPresent(lecture::setClassroom);
+	lecture.setDate(rs.getObject("date", LocalDate.class));
+	lecture.setGroups(jdbcGroupDao.findByLectureId(rs.getInt("id")));
+	jdbcSubjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
+	jdbcTeacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);
 
 	LocalTime beginTime = rs.getTime("begin_time").toLocalTime();
 	LocalTime endTime = rs.getTime("end_time").toLocalTime();

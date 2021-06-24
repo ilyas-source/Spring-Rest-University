@@ -2,20 +2,15 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
-import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
-import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Vacation;
 
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
@@ -38,18 +33,12 @@ public class TeacherMapper implements RowMapper<Teacher> {
 	teacher.setLastName(rs.getString("last_name"));
 	teacher.setEmail(rs.getString("email"));
 	teacher.setPhoneNumber(rs.getString("phone"));
-
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
 	teacher.setDegree(Degree.valueOf(rs.getString("degree")));
+	jdbcAddressDao.findById(rs.getInt("address_id")).ifPresent(teacher::setAddress);
+	teacher.setSubjects(jdbcSubjectDao.getSubjectsByTeacher(teacher.getId()));
+	teacher.setVacations(jdbcVacationDao.getVacationsByTeacher(teacher.getId()));
 
-	Address address = jdbcAddressDao.findById(rs.getInt("address_id")).orElseThrow();
-	teacher.setAddress(address);
-
-	List<Subject> subjects = jdbcSubjectDao.getSubjectsByTeacher(teacher.getId());
-	teacher.setSubjects(subjects);
-
-	List<Vacation> vacations = jdbcVacationDao.getVacationsByTeacher(teacher.getId());
-	teacher.setVacations(vacations);
 	return teacher;
     }
 }

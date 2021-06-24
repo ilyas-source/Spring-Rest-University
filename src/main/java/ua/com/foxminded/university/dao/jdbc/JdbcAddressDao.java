@@ -34,13 +34,6 @@ public class JdbcAddressDao implements AddressDao {
 	this.addressMapper = addressMapper;
     }
 
-    public JdbcAddressDao() {
-    }
-
-    public void SetDataSource(DataSource dataSource) {
-	jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
     public void create(Address address) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 

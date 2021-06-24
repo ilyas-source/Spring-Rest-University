@@ -5,13 +5,13 @@ import java.util.Optional;
 
 public interface GeneralDao<T> {
 
-    void create(T object);
+    void create(T entity);
 
     Optional<T> findById(int id);
 
     List<T> findAll();
 
-    void update(T object);
+    void update(T entity);
 
     void delete(int id);
 }
