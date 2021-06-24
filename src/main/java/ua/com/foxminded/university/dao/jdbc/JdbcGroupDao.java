@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.GroupMapper;
 import ua.com.foxminded.university.model.Group;
-import ua.com.foxminded.university.model.Lecture;
 
 @Component
 public class JdbcGroupDao implements GroupDao {
@@ -24,7 +23,6 @@ public class JdbcGroupDao implements GroupDao {
     private static final String FIND_ALL = "SELECT * FROM groups";
     private static final String UPDATE = "UPDATE groups SET name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
-    private static final String ASSIGN_GROUP_TO_LECTURE = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
     private static final String FIND_BY_LECTURE_ID = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
 	    "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?";
 
@@ -38,19 +36,15 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void create(Group group) {
-	List<Group> groups = findAll();
-	if (!groups.contains(group)) {
-	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection
-			.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, group.getName());
-		return ps;
-	    }, keyHolder);
-	    group.setId((int) keyHolder.getKeys().get("id"));
-	}
-
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, group.getName());
+	    return ps;
+	}, keyHolder);
+	group.setId((int) keyHolder.getKeys().get("id"));
     }
 
     public List<Group> findByLectureId(int lectureId) {
@@ -81,10 +75,10 @@ public class JdbcGroupDao implements GroupDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    public void assignGroupsToLecture(Lecture lecture) {
-	List<Group> groups = lecture.getGroups();
-	for (Group group : groups) {
-	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
-	}
-    }
+//    public void assignGroupsToLecture(Lecture lecture) {
+//	List<Group> groups = lecture.getGroups();
+//	for (Group group : groups) {
+//	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
+//	}
+//    }
 }

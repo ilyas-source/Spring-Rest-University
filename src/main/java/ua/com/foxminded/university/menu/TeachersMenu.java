@@ -133,6 +133,7 @@ public class TeachersMenu {
 	Teacher oldTeacher = selectTeacher();
 	Teacher newTeacher = createTeacher();
 	newTeacher.setId(oldTeacher.getId());
+	newTeacher.getAddress().setId(oldTeacher.getAddress().getId());
 	jdbcTeacherDao.update(newTeacher);
 	System.out.println("Overwrite successful.");
     }

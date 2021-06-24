@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;

@@ -36,19 +36,16 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public void create(Subject subject) {
-	List<Subject> subjects = findAll();
-	if (!subjects.contains(subject)) {
-	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection
-			.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-		ps.setString(1, subject.getName());
-		ps.setString(2, subject.getDescription());
-		return ps;
-	    }, keyHolder);
-	    subject.setId((int) keyHolder.getKeys().get("id"));
-	}
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+	    ps.setString(1, subject.getName());
+	    ps.setString(2, subject.getDescription());
+	    return ps;
+	}, keyHolder);
+	subject.setId((int) keyHolder.getKeys().get("id"));
     }
 
     @Override

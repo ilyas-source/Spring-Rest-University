@@ -34,19 +34,16 @@ public class JdbcHolidayDao implements HolidayDao {
 
     @Override
     public void create(Holiday holiday) {
-	List<Holiday> holidays = findAll();
-	if (!holidays.contains(holiday)) {
-	    KeyHolder keyHolder = new GeneratedKeyHolder();
+	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	    jdbcTemplate.update(connection -> {
-		PreparedStatement ps = connection
-			.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-		ps.setObject(1, holiday.getDate());
-		ps.setString(2, holiday.getName());
-		return ps;
-	    }, keyHolder);
-	    holiday.setId((int) keyHolder.getKeys().get("id"));
-	}
+	jdbcTemplate.update(connection -> {
+	    PreparedStatement ps = connection
+		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+	    ps.setObject(1, holiday.getDate());
+	    ps.setString(2, holiday.getName());
+	    return ps;
+	}, keyHolder);
+	holiday.setId((int) keyHolder.getKeys().get("id"));
     }
 
     @Override

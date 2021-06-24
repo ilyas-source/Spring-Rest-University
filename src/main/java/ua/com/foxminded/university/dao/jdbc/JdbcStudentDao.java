@@ -1,18 +1,42 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.NClob;
+import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
+import java.sql.PseudoColumnUsage;
+import java.sql.Ref;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
+import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Student;
 
 @Component
@@ -60,22 +84,13 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public void update(Student student) {
-	jdbcAddressDao.create(student.getAddress());
+	Address address = student.getAddress();
+	jdbcAddressDao.update(address);
 
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection
-		    .prepareStatement(UPDATE, Statement.NO_GENERATED_KEYS);
-	    ps.setString(1, student.getFirstName());
-	    ps.setString(2, student.getLastName());
-	    ps.setObject(3, student.getGender(), java.sql.Types.OTHER);
-	    ps.setObject(4, student.getBirthDate());
-	    ps.setString(5, student.getEmail());
-	    ps.setString(6, student.getPhoneNumber());
-	    ps.setInt(7, student.getAddress().getId());
-	    ps.setInt(8, student.getGroup().getId());
-	    ps.setInt(9, student.getId());
-	    return ps;
-	});
+	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(),
+		new SqlParameterValue(java.sql.Types.OTHER, student.getGender()),
+		student.getBirthDate(), student.getEmail(), student.getPhoneNumber(),
+		student.getAddress().getId(), student.getGroup().getId(), student.getId());
     }
 
     @Override

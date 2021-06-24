@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 
 @Component
@@ -26,15 +27,14 @@ public class JdbcLectureDao implements LectureDao {
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM lectures WHERE id = ?";
     private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM lectures_groups WHERE lecture_id = ?";
+    private static final String ASSIGN_GROUP_TO_LECTURE = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
-    private JdbcGroupDao jdbcGroupDao;
 
-    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao jdbcGroupDao) {
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lectureMapper = lectureMapper;
-	this.jdbcGroupDao = jdbcGroupDao;
     }
 
     @Override
@@ -55,28 +55,17 @@ public class JdbcLectureDao implements LectureDao {
 
 	lecture.setId((int) keyHolder.getKeys().get("id"));
 
-	jdbcGroupDao.assignGroupsToLecture(lecture);
+	assignGroupsToLecture(lecture);
     }
 
     @Override
     public void update(Lecture lecture) {
-	KeyHolder keyHolder = new GeneratedKeyHolder();
-
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection
-		    .prepareStatement(UPDATE, Statement.NO_GENERATED_KEYS);
-	    ps.setObject(1, lecture.getDate());
-	    ps.setObject(2, lecture.getTime().getStartTime());
-	    ps.setObject(3, lecture.getTime().getEndTime());
-	    ps.setInt(4, lecture.getSubject().getId());
-	    ps.setInt(5, lecture.getTeacher().getId());
-	    ps.setInt(6, lecture.getClassroom().getId());
-	    ps.setInt(7, lecture.getId());
-	    return ps;
-	}, keyHolder);
+	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTime().getStartTime(),
+		lecture.getTime().getEndTime(), lecture.getSubject().getId(),
+		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
 	clearAssignedSubjects(lecture);
-	jdbcGroupDao.assignGroupsToLecture(lecture);
+	assignGroupsToLecture(lecture);
     }
 
     private void clearAssignedSubjects(Lecture lecture) {
@@ -102,4 +91,10 @@ public class JdbcLectureDao implements LectureDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    public void assignGroupsToLecture(Lecture lecture) {
+	List<Group> groups = lecture.getGroups();
+	for (Group group : groups) {
+	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
+	}
+    }
 }

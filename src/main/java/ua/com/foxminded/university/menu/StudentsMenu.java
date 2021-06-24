@@ -61,6 +61,7 @@ public class StudentsMenu {
 	String firstName = scanner.nextLine();
 	System.out.print("Last name: ");
 	String lastName = scanner.nextLine();
+	Address address = addressMenu.createAddress();
 	Gender gender = genderMenu.getGender();
 	System.out.print("Birth date: ");
 	LocalDate birthDate = Menu.getDateFromScanner();
@@ -68,7 +69,6 @@ public class StudentsMenu {
 	String email = scanner.nextLine();
 	System.out.print("Phone number: ");
 	String phone = scanner.nextLine();
-	Address address = addressMenu.createAddress();
 	Group group = groupsMenu.selectGroup();
 
 	return new Student(firstName, lastName, gender, birthDate, email, phone, address, group);
@@ -101,6 +101,7 @@ public class StudentsMenu {
 	Student oldStudent = selectStudent();
 	Student newStudent = createStudent();
 	newStudent.setId(oldStudent.getId());
+	newStudent.getAddress().setId(oldStudent.getAddress().getId());
 	jdbcStudentDao.update(newStudent);
 	System.out.println("Overwrite successful.");
     }

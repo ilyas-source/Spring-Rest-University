@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -37,14 +38,11 @@ public class JdbcTeacherDao implements TeacherDao {
     private JdbcTemplate jdbcTemplate;
     private TeacherMapper teacherMapper;
     private JdbcAddressDao jdbcAddressDao;
-    private JdbcSubjectDao jdbcSubjectDao;
 
-    public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, JdbcAddressDao jdbcAddressDao,
-	    JdbcSubjectDao jdbcSubjectDao) {
+    public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, JdbcAddressDao jdbcAddressDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.teacherMapper = teacherMapper;
 	this.jdbcAddressDao = jdbcAddressDao;
-	this.jdbcSubjectDao = jdbcSubjectDao;
     }
 
     @Override
@@ -79,21 +77,13 @@ public class JdbcTeacherDao implements TeacherDao {
 
     @Override
     public void update(Teacher teacher) {
-	jdbcAddressDao.create(teacher.getAddress());
+	jdbcAddressDao.update(teacher.getAddress());
 
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection
-		    .prepareStatement(UPDATE, Statement.NO_GENERATED_KEYS);
-	    ps.setString(1, teacher.getFirstName());
-	    ps.setString(2, teacher.getLastName());
-	    ps.setObject(3, teacher.getGender(), java.sql.Types.OTHER);
-	    ps.setObject(4, teacher.getDegree(), java.sql.Types.OTHER);
-	    ps.setString(5, teacher.getEmail());
-	    ps.setString(6, teacher.getPhoneNumber());
-	    ps.setInt(7, teacher.getAddress().getId());
-	    ps.setInt(8, teacher.getId());
-	    return ps;
-	});
+	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(),
+		new SqlParameterValue(java.sql.Types.OTHER, teacher.getGender()),
+		new SqlParameterValue(java.sql.Types.OTHER, teacher.getDegree()),
+		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(),
+		teacher.getId());
 
 	clearAssignedSubjects(teacher);
 	for (Subject subject : teacher.getSubjects()) {
@@ -106,17 +96,17 @@ public class JdbcTeacherDao implements TeacherDao {
 	}
     }
 
-    private void clearAssignedSubjects(Teacher teacher) {
-	jdbcTemplate.update(CLEAR_ASSIGNED_SUBJECTS, teacher.getId());
-    }
+//    private void clearAssignedSubjects(Teacher teacher) {
+//	jdbcTemplate.update(CLEAR_ASSIGNED_SUBJECTS, teacher.getId());
+//    }
 
     private void assignSubject(Subject subject, Teacher teacher) {
 	jdbcTemplate.update(ASSIGN_SUBJECT, teacher.getId(), subject.getId());
     }
 
-    private void clearAssignedVacations(Teacher teacher) {
-	jdbcTemplate.update(CLEAR_ASSIGNED_VACATIONS, teacher.getId());
-    }
+//    private void clearAssignedVacations(Teacher teacher) {
+//	jdbcTemplate.update(CLEAR_ASSIGNED_VACATIONS, teacher.getId());
+//    }
 
     private void assignVacation(Vacation vacation, Teacher teacher) {
 	jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());

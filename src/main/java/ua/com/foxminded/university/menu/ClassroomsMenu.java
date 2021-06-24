@@ -79,6 +79,7 @@ public class ClassroomsMenu {
 	Classroom oldClassroom = selectClassroom();
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());
+	newClassroom.getLocation().setId(oldClassroom.getLocation().getId());
 	jdbcClassroomDao.update(newClassroom);
 	System.out.println("Overwrite successful.");
     }
