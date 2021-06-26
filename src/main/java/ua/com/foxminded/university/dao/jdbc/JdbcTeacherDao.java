@@ -29,7 +29,7 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String FIND_ALL = "SELECT * FROM teachers";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
-    private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM teachers_subjects WHERE teacher_id = ?";
+    private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects where teacher_id = ? AND subject_id = ?";
     private static final String ASSIGN_SUBJECT = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 
     private static final String CLEAR_ASSIGNED_VACATIONS = "DELETE FROM vacations WHERE teacher_id = ?";
@@ -85,10 +85,14 @@ public class JdbcTeacherDao implements TeacherDao {
 		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(),
 		teacher.getId());
 
-	clearAssignedSubjects(teacher);
-	for (Subject subject : teacher.getSubjects()) {
-	    assignSubject(subject, teacher);
-	}
+	Teacher oldTeacher = findById(teacher.getId()).get();
+	oldTeacher.getSubjects().stream()
+		.filter(s -> !teacher.getSubjects().contains(s))
+		.forEach(s -> removeSubject(s, teacher));
+
+	teacher.getSubjects().stream()
+		.filter(s -> !oldTeacher.getSubjects().contains(s))
+		.forEach(s -> assignSubject(s, teacher));
 
 	clearAssignedVacations(teacher);
 	for (Vacation vacation : teacher.getVacations()) {
@@ -96,17 +100,17 @@ public class JdbcTeacherDao implements TeacherDao {
 	}
     }
 
-//    private void clearAssignedSubjects(Teacher teacher) {
-//	jdbcTemplate.update(CLEAR_ASSIGNED_SUBJECTS, teacher.getId());
-//    }
+    private void removeSubject(Subject subject, Teacher teacher) {
+	jdbcTemplate.update(REMOVE_SUBJECT, teacher.getId(), subject.getId());
+    }
 
     private void assignSubject(Subject subject, Teacher teacher) {
 	jdbcTemplate.update(ASSIGN_SUBJECT, teacher.getId(), subject.getId());
     }
 
-//    private void clearAssignedVacations(Teacher teacher) {
-//	jdbcTemplate.update(CLEAR_ASSIGNED_VACATIONS, teacher.getId());
-//    }
+    private void clearAssignedVacations(Teacher teacher) {
+	jdbcTemplate.update(CLEAR_ASSIGNED_VACATIONS, teacher.getId());
+    }
 
     private void assignVacation(Vacation vacation, Teacher teacher) {
 	jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());

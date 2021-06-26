@@ -13,7 +13,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @ComponentScan("ua.com.foxminded.university")
 @PropertySource("classpath:database.properties")
-public class AppConfig {
+public class ApplicationConfig {
 
     @Value("${driver}")
     private String driver;
@@ -25,11 +25,6 @@ public class AppConfig {
     private String password;
 
     @Bean
-    public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
-	return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
     DataSource dataSource() {
 	DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
 	driverManagerDataSource.setUrl(url);
@@ -37,5 +32,10 @@ public class AppConfig {
 	driverManagerDataSource.setPassword(password);
 	driverManagerDataSource.setDriverClassName(driver);
 	return driverManagerDataSource;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
+	return new JdbcTemplate(dataSource);
     }
 }
