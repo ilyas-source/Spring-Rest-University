@@ -7,10 +7,10 @@ INSERT INTO addresses (country, postalCode, region, city, streetAddress) VALUES
 ('China', '20121', 'Guangdung', 'Beijin', 'Main St. 125');
 
 INSERT INTO subjects (name, description) VALUES
-('Economics', 'Base economics'),
-('Philosophy', 'Base philosophy'),
-('Chemistry', 'Base chemistry'),
-('Radiology', 'Explore radiation');
+('Test Economics', 'Base economics'),
+('Test Philosophy', 'Base philosophy'),
+('Test Chemistry', 'Base chemistry'),
+('Test Radiology', 'Explore radiation');
 
 INSERT INTO teachers (first_name, last_name, gender, degree, email, phone, address_id) VALUES
 ('Adam', 'Smith', 'MALE', 'DOCTOR', 'adam@smith.com', '+223322', 1),

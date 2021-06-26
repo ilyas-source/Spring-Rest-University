@@ -17,7 +17,7 @@ public class SpringTestConfig {
 	return new EmbeddedDatabaseBuilder()
 		.setType(EmbeddedDatabaseType.H2)
 		.addScript("/schema.sql")
-		.addScript("/data.sql")
+//		.addScript("/test-data.sql")
 		.build();
     }
 
