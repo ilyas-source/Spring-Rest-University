@@ -34,11 +34,11 @@ class AddressDaoTest {
     private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";
 
     @Autowired
-    JdbcAddressDao addressDao;
+    private JdbcAddressDao addressDao;
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     @Autowired
-    AddressesMenu addressMenu; // todo delete after implementing tests
+    private AddressesMenu addressMenu; // todo delete after implementing tests
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {

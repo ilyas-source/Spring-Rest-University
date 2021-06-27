@@ -1,13 +1,22 @@
 package ua.com.foxminded.university.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.assertj.core.error.ShouldBeAfterOrEqualTo;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
@@ -16,6 +25,8 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
+import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.menu.ClassroomsMenu;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
@@ -25,46 +36,74 @@ import ua.com.foxminded.university.model.Location;
 //(2, 'Small chemistry auditory', 30),
 //(3, 'Chemistry laboratory', 15);
 
-//System.out.println(classroomMenu.getStringFromClassroom(expected.get()));
-//System.out.println(classroomMenu.getStringFromClassroom(actual.get()));
+//INSERT INTO locations (building, floor, room_number) VALUES
+//('Phys building', 2, 22),
+//('Chem building', 1, 12),
+//('Chem building', 2, 12);
 
+@ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class ClassroomDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "location_id=5 AND name = 'test' AND capacity=5";
+    private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
+    private static final Location testLocation = new Location(4, "Test location", 1, 1);
 
     @Autowired
-    JdbcClassroomDao classroomDao;
+    private JdbcTemplate jdbcTemplate;
+    @Mock
+    private JdbcLocationDao locationDao;
+    @InjectMocks
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcClassroomDao classroomDao;
+    @InjectMocks
     @Autowired
-    ClassroomsMenu classroomMenu; // todo delete after implementing tests
+    private ClassroomMapper classroomMapper;
 
-//    @Test
-//    void givenNewClassroom_onCreate_shouldCreateClassroom() {
-//	Location location = new Location(2, "Chem building", 1, 12);
-//	Classroom classroom = new Classroom(4, location, TEST_WHERE_CLAUSE, 0)
-//	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"classrooms", "id = 4 AND " + TEST_WHERE_CLAUSE);
-//
-//	classroomDao.create(classroom);
-//
-//	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"classrooms", "id = 4 AND " + TEST_WHERE_CLAUSE);
-//
-//	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
-//    }
+    @Autowired
+    private ClassroomsMenu classroomsMenu;
 
-//    @Test
-//    void givenCorrectClassroomId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
-//	Optional<Classroom> expected = Optional
-//		.of(new Classroom(2, 'Small chemistry auditory', 30));
-//
-//	Optional<Classroom> actual = classroomDao.findById(2);
-//
-//	assertEquals(expected, actual);
-//    }
+    @Test
+    void givenNewClassroom_onCreate_shouldCreateClassroom() {
+	Classroom classroom = new Classroom(testLocation, "Test room", 5);
+
+	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"classrooms", TEST_WHERE_CLAUSE);
+
+	classroomDao.create(classroom);
+	verify(locationDao).create(testLocation);
+
+	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"classrooms", TEST_WHERE_CLAUSE);
+
+	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+    }
+
+    @Test
+    void givenClassroomWithExistingId_onUpdate_shouldUpdateCorrectly() {
+	Classroom classroom = new Classroom(2, testLocation, "Test room", 5);
+
+	classroomDao.update(classroom);
+	verify(locationDao).update(testLocation);
+
+	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
+
+	assertThat(elementAfterUpdate).isEqualTo(1);
+    }
+
+    @Test
+    void givenCorrectClassroomId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
+	Location location = new Location(2, "Chem building", 1, 12);
+	when(locationDao.findById(2)).thenReturn(Optional.of(location));
+
+	Optional<Classroom> expected = Optional.of(new Classroom(2, location, "Small chemistry auditory", 30));
+
+	Optional<Classroom> actual = classroomDao.findById(2);
+	verify(locationDao).findById(2);
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenIncorrectClassroomId_onFindById_shouldReturnEmptyOptional() {
@@ -75,38 +114,37 @@ class ClassroomDaoTest {
 	assertEquals(expected, actual);
     }
 
-//    @Test
-//    void ifDatabaseHasClassrooms_onFindAll_shouldReturnCorrectListOfClassroomes() {
-//	List<Classroom> expected = new ArrayList<>();
-//	expected.add(new Classroom(1, 1, "Big physics auditory", 500));
-//	expected.add(new Classroom(2, 2, "Small chemistry auditory", 30));
-//	expected.add(new Classroom(3, 3, "Big physics auditory", 500));
-//
-//	List<Classroom> actual = classroomDao.findAll();
-//
-//	assertEquals(expected, actual);
-//    }
+    @Test
+    void ifDatabaseHasClassrooms_onFindAll_shouldReturnCorrectListOfClassrooms() {
+	List<Classroom> expected = new ArrayList<>();
+
+	Location location1 = new Location(1, "Phys building", 2, 22);
+	expected.add(new Classroom(1, location1, "Big physics auditory", 500));
+	when(locationDao.findById(1)).thenReturn(Optional.of(location1));
+
+	Location location2 = new Location(2, "Chem building", 1, 12);
+	expected.add(new Classroom(2, location2, "Small chemistry auditory", 30));
+	when(locationDao.findById(2)).thenReturn(Optional.of(location2));
+
+	Location location3 = new Location(3, "Chem building", 2, 12);
+	expected.add(new Classroom(3, location3, "Chemistry laboratory", 15));
+	when(locationDao.findById(3)).thenReturn(Optional.of(location3));
+
+	List<Classroom> actual = classroomDao.findAll();
+
+	verify(locationDao, times(3)).findById(anyInt());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
-    void ifDatabaseHasNoClassrooms_onFindAll_shouldReturnEmptyListOfClassroomes() {
+    void ifDatabaseHasNoClassrooms_onFindAll_shouldReturnEmptyListOfClassrooms() {
 	JdbcTestUtils.deleteFromTables(jdbcTemplate, "classrooms");
 
 	List<Classroom> classrooms = classroomDao.findAll();
 
 	assertThat(classrooms).isEmpty();
     }
-
-//    @Test
-//    void givenClassroom_onUpdate_shouldUpdateCorrectly() {
-//	Classroom classroom = new Classroom(2, 5, "test", 5);
-//
-//	classroomDao.update(classroom);
-//
-//	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
-//
-//	assertThat(elementAfterUpdate).isEqualTo(1);
-//    }
 
     @Test
     void givenCorrectClassroomId_onDelete_shouldDeleteCorrectly() {

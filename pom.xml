@@ -19,6 +19,40 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring-test.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.dbunit</groupId>
 			<artifactId>dbunit</artifactId>
 			<version>${org.dbunit.version}</version>
@@ -30,6 +64,12 @@
 			<version>${com.h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
+		 <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -46,38 +86,6 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<version>${mockito.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>${postgresql.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring-test.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>${assertj-core.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
