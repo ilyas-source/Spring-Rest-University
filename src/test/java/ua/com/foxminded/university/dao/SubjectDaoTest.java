@@ -1,8 +1,8 @@
 package ua.com.foxminded.university.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.model.Subject;
 
@@ -22,11 +23,11 @@ import ua.com.foxminded.university.model.Subject;
 //System.out.println(subjectsMenu.getStringFromSubject(expected.get()));
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql({ "classpath:fill-subjects.sql" })
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class SubjectDaoTest {
 
     @Autowired
-    private SubjectDao subjectDao;
+    private JdbcSubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -34,39 +35,105 @@ class SubjectDaoTest {
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
-	Subject subject = new Subject("test", "test");
-	int expectedRows = JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects") + 1;
+	Subject subject = new Subject(5, "test", "test");
+	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"subjects", "id = 5 AND name='test' AND description = 'test'");
+
 	subjectDao.create(subject);
-	System.out.println(subjectsMenu.getStringOfSubjects(subjectDao.findAll()));
-	assertThat(expectedRows).isEqualTo(JdbcTestUtils.countRowsInTable(jdbcTemplate, "subjects"));
+
+	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"subjects", "id = 5 AND name='test' AND description = 'test'");
+
+	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
+    void givenCorrectSubjectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
 	Optional<Subject> expected = Optional.of(new Subject(2, "Test Philosophy", "Base philosophy"));
+
 	Optional<Subject> actual = subjectDao.findById(2);
 
 	assertEquals(expected, actual);
     }
 
-//    @Test
-//    void testFindAll() {
-//	fail("Not yet implemented");
-//    }
-////
-//    @Test
-//    void testUpdate() {
-//	fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    void testDelete() {
-//	fail("Not yet implemented");
-//    }
-//
-//    @Test
-//    void testGetSubjectsByTeacher() {
-//	fail("Not yet implemented");
-//    }
+    @Test
+    void givenIncorrectSubjectId_onFindById_shouldReturnEmptyOptional() {
+	Optional<Subject> expected = Optional.empty();
+
+	Optional<Subject> actual = subjectDao.findById(5);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasSubjects_onFindAll_shouldReturnCorrectListOfSubjects() {
+	List<Subject> expected = new ArrayList<>();
+	expected.add(new Subject(1, "Test Economics", "Base economics"));
+	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
+	expected.add(new Subject(3, "Test Chemistry", "Base chemistry"));
+	expected.add(new Subject(4, "Test Radiology", "Explore radiation"));
+
+	List<Subject> actual = subjectDao.findAll();
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasNoSubjects_onFindAll_shouldReturnEmptyListOfSubjects() {
+	JdbcTestUtils.deleteFromTables(jdbcTemplate, "subjects");
+
+	List<Subject> groups = subjectDao.findAll();
+
+	assertThat(groups).isEmpty();
+    }
+
+    @Test
+    void givenSubject_onUpdate_shouldUpdateCorrectly() {
+	Subject subject = new Subject(2, "test", "test");
+
+	subjectDao.update(subject);
+
+	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"subjects", "id = 2 AND name='test' AND description = 'test'");
+
+	assertThat(elementAfterUpdate).isEqualTo(1);
+    }
+
+    @Test
+    void givenCorrectSubjectId_onDelete_shouldDeleteCorrectly() {
+	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"subjects", "id = 2 AND name='Test Philosophy' AND description = 'Base philosophy'");
+
+	subjectDao.delete(2);
+
+	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"subjects", "id = 2 AND name='Test Philosophy' AND description = 'Base philosophy'");
+
+	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+    }
+
+    @Test
+    void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
+	List<Subject> expected = new ArrayList<>();
+	expected.add(new Subject(1, "Test Economics", "Base economics"));
+	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
+
+	List<Subject> actual = subjectDao.getSubjectsByTeacher(1);
+
+	System.out.println(subjectsMenu.getStringOfSubjects(expected));
+	System.out.println(subjectsMenu.getStringOfSubjects(actual));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
+
+	List<Subject> actual = subjectDao.getSubjectsByTeacher(3);
+
+	System.out.println(subjectsMenu.getStringOfSubjects(actual));
+
+	assertThat(actual).isEmpty();
+    }
 
 }
