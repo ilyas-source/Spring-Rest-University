@@ -16,7 +16,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
-import ua.com.foxminded.university.menu.AddressMenu;
+import ua.com.foxminded.university.menu.AddressesMenu;
 import ua.com.foxminded.university.model.Address;
 
 //INSERT INTO addresses (country, postalCode, region, city, streetAddress) VALUES
@@ -38,7 +38,7 @@ class AddressDaoTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
-    AddressMenu addressMenu; // todo delete after implementing tests
+    AddressesMenu addressMenu; // todo delete after implementing tests
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
@@ -89,9 +89,9 @@ class AddressDaoTest {
     void ifDatabaseHasNoAddresses_onFindAll_shouldReturnEmptyListOfAddresses() {
 	JdbcTestUtils.deleteFromTables(jdbcTemplate, "addresses");
 
-	List<Address> groups = addressDao.findAll();
+	List<Address> addresses = addressDao.findAll();
 
-	assertThat(groups).isEmpty();
+	assertThat(addresses).isEmpty();
     }
 
     @Test

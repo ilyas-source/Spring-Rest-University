@@ -23,11 +23,11 @@ public class TeachersMenu {
 
     private GenderMenu genderMenu;
     private VacationsMenu vacationsMenu;
-    private AddressMenu addressMenu;
+    private AddressesMenu addressMenu;
     private SubjectsMenu subjectsMenu;
     private JdbcTeacherDao jdbcTeacherDao;
 
-    public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressMenu addressMenu, SubjectsMenu subjectsMenu,
+    public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
 	    JdbcTeacherDao jdbcTeacherDao) {
 	this.genderMenu = genderMenu;
 	this.vacationsMenu = vacationsMenu;

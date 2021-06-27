@@ -16,6 +16,12 @@ public class Holiday {
 	this.name = name;
     }
 
+    public Holiday(int id, LocalDate date, String name) {
+	this.id = id;
+	this.date = date;
+	this.name = name;
+    }
+
     public int getId() {
 	return id;
     }

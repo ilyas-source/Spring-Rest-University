@@ -84,9 +84,9 @@ class SubjectDaoTest {
     void ifDatabaseHasNoSubjects_onFindAll_shouldReturnEmptyListOfSubjects() {
 	JdbcTestUtils.deleteFromTables(jdbcTemplate, "subjects");
 
-	List<Subject> groups = subjectDao.findAll();
+	List<Subject> subjects = subjectDao.findAll();
 
-	assertThat(groups).isEmpty();
+	assertThat(subjects).isEmpty();
     }
 
     @Test

@@ -20,12 +20,12 @@ import ua.com.foxminded.university.model.Student;
 @Component
 public class StudentsMenu {
 
-    private AddressMenu addressMenu;
+    private AddressesMenu addressMenu;
     private GroupsMenu groupsMenu;
     private GenderMenu genderMenu;
     private JdbcStudentDao jdbcStudentDao;
 
-    public StudentsMenu(AddressMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, JdbcStudentDao jdbcStudentDao) {
+    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, JdbcStudentDao jdbcStudentDao) {
 	this.addressMenu = addressMenu;
 	this.groupsMenu = groupsMenu;
 	this.genderMenu = genderMenu;

@@ -16,6 +16,13 @@ public class Classroom {
 	this.capacity = capacity;
     }
 
+    public Classroom(int id, Location location, String name, int capacity) {
+	this.id = id;
+	this.location = location;
+	this.name = name;
+	this.capacity = capacity;
+    }
+
     public int getId() {
 	return id;
     }

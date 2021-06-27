@@ -16,6 +16,13 @@ public class Location {
 	this.roomNumber = roomNumber;
     }
 
+    public Location(int id, String building, int floor, int roomNumber) {
+	this.id = id;
+	this.building = building;
+	this.floor = floor;
+	this.roomNumber = roomNumber;
+    }
+
     public int getId() {
 	return id;
     }

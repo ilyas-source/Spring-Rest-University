@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.Address;
 
 @Component
-public class AddressMenu {
+public class AddressesMenu {
 
     public Address createAddress() {
 	System.out.println("Entering address.");
