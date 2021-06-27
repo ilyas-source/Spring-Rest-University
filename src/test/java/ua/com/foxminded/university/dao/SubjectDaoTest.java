@@ -26,23 +26,25 @@ import ua.com.foxminded.university.model.Subject;
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class SubjectDaoTest {
 
+    private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
+
     @Autowired
     private JdbcSubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private SubjectsMenu subjectsMenu;
+    private SubjectsMenu subjectsMenu; // todo delete after implementing tests
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
 	Subject subject = new Subject(5, "test", "test");
 	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"subjects", "id = 5 AND name='test' AND description = 'test'");
+		"subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
 	subjectDao.create(subject);
 
 	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"subjects", "id = 5 AND name='test' AND description = 'test'");
+		"subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
 	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
     }
@@ -94,20 +96,18 @@ class SubjectDaoTest {
 	subjectDao.update(subject);
 
 	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"subjects", "id = 2 AND name='test' AND description = 'test'");
+		"subjects", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	assertThat(elementAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectSubjectId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"subjects", "id = 2 AND name='Test Philosophy' AND description = 'Base philosophy'");
+	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 2");
 
 	subjectDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"subjects", "id = 2 AND name='Test Philosophy' AND description = 'Base philosophy'");
+	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 2");
 
 	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
     }
@@ -119,9 +119,6 @@ class SubjectDaoTest {
 	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
 
 	List<Subject> actual = subjectDao.getSubjectsByTeacher(1);
-
-	System.out.println(subjectsMenu.getStringOfSubjects(expected));
-	System.out.println(subjectsMenu.getStringOfSubjects(actual));
 
 	assertEquals(expected, actual);
     }
@@ -135,5 +132,4 @@ class SubjectDaoTest {
 
 	assertThat(actual).isEmpty();
     }
-
 }

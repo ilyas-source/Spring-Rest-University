@@ -80,4 +80,62 @@ public class Lecture {
     public void setClassroom(Classroom classroom) {
 	this.classroom = classroom;
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((classroom == null) ? 0 : classroom.hashCode());
+	result = prime * result + ((date == null) ? 0 : date.hashCode());
+	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+	result = prime * result + id;
+	result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
+	result = prime * result + ((time == null) ? 0 : time.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Lecture other = (Lecture) obj;
+	if (classroom == null) {
+	    if (other.classroom != null)
+		return false;
+	} else if (!classroom.equals(other.classroom))
+	    return false;
+	if (date == null) {
+	    if (other.date != null)
+		return false;
+	} else if (!date.equals(other.date))
+	    return false;
+	if (groups == null) {
+	    if (other.groups != null)
+		return false;
+	} else if (!groups.equals(other.groups))
+	    return false;
+	if (id != other.id)
+	    return false;
+	if (subject == null) {
+	    if (other.subject != null)
+		return false;
+	} else if (!subject.equals(other.subject))
+	    return false;
+	if (teacher == null) {
+	    if (other.teacher != null)
+		return false;
+	} else if (!teacher.equals(other.teacher))
+	    return false;
+	if (time == null) {
+	    if (other.time != null)
+		return false;
+	} else if (!time.equals(other.time))
+	    return false;
+	return true;
+    }
 }
