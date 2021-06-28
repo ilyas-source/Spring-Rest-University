@@ -11,6 +11,7 @@ import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 
 @Component
 public class UniversityMenu {
@@ -22,6 +23,7 @@ public class UniversityMenu {
     private HolidaysMenu holidaysMenu;
     private GroupsMenu groupsMenu;
     private SubjectsMenu subjectsMenu;
+    private TimeslotsMenu timeslotsMenu;
     private JdbcTeacherDao jdbcTeacherDao;
     private JdbcStudentDao jdbcStudentDao;
     private JdbcSubjectDao jdbcSubjectDao;
@@ -29,12 +31,13 @@ public class UniversityMenu {
     private JdbcGroupDao jdbcGroupDao;
     private JdbcLectureDao jdbcLectureDao;
     private JdbcHolidayDao jdbcHolidayDao;
+    private JdbcTimeslotDao jdbcTimeslotDao;
 
     public UniversityMenu(TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, StudentsMenu studentsMenu,
 	    LecturesMenu lecturesMenu, HolidaysMenu holidaysMenu, GroupsMenu groupsMenu, SubjectsMenu subjectsMenu,
-	    JdbcTeacherDao jdbcTeacherDao, JdbcStudentDao jdbcStudentDao, JdbcSubjectDao jdbcSubjectDao,
-	    JdbcClassroomDao jdbcClassroomDao, JdbcGroupDao jdbcGroupDao, JdbcLectureDao jdbcLectureDao,
-	    JdbcHolidayDao jdbcHolidayDao) {
+	    TimeslotsMenu timeslotsMenu, JdbcTeacherDao jdbcTeacherDao, JdbcStudentDao jdbcStudentDao,
+	    JdbcSubjectDao jdbcSubjectDao, JdbcClassroomDao jdbcClassroomDao, JdbcGroupDao jdbcGroupDao,
+	    JdbcLectureDao jdbcLectureDao, JdbcHolidayDao jdbcHolidayDao, JdbcTimeslotDao jdbcTimeslotDao) {
 	this.teachersMenu = teachersMenu;
 	this.classroomsMenu = classroomsMenu;
 	this.studentsMenu = studentsMenu;
@@ -42,6 +45,7 @@ public class UniversityMenu {
 	this.holidaysMenu = holidaysMenu;
 	this.groupsMenu = groupsMenu;
 	this.subjectsMenu = subjectsMenu;
+	this.timeslotsMenu = timeslotsMenu;
 	this.jdbcTeacherDao = jdbcTeacherDao;
 	this.jdbcStudentDao = jdbcStudentDao;
 	this.jdbcSubjectDao = jdbcSubjectDao;
@@ -49,6 +53,7 @@ public class UniversityMenu {
 	this.jdbcGroupDao = jdbcGroupDao;
 	this.jdbcLectureDao = jdbcLectureDao;
 	this.jdbcHolidayDao = jdbcHolidayDao;
+	this.jdbcTimeslotDao = jdbcTimeslotDao;
     }
 
     public void printUniversity() {
@@ -68,6 +73,9 @@ public class UniversityMenu {
 	result.append(FORMAT_DIVIDER);
 	result.append("Classrooms list:" + CR);
 	result.append(classroomsMenu.getStringOfClassrooms(jdbcClassroomDao.findAll()));
+	result.append(FORMAT_DIVIDER);
+	result.append("Time slots list:" + CR);
+	result.append(timeslotsMenu.getStringOfTimeslots(jdbcTimeslotDao.findAll()));
 	result.append(FORMAT_DIVIDER);
 	result.append("Scheduled lectures:" + CR);
 	result.append(lecturesMenu.getStringOfLectures(jdbcLectureDao.findAll()));

@@ -14,6 +14,7 @@ import ua.com.foxminded.university.menu.LecturesMenu;
 import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
+import ua.com.foxminded.university.menu.TimeslotsMenu;
 import ua.com.foxminded.university.menu.UniversityMenu;
 
 @Component
@@ -31,6 +32,7 @@ public class Menu {
 	    + "5. Manage lectures" + CR
 	    + "6. Manage classrooms" + CR
 	    + "7. Manage students" + CR
+	    + "8. Manage daily time slots" + CR
 	    + "9. Manage university holidays" + CR
 	    + "Enter choice or 0 to quit:";
 
@@ -51,9 +53,11 @@ public class Menu {
     private UniversityMenu universityMenu;
     private ClassroomsMenu classroomsMenu;
     private HolidaysMenu holidaysMenu;
+    private TimeslotsMenu timeslotsMenu;
 
     public Menu(TeachersMenu teachersMenu, GroupsMenu groupsMenu, StudentsMenu studentsMenu, SubjectsMenu subjectsMenu,
-	    LecturesMenu lecturesMenu, UniversityMenu universityMenu, ClassroomsMenu classroomsMenu, HolidaysMenu holidaysMenu) {
+	    LecturesMenu lecturesMenu, UniversityMenu universityMenu, ClassroomsMenu classroomsMenu, HolidaysMenu holidaysMenu,
+	    TimeslotsMenu timeslotsMenu) {
 	this.teachersMenu = teachersMenu;
 	this.groupsMenu = groupsMenu;
 	this.studentsMenu = studentsMenu;
@@ -62,6 +66,7 @@ public class Menu {
 	this.universityMenu = universityMenu;
 	this.classroomsMenu = classroomsMenu;
 	this.holidaysMenu = holidaysMenu;
+	this.timeslotsMenu = timeslotsMenu;
     }
 
     public void start(int menuEntryPoint) {
@@ -257,6 +262,32 @@ public class Menu {
 	    break;
 	case 4:
 	    studentsMenu.deleteStudent();
+	    start(7);
+	    break;
+	default:
+	    System.out.println("Returning...");
+	    start(0);
+	    break;
+	}
+    }
+
+    private void manageTimeslots() {
+	System.out.println(FORMAT_DIVIDER + "Manage time slots:" + CRUD_MENU_TEXT);
+	switch (getIntFromScanner()) {
+	case 1:
+	    timeslotsMenu.addTimeslot();
+	    start(7);
+	    break;
+	case 2:
+	    timeslotsMenu.printTimeslots();
+	    start(7);
+	    break;
+	case 3:
+	    timeslotsMenu.updateTimeslot();
+	    start(7);
+	    break;
+	case 4:
+	    timeslotsMenu.deleteTimeslot();
 	    start(7);
 	    break;
 	default:
