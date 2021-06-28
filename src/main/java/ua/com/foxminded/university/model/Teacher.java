@@ -30,6 +30,19 @@ public class Teacher {
 	this.address = address;
     }
 
+    public Teacher(int id, String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
+	    String phoneNumber, Address address) {
+	this.id = id;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.gender = gender;
+	this.degree = degree;
+	this.subjects = subjects;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.address = address;
+    }
+
     public int getId() {
 	return id;
     }

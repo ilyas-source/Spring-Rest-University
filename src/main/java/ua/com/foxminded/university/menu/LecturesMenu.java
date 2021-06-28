@@ -49,11 +49,17 @@ public class LecturesMenu {
 
     public String getStringFromLecture(Lecture lecture) {
 	StringBuilder result = new StringBuilder();
+	Subject subject = lecture.getSubject();
+	Teacher teacher = lecture.getTeacher();
+	Classroom classroom = lecture.getClassroom();
 
-	result.append("Lecture on " + lecture.getSubject().getName() + " will take place on " + lecture.getDate() + ", from "
-		+ lecture.getTimeSlot().getBeginTime() + " to " + lecture.getTimeSlot().getEndTime() + "." + CR);
-	result.append("Read by " + lecture.getTeacher().getFirstName() + " " + lecture.getTeacher().getLastName() + " in "
-		+ lecture.getClassroom().getName() + "." + CR);
+	result.append(
+		"Lecture on (" + subject.getId() + ")" + subject.getName() + " will take place on " + lecture.getDate()
+			+ ", from "
+			+ lecture.getTimeSlot().getBeginTime() + " to " + lecture.getTimeSlot().getEndTime() + " (timeslot #"
+			+ lecture.getTimeSlot().getId() + ")" + CR);
+	result.append("Read by (" + teacher.getId() + ")" + teacher.getFirstName() + " " + teacher.getLastName() + " in ("
+		+ classroom.getId() + ")" + classroom.getName() + "." + CR);
 
 	List<Group> groups = lecture.getGroups();
 

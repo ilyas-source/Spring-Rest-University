@@ -25,6 +25,17 @@ public class Lecture {
 	this.classroom = classroom;
     }
 
+    public Lecture(int id, LocalDate date, Timeslot timeslot, List<Group> groups, Subject subject, Teacher teacher,
+	    Classroom classroom) {
+	this.id = id;
+	this.date = date;
+	this.timeslot = timeslot;
+	this.groups = groups;
+	this.subject = subject;
+	this.teacher = teacher;
+	this.classroom = classroom;
+    }
+
     public int getId() {
 	return id;
     }

@@ -16,6 +16,12 @@ public class Timeslot {
 	this.endTime = endTime;
     }
 
+    public Timeslot(int id, LocalTime beginTime, LocalTime endTime) {
+	this.id = id;
+	this.beginTime = beginTime;
+	this.endTime = endTime;
+    }
+
     public int getId() {
 	return id;
     }

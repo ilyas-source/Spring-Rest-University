@@ -1,21 +1,17 @@
 package ua.com.foxminded.university.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.error.ShouldBeAfterOrEqualTo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,7 +23,6 @@ import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
-import ua.com.foxminded.university.menu.ClassroomsMenu;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
@@ -47,7 +42,7 @@ import ua.com.foxminded.university.model.Location;
 class ClassroomDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
-    private static final Location testLocation = new Location(4, "Test location", 1, 1);
+    private static final Location TEST_LOCATION = new Location(4, "Test location", 1, 1);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -60,18 +55,15 @@ class ClassroomDaoTest {
     @Autowired
     private ClassroomMapper classroomMapper;
 
-    @Autowired
-    private ClassroomsMenu classroomsMenu;
-
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {
-	Classroom classroom = new Classroom(testLocation, "Test room", 5);
+	Classroom classroom = new Classroom(TEST_LOCATION, "Test room", 5);
 
 	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", TEST_WHERE_CLAUSE);
 
 	classroomDao.create(classroom);
-	verify(locationDao).create(testLocation);
+	verify(locationDao).create(TEST_LOCATION);
 
 	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", TEST_WHERE_CLAUSE);
@@ -81,14 +73,18 @@ class ClassroomDaoTest {
 
     @Test
     void givenClassroomWithExistingId_onUpdate_shouldUpdateCorrectly() {
-	Classroom classroom = new Classroom(2, testLocation, "Test room", 5);
+	Classroom classroom = new Classroom(2, TEST_LOCATION, "Test room", 5);
+
+	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	classroomDao.update(classroom);
-	verify(locationDao).update(testLocation);
+	verify(locationDao).update(TEST_LOCATION);
 
 	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
+	assertThat(elementBeforeUpdate).isZero();
 	assertThat(elementAfterUpdate).isEqualTo(1);
     }
 
