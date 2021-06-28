@@ -26,16 +26,6 @@ import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
-//INSERT INTO classrooms (location_id, name, capacity) VALUES
-//(1, 'Big physics auditory', 500),
-//(2, 'Small chemistry auditory', 30),
-//(3, 'Chemistry laboratory', 15);
-
-//INSERT INTO locations (building, floor, room_number) VALUES
-//('Phys building', 2, 22),
-//('Chem building', 1, 12),
-//('Chem building', 2, 12);
-
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })

@@ -106,6 +106,9 @@ public class Menu {
 	case 7:
 	    manageStudents();
 	    break;
+	case 8:
+	    manageTimeslots();
+	    break;
 	case 9:
 	    manageHolidays();
 	    break;
@@ -276,19 +279,19 @@ public class Menu {
 	switch (getIntFromScanner()) {
 	case 1:
 	    timeslotsMenu.addTimeslot();
-	    start(7);
+	    start(8);
 	    break;
 	case 2:
 	    timeslotsMenu.printTimeslots();
-	    start(7);
+	    start(8);
 	    break;
 	case 3:
 	    timeslotsMenu.updateTimeslot();
-	    start(7);
+	    start(8);
 	    break;
 	case 4:
 	    timeslotsMenu.deleteTimeslot();
-	    start(7);
+	    start(8);
 	    break;
 	default:
 	    System.out.println("Returning...");

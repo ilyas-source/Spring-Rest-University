@@ -19,11 +19,6 @@ import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.model.Location;
 
-//INSERT INTO locations (building, floor, room_number) VALUES
-//('Phys building', 2, 22),
-//('Chem building', 1, 12),
-//('Chem building', 2, 12);
-
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:fill-locations.sql" })
 class LocationDaoTest {

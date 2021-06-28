@@ -42,10 +42,6 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
 
-//INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, classroom_id) VALUES
-//('2000-1-1', 1, 1, 1, 1),
-//('2000-1-2', 2, 2, 2, 2);
-
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
@@ -97,12 +93,14 @@ class LectureDaoTest {
 
 	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
-//	int lecturesGroupsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//		"lecture_id=3 AND group_id=1");
-//	lecturesGroupsAfterCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//		"lecture_id=3 AND group_id=2");
+	int lecturesGroupsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=3 AND group_id=1");
+	lecturesGroupsAfterCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=3 AND group_id=2");
 
 	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertThat(lecturesGroupsBeforeCreate).isZero();
+	assertThat(lecturesGroupsAfterCreate).isEqualTo(2);
     }
 
     @Test

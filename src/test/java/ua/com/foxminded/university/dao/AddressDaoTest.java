@@ -19,14 +19,6 @@ import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.menu.AddressesMenu;
 import ua.com.foxminded.university.model.Address;
 
-//INSERT INTO addresses (country, postalCode, region, city, streetAddress) VALUES
-//('UK', '12345', 'City-Of-Edinburgh', 'Edinburgh', 'Panmure House'),
-//('Poland', '54321', 'Central region', 'Warsaw', 'Urszuli Ledochowskiej 3'),
-//('Russia', '450080', 'Permskiy kray', 'Perm', 'Lenina 5'),
-
-//System.out.println(addressMenu.getStringFromAddress(expected.get()));
-//System.out.println(addressMenu.getStringFromAddress(actual.get()));
-
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:fill-addresses.sql" })
 class AddressDaoTest {
@@ -37,8 +29,6 @@ class AddressDaoTest {
     private JdbcAddressDao addressDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private AddressesMenu addressMenu; // todo delete after implementing tests
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {

@@ -19,9 +19,6 @@ import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.model.Subject;
 
-//System.out.println(subjectsMenu.getStringOfSubjects(subjectDao.findAll()));
-//System.out.println(subjectsMenu.getStringFromSubject(expected.get()));
-
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class SubjectDaoTest {
@@ -32,8 +29,6 @@ class SubjectDaoTest {
     private JdbcSubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private SubjectsMenu subjectsMenu; // todo delete after implementing tests
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
@@ -127,8 +122,6 @@ class SubjectDaoTest {
     void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
 
 	List<Subject> actual = subjectDao.getSubjectsByTeacher(3);
-
-	System.out.println(subjectsMenu.getStringOfSubjects(actual));
 
 	assertThat(actual).isEmpty();
     }

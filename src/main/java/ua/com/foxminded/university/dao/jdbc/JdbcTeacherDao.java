@@ -32,7 +32,7 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects where teacher_id = ? AND subject_id = ?";
     private static final String ASSIGN_SUBJECT = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 
-    private static final String CLEAR_ASSIGNED_VACATIONS = "DELETE FROM vacations WHERE teacher_id = ?";
+    private static final String REMOVE_VACATION = "DELETE FROM vacations where teacher_id = ? AND start_date = ? AND end_date  = ?";
     private static final String ASSIGN_VACATION = "INSERT INTO vacations (teacher_id, start_date, end_date) VALUES (?, ?, ?)";
 
     private JdbcTemplate jdbcTemplate;
@@ -86,6 +86,7 @@ public class JdbcTeacherDao implements TeacherDao {
 		teacher.getId());
 
 	Teacher oldTeacher = findById(teacher.getId()).get();
+
 	oldTeacher.getSubjects().stream()
 		.filter(s -> !teacher.getSubjects().contains(s))
 		.forEach(s -> removeSubject(s, teacher));
@@ -94,10 +95,13 @@ public class JdbcTeacherDao implements TeacherDao {
 		.filter(s -> !oldTeacher.getSubjects().contains(s))
 		.forEach(s -> assignSubject(s, teacher));
 
-	clearAssignedVacations(teacher);
-	for (Vacation vacation : teacher.getVacations()) {
-	    assignVacation(vacation, teacher);
-	}
+	oldTeacher.getVacations().stream()
+		.filter(v -> !teacher.getVacations().contains(v))
+		.forEach(v -> removeVacation(v, teacher));
+
+	teacher.getVacations().stream()
+		.filter(v -> !oldTeacher.getVacations().contains(v))
+		.forEach(v -> assignVacation(v, teacher));
     }
 
     private void removeSubject(Subject subject, Teacher teacher) {
@@ -108,8 +112,8 @@ public class JdbcTeacherDao implements TeacherDao {
 	jdbcTemplate.update(ASSIGN_SUBJECT, teacher.getId(), subject.getId());
     }
 
-    private void clearAssignedVacations(Teacher teacher) {
-	jdbcTemplate.update(CLEAR_ASSIGNED_VACATIONS, teacher.getId());
+    private void removeVacation(Vacation vacation, Teacher teacher) {
+	jdbcTemplate.update(REMOVE_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());
     }
 
     private void assignVacation(Vacation vacation, Teacher teacher) {
