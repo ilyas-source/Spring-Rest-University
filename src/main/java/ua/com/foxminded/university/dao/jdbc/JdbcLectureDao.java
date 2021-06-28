@@ -27,8 +27,9 @@ public class JdbcLectureDao implements LectureDao {
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM lectures WHERE id = ?";
-    private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM lectures_groups WHERE lecture_id = ?";
-    private static final String ASSIGN_GROUP_TO_LECTURE = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
+
+    private static final String REMOVE_GROUP = "DELETE FROM lectures_groups where lecture_id = ? AND group_id = ?";
+    private static final String ASSIGN_GROUP = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
@@ -63,12 +64,25 @@ public class JdbcLectureDao implements LectureDao {
 	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
-	clearAssignedSubjects(lecture);
-	assignGroupsToLecture(lecture);
+	Lecture oldLecture = findById(lecture.getId()).get();
+
+	// перебираем старые группы и если их нет в новой лекции, то на выход их
+	oldLecture.getGroups().stream()
+		.filter(g -> !lecture.getGroups().contains(g))
+		.forEach(g -> removeGroup(g, lecture));
+
+	// перебираем новые группы и если их не было в старой лекции, то добавляем
+	lecture.getGroups().stream()
+		.filter(g -> !oldLecture.getGroups().contains(g))
+		.forEach(g -> assignGroup(g, lecture));
     }
 
-    private void clearAssignedSubjects(Lecture lecture) {
-	jdbcTemplate.update(CLEAR_ASSIGNED_SUBJECTS, lecture.getId());
+    private void removeGroup(Group group, Lecture lecture) {
+	jdbcTemplate.update(REMOVE_GROUP, lecture.getId(), group.getId());
+    }
+
+    private void assignGroup(Group group, Lecture lecture) {
+	jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
     }
 
     @Override
@@ -93,7 +107,7 @@ public class JdbcLectureDao implements LectureDao {
     public void assignGroupsToLecture(Lecture lecture) {
 	List<Group> groups = lecture.getGroups();
 	for (Group group : groups) {
-	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
+	    jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
 	}
     }
 }

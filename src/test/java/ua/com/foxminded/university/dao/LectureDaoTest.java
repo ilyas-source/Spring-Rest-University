@@ -190,14 +190,23 @@ class LectureDaoTest {
 
 	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
+	int lecturesGroupsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=2 AND group_id=1");
+	lecturesGroupsBeforeUpdate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=2 AND group_id=2");
 
 	lectureDao.update(lecture);
 
 	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
+	int lecturesGroupsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=2 AND group_id=1");
+	lecturesGroupsAfterUpdate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=2 AND group_id=2");
 
 	assertThat(elementBeforeUpdate).isZero();
 	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertEquals(lecturesGroupsAfterUpdate, lecturesGroupsBeforeUpdate + 2);
     }
 
     @Test
