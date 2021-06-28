@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.security.KeyStore.PrivateKeyEntry;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -67,9 +66,15 @@ public class JdbcLectureDao implements LectureDao {
 	Lecture oldLecture = findById(lecture.getId()).get();
 
 	// перебираем старые группы и если их нет в новой лекции, то на выход их
+//	System.out.println("Old lecture before processing is:");
+//	System.out.println(lecturesMenu.getStringFromLecture(oldLecture));
+
 	oldLecture.getGroups().stream()
 		.filter(g -> !lecture.getGroups().contains(g))
 		.forEach(g -> removeGroup(g, lecture));
+
+//	System.out.println("Old lecture after removing is:");
+//	System.out.println(lecturesMenu.getStringFromLecture(oldLecture));
 
 	// перебираем новые группы и если их не было в старой лекции, то добавляем
 	lecture.getGroups().stream()

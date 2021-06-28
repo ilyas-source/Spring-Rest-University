@@ -28,14 +28,16 @@ public class LecturesMenu {
     private SubjectsMenu subjectsMenu;
     private TeachersMenu teachersMenu;
     private ClassroomsMenu classroomsMenu;
+    private TimeslotsMenu timeslotsMenu;
 
     public LecturesMenu(GroupsMenu groupsMenu, JdbcLectureDao jdbcLectureDao, SubjectsMenu subjectsMenu,
-	    TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu) {
+	    TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, TimeslotsMenu timeslotsMenu) {
 	this.groupsMenu = groupsMenu;
 	this.jdbcLectureDao = jdbcLectureDao;
 	this.subjectsMenu = subjectsMenu;
 	this.teachersMenu = teachersMenu;
 	this.classroomsMenu = classroomsMenu;
+	this.timeslotsMenu = timeslotsMenu;
     }
 
     public String getStringOfLectures(List<Lecture> lectures) {
@@ -79,26 +81,13 @@ public class LecturesMenu {
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
-	Timeslot timeRange = null;
-	while (isNull(timeRange)) {
-	    System.out.print("Lecture begin time: ");
-	    LocalTime startTime = getTimeFromScanner();
-	    System.out.print("Lecture end time: ");
-	    LocalTime endTime = getTimeFromScanner();
-	    if (endTime.isBefore(startTime)) {
-		System.out.println("Wrong entry, try again.");
-	    } else {
-		System.out.println("Success.");
-		timeRange = new Timeslot(startTime, endTime);
-	    }
-	}
-
+	Timeslot timeslot = timeslotsMenu.selectTimeslot();
 	List<Group> groups = groupsMenu.selectGroups();
 	Subject subject = subjectsMenu.selectSubject();
 	Teacher teacher = teachersMenu.selectTeacher();
 	Classroom classroom = classroomsMenu.selectClassroom();
 
-	return new Lecture(date, timeRange, groups, subject, teacher, classroom);
+	return new Lecture(date, timeslot, groups, subject, teacher, classroom);
     }
 
     public Lecture selectLecture() {
