@@ -74,11 +74,4 @@ public class JdbcGroupDao implements GroupDao {
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
-
-//    public void assignGroupsToLecture(Lecture lecture) {
-//	List<Group> groups = lecture.getGroups();
-//	for (Group group : groups) {
-//	    jdbcTemplate.update(ASSIGN_GROUP_TO_LECTURE, lecture.getId(), group.getId());
-//	}
-//    }
 }

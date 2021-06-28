@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import java.security.KeyStore.PrivateKeyEntry;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -19,11 +20,11 @@ import ua.com.foxminded.university.model.Lecture;
 @Component
 public class JdbcLectureDao implements LectureDao {
 
-    private static final String CREATE = "INSERT INTO lectures (date, begin_time, end_time, subject_id, teacher_id, " +
-	    "classroom_id) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String CREATE = "INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, " +
+	    "classroom_id) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
-    private static final String UPDATE = "UPDATE lectures SET date = ?, begin_time = ?, end_time = ?, " +
+    private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM lectures WHERE id = ?";
     private static final String CLEAR_ASSIGNED_SUBJECTS = "DELETE FROM lectures_groups WHERE lecture_id = ?";
@@ -45,11 +46,10 @@ public class JdbcLectureDao implements LectureDao {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setObject(1, lecture.getDate());
-	    ps.setObject(2, lecture.getTime().getStartTime());
-	    ps.setObject(3, lecture.getTime().getEndTime());
-	    ps.setInt(4, lecture.getSubject().getId());
-	    ps.setInt(5, lecture.getTeacher().getId());
-	    ps.setInt(6, lecture.getClassroom().getId());
+	    ps.setObject(2, lecture.getTimeSlot().getId());
+	    ps.setInt(3, lecture.getSubject().getId());
+	    ps.setInt(4, lecture.getTeacher().getId());
+	    ps.setInt(5, lecture.getClassroom().getId());
 	    return ps;
 	}, keyHolder);
 
@@ -60,8 +60,7 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public void update(Lecture lecture) {
-	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTime().getStartTime(),
-		lecture.getTime().getEndTime(), lecture.getSubject().getId(),
+	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
 	clearAssignedSubjects(lecture);

@@ -2,17 +2,17 @@ package ua.com.foxminded.university.model;
 
 import java.time.LocalTime;
 
-public class TimeRange {
+public class Timeslot {
 
     private int id;
-    private LocalTime startTime;
+    private LocalTime beginTime;
     private LocalTime endTime;
 
-    public TimeRange() {
+    public Timeslot() {
     }
 
-    public TimeRange(LocalTime startTime, LocalTime endTime) {
-	this.startTime = startTime;
+    public Timeslot(LocalTime beginTime, LocalTime endTime) {
+	this.beginTime = beginTime;
 	this.endTime = endTime;
     }
 
@@ -24,12 +24,12 @@ public class TimeRange {
 	this.id = id;
     }
 
-    public LocalTime getStartTime() {
-	return startTime;
+    public LocalTime getBeginTime() {
+	return beginTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
-	this.startTime = startTime;
+    public void setBeginTime(LocalTime beginTime) {
+	this.beginTime = beginTime;
     }
 
     public LocalTime getEndTime() {
@@ -46,7 +46,7 @@ public class TimeRange {
 	int result = 1;
 	result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 	result = prime * result + id;
-	result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+	result = prime * result + ((beginTime == null) ? 0 : beginTime.hashCode());
 	return result;
     }
 
@@ -58,7 +58,7 @@ public class TimeRange {
 	    return false;
 	if (getClass() != obj.getClass())
 	    return false;
-	TimeRange other = (TimeRange) obj;
+	Timeslot other = (Timeslot) obj;
 	if (endTime == null) {
 	    if (other.endTime != null)
 		return false;
@@ -66,10 +66,10 @@ public class TimeRange {
 	    return false;
 	if (id != other.id)
 	    return false;
-	if (startTime == null) {
-	    if (other.startTime != null)
+	if (beginTime == null) {
+	    if (other.beginTime != null)
 		return false;
-	} else if (!startTime.equals(other.startTime))
+	} else if (!beginTime.equals(other.beginTime))
 	    return false;
 	return true;
     }

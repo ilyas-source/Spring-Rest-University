@@ -12,12 +12,13 @@ import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.TimeRange;
+import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class LectureMapper implements RowMapper<Lecture> {
@@ -26,13 +27,15 @@ public class LectureMapper implements RowMapper<Lecture> {
     private JdbcTeacherDao jdbcTeacherDao;
     private JdbcClassroomDao jdbcClassroomDao;
     private JdbcGroupDao jdbcGroupDao;
+    private JdbcTimeslotDao jdbcTimeslotDao;
 
     public LectureMapper(JdbcSubjectDao jdbcSubjectDao, JdbcTeacherDao jdbcTeacherDao, JdbcClassroomDao jdbcClassroomDao,
-	    JdbcGroupDao jdbcGroupDao) {
+	    JdbcGroupDao jdbcGroupDao, JdbcTimeslotDao jdbcTimeslotDao) {
 	this.jdbcSubjectDao = jdbcSubjectDao;
 	this.jdbcTeacherDao = jdbcTeacherDao;
 	this.jdbcClassroomDao = jdbcClassroomDao;
 	this.jdbcGroupDao = jdbcGroupDao;
+	this.jdbcTimeslotDao = jdbcTimeslotDao;
     }
 
     @Override
@@ -45,10 +48,7 @@ public class LectureMapper implements RowMapper<Lecture> {
 	lecture.setGroups(jdbcGroupDao.findByLectureId(rs.getInt("id")));
 	jdbcSubjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
 	jdbcTeacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);
-
-	LocalTime beginTime = rs.getTime("begin_time").toLocalTime();
-	LocalTime endTime = rs.getTime("end_time").toLocalTime();
-	lecture.setTime(new TimeRange(beginTime, endTime));
+	jdbcTimeslotDao.findById(rs.getInt("timeslot_id")).ifPresent(lecture::setTimeSlot);
 
 	return lecture;
     }

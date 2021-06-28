@@ -16,7 +16,7 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.TimeRange;
+import ua.com.foxminded.university.model.Timeslot;
 
 import static ua.com.foxminded.university.Menu.*;
 
@@ -51,7 +51,7 @@ public class LecturesMenu {
 	StringBuilder result = new StringBuilder();
 
 	result.append("Lecture on " + lecture.getSubject().getName() + " will take place on " + lecture.getDate() + ", from "
-		+ lecture.getTime().getStartTime() + " to " + lecture.getTime().getEndTime() + "." + CR);
+		+ lecture.getTimeSlot().getBeginTime() + " to " + lecture.getTimeSlot().getEndTime() + "." + CR);
 	result.append("Read by " + lecture.getTeacher().getFirstName() + " " + lecture.getTeacher().getLastName() + " in "
 		+ lecture.getClassroom().getName() + "." + CR);
 
@@ -73,7 +73,7 @@ public class LecturesMenu {
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
-	TimeRange timeRange = null;
+	Timeslot timeRange = null;
 	while (isNull(timeRange)) {
 	    System.out.print("Lecture begin time: ");
 	    LocalTime startTime = getTimeFromScanner();
@@ -83,7 +83,7 @@ public class LecturesMenu {
 		System.out.println("Wrong entry, try again.");
 	    } else {
 		System.out.println("Success.");
-		timeRange = new TimeRange(startTime, endTime);
+		timeRange = new Timeslot(startTime, endTime);
 	    }
 	}
 

@@ -48,10 +48,15 @@ INSERT INTO classrooms (location_id, name, capacity) VALUES
 (1, 'Big physics auditory', 500),
 (2, 'Small chemistry auditory', 30),
 (3, 'Chemistry laboratory', 15);
+
+INSERT INTO timeslots (begin_time, end_time) VALUES
+('09:00:00', '9:45:00'),
+('10:00:00', '10:45:00'),
+('11:00:00', '11:45:00');
    
-INSERT INTO lectures (date, begin_time, end_time, subject_id, teacher_id, classroom_id) VALUES
-('2000-1-1', '09:00:00', '10:00:00', 1, 1, 1),
-('2000-1-2', '10:00:00', '11:00:00', 2, 2, 2);
+INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, classroom_id) VALUES
+('2000-1-1', 1, 1, 1, 1),
+('2000-1-2', 2, 2, 2, 2);
     
 INSERT INTO holidays (date, name) VALUES
 ('2000-12-25', 'Christmas'),

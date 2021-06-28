@@ -7,7 +7,7 @@ public class Lecture {
 
     private int id;
     private LocalDate date;
-    private TimeRange time;
+    private Timeslot timeslot;
     private List<Group> groups;
     private Subject subject;
     private Teacher teacher;
@@ -16,9 +16,9 @@ public class Lecture {
     public Lecture() {
     }
 
-    public Lecture(LocalDate date, TimeRange time, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
+    public Lecture(LocalDate date, Timeslot timeslot, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
 	this.date = date;
-	this.time = time;
+	this.timeslot = timeslot;
 	this.groups = groups;
 	this.subject = subject;
 	this.teacher = teacher;
@@ -41,12 +41,12 @@ public class Lecture {
 	this.date = date;
     }
 
-    public TimeRange getTime() {
-	return time;
+    public Timeslot getTimeSlot() {
+	return timeslot;
     }
 
-    public void setTime(TimeRange time) {
-	this.time = time;
+    public void setTimeSlot(Timeslot timeSlot) {
+	this.timeslot = timeSlot;
     }
 
     public List<Group> getGroups() {
@@ -91,7 +91,7 @@ public class Lecture {
 	result = prime * result + id;
 	result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
-	result = prime * result + ((time == null) ? 0 : time.hashCode());
+	result = prime * result + ((timeslot == null) ? 0 : timeslot.hashCode());
 	return result;
     }
 
@@ -131,10 +131,10 @@ public class Lecture {
 		return false;
 	} else if (!teacher.equals(other.teacher))
 	    return false;
-	if (time == null) {
-	    if (other.time != null)
+	if (timeslot == null) {
+	    if (other.timeslot != null)
 		return false;
-	} else if (!time.equals(other.time))
+	} else if (!timeslot.equals(other.timeslot))
 	    return false;
 	return true;
     }
