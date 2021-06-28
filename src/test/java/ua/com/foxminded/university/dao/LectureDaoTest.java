@@ -82,9 +82,6 @@ class LectureDaoTest {
     @Autowired
     private LectureMapper lectureMapper;
 
-    @Autowired
-    private LecturesMenu lecturesMenu;
-
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
 	Lecture lecture = new Lecture(3, TEST_DATE, TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
@@ -181,51 +178,41 @@ class LectureDaoTest {
 
     @Test
     void givenLecture_onUpdate_shouldUpdateCorrectly() {
+	List<Group> testGroupsBeforeUpdate = new ArrayList<Group>(Arrays.asList(new Group(1, "Test-01")));
+	List<Group> testGroupsAfterUpdate = new ArrayList<Group>(Arrays.asList(new Group(2, "Test-02")));
 
-	// хотим апдейтнуть лекцию №2, дав ей только 2-ю группу. У лекции №2 по идее в
-	// списке групп только группа 1.
-	// так что мы ждем, что произойдет как удаление группы, так и добавление группы
-	List<Group> testGroups = new ArrayList<Group>(Arrays.asList(new Group(2, "Test-02")));
-
-	Lecture lecture = new Lecture(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroups,
+	Lecture lecture = new Lecture(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroupsAfterUpdate,
 		TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 
-	// на этот подсчет группы не влияют, т.к. тестим только таблицу Лекции
 	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	// эта цифра должна быть единицей
-	int group1AssignedToLecture2BeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+	int group1AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=2 AND group_id=1");
-	System.out.println(group1AssignedToLecture2BeforeUpdate);
-
-	// эта цифра должна быть нулём
-	int group2AssignedToLecture2BeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+	int group2AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=2 AND group_id=2");
-	System.out.println(group2AssignedToLecture2BeforeUpdate);
 
-	System.out.println(lecturesMenu.getStringFromLecture(lecture));
-	System.out.println(lecturesMenu.getStringFromLecture(lectureDao.findById(2).get()));
+	when(groupDao.findByLectureId(2)).thenReturn(testGroupsBeforeUpdate);
 
 	lectureDao.update(lecture);
 
 	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	// эта цифра должна быть нулем. Но почему-то 1. Значит, не удалилась группа 1.
-	// Надо смотреть
-	int group1AssignedToLecture2AfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+	int group1AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=2 AND group_id=1");
-	System.out.println(group1AssignedToLecture2AfterUpdate);
 
-	// эта цифра должна быть единицей
-	int group2AssignedToLecture2AfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+	int group2AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=2 AND group_id=2");
-	System.out.println(group2AssignedToLecture2AfterUpdate);
 
 	assertThat(elementBeforeUpdate).isZero();
 	assertThat(elementAfterUpdate).isEqualTo(1);
-	// assertEquals(lecturesGroupsAfterUpdate, lecturesGroupsBeforeUpdate + 2);
+
+	assertThat(group1AssignedBeforeUpdate).isEqualTo(1);
+	assertThat(group2AssignedBeforeUpdate).isZero();
+
+	assertThat(group1AssignedAfterUpdate).isZero();
+	assertThat(group2AssignedAfterUpdate).isEqualTo(1);
     }
 
     @Test
