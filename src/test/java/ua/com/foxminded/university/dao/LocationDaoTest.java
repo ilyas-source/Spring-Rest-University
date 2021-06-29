@@ -33,15 +33,15 @@ class LocationDaoTest {
     @Test
     void givenNewLocation_onCreate_shouldCreateLocation() {
 	Location location = new Location(4, "test", 10, 100);
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
 	locationDao.create(location);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -89,20 +89,20 @@ class LocationDaoTest {
 
 	locationDao.update(location);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectLocationId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "locations", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "locations", "id = 2");
 
 	locationDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "locations", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "locations", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

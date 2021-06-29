@@ -78,7 +78,7 @@
 //    void givenNewTeacher_onCreate_shouldCreateTeacherAndAssignSubjects() {
 //	Teacher teacher = new Teacher(3, TEST_DATE, TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 //
-//	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+//	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 //		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
 //	int teachersGroupsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
 //		"teacher_id=3 AND group_id=1");
@@ -87,14 +87,14 @@
 //
 //	teacherDao.create(teacher);
 //
-//	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+//	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 //		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
 //	int teachersGroupsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
 //		"teacher_id=3 AND group_id=1");
 //	teachersGroupsAfterCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
 //		"teacher_id=3 AND group_id=2");
 //
-//	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+//	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
 //	assertThat(teachersGroupsBeforeCreate).isZero();
 //	assertThat(teachersGroupsAfterCreate).isEqualTo(2);
 //    }
@@ -178,7 +178,7 @@
 //	Teacher teacher = new Teacher(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroupsAfterUpdate,
 //		TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 //
-//	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+//	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 //		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
 //
 //	int group1AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
@@ -190,7 +190,7 @@
 //
 //	teacherDao.update(teacher);
 //
-//	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+//	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 //		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
 //
 //	int group1AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
@@ -199,8 +199,8 @@
 //	int group2AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers_groups",
 //		"teacher_id=2 AND group_id=2");
 //
-//	assertThat(elementBeforeUpdate).isZero();
-//	assertThat(elementAfterUpdate).isEqualTo(1);
+//	assertThat(rowsBeforeUpdate).isZero();
+//	assertThat(rowsAfterCreate).isEqualTo(1);
 //
 //	assertThat(group1AssignedBeforeUpdate).isEqualTo(1);
 //	assertThat(group2AssignedBeforeUpdate).isZero();
@@ -211,12 +211,12 @@
 //
 //    @Test
 //    void givenCorrectTeacherId_onDelete_shouldDeleteCorrectly() {
-//	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
+//	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
 //
 //	teacherDao.delete(2);
 //
-//	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
+//	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
 //
-//	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+//	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
 //    }
 //}

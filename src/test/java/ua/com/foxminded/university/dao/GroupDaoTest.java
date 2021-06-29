@@ -32,15 +32,15 @@ class GroupDaoTest {
     @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {
 	Group group = new Group(3, "test");
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
 
 	groupDao.create(group);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -87,20 +87,20 @@ class GroupDaoTest {
 
 	groupDao.update(group);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectGroupId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
 
 	groupDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

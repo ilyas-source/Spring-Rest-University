@@ -114,14 +114,14 @@ CONSTRAINT vacations_pkey PRIMARY KEY (id)
 
 CREATE TABLE teachers_subjects
 (
-id SERIAL PRIMARY KEY,
 teacher_id INTEGER REFERENCES teachers(id) ON DELETE CASCADE,
-subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE
+subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
+CONSTRAINT pk_teacherssubjects UNIQUE (teacher_id, subject_id)
 );
 
 CREATE TABLE lectures_groups
 (
-id SERIAL PRIMARY KEY,
 lecture_id INTEGER REFERENCES lectures(id) ON DELETE CASCADE,
-group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE
+group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE,
+CONSTRAINT pk_lecturesgroups UNIQUE (lecture_id, group_id)
 );

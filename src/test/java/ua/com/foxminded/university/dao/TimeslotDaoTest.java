@@ -34,15 +34,15 @@ class TimeslotDaoTest {
     @Test
     void givenNewTimeslot_onCreate_shouldCreateTimeslot() {
 	Timeslot timeslot = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
 	timeslotDao.create(timeslot);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -91,20 +91,20 @@ class TimeslotDaoTest {
 
 	timeslotDao.update(timeslot);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectTimeslotId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
 
 	timeslotDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

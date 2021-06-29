@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.times;
@@ -8,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,16 +22,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.test.web.client.ExpectedCount;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.VacationMapper;
-import ua.com.foxminded.university.menu.LocationsMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.menu.VacationsMenu;
 import ua.com.foxminded.university.model.Address;
@@ -42,12 +36,6 @@ import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
-
-//INSERT INTO vacations (teacher_id, start_date, end_date) VALUES 
-//(1, '2000-01-01', '2000-02-01'),
-//(1, '2000-05-01', '2000-06-01'),
-//(2, '2000-01-15', '2000-02-15'),
-//(2, '2000-06-01', '2000-07-01');
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -71,24 +59,19 @@ class VacationDaoTest {
     private VacationMapper vacationMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired // todo
-    private VacationsMenu vacationsMenu;
-    @Autowired // todo
-    private TeachersMenu teachersMenu;
 
     @Test
     void givenNewVacation_onCreate_shouldCreateVacation() {
-	assertNotNull(teacherDao);
 	Vacation vacation = new Vacation(5, TEST_TEACHER, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
 	vacationDao.create(vacation);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 5");
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -143,27 +126,27 @@ class VacationDaoTest {
     void givenVacationWithExistingId_onUpdate_shouldUpdateCorrectly() {
 	Vacation vacation = new Vacation(2, TEST_TEACHER, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
 
-	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	vacationDao.update(vacation);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementBeforeUpdate).isZero();
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsBeforeUpdate).isZero();
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectVacationId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
 
 	vacationDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
     @Test
@@ -175,8 +158,6 @@ class VacationDaoTest {
 	when(teacherDao.findById(anyInt())).thenReturn(Optional.of(TEST_TEACHER));
 
 	List<Vacation> actual = vacationDao.getVacationsByTeacherId(2);
-
-	System.out.println(vacationsMenu.getStringOfVacations(actual));
 
 	assertEquals(expected, actual);
     }

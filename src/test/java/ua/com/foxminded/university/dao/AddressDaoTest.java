@@ -16,7 +16,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
-import ua.com.foxminded.university.menu.AddressesMenu;
 import ua.com.foxminded.university.model.Address;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -33,15 +32,15 @@ class AddressDaoTest {
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
 	Address address = new Address(4, "test", "test", "test", "test", "test");
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
 	addressDao.create(address);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -90,20 +89,20 @@ class AddressDaoTest {
 
 	addressDao.update(address);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectAddressId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
 
 	addressDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

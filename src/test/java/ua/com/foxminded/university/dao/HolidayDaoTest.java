@@ -34,15 +34,15 @@ class HolidayDaoTest {
     @Test
     void givenNewHoliday_onCreate_shouldCreateHoliday() {
 	Holiday holiday = new Holiday(4, LocalDate.of(2000, 01, 01), "test");
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"holidays", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
 	holidayDao.create(holiday);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"holidays", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
@@ -90,20 +90,20 @@ class HolidayDaoTest {
 
 	holidayDao.update(holiday);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"holidays", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectHolidayId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
 
 	holidayDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

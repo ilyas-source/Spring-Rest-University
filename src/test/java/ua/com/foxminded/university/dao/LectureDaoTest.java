@@ -82,7 +82,7 @@ class LectureDaoTest {
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
 	Lecture lecture = new Lecture(3, TEST_DATE, TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
 	int lecturesGroupsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=3 AND group_id=1");
@@ -91,14 +91,14 @@ class LectureDaoTest {
 
 	lectureDao.create(lecture);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
 	int lecturesGroupsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=3 AND group_id=1");
 	lecturesGroupsAfterCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=3 AND group_id=2");
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
 	assertThat(lecturesGroupsBeforeCreate).isZero();
 	assertThat(lecturesGroupsAfterCreate).isEqualTo(2);
     }
@@ -149,7 +149,6 @@ class LectureDaoTest {
 		TEST_CLASSROOM);
 	Lecture lecture2 = new Lecture(2, LocalDate.of(2000, 1, 2), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
 		TEST_CLASSROOM);
-
 	List<Lecture> expected = new ArrayList<>();
 	expected.add(lecture1);
 	expected.add(lecture2);
@@ -182,7 +181,7 @@ class LectureDaoTest {
 	Lecture lecture = new Lecture(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroupsAfterUpdate,
 		TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 
-	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	int group1AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
@@ -194,7 +193,7 @@ class LectureDaoTest {
 
 	lectureDao.update(lecture);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	int group1AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
@@ -203,8 +202,8 @@ class LectureDaoTest {
 	int group2AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
 		"lecture_id=2 AND group_id=2");
 
-	assertThat(elementBeforeUpdate).isZero();
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsBeforeUpdate).isZero();
+	assertThat(rowsAfterCreate).isEqualTo(1);
 
 	assertThat(group1AssignedBeforeUpdate).isEqualTo(1);
 	assertThat(group2AssignedBeforeUpdate).isZero();
@@ -215,12 +214,12 @@ class LectureDaoTest {
 
     @Test
     void givenCorrectLectureId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
 
 	lectureDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }

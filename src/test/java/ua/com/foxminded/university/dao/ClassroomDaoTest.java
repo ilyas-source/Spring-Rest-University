@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,36 +47,35 @@ class ClassroomDaoTest {
 
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {
-	assertNotNull(locationDao);
 	Classroom classroom = new Classroom(TEST_LOCATION, "Test room", 5);
 
-	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", TEST_WHERE_CLAUSE);
 
 	classroomDao.create(classroom);
 	verify(locationDao).create(TEST_LOCATION);
 
-	int elementAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", TEST_WHERE_CLAUSE);
 
-	assertEquals(elementAfterCreate, elementBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
     void givenClassroomWithExistingId_onUpdate_shouldUpdateCorrectly() {
 	Classroom classroom = new Classroom(2, TEST_LOCATION, "Test room", 5);
 
-	int elementBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	classroomDao.update(classroom);
 	verify(locationDao).update(TEST_LOCATION);
 
-	int elementAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(elementBeforeUpdate).isZero();
-	assertThat(elementAfterUpdate).isEqualTo(1);
+	assertThat(rowsBeforeUpdate).isZero();
+	assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
@@ -136,12 +134,12 @@ class ClassroomDaoTest {
 
     @Test
     void givenCorrectClassroomId_onDelete_shouldDeleteCorrectly() {
-	int elementBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
 
 	classroomDao.delete(2);
 
-	int elementAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
 
-	assertEquals(elementAfterDelete, elementBeforeDelete - 1);
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 }
