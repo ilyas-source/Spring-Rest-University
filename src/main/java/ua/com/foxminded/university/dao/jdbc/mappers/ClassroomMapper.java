@@ -21,7 +21,6 @@ public class ClassroomMapper implements RowMapper<Classroom> {
     @Override
     public Classroom mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Classroom classroom = new Classroom();
-
 	classroom.setId(rs.getInt("id"));
 	jdbcLocationDao.findById(rs.getInt("location_id")).ifPresent(classroom::setLocation);
 	classroom.setName(rs.getString("name"));

@@ -42,7 +42,6 @@ public class LectureMapper implements RowMapper<Lecture> {
     public Lecture mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Lecture lecture = new Lecture();
 	lecture.setId(rs.getInt("id"));
-
 	jdbcClassroomDao.findById(rs.getInt("classroom_id")).ifPresent(lecture::setClassroom);
 	lecture.setDate(rs.getObject("date", LocalDate.class));
 	lecture.setGroups(jdbcGroupDao.findByLectureId(rs.getInt("id")));

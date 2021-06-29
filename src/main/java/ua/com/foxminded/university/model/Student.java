@@ -29,6 +29,19 @@ public class Student {
 	this.group = group;
     }
 
+    public Student(int id, String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
+	    String phoneNumber, Address address, Group group) {
+	this.id = id;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.gender = gender;
+	this.birthDate = birthDate;
+	this.email = email;
+	this.phoneNumber = phoneNumber;
+	this.address = address;
+	this.group = group;
+    }
+
     public int getId() {
 	return id;
     }

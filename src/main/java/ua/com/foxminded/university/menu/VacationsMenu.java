@@ -27,7 +27,11 @@ public class VacationsMenu {
     }
 
     public String getStringFromVacation(Vacation vacation) {
-	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
+	StringBuilder result = new StringBuilder();
+	result.append(vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString());
+	result.append(" (" + vacation.getTeacher().getFirstName() + " ");
+	result.append(vacation.getTeacher().getLastName() + ")");
+	return result.toString();
     }
 
     public List<Vacation> createVacationsFor(Teacher teacher) {

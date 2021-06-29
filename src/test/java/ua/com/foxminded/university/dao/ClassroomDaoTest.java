@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +48,7 @@ class ClassroomDaoTest {
 
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {
+	assertNotNull(locationDao);
 	Classroom classroom = new Classroom(TEST_LOCATION, "Test room", 5);
 
 	int elementBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,

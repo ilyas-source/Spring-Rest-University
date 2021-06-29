@@ -14,10 +14,13 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class VacationMapper implements RowMapper<Vacation> {
 
+    private JdbcTeacherDao jdbcTeacherDao;
+
     @Override
     public Vacation mapRow(ResultSet rs, int rowNum) throws SQLException {
 	Vacation vacation = new Vacation();
 	vacation.setId(rs.getInt("id"));
+	jdbcTeacherDao.findById(rs.getInt("teacher_id")).ifPresent(vacation::setTeacher);
 	vacation.setStartDate(rs.getObject("start_date", LocalDate.class));
 	vacation.setEndDate(rs.getObject("end_date", LocalDate.class));
 

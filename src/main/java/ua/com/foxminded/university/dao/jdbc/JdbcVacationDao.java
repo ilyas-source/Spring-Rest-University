@@ -23,7 +23,7 @@ public class JdbcVacationDao implements VacationDao {
     private static final String FIND_ALL = "SELECT * FROM vacations";
     private static final String UPDATE = "UPDATE vacations SET teacher_id =?, start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
-    private static final String FIND_BY_TEACHER_ID = "SELECT id, start_date, end_date from vacations WHERE teacher_id = ?;";
+    private static final String FIND_BY_TEACHER_ID = "SELECT id, teacher_id, start_date, end_date from vacations WHERE teacher_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private VacationMapper vacationMapper;
@@ -64,7 +64,8 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public void update(Vacation vacation) {
-	jdbcTemplate.update(UPDATE, vacation.getStartDate(), vacation.getEndDate(), vacation.getId());
+	jdbcTemplate.update(UPDATE, vacation.getTeacher().getId(), vacation.getStartDate(), vacation.getEndDate(),
+		vacation.getId());
     }
 
     @Override
@@ -72,7 +73,7 @@ public class JdbcVacationDao implements VacationDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    public List<Vacation> getVacationsByTeacher(int id) {
+    public List<Vacation> getVacationsByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, vacationMapper, id);
     }
 }
