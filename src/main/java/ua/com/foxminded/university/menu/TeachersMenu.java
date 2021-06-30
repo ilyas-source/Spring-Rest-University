@@ -77,7 +77,7 @@ public class TeachersMenu {
 	List<Subject> subjects = subjectsMenu.selectSubjects();
 
 	Teacher result = new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address);
-	List<Vacation> vacations = vacationsMenu.createVacationsFor(result);
+	List<Vacation> vacations = vacationsMenu.createVacations();
 	result.setVacations(vacations);
 
 	return result;

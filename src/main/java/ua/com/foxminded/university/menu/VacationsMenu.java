@@ -34,17 +34,17 @@ public class VacationsMenu {
 	return result.toString();
     }
 
-    public List<Vacation> createVacationsFor(Teacher teacher) {
+    public List<Vacation> createVacations() {
 	List<Vacation> result = new ArrayList<>();
 	boolean finished = false;
 	while (!finished) {
-	    System.out.println("Add new vacation for " + teacher.getFirstName() + " " + teacher.getLastName() + "? (y/n):");
+	    System.out.println("Add new vacation for teacher? (y/n):");
 	    String entry = scanner.nextLine().toLowerCase();
 	    if (!entry.equals("y")) {
 		finished = true;
 	    } else {
 		Vacation vacation = createVacation();
-		result.add(new Vacation(teacher, vacation.getStartDate(), vacation.getEndDate()));
+		result.add(new Vacation(vacation.getStartDate(), vacation.getEndDate()));
 	    }
 	}
 	return result;

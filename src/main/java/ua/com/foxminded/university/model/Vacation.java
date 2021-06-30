@@ -5,17 +5,10 @@ import java.time.LocalDate;
 public class Vacation {
 
     private int id;
-    private Teacher teacher;
     private LocalDate startDate;
     private LocalDate endDate;
 
     public Vacation() {
-    }
-
-    public Vacation(Teacher teacher, LocalDate startDate, LocalDate endDate) {
-	this.teacher = teacher;
-	this.startDate = startDate;
-	this.endDate = endDate;
     }
 
     public Vacation(LocalDate startDate, LocalDate endDate) {
@@ -23,9 +16,8 @@ public class Vacation {
 	this.endDate = endDate;
     }
 
-    public Vacation(int id, Teacher teacher, LocalDate startDate, LocalDate endDate) {
+    public Vacation(int id, LocalDate startDate, LocalDate endDate) {
 	this.id = id;
-	this.teacher = teacher;
 	this.startDate = startDate;
 	this.endDate = endDate;
     }
@@ -36,14 +28,6 @@ public class Vacation {
 
     public void setId(int id) {
 	this.id = id;
-    }
-
-    public Teacher getTeacher() {
-	return teacher;
-    }
-
-    public void setTeacher(Teacher teacher) {
-	this.teacher = teacher;
     }
 
     public LocalDate getStartDate() {
@@ -69,7 +53,6 @@ public class Vacation {
 	result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-	result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
 	return result;
     }
 
@@ -93,11 +76,6 @@ public class Vacation {
 	    if (other.startDate != null)
 		return false;
 	} else if (!startDate.equals(other.startDate))
-	    return false;
-	if (teacher == null) {
-	    if (other.teacher != null)
-		return false;
-	} else if (!teacher.equals(other.teacher))
 	    return false;
 	return true;
     }

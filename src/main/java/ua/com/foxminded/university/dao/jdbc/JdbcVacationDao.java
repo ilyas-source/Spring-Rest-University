@@ -18,10 +18,10 @@ import ua.com.foxminded.university.model.Vacation;
 @Component
 public class JdbcVacationDao implements VacationDao {
 
-    private static final String CREATE = "INSERT INTO vacations (teacher_id, start_date, end_date) VALUES (?, ?, ?)";
+    private static final String CREATE = "INSERT INTO vacations (start_date, end_date) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM vacations WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM vacations";
-    private static final String UPDATE = "UPDATE vacations SET teacher_id =?, start_date = ?, end_date = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE vacations SET start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT id, teacher_id, start_date, end_date from vacations WHERE teacher_id = ?";
 
@@ -40,9 +40,9 @@ public class JdbcVacationDao implements VacationDao {
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-	    ps.setInt(1, vacation.getTeacher().getId());
-	    ps.setObject(2, vacation.getStartDate());
-	    ps.setObject(3, vacation.getEndDate());
+//	    ps.setInt(1, vacation.getTeacher().getId());
+	    ps.setObject(1, vacation.getStartDate());
+	    ps.setObject(2, vacation.getEndDate());
 	    return ps;
 	}, keyHolder);
 	vacation.setId((int) keyHolder.getKeys().get("id"));
@@ -64,7 +64,7 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public void update(Vacation vacation) {
-	jdbcTemplate.update(UPDATE, vacation.getTeacher().getId(), vacation.getStartDate(), vacation.getEndDate(),
+	jdbcTemplate.update(UPDATE, vacation.getStartDate(), vacation.getEndDate(),
 		vacation.getId());
     }
 
