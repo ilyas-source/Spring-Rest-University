@@ -56,12 +56,14 @@ class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
-	    "AND address_id = 15 AND group_id = 15";
-    private static final Address TEST_ADDRESS = new Address(15, "test", "test", "test", "test", "test");
-    private static final Group TEST_GROUP = new Group(15, "test-01");
+	    "AND address_id = 1 AND group_id = 1";
+    private static final Address TEST_ADDRESS = new Address(1, "test", "test", "test", "test", "test");
+    private static final Group TEST_GROUP = new Group(1, "test-01");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StudentsMenu studentsMenu;
     @Mock
     private JdbcAddressDao addressDao;
     @Mock
@@ -73,22 +75,24 @@ class StudentDaoTest {
     @Autowired
     private StudentMapper studentMapper;
 
-//    @Test
-//    void givenNewStudent_onCreate_shouldCreateStudentAndAssignSubjects() {
-//	Student student = new Student(5, "Name", "Lastname", Gender.MALE, LocalDate.of(1980, 2, 2), "test@mail", "+phone",
-//		TEST_ADDRESS, TEST_GROUP);
-//
-//	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
-//
-//	studentDao.create(student);
-//
-//	int rowsAfterCreate = 0;
-////	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-////		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
-//
-//	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-//    }
+    @Test
+    void givenNewStudent_onCreate_shouldCreateStudent() {
+	Student student = new Student(5, "Name", "Lastname", null, LocalDate.of(1980, 2, 2), "test@mail", "+phone",
+		TEST_ADDRESS, TEST_GROUP);
+
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
+
+	studentDao.create(student);
+
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 5");
+
+	Student actual = studentDao.findById(5).get();
+	System.out.println(studentsMenu.getStringFromStudent(actual));
+
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+    }
 
 //    @Test
 //    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {

@@ -33,6 +33,7 @@ import ua.com.foxminded.university.menu.VacationsMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
@@ -59,6 +60,8 @@ class VacationDaoTest {
     private VacationMapper vacationMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private VacationsMenu vacationsMenu;
 
     @Test
     void givenNewVacation_onCreate_shouldCreateVacation() {
@@ -70,6 +73,10 @@ class VacationDaoTest {
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 5");
+
+//	when(teacherDao.findById(2)).thenReturn(Optional.of(TEST_TEACHER));
+//	Vacation actual = vacationDao.findById(5).get();
+//	System.out.println(vacationsMenu.getStringFromVacation(actual));
 
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }

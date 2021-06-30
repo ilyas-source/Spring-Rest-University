@@ -2,8 +2,11 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.function.Predicate.not;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -63,14 +66,15 @@ public class JdbcLectureDao implements LectureDao {
 	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
-	Lecture oldLecture = findById(lecture.getId()).get();
+	List<Group> newGroups = lecture.getGroups();
+	List<Group> oldGroups = findById(lecture.getId()).get().getGroups();
 
-	oldLecture.getGroups().stream()
-		.filter(g -> !lecture.getGroups().contains(g))
+	oldGroups.stream()
+		.filter(not(newGroups::contains))
 		.forEach(g -> removeGroup(g, lecture));
 
-	lecture.getGroups().stream()
-		.filter(g -> !oldLecture.getGroups().contains(g))
+	newGroups.stream()
+		.filter(not(oldGroups::contains))
 		.forEach(g -> assignGroup(g, lecture));
     }
 

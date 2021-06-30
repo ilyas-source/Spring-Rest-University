@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import static java.util.function.Predicate.not;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
@@ -102,6 +105,15 @@ public class JdbcTeacherDao implements TeacherDao {
 	teacher.getVacations().stream()
 		.filter(v -> !oldTeacher.getVacations().contains(v))
 		.forEach(v -> assignVacation(v, teacher));
+
+//	oldGroups.stream()
+//	.filter(not(newGroups::contains))
+//	.forEach(g -> removeGroup(g, lecture));
+//
+//	newGroups.stream()
+//	.filter(not(oldGroups::contains))
+//	.forEach(g -> assignGroup(g, lecture));
+
     }
 
     private void removeSubject(Subject subject, Teacher teacher) {

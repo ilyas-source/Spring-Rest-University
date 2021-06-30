@@ -184,10 +184,8 @@ class LectureDaoTest {
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	int group1AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-		"lecture_id=2 AND group_id=1");
-	int group2AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-		"lecture_id=2 AND group_id=2");
+	boolean group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	boolean group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	when(groupDao.findByLectureId(2)).thenReturn(testGroupsBeforeUpdate);
 
@@ -196,20 +194,17 @@ class LectureDaoTest {
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	int group1AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-		"lecture_id=2 AND group_id=1");
-
-	int group2AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-		"lecture_id=2 AND group_id=2");
+	boolean group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	boolean group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	assertThat(rowsBeforeUpdate).isZero();
 	assertThat(rowsAfterCreate).isEqualTo(1);
 
-	assertThat(group1AssignedBeforeUpdate).isEqualTo(1);
-	assertThat(group2AssignedBeforeUpdate).isZero();
+	assertThat(group1AssignedBeforeUpdate).isTrue();
+	assertThat(group2AssignedBeforeUpdate).isFalse();
 
-	assertThat(group1AssignedAfterUpdate).isZero();
-	assertThat(group2AssignedAfterUpdate).isEqualTo(1);
+	assertThat(group1AssignedAfterUpdate).isFalse();
+	assertThat(group2AssignedAfterUpdate).isTrue();
     }
 
     @Test
@@ -221,5 +216,13 @@ class LectureDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    boolean checkIfGroupIsAssignedToLecture(int groupId, int lectureId) {
+	if (JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
+		"lecture_id=" + lectureId + " AND group_id=" + groupId) == 1) {
+	    return true;
+	}
+	return false;
     }
 }
