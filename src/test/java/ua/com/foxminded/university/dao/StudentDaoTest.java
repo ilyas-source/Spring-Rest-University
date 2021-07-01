@@ -1,98 +1,103 @@
-//package ua.com.foxminded.university.dao;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//import static org.mockito.Mockito.*;
-//import static org.assertj.core.api.Assertions.assertThat;
-//
-//import java.time.LocalDate;
-//import java.time.LocalTime;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//import java.util.Optional;
-//
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.test.context.jdbc.Sql;
-//import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-//import org.springframework.test.jdbc.JdbcTestUtils;
-//
-//import ua.com.foxminded.university.SpringTestConfig;
-//import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
-//import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
-//import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
-//import ua.com.foxminded.university.menu.StudentsMenu;
-//import ua.com.foxminded.university.model.Address;
-//import ua.com.foxminded.university.model.Classroom;
-//import ua.com.foxminded.university.model.Degree;
-//import ua.com.foxminded.university.model.Gender;
-//import ua.com.foxminded.university.model.Group;
-//import ua.com.foxminded.university.model.Student;
-//import ua.com.foxminded.university.model.Location;
-//import ua.com.foxminded.university.model.Subject;
-//import ua.com.foxminded.university.model.Teacher;
-//import ua.com.foxminded.university.model.Timeslot;
-//
-////INSERT INTO students (first_name, last_name, gender, birth_date, email, phone, address_id, group_id) VALUES
-////('Ivan', 'Petrov', 'MALE', '1980-11-1', 'qwe@rty.com', '123123123', 3, 1),
-////('John', 'Doe', 'MALE', '1981-11-1','qwe@qwe.com', '1231223', 4, 2),
-////('Janna', 'DArk', 'FEMALE', '1881-11-1', 'qwe@no.fr', '1231223', 5, 1),
-////('Mao', 'Zedun', 'MALE', '1921-9-14','qwe@no.cn', '1145223', 6, 2);
-//
-//@ExtendWith(MockitoExtension.class)
-//@SpringJUnitConfig(SpringTestConfig.class)
-//@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
-//class StudentDaoTest {
-//
-//    private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
-//	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
-//	    "AND address_id = 1 AND group_id = 1";
-//    private static final Address TEST_ADDRESS = new Address(1, "test", "test", "test", "test", "test");
-//    private static final Group TEST_GROUP = new Group(1, "test-01");
-//
-//    @Autowired
-//    private JdbcTemplate jdbcTemplate;
-//    @Autowired
-//    private StudentsMenu studentsMenu;
-//    @Mock
-//    private JdbcAddressDao addressDao;
-//    @Mock
-//    private JdbcGroupDao groupDao;
-//    @InjectMocks
-//    @Autowired
-//    private JdbcStudentDao studentDao;
-//    @InjectMocks
-//    @Autowired
-//    private StudentMapper studentMapper;
-//
-//    @Test
-//    void givenNewStudent_onCreate_shouldCreateStudent() {
-//	Student student = new Student(5, "Name", "Lastname", null, LocalDate.of(1980, 2, 2), "test@mail", "+phone",
-//		TEST_ADDRESS, TEST_GROUP);
-//
-//	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
-//
-//	studentDao.create(student);
-//
-//	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"students", "id = 5");
-//
-//	Student actual = studentDao.findById(5).get();
-//	System.out.println(studentsMenu.getStringFromStudent(actual));
-//
-//	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-//    }
+package ua.com.foxminded.university.dao;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.jdbc.JdbcTestUtils;
+
+import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
+import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
+import ua.com.foxminded.university.menu.StudentsMenu;
+import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.model.Degree;
+import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Timeslot;
+
+//INSERT INTO students (first_name, last_name, gender, birth_date, email, phone, address_id, group_id) VALUES
+//('Ivan', 'Petrov', 'MALE', '1980-11-1', 'qwe@rty.com', '123123123', 3, 1),
+//('John', 'Doe', 'MALE', '1981-11-1','qwe@qwe.com', '1231223', 4, 2),
+//('Janna', 'DArk', 'FEMALE', '1881-11-1', 'qwe@no.fr', '1231223', 5, 1),
+//('Mao', 'Zedun', 'MALE', '1921-9-14','qwe@no.cn', '1145223', 6, 2);
+
+@ExtendWith(MockitoExtension.class)
+@SpringJUnitConfig(SpringTestConfig.class)
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
+class StudentDaoTest {
+
+    private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
+	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
+	    "AND address_id = 1 AND group_id = 1";
+    private static final Address TEST_ADDRESS = new Address(1, "test", "test", "test", "test", "test");
+    private static final Group TEST_GROUP = new Group(1, "test-01");
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private StudentsMenu studentsMenu;
+    @Mock
+    private JdbcAddressDao addressDao;
+    @Mock
+    private JdbcGroupDao groupDao;
+    @InjectMocks
+    @Autowired
+    private JdbcStudentDao studentDao;
+    @InjectMocks
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Test
+    void givenNewStudent_onCreate_shouldCreateStudent() {
+	Student student = new Student.Builder("Name", "Lastname")
+		.id(5)
+		.gender(Gender.MALE)
+		.birthDate(LocalDate.of(1980, 2, 2))
+		.email("test@mail")
+		.phone("+phone")
+		.address(TEST_ADDRESS)
+		.group(TEST_GROUP)
+		.build();
+
+	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
+
+	studentDao.create(student);
+
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 5");
+
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+    }
+}
 
 //    @Test
 //    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
