@@ -32,6 +32,7 @@ class AddressDaoTest {
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
 	Address address = new Address(4, "test", "test", "test", "test", "test");
+
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
 

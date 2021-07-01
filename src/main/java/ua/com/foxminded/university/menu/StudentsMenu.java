@@ -71,7 +71,16 @@ public class StudentsMenu {
 	String phone = scanner.nextLine();
 	Group group = groupsMenu.selectGroup();
 
-	return new Student(firstName, lastName, gender, birthDate, email, phone, address, group);
+	// return new Student(firstName, lastName, gender, birthDate, email, phone,
+	// address, group);
+	return new Student.Builder(firstName, lastName)
+		.gender(gender)
+		.birthDate(birthDate)
+		.email(email)
+		.phone(phone)
+		.address(address)
+		.group(group)
+		.build();
     }
 
     public void printStudents() {

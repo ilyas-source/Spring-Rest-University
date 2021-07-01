@@ -10,37 +10,105 @@ public class Student {
     private Gender gender;
     private LocalDate birthDate;
     private String email;
-    private String phoneNumber;
+    private String phone;
     private Address address;
     private Group group;
+
+    public static class Builder {
+	private int id = 0;
+	private String firstName;
+	private String lastName;
+	private Gender gender;
+	private LocalDate birthDate;
+	private String email;
+	private String phone;
+	private Address address;
+	private Group group;
+
+	public Builder(String firstName, String lastName) {
+	    this.firstName = firstName;
+	    this.lastName = lastName;
+	}
+
+	public Builder id(int val) {
+	    this.id = val;
+	    return this;
+	}
+
+	public Builder gender(Gender val) {
+	    this.gender = val;
+	    return this;
+	}
+
+	public Builder birthDate(LocalDate val) {
+	    this.birthDate = val;
+	    return this;
+	}
+
+	public Builder email(String val) {
+	    this.email = val;
+	    return this;
+	}
+
+	public Builder phone(String val) {
+	    this.phone = val;
+	    return this;
+	}
+
+	public Builder address(Address val) {
+	    this.address = val;
+	    return this;
+	}
+
+	public Builder group(Group val) {
+	    this.group = val;
+	    return this;
+	}
+
+	public Student build() {
+	    return new Student(this);
+	}
+    }
 
     public Student() {
     }
 
-    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
-	    String phoneNumber, Address address, Group group) {
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.gender = gender;
-	this.birthDate = birthDate;
-	this.email = email;
-	this.phoneNumber = phoneNumber;
-	this.address = address;
-	this.group = group;
+    private Student(Builder builder) {
+	id = builder.id;
+	firstName = builder.firstName;
+	lastName = builder.lastName;
+	gender = builder.gender;
+	birthDate = builder.birthDate;
+	email = builder.email;
+	phone = builder.phone;
+	address = builder.address;
+	group = builder.group;
     }
 
-    public Student(int id, String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
-	    String phoneNumber, Address address, Group group) {
-	this.id = id;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.gender = gender;
-	this.birthDate = birthDate;
-	this.email = email;
-	this.phoneNumber = phoneNumber;
-	this.address = address;
-	this.group = group;
-    }
+//    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
+//	    String phoneNumber, Address address, Group group) {
+//	this.firstName = firstName;
+//	this.lastName = lastName;
+//	this.gender = gender;
+//	this.birthDate = birthDate;
+//	this.email = email;
+//	this.phone = phoneNumber;
+//	this.address = address;
+//	this.group = group;
+//    }
+//
+//    public Student(int id, String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
+//	    String phoneNumber, Address address, Group group) {
+//	this.id = id;
+//	this.firstName = firstName;
+//	this.lastName = lastName;
+//	this.gender = gender;
+//	this.birthDate = birthDate;
+//	this.email = email;
+//	this.phone = phoneNumber;
+//	this.address = address;
+//	this.group = group;
+//    }
 
     public int getId() {
 	return id;
@@ -91,11 +159,11 @@ public class Student {
     }
 
     public String getPhoneNumber() {
-	return phoneNumber;
+	return phone;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-	this.phoneNumber = phoneNumber;
+	this.phone = phoneNumber;
     }
 
     public Address getAddress() {
@@ -126,7 +194,7 @@ public class Student {
 	result = prime * result + ((group == null) ? 0 : group.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-	result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+	result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 	return result;
     }
 
@@ -173,10 +241,10 @@ public class Student {
 		return false;
 	} else if (!lastName.equals(other.lastName))
 	    return false;
-	if (phoneNumber == null) {
-	    if (other.phoneNumber != null)
+	if (phone == null) {
+	    if (other.phone != null)
 		return false;
-	} else if (!phoneNumber.equals(other.phoneNumber))
+	} else if (!phone.equals(other.phone))
 	    return false;
 	return true;
     }

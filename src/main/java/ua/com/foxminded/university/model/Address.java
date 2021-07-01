@@ -9,15 +9,57 @@ public class Address {
     private String city;
     private String streetAddress;
 
+    public static class Builder {
+	private int id = 0;
+	private String country;
+	private String postalCode;
+	private String region;
+	private String city;
+	private String streetAddress;
+
+	public Builder(String country) {
+	    this.country = country;
+	}
+
+	public Builder id(int val) {
+	    this.id = val;
+	    return this;
+	}
+
+	public Builder postalCode(String val) {
+	    this.postalCode = val;
+	    return this;
+	}
+
+	public Builder region(String val) {
+	    this.region = val;
+	    return this;
+	}
+
+	public Builder city(String val) {
+	    this.city = val;
+	    return this;
+	}
+
+	public Builder streetAddress(String val) {
+	    this.streetAddress = val;
+	    return this;
+	}
+
+	public Address build() {
+	    return new Address(this);
+	}
+    }
+
     public Address() {
     }
 
-    public Address(String country, String postalCode, String region, String city, String streetAddress) {
-	this.country = country;
-	this.postalCode = postalCode;
-	this.region = region;
-	this.city = city;
-	this.streetAddress = streetAddress;
+    private Address(Builder builder) {
+	country = builder.country;
+	postalCode = builder.postalCode;
+	region = builder.region;
+	city = builder.city;
+	streetAddress = builder.streetAddress;
     }
 
     public Address(int id, String country, String postalCode, String region, String city, String streetAddress) {

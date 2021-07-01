@@ -13,27 +13,61 @@ public class Lecture {
     private Teacher teacher;
     private Classroom classroom;
 
+    public static class Builder {
+	private int id = 0;
+	private LocalDate date;
+	private Subject subject;
+	private Timeslot timeslot;
+	private List<Group> groups;
+	private Teacher teacher;
+	private Classroom classroom;
+
+	public Builder(LocalDate date, Subject subject) {
+	    this.date = date;
+	    this.subject = subject;
+	}
+
+	public Builder id(int val) {
+	    this.id = val;
+	    return this;
+	}
+
+	public Builder timeslot(Timeslot val) {
+	    this.timeslot = val;
+	    return this;
+	}
+
+	public Builder groups(List<Group> val) {
+	    this.groups = val;
+	    return this;
+	}
+
+	public Builder teacher(Teacher val) {
+	    this.teacher = val;
+	    return this;
+	}
+
+	public Builder classroom(Classroom val) {
+	    this.classroom = val;
+	    return this;
+	}
+
+	public Lecture build() {
+	    return new Lecture(this);
+	}
+    }
+
     public Lecture() {
     }
 
-    public Lecture(LocalDate date, Timeslot timeslot, List<Group> groups, Subject subject, Teacher teacher, Classroom classroom) {
-	this.date = date;
-	this.timeslot = timeslot;
-	this.groups = groups;
-	this.subject = subject;
-	this.teacher = teacher;
-	this.classroom = classroom;
-    }
-
-    public Lecture(int id, LocalDate date, Timeslot timeslot, List<Group> groups, Subject subject, Teacher teacher,
-	    Classroom classroom) {
-	this.id = id;
-	this.date = date;
-	this.timeslot = timeslot;
-	this.groups = groups;
-	this.subject = subject;
-	this.teacher = teacher;
-	this.classroom = classroom;
+    public Lecture(Builder builder) {
+	id = builder.id;
+	date = builder.date;
+	timeslot = builder.timeslot;
+	groups = builder.groups;
+	subject = builder.subject;
+	teacher = builder.teacher;
+	classroom = builder.classroom;
     }
 
     public int getId() {

@@ -87,7 +87,13 @@ public class LecturesMenu {
 	Teacher teacher = teachersMenu.selectTeacher();
 	Classroom classroom = classroomsMenu.selectClassroom();
 
-	return new Lecture(date, timeslot, groups, subject, teacher, classroom);
+	// return new Lecture(date, timeslot, groups, subject, teacher, classroom);
+	return new Lecture.Builder(date, subject)
+		.timeslot(timeslot)
+		.groups(groups)
+		.teacher(teacher)
+		.classroom(classroom)
+		.build();
     }
 
     public Lecture selectLecture() {

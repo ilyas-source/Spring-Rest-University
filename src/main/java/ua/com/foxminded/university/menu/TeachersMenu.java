@@ -76,8 +76,6 @@ public class TeachersMenu {
 	Address address = addressMenu.createAddress();
 	List<Subject> subjects = subjectsMenu.selectSubjects();
 
-	// Teacher result = new Teacher(firstName, lastName, gender, degree, subjects,
-	// email, phone, address);
 	Teacher result = new Teacher.Builder(firstName, lastName)
 		.gender(gender)
 		.degree(degree)
