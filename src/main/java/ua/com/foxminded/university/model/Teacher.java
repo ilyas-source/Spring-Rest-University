@@ -4,16 +4,6 @@ import java.util.List;
 
 public class Teacher {
 
-    @Override
-    public String toString() {
-	StringBuilder result = new StringBuilder();
-	result.append(id).append(".").append(firstName + " " + lastName);
-	result.append(" " + gender).append(" " + degree).append("Subjects:" + subjects);
-	result.append(email).append(phone).append(address);
-	result.append("Vacations:" + vacations);
-	return result.toString();
-    }
-
     private int id;
     private String firstName;
     private String lastName;
