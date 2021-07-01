@@ -67,10 +67,6 @@ class VacationDaoTest {
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", "id = 5");
 
-//	when(teacherDao.findById(2)).thenReturn(Optional.of(TEST_TEACHER));
-//	Vacation actual = vacationDao.findById(5).get();
-//	System.out.println(vacationsMenu.getStringFromVacation(actual));
-
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 

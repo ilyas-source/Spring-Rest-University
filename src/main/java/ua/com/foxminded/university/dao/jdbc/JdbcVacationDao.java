@@ -40,7 +40,6 @@ public class JdbcVacationDao implements VacationDao {
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-//	    ps.setInt(1, vacation.getTeacher().getId());
 	    ps.setObject(1, vacation.getStartDate());
 	    ps.setObject(2, vacation.getEndDate());
 	    return ps;

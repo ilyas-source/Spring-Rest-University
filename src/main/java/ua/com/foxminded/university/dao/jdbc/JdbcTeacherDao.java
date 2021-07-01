@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
@@ -88,31 +89,27 @@ public class JdbcTeacherDao implements TeacherDao {
 		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(),
 		teacher.getId());
 
-	Teacher oldTeacher = findById(teacher.getId()).get();
+	List<Subject> newSubjects = teacher.getSubjects();
+	List<Subject> oldSubjects = findById(teacher.getId()).get().getSubjects();
 
-	oldTeacher.getSubjects().stream()
-		.filter(s -> !teacher.getSubjects().contains(s))
+	List<Vacation> newVacations = teacher.getVacations();
+	List<Vacation> oldVacations = findById(teacher.getId()).get().getVacations();
+
+	oldSubjects.stream()
+		.filter(not(newSubjects::contains))
 		.forEach(s -> removeSubject(s, teacher));
 
-	teacher.getSubjects().stream()
-		.filter(s -> !oldTeacher.getSubjects().contains(s))
+	newSubjects.stream()
+		.filter(not(oldSubjects::contains))
 		.forEach(s -> assignSubject(s, teacher));
 
-	oldTeacher.getVacations().stream()
-		.filter(v -> !teacher.getVacations().contains(v))
+	oldVacations.stream()
+		.filter(not(newVacations::contains))
 		.forEach(v -> removeVacation(v, teacher));
 
-	teacher.getVacations().stream()
-		.filter(v -> !oldTeacher.getVacations().contains(v))
+	newVacations.stream()
+		.filter(not(oldVacations::contains))
 		.forEach(v -> assignVacation(v, teacher));
-
-//	oldGroups.stream()
-//	.filter(not(newGroups::contains))
-//	.forEach(g -> removeGroup(g, lecture));
-//
-//	newGroups.stream()
-//	.filter(not(oldGroups::contains))
-//	.forEach(g -> assignGroup(g, lecture));
 
     }
 

@@ -102,12 +102,6 @@ class LectureDaoTest {
 		.classroom(TEST_CLASSROOM)
 		.build();
 
-//	List<Vacation> vacations = new ArrayList<Vacation>(
-//		Arrays.asList(new Vacation(LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1))));
-//	when(vacationDao.getVacationsByTeacherId(2)).thenReturn(vacations);
-//	System.out.println(teachersMenu.getStringFromTeacher(TEST_TEACHER));
-//	System.out.println(teachersMenu.getStringFromTeacher(TEST_TEACHER2));
-
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
 	int lecturesGroupsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",

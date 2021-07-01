@@ -72,7 +72,7 @@ public class JdbcSubjectDao implements SubjectDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    public List<Subject> getSubjectsByTeacher(int id) {
+    public List<Subject> getSubjectsByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, subjectMapper, id);
     }
 }

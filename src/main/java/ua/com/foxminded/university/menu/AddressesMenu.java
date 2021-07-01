@@ -22,7 +22,6 @@ public class AddressesMenu {
 	System.out.print("Street Address:");
 	String streetAddress = scanner.nextLine();
 
-	// return new Address(country, index, region, city, streetAddress);
 	return new Address.Builder(country)
 		.postalCode(index)
 		.region(region)

@@ -29,8 +29,7 @@ public class VacationsMenu {
     public String getStringFromVacation(Vacation vacation) {
 	StringBuilder result = new StringBuilder();
 	result.append(vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString());
-//	result.append(" (" + vacation.getTeacher().getFirstName() + " ");
-//	result.append(vacation.getTeacher().getLastName() + ")");
+
 	return result.toString();
     }
 

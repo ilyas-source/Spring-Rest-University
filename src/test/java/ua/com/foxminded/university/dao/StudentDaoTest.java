@@ -5,9 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,24 +22,14 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.model.Address;
-import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Timeslot;
 
 //INSERT INTO students (first_name, last_name, gender, birth_date, email, phone, address_id, group_id) VALUES
 //('Ivan', 'Petrov', 'MALE', '1980-11-1', 'qwe@rty.com', '123123123', 3, 1),
@@ -56,9 +44,9 @@ class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
-	    "AND address_id = 1 AND group_id = 1";
-    private static final Address TEST_ADDRESS = new Address(1, "test", "test", "test", "test", "test");
-    private static final Group TEST_GROUP = new Group(1, "test-01");
+	    "AND address_id = 4 AND group_id = 2";
+    private static final Address TEST_ADDRESS = new Address(4, "test", "test", "test", "test", "test");
+    private static final Group TEST_GROUP = new Group(2, "test-01");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -78,145 +66,127 @@ class StudentDaoTest {
     @Test
     void givenNewStudent_onCreate_shouldCreateStudent() {
 	Student student = new Student.Builder("Name", "Lastname")
-		.id(5)
-		.gender(Gender.MALE)
+		.id(5).gender(Gender.MALE)
 		.birthDate(LocalDate.of(1980, 2, 2))
-		.email("test@mail")
-		.phone("+phone")
-		.address(TEST_ADDRESS)
-		.group(TEST_GROUP)
+		.email("test@mail").phone("+phone")
+		.address(TEST_ADDRESS).group(TEST_GROUP)
 		.build();
-
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
 	studentDao.create(student);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"students", "id = 5");
+		"students", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
-}
 
-//    @Test
-//    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
-//
-//	when(timeslotDao.findById(2)).thenReturn(Optional.of(TEST_TIMESLOT));
-//	when(subjectDao.findById(2)).thenReturn(Optional.of(TEST_SUBJECT));
-//	when(teacherDao.findById(2)).thenReturn(Optional.of(TEST_TEACHER));
-//	when(classroomDao.findById(2)).thenReturn(Optional.of(TEST_CLASSROOM));
-//	when(groupDao.findByStudentId(2)).thenReturn(TEST_GROUPS);
-//
-//	Student expectedStudent = new Student(2, LocalDate.of(2000, 1, 2), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
-//	Optional<Student> expected = Optional.of(expectedStudent);
-//
-//	Optional<Student> actual = studentDao.findById(2);
-//
-//	verify(timeslotDao).findById(2);
-//	verify(subjectDao).findById(2);
-//	verify(teacherDao).findById(2);
-//	verify(classroomDao).findById(2);
-//	verify(groupDao).findByStudentId(2);
-//
-//	assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void givenIncorrectStudentId_onFindById_shouldReturnEmptyOptional() {
-//	Optional<Student> expected = Optional.empty();
-//
-//	Optional<Student> actual = studentDao.findById(5);
-//
-//	assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void ifDatabaseHasStudents_onFindAll_shouldReturnCorrectListOfStudents() {
-//
-//	when(timeslotDao.findById(anyInt())).thenReturn(Optional.of(TEST_TIMESLOT));
-//	when(subjectDao.findById(anyInt())).thenReturn(Optional.of(TEST_SUBJECT));
-//	when(teacherDao.findById(anyInt())).thenReturn(Optional.of(TEST_TEACHER));
-//	when(classroomDao.findById(anyInt())).thenReturn(Optional.of(TEST_CLASSROOM));
-//	when(groupDao.findByStudentId(anyInt())).thenReturn(TEST_GROUPS);
-//
-//	Student student1 = new Student(1, LocalDate.of(2000, 1, 1), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
-//	Student student2 = new Student(2, LocalDate.of(2000, 1, 2), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
-//
-//	List<Student> expected = new ArrayList<>();
-//	expected.add(student1);
-//	expected.add(student2);
-//
-//	List<Student> actual = studentDao.findAll();
-//
-//	verify(timeslotDao, times(2)).findById(anyInt());
-//	verify(subjectDao, times(2)).findById(anyInt());
-//	verify(teacherDao, times(2)).findById(anyInt());
-//	verify(classroomDao, times(2)).findById(anyInt());
-//	verify(groupDao, times(2)).findByStudentId(anyInt());
-//
-//	assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    void ifDatabaseHasNoStudents_onFindAll_shouldReturnEmptyListOfStudents() {
-//	JdbcTestUtils.deleteFromTables(jdbcTemplate, "students");
-//
-//	List<Student> students = studentDao.findAll();
-//
-//	assertThat(students).isEmpty();
-//    }
-//
-//    @Test
-//    void givenStudent_onUpdate_shouldUpdateCorrectly() {
-//	List<Group> testGroupsBeforeUpdate = new ArrayList<Group>(Arrays.asList(new Group(1, "Test-01")));
-//	List<Group> testGroupsAfterUpdate = new ArrayList<Group>(Arrays.asList(new Group(2, "Test-02")));
-//
-//	Student student = new Student(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroupsAfterUpdate,
-//		TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
-//
-//	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"students", "id = 2 AND " + TEST_WHERE_CLAUSE);
-//
-//	int group1AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students_groups",
-//		"student_id=2 AND group_id=1");
-//	int group2AssignedBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students_groups",
-//		"student_id=2 AND group_id=2");
-//
-//	when(groupDao.findByStudentId(2)).thenReturn(testGroupsBeforeUpdate);
-//
-//	studentDao.update(student);
-//
-//	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//		"students", "id = 2 AND " + TEST_WHERE_CLAUSE);
-//
-//	int group1AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students_groups",
-//		"student_id=2 AND group_id=1");
-//
-//	int group2AssignedAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students_groups",
-//		"student_id=2 AND group_id=2");
-//
-//	assertThat(rowsBeforeUpdate).isZero();
-//	assertThat(rowsAfterCreate).isEqualTo(1);
-//
-//	assertThat(group1AssignedBeforeUpdate).isEqualTo(1);
-//	assertThat(group2AssignedBeforeUpdate).isZero();
-//
-//	assertThat(group1AssignedAfterUpdate).isZero();
-//	assertThat(group2AssignedAfterUpdate).isEqualTo(1);
-//    }
-//
-//    @Test
-//    void givenCorrectStudentId_onDelete_shouldDeleteCorrectly() {
-//	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
-//
-//	studentDao.delete(2);
-//
-//	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
-//
-//	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
-//}
+    @Test
+    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
+
+	when(groupDao.findById(2)).thenReturn(Optional.of(TEST_GROUP));
+	when(addressDao.findById(4)).thenReturn(Optional.of(TEST_ADDRESS));
+
+	Student expectedStudent = new Student.Builder("John", "Doe")
+		.id(2).gender(Gender.MALE)
+		.birthDate(LocalDate.of(1981, 11, 1))
+		.email("qwe@qwe.com")
+		.phone("1231223")
+		.address(TEST_ADDRESS)
+		.group(TEST_GROUP)
+		.build();
+	Optional<Student> expected = Optional.of(expectedStudent);
+
+	Optional<Student> actual = studentDao.findById(2);
+
+	verify(groupDao).findById(2);
+	verify(addressDao).findById(4);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectStudentId_onFindById_shouldReturnEmptyOptional() {
+	Optional<Student> expected = Optional.empty();
+
+	Optional<Student> actual = studentDao.findById(5);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasStudents_onFindAll_shouldReturnCorrectListOfStudents() {
+	when(groupDao.findById(anyInt())).thenReturn(Optional.of(TEST_GROUP));
+	when(addressDao.findById(anyInt())).thenReturn(Optional.of(TEST_ADDRESS));
+
+	Student student1 = new Student.Builder("Ivan", "Petrov")
+		.id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
+		.email("qwe@rty.com").phone("123123123").address(TEST_ADDRESS)
+		.group(TEST_GROUP).build();
+	Student student2 = new Student.Builder("John", "Doe")
+		.id(2).gender(Gender.MALE).birthDate(LocalDate.of(1981, 11, 1))
+		.email("qwe@qwe.com").phone("1231223").address(TEST_ADDRESS)
+		.group(TEST_GROUP).build();
+	Student student3 = new Student.Builder("Janna", "DArk")
+		.id(3).gender(Gender.FEMALE).birthDate(LocalDate.of(1881, 11, 1))
+		.email("qwe@no.fr").phone("1231223").address(TEST_ADDRESS)
+		.group(TEST_GROUP).build();
+	Student student4 = new Student.Builder("Mao", "Zedun")
+		.id(4).gender(Gender.MALE).birthDate(LocalDate.of(1921, 9, 14))
+		.email("qwe@no.cn").phone("1145223").address(TEST_ADDRESS)
+		.group(TEST_GROUP).build();
+	List<Student> expected = new ArrayList<>();
+	expected.add(student1);
+	expected.add(student2);
+	expected.add(student3);
+	expected.add(student4);
+
+	List<Student> actual = studentDao.findAll();
+
+	verify(groupDao, times(4)).findById(anyInt());
+	verify(addressDao, times(4)).findById(anyInt());
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasNoStudents_onFindAll_shouldReturnEmptyListOfStudents() {
+	JdbcTestUtils.deleteFromTables(jdbcTemplate, "students");
+
+	List<Student> students = studentDao.findAll();
+
+	assertThat(students).isEmpty();
+    }
+
+    @Test
+    void givenStudent_onUpdate_shouldUpdateCorrectly() {
+	Student student = new Student.Builder("Name", "Lastname")
+		.id(2).gender(Gender.MALE)
+		.birthDate(LocalDate.of(1980, 2, 2))
+		.email("test@mail").phone("+phone")
+		.address(TEST_ADDRESS).group(TEST_GROUP)
+		.build();
+
+	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 2 AND " + TEST_WHERE_CLAUSE);
+
+	studentDao.update(student);
+
+	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+		"students", "id = 2 AND " + TEST_WHERE_CLAUSE);
+
+	assertThat(rowsBeforeUpdate).isZero();
+	assertThat(rowsAfterCreate).isEqualTo(1);
+    }
+
+    @Test
+    void givenCorrectStudentId_onDelete_shouldDeleteCorrectly() {
+	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
+
+	studentDao.delete(2);
+
+	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
+
+	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+}

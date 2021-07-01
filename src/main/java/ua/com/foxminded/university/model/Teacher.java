@@ -4,6 +4,16 @@ import java.util.List;
 
 public class Teacher {
 
+    @Override
+    public String toString() {
+	StringBuilder result = new StringBuilder();
+	result.append(id).append(".").append(firstName + " " + lastName);
+	result.append(" " + gender).append(" " + degree).append("Subjects:" + subjects);
+	result.append(email).append(phone).append(address);
+	result.append("Vacations:" + vacations);
+	return result.toString();
+    }
+
     private int id;
     private String firstName;
     private String lastName;
@@ -11,7 +21,7 @@ public class Teacher {
     private Degree degree;
     private List<Subject> subjects;
     private String email;
-    private String phoneNumber;
+    private String phone;
     private Address address;
     private List<Vacation> vacations;
 
@@ -95,7 +105,7 @@ public class Teacher {
 	degree = builder.degree;
 	subjects = builder.subjects;
 	email = builder.email;
-	phoneNumber = builder.phoneNumber;
+	phone = builder.phoneNumber;
 	address = builder.address;
 	vacations = builder.vacations;
     }
@@ -152,11 +162,11 @@ public class Teacher {
     }
 
     public String getPhoneNumber() {
-	return phoneNumber;
+	return phone;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-	this.phoneNumber = phoneNumber;
+	this.phone = phoneNumber;
     }
 
     public Address getAddress() {
@@ -194,7 +204,7 @@ public class Teacher {
 	result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 	result = prime * result + id;
 	result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-	result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+	result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 	result = prime * result + ((subjects == null) ? 0 : subjects.hashCode());
 	result = prime * result + ((vacations == null) ? 0 : vacations.hashCode());
 	return result;
@@ -235,10 +245,10 @@ public class Teacher {
 		return false;
 	} else if (!lastName.equals(other.lastName))
 	    return false;
-	if (phoneNumber == null) {
-	    if (other.phoneNumber != null)
+	if (phone == null) {
+	    if (other.phone != null)
 		return false;
-	} else if (!phoneNumber.equals(other.phoneNumber))
+	} else if (!phone.equals(other.phone))
 	    return false;
 	if (subjects == null) {
 	    if (other.subjects != null)

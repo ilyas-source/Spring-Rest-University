@@ -85,31 +85,6 @@ public class Student {
 	group = builder.group;
     }
 
-//    public Student(String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
-//	    String phoneNumber, Address address, Group group) {
-//	this.firstName = firstName;
-//	this.lastName = lastName;
-//	this.gender = gender;
-//	this.birthDate = birthDate;
-//	this.email = email;
-//	this.phone = phoneNumber;
-//	this.address = address;
-//	this.group = group;
-//    }
-//
-//    public Student(int id, String firstName, String lastName, Gender gender, LocalDate birthDate, String email,
-//	    String phoneNumber, Address address, Group group) {
-//	this.id = id;
-//	this.firstName = firstName;
-//	this.lastName = lastName;
-//	this.gender = gender;
-//	this.birthDate = birthDate;
-//	this.email = email;
-//	this.phone = phoneNumber;
-//	this.address = address;
-//	this.group = group;
-//    }
-
     public int getId() {
 	return id;
     }

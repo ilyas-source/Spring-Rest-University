@@ -113,7 +113,7 @@ class SubjectDaoTest {
 	expected.add(new Subject(1, "Test Economics", "Base economics"));
 	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
 
-	List<Subject> actual = subjectDao.getSubjectsByTeacher(1);
+	List<Subject> actual = subjectDao.getSubjectsByTeacherId(1);
 
 	assertEquals(expected, actual);
     }
@@ -121,7 +121,7 @@ class SubjectDaoTest {
     @Test
     void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
 
-	List<Subject> actual = subjectDao.getSubjectsByTeacher(3);
+	List<Subject> actual = subjectDao.getSubjectsByTeacherId(3);
 
 	assertThat(actual).isEmpty();
     }
