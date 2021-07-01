@@ -29,8 +29,10 @@ import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.menu.LecturesMenu;
+import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Degree;
@@ -41,6 +43,7 @@ import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
+import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -50,9 +53,16 @@ class LectureDaoTest {
     private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=2 AND teacher_id=1 AND classroom_id=1";
     private static final Timeslot TEST_TIMESLOT = new Timeslot(1, LocalTime.of(9, 0), LocalTime.of(10, 0));
     private static final Subject TEST_SUBJECT = new Subject(2, "Test Subject", "For testing");
-    private static final Teacher TEST_TEACHER = new Teacher(1, "Adam", "Smith", Gender.MALE, Degree.DOCTOR,
-	    new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT)), "adam@smith.com", "+223322",
-	    new Address(1, "France", "21012", "Central", "Paris", "Rue 15"));
+    private static final Teacher TEST_TEACHER = new Teacher.Builder("Adam", "Smith")
+	    .id(1)
+	    .gender(Gender.MALE)
+	    .degree(Degree.DOCTOR)
+	    .subjects(new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT)))
+	    .email("adam@smith.com")
+	    .phoneNumber("+223322")
+	    .address(new Address(1, "France", "21012", "Central", "Paris", "Rue 15"))
+	    .build();
+
     private static final Classroom TEST_CLASSROOM = new Classroom(1, new Location(1, "Test building", 1, 5), "Test classroom",
 	    15);
     private static final List<Group> TEST_GROUPS = new ArrayList<Group>(
@@ -71,16 +81,26 @@ class LectureDaoTest {
     private JdbcClassroomDao classroomDao;
     @Mock
     private JdbcGroupDao groupDao;
+    @Mock
+    private JdbcVacationDao vacationDao;
     @InjectMocks
     @Autowired
     private JdbcLectureDao lectureDao;
     @InjectMocks
     @Autowired
     private LectureMapper lectureMapper;
+    @Autowired
+    private TeachersMenu teachersMenu;
 
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
 	Lecture lecture = new Lecture(3, TEST_DATE, TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
+
+//	List<Vacation> vacations = new ArrayList<Vacation>(
+//		Arrays.asList(new Vacation(LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1))));
+//	when(vacationDao.getVacationsByTeacherId(2)).thenReturn(vacations);
+//	System.out.println(teachersMenu.getStringFromTeacher(TEST_TEACHER));
+//	System.out.println(teachersMenu.getStringFromTeacher(TEST_TEACHER2));
 
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);

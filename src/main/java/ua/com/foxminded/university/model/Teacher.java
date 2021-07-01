@@ -15,33 +15,125 @@ public class Teacher {
     private Address address;
     private List<Vacation> vacations;
 
+    public static Builder builder() {
+	return new Builder();
+    }
+
+    public static class Builder {
+	private int id = 0;
+	private String firstName;
+	private String lastName;
+	private Gender gender;
+	private Degree degree;
+	private List<Subject> subjects;
+	private String email;
+	private String phoneNumber;
+	private Address address;
+	private List<Vacation> vacations;
+
+	public Builder(String firstName, String lastName) {
+	    this.firstName = firstName;
+	    this.lastName = lastName;
+	}
+
+	private Builder() {
+	}
+
+	public Builder id(int val) {
+	    this.id = val;
+	    return this;
+	}
+
+	public Builder firstName(String val) {
+	    this.firstName = val;
+	    return this;
+	}
+
+	public Builder lastName(String val) {
+	    this.lastName = val;
+	    return this;
+	}
+
+	public Builder gender(Gender val) {
+	    this.gender = val;
+	    return this;
+	}
+
+	public Builder degree(Degree val) {
+	    this.degree = val;
+	    return this;
+	}
+
+	public Builder subjects(List<Subject> val) {
+	    this.subjects = val;
+	    return this;
+	}
+
+	public Builder email(String val) {
+	    this.email = val;
+	    return this;
+	}
+
+	public Builder phoneNumber(String val) {
+	    this.phoneNumber = val;
+	    return this;
+	}
+
+	public Builder vacations(List<Vacation> val) {
+	    this.vacations = val;
+	    return this;
+	}
+
+	public Builder address(Address val) {
+	    this.address = val;
+	    return this;
+	}
+
+	public Teacher build() {
+	    return new Teacher(this);
+	}
+    }
+
+    private Teacher(Builder builder) {
+	id = builder.id;
+	firstName = builder.firstName;
+	lastName = builder.lastName;
+	gender = builder.gender;
+	degree = builder.degree;
+	subjects = builder.subjects;
+	email = builder.email;
+	phoneNumber = builder.phoneNumber;
+	address = builder.address;
+	vacations = builder.vacations;
+    }
+
     public Teacher() {
     }
 
-    public Teacher(String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
-	    String phoneNumber, Address address) {
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.gender = gender;
-	this.degree = degree;
-	this.subjects = subjects;
-	this.email = email;
-	this.phoneNumber = phoneNumber;
-	this.address = address;
-    }
-
-    public Teacher(int id, String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
-	    String phoneNumber, Address address) {
-	this.id = id;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.gender = gender;
-	this.degree = degree;
-	this.subjects = subjects;
-	this.email = email;
-	this.phoneNumber = phoneNumber;
-	this.address = address;
-    }
+//    public Teacher(String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
+//	    String phoneNumber, Address address) {
+//	this.firstName = firstName;
+//	this.lastName = lastName;
+//	this.gender = gender;
+//	this.degree = degree;
+//	this.subjects = subjects;
+//	this.email = email;
+//	this.phoneNumber = phoneNumber;
+//	this.address = address;
+//    }
+//
+//    public Teacher(int id, String firstName, String lastName, Gender gender, Degree degree, List<Subject> subjects, String email,
+//	    String phoneNumber, Address address) {
+//	this.id = id;
+//	this.firstName = firstName;
+//	this.lastName = lastName;
+//	this.gender = gender;
+//	this.degree = degree;
+//	this.subjects = subjects;
+//	this.email = email;
+//	this.phoneNumber = phoneNumber;
+//	this.address = address;
+//    }
 
     public int getId() {
 	return id;
