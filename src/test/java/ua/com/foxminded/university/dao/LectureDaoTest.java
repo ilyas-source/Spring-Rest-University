@@ -92,7 +92,6 @@ class LectureDaoTest {
 
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
-//	Lecture lecture = new Lecture(3, TEST_DATE, TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 	Lecture lecture = new Lecture.Builder(TEST_DATE, TEST_SUBJECT)
 		.timeslot(TEST_TIMESLOT)
 		.groups(TEST_GROUPS)
@@ -129,9 +128,6 @@ class LectureDaoTest {
 	when(teacherDao.findById(2)).thenReturn(Optional.of(TEST_TEACHER));
 	when(classroomDao.findById(2)).thenReturn(Optional.of(TEST_CLASSROOM));
 	when(groupDao.findByLectureId(2)).thenReturn(TEST_GROUPS);
-
-//	Lecture expectedLecture = new Lecture(2, LocalDate.of(2000, 1, 2), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
 
 	Lecture expectedLecture = new Lecture.Builder(LocalDate.of(2000, 1, 2), TEST_SUBJECT)
 		.id(2)
@@ -172,25 +168,13 @@ class LectureDaoTest {
 	when(classroomDao.findById(anyInt())).thenReturn(Optional.of(TEST_CLASSROOM));
 	when(groupDao.findByLectureId(anyInt())).thenReturn(TEST_GROUPS);
 
-//	Lecture lecture1 = new Lecture(1, LocalDate.of(2000, 1, 1), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
-//	Lecture lecture2 = new Lecture(2, LocalDate.of(2000, 1, 2), TEST_TIMESLOT, TEST_GROUPS, TEST_SUBJECT, TEST_TEACHER,
-//		TEST_CLASSROOM);
 	Lecture lecture1 = new Lecture.Builder(LocalDate.of(2000, 1, 1), TEST_SUBJECT)
-		.id(1)
-		.timeslot(TEST_TIMESLOT)
-		.groups(TEST_GROUPS)
-		.teacher(TEST_TEACHER)
-		.classroom(TEST_CLASSROOM)
-		.build();
+		.id(1).timeslot(TEST_TIMESLOT).groups(TEST_GROUPS)
+		.teacher(TEST_TEACHER).classroom(TEST_CLASSROOM).build();
 
 	Lecture lecture2 = new Lecture.Builder(LocalDate.of(2000, 1, 2), TEST_SUBJECT)
-		.id(2)
-		.timeslot(TEST_TIMESLOT)
-		.groups(TEST_GROUPS)
-		.teacher(TEST_TEACHER)
-		.classroom(TEST_CLASSROOM)
-		.build();
+		.id(2).timeslot(TEST_TIMESLOT).groups(TEST_GROUPS)
+		.teacher(TEST_TEACHER).classroom(TEST_CLASSROOM).build();
 
 	List<Lecture> expected = new ArrayList<>();
 	expected.add(lecture1);
@@ -220,9 +204,6 @@ class LectureDaoTest {
     void givenLecture_onUpdate_shouldUpdateCorrectly() {
 	List<Group> testGroupsBeforeUpdate = new ArrayList<Group>(Arrays.asList(new Group(1, "Test-01")));
 	List<Group> testGroupsAfterUpdate = new ArrayList<Group>(Arrays.asList(new Group(2, "Test-02")));
-
-//	Lecture lecture = new Lecture(2, LocalDate.of(2010, 10, 10), TEST_TIMESLOT, testGroupsAfterUpdate,
-//		TEST_SUBJECT, TEST_TEACHER, TEST_CLASSROOM);
 
 	Lecture lecture = new Lecture.Builder(LocalDate.of(2010, 10, 10), TEST_SUBJECT)
 		.id(2)

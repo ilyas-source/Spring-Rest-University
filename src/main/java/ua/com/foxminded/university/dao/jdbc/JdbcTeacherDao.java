@@ -60,8 +60,8 @@ public class JdbcTeacherDao implements TeacherDao {
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setString(1, teacher.getFirstName());
 	    ps.setString(2, teacher.getLastName());
-	    ps.setObject(3, teacher.getGender(), java.sql.Types.OTHER);
-	    ps.setObject(4, teacher.getDegree(), java.sql.Types.OTHER);
+	    ps.setString(3, teacher.getGender().toString());
+	    ps.setString(4, teacher.getDegree().toString());
 	    ps.setString(5, teacher.getEmail());
 	    ps.setString(6, teacher.getPhoneNumber());
 	    ps.setInt(7, teacher.getAddress().getId());
@@ -84,8 +84,7 @@ public class JdbcTeacherDao implements TeacherDao {
 	jdbcAddressDao.update(teacher.getAddress());
 
 	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(),
-		new SqlParameterValue(java.sql.Types.OTHER, teacher.getGender()),
-		new SqlParameterValue(java.sql.Types.OTHER, teacher.getDegree()),
+		teacher.getGender().toString(), teacher.getDegree().toString(),
 		teacher.getEmail(), teacher.getPhoneNumber(), teacher.getAddress().getId(),
 		teacher.getId());
 

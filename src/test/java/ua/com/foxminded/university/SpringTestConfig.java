@@ -11,10 +11,10 @@ import javax.sql.DataSource;
 @Import(ApplicationConfig.class)
 public class SpringTestConfig {
 
-//    @Bean
-//    public DataSource dataSource() {
-//	return new EmbeddedDatabaseBuilder()
-//		.setType(EmbeddedDatabaseType.H2)
-//		.build();
-//    }
+    @Bean
+    public DataSource dataSource() {
+	return new EmbeddedDatabaseBuilder()
+		.setType(EmbeddedDatabaseType.H2)
+		.build();
+    }
 }

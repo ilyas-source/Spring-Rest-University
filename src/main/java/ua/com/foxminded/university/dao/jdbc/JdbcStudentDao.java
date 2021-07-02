@@ -49,7 +49,7 @@ public class JdbcStudentDao implements StudentDao {
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setString(1, student.getFirstName());
 	    ps.setString(2, student.getLastName());
-	    ps.setObject(3, student.getGender(), java.sql.Types.OTHER);
+	    ps.setString(3, student.getGender().toString());
 	    ps.setObject(4, student.getBirthDate());
 	    ps.setString(5, student.getEmail());
 	    ps.setString(6, student.getPhoneNumber());
@@ -66,9 +66,9 @@ public class JdbcStudentDao implements StudentDao {
 	jdbcAddressDao.update(address);
 
 	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(),
-		new SqlParameterValue(java.sql.Types.OTHER, student.getGender()),
-		student.getBirthDate(), student.getEmail(), student.getPhoneNumber(),
-		student.getAddress().getId(), student.getGroup().getId(), student.getId());
+		student.getGender().toString(), student.getBirthDate(), student.getEmail(),
+		student.getPhoneNumber(), student.getAddress().getId(),
+		student.getGroup().getId(), student.getId());
     }
 
     @Override

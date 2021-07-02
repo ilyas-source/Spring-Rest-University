@@ -91,9 +91,6 @@ class VacationDaoTest {
     @Test
     void ifDatabaseHasVacations_onFindAll_shouldReturnCorrectListOfVacations() {
 	List<Vacation> expected = new ArrayList<>();
-
-//	when(teacherDao.findById(anyInt())).thenReturn(Optional.of(TEST_TEACHER));
-
 	expected.add(new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01)));
 	expected.add(new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01)));
 	expected.add(new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15)));
@@ -101,7 +98,6 @@ class VacationDaoTest {
 
 	List<Vacation> actual = vacationDao.findAll();
 
-	// verify(teacherDao, times(4)).findById(anyInt());
 	assertEquals(expected, actual);
     }
 
