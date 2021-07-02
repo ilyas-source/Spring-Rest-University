@@ -55,20 +55,12 @@ public class Address {
     }
 
     private Address(Builder builder) {
+	id = builder.id;
 	country = builder.country;
 	postalCode = builder.postalCode;
 	region = builder.region;
 	city = builder.city;
 	streetAddress = builder.streetAddress;
-    }
-
-    public Address(int id, String country, String postalCode, String region, String city, String streetAddress) {
-	this.id = id;
-	this.country = country;
-	this.postalCode = postalCode;
-	this.region = region;
-	this.city = city;
-	this.streetAddress = streetAddress;
     }
 
     public int getId() {

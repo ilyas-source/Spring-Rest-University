@@ -53,15 +53,13 @@ class LectureDaoTest {
     private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=2 AND teacher_id=1 AND classroom_id=1";
     private static final Timeslot TEST_TIMESLOT = new Timeslot(1, LocalTime.of(9, 0), LocalTime.of(10, 0));
     private static final Subject TEST_SUBJECT = new Subject(2, "Test Subject", "For testing");
+    private static final Address TEST_ADDRESS = new Address.Builder("France").id(1).postalCode("21012")
+	    .region("Central").city("Paris").streetAddress("Rue 15").build();
     private static final Teacher TEST_TEACHER = new Teacher.Builder("Adam", "Smith")
-	    .id(1)
-	    .gender(Gender.MALE)
-	    .degree(Degree.DOCTOR)
+	    .id(1).gender(Gender.MALE).degree(Degree.DOCTOR)
 	    .subjects(new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT)))
-	    .email("adam@smith.com")
-	    .phoneNumber("+223322")
-	    .address(new Address(1, "France", "21012", "Central", "Paris", "Rue 15"))
-	    .build();
+	    .email("adam@smith.com").phoneNumber("+223322")
+	    .address(TEST_ADDRESS).build();
 
     private static final Classroom TEST_CLASSROOM = new Classroom(1, new Location(1, "Test building", 1, 5), "Test classroom",
 	    15);

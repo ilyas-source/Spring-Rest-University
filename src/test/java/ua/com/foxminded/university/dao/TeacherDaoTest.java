@@ -45,7 +45,8 @@ class TeacherDaoTest {
     private static final String VACATIONS_WHERE_CLAUSE = "id=5 AND teacher_id=3 AND start_date='2020-01-01' AND end_date='2020-02-01'";
     private static final Subject TEST_SUBJECT = new Subject(2, "Test Subject", "For testing");
     private static final List<Subject> TEST_SUBJECTS = new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT));
-    private static final Address TEST_ADDRESS = new Address(4, "test", "test", "test", "test", "test");
+    private static final Address TEST_ADDRESS = new Address.Builder("test").id(4).postalCode("test").region("test")
+	    .city("test").streetAddress("test").build();
     private static final Vacation TEST_VACATION = new Vacation(5, LocalDate.of(2020, 01, 01), LocalDate.of(2020, 02, 01));
     private static final List<Vacation> TEST_VACATIONS = new ArrayList<Vacation>(Arrays.asList(TEST_VACATION));
 

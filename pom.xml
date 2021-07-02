@@ -5,7 +5,6 @@
 	<groupId>ua.com.foxminded</groupId>
 	<artifactId>university</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
 	<properties>
 		<spring.version>5.3.7</spring.version>
 		<postgresql.version>42.2.20</postgresql.version>
@@ -14,7 +13,6 @@
 		<mockito.version>3.8.0</mockito.version>
 		<assertj-core.version>3.20.2</assertj-core.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -31,13 +29,11 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -56,12 +52,12 @@
 			<version>${com.h2database.version}</version>
 			<scope>test</scope>
 		</dependency>
-		 <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
@@ -81,5 +77,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

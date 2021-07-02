@@ -45,13 +45,12 @@ class StudentDaoTest {
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
 	    "AND address_id = 4 AND group_id = 2";
-    private static final Address TEST_ADDRESS = new Address(4, "test", "test", "test", "test", "test");
+    private static final Address TEST_ADDRESS = new Address.Builder("test").id(4).postalCode("test").region("test")
+	    .city("test").streetAddress("test").build();
     private static final Group TEST_GROUP = new Group(2, "test-01");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private StudentsMenu studentsMenu;
     @Mock
     private JdbcAddressDao addressDao;
     @Mock

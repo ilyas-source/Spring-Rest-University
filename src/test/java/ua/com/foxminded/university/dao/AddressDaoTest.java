@@ -31,7 +31,8 @@ class AddressDaoTest {
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
-	Address address = new Address(4, "test", "test", "test", "test", "test");
+	Address address = new Address.Builder("test").id(4).postalCode("test").region("test")
+		.city("test").streetAddress("test").build();
 
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
@@ -47,7 +48,8 @@ class AddressDaoTest {
     @Test
     void givenCorrectAddressId_onFindById_shouldReturnOptionalWithCorrectAddress() {
 	Optional<Address> expected = Optional
-		.of(new Address(2, "Poland", "54321", "Central region", "Warsaw", "Urszuli Ledochowskiej 3"));
+		.of(new Address.Builder("Poland").id(2).postalCode("54321").region("Central region").city("Warsaw")
+			.streetAddress("Urszuli Ledochowskiej 3").build());
 
 	Optional<Address> actual = addressDao.findById(2);
 
@@ -66,9 +68,12 @@ class AddressDaoTest {
     @Test
     void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
 	List<Address> expected = new ArrayList<>();
-	expected.add(new Address(1, "UK", "12345", "City-Of-Edinburgh", "Edinburgh", "Panmure House"));
-	expected.add(new Address(2, "Poland", "54321", "Central region", "Warsaw", "Urszuli Ledochowskiej 3"));
-	expected.add(new Address(3, "Russia", "450080", "Permskiy kray", "Perm", "Lenina 5"));
+	expected.add(new Address.Builder("UK").id(1).postalCode("12345").region("City-Of-Edinburgh").city("Edinburgh")
+		.streetAddress("Panmure House").build());
+	expected.add(new Address.Builder("Poland").id(2).postalCode("54321").region("Central region").city("Warsaw")
+		.streetAddress("Urszuli Ledochowskiej 3").build());
+	expected.add(new Address.Builder("Russia").id(3).postalCode("450080").region("Permskiy kray").city("Perm")
+		.streetAddress("Lenina 5").build());
 
 	List<Address> actual = addressDao.findAll();
 
@@ -86,7 +91,8 @@ class AddressDaoTest {
 
     @Test
     void givenAddress_onUpdate_shouldUpdateCorrectly() {
-	Address address = new Address(2, "test", "test", "test", "test", "test");
+	Address address = new Address.Builder("test").id(2).postalCode("test").region("test")
+		.city("test").streetAddress("test").build();
 
 	addressDao.update(address);
 
