@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
@@ -25,10 +26,10 @@ public class TeachersMenu {
     private VacationsMenu vacationsMenu;
     private AddressesMenu addressMenu;
     private SubjectsMenu subjectsMenu;
-    private JdbcTeacherDao jdbcTeacherDao;
+    private TeacherDao jdbcTeacherDao;
 
     public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
-	    JdbcTeacherDao jdbcTeacherDao) {
+	    TeacherDao jdbcTeacherDao) {
 	this.genderMenu = genderMenu;
 	this.vacationsMenu = vacationsMenu;
 	this.addressMenu = addressMenu;

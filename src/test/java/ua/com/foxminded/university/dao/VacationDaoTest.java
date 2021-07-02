@@ -46,7 +46,7 @@ class VacationDaoTest {
     private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
 
     @Mock
-    private JdbcTeacherDao teacherDao;
+    private TeacherDao teacherDao;
     @InjectMocks
     @Autowired
     private JdbcVacationDao vacationDao;

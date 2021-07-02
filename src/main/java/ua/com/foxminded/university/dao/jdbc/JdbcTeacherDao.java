@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.TeacherDao;
@@ -50,6 +51,7 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
+    // @Transactional
     public void create(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 

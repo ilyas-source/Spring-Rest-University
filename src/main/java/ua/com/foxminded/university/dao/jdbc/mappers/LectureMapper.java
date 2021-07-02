@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
@@ -24,12 +25,12 @@ import ua.com.foxminded.university.model.Timeslot;
 public class LectureMapper implements RowMapper<Lecture> {
 
     private JdbcSubjectDao jdbcSubjectDao;
-    private JdbcTeacherDao jdbcTeacherDao;
+    private TeacherDao jdbcTeacherDao;
     private JdbcClassroomDao jdbcClassroomDao;
     private JdbcGroupDao jdbcGroupDao;
     private JdbcTimeslotDao jdbcTimeslotDao;
 
-    public LectureMapper(JdbcSubjectDao jdbcSubjectDao, JdbcTeacherDao jdbcTeacherDao, JdbcClassroomDao jdbcClassroomDao,
+    public LectureMapper(JdbcSubjectDao jdbcSubjectDao, TeacherDao jdbcTeacherDao, JdbcClassroomDao jdbcClassroomDao,
 	    JdbcGroupDao jdbcGroupDao, JdbcTimeslotDao jdbcTimeslotDao) {
 	this.jdbcSubjectDao = jdbcSubjectDao;
 	this.jdbcTeacherDao = jdbcTeacherDao;

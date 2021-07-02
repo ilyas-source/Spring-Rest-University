@@ -74,7 +74,7 @@ class LectureDaoTest {
     @Mock
     private JdbcSubjectDao subjectDao;
     @Mock
-    private JdbcTeacherDao teacherDao;
+    private TeacherDao teacherDao;
     @Mock
     private JdbcClassroomDao classroomDao;
     @Mock

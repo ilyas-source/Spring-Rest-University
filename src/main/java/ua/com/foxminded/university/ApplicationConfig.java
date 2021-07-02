@@ -8,9 +8,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@EnableTransactionManagement
 @ComponentScan("ua.com.foxminded.university")
 @PropertySource("classpath:database.properties")
 public class ApplicationConfig {
@@ -37,5 +41,10 @@ public class ApplicationConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
 	return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final DataSource dataSource) {
+	return new DataSourceTransactionManager(dataSource);
     }
 }

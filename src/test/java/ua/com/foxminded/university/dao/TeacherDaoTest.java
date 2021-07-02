@@ -60,7 +60,7 @@ class TeacherDaoTest {
     private JdbcVacationDao vacationDao;
     @InjectMocks
     @Autowired
-    private JdbcTeacherDao teacherDao;
+    private TeacherDao teacherDao;
     @InjectMocks
     @Autowired
     private TeacherMapper teacherMapper;
@@ -167,7 +167,7 @@ class TeacherDaoTest {
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	teacherDao.update(teacher); // протестить как изменились вакейшены
+	teacherDao.update(teacher);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
