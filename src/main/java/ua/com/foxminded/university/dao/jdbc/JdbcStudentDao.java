@@ -41,7 +41,7 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    @Transactional
+    // @Transactional
     public void create(Student student) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 

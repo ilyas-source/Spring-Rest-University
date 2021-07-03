@@ -49,7 +49,7 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    @Transactional
+    // @Transactional
     public void create(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 

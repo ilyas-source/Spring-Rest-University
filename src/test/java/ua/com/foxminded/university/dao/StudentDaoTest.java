@@ -48,7 +48,7 @@ class StudentDaoTest {
     @Mock
     private AddressDao addressDao;
     @Mock
-    private GroupDao groupDao;
+    private JdbcGroupDao groupDao;
     @InjectMocks
     @Autowired
     private StudentDao studentDao;

@@ -27,11 +27,9 @@ import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
-import ua.com.foxminded.university.menu.LecturesMenu;
 import ua.com.foxminded.university.menu.TeachersMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Classroom;
@@ -43,7 +41,6 @@ import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
-import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -80,10 +77,10 @@ class LectureDaoTest {
     @Mock
     private JdbcGroupDao groupDao;
     @Mock
-    private JdbcVacationDao vacationDao;
+    private VacationDao vacationDao;
     @InjectMocks
     @Autowired
-    private JdbcLectureDao lectureDao;
+    private LectureDao lectureDao;
     @InjectMocks
     @Autowired
     private LectureMapper lectureMapper;
