@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sound.midi.Soundbank;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,11 +43,11 @@ import ua.com.foxminded.university.model.Vacation;
 @Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class TeacherDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone' AND address_id=4";
+    private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
     private static final String VACATIONS_WHERE_CLAUSE = "id=5 AND teacher_id=3 AND start_date='2020-01-01' AND end_date='2020-02-01'";
     private static final Subject TEST_SUBJECT = new Subject(2, "Test Subject", "For testing");
     private static final List<Subject> TEST_SUBJECTS = new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT));
-    private static final Address TEST_ADDRESS = new Address.Builder("test").id(4).postalCode("test").region("test")
+    private static final Address TEST_ADDRESS = new Address.Builder("test").id(7).postalCode("test").region("test")
 	    .city("test").streetAddress("test").build();
     private static final Vacation TEST_VACATION = new Vacation(5, LocalDate.of(2020, 01, 01), LocalDate.of(2020, 02, 01));
     private static final List<Vacation> TEST_VACATIONS = new ArrayList<Vacation>(Arrays.asList(TEST_VACATION));
@@ -54,7 +56,8 @@ class TeacherDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Mock
     private JdbcSubjectDao subjectDao;
-    @Mock
+//   @Mock
+    @Autowired
     private AddressDao addressDao;
     @Mock
     private JdbcVacationDao vacationDao;
@@ -65,7 +68,6 @@ class TeacherDaoTest {
     @Autowired
     private TeacherDao teacherDao;
 
-    @Transactional
     @Test
     void givenNewTeacher_onCreate_shouldCreateTeacherAndAssignSubjects() {
 	Teacher teacher = new Teacher.Builder("Test", "Teacher").id(3)
@@ -76,16 +78,14 @@ class TeacherDaoTest {
 	System.out.println(teacher.getAddress().getId());
 
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
+		"teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
 	int vacationsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", VACATIONS_WHERE_CLAUSE);
 
 	teacherDao.create(teacher);
 
-	verify(addressDao).create(TEST_ADDRESS);
-
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
+		"teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
 	int vacationsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", VACATIONS_WHERE_CLAUSE);
 
@@ -95,14 +95,14 @@ class TeacherDaoTest {
 
     @Test
     void givenCorrectTeacherId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
-
 	when(subjectDao.getSubjectsByTeacherId(2)).thenReturn(TEST_SUBJECTS);
-	when(addressDao.findById(2)).thenReturn(Optional.of(TEST_ADDRESS));
 	when(vacationDao.getVacationsByTeacherId(2)).thenReturn(TEST_VACATIONS);
+	Address expectedAddress = new Address.Builder("Poland").id(2).postalCode("54321").region("Central region")
+		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
 
 	Teacher expectedTeacher = new Teacher.Builder("Marie", "Curie").id(2)
 		.gender(Gender.FEMALE).degree(Degree.MASTER).subjects(TEST_SUBJECTS)
-		.email("marie@curie.com").phoneNumber("+322223").address(TEST_ADDRESS)
+		.email("marie@curie.com").phoneNumber("+322223").address(expectedAddress)
 		.vacations(TEST_VACATIONS).build();
 
 	Optional<Teacher> expected = Optional.of(expectedTeacher);
@@ -110,8 +110,8 @@ class TeacherDaoTest {
 	Optional<Teacher> actual = teacherDao.findById(2);
 
 	verify(subjectDao).getSubjectsByTeacherId(2);
-	verify(addressDao).findById(2);
 	verify(vacationDao).getVacationsByTeacherId(2);
+
 	assertEquals(expected, actual);
     }
 
@@ -127,18 +127,23 @@ class TeacherDaoTest {
     @Test
     void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
 
-	when(addressDao.findById(anyInt())).thenReturn(Optional.of(TEST_ADDRESS));
 	when(vacationDao.getVacationsByTeacherId(anyInt())).thenReturn(TEST_VACATIONS);
 	when(subjectDao.getSubjectsByTeacherId(anyInt())).thenReturn(TEST_SUBJECTS);
 
+	Address expectedAddress1 = new Address.Builder("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
+		.city("Edinburgh").streetAddress("Panmure House").build();
+
 	Teacher teacher1 = new Teacher.Builder("Adam", "Smith").id(1)
 		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(TEST_SUBJECTS)
-		.email("adam@smith.com").phoneNumber("+223322").address(TEST_ADDRESS)
+		.email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
 		.vacations(TEST_VACATIONS).build();
+
+	Address expectedAddress2 = new Address.Builder("Poland").id(2).postalCode("54321").region("Central region")
+		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
 
 	Teacher teacher2 = new Teacher.Builder("Marie", "Curie").id(2)
 		.gender(Gender.FEMALE).degree(Degree.MASTER).subjects(TEST_SUBJECTS)
-		.email("marie@curie.com").phoneNumber("+322223").address(TEST_ADDRESS)
+		.email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
 		.vacations(TEST_VACATIONS).build();
 
 	List<Teacher> expected = new ArrayList<>();
@@ -147,9 +152,9 @@ class TeacherDaoTest {
 
 	List<Teacher> actual = teacherDao.findAll();
 
-	verify(addressDao, times(2)).findById(anyInt());
 	verify(vacationDao, times(2)).getVacationsByTeacherId(anyInt());
 	verify(subjectDao, times(2)).getSubjectsByTeacherId(anyInt());
+
 	assertEquals(expected, actual);
     }
 
@@ -164,18 +169,22 @@ class TeacherDaoTest {
 
     @Test
     void givenTeacher_onUpdate_shouldUpdateCorrectly() {
+
+	Address updatedAddress = new Address.Builder("test").id(2).postalCode("test").region("test")
+		.city("test").streetAddress("test").build();
+
 	Teacher teacher = new Teacher.Builder("Test", "Teacher").id(2)
 		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(TEST_SUBJECTS)
-		.email("test@mail").phoneNumber("phone").address(TEST_ADDRESS)
+		.email("test@mail").phoneNumber("phone").address(updatedAddress)
 		.vacations(TEST_VACATIONS).build();
 
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
+		"teachers", "id = 2 AND address_id=2 AND " + TEST_WHERE_CLAUSE);
 
 	teacherDao.update(teacher);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"teachers", "id = 2 AND " + TEST_WHERE_CLAUSE);
+		"teachers", "id = 2 AND address_id=2 AND " + TEST_WHERE_CLAUSE);
 
 	assertThat(rowsBeforeUpdate).isZero();
 	assertThat(rowsAfterCreate).isEqualTo(1);

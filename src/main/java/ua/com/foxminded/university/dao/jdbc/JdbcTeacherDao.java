@@ -49,7 +49,7 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    // @Transactional
+    @Transactional
     public void create(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -110,7 +110,6 @@ public class JdbcTeacherDao implements TeacherDao {
 	newVacations.stream()
 		.filter(not(oldVacations::contains))
 		.forEach(v -> assignVacation(v, teacher));
-
     }
 
     private void removeSubject(Subject subject, Teacher teacher) {

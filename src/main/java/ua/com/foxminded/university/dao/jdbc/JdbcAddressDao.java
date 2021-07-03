@@ -5,9 +5,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sound.midi.Soundbank;
-import javax.sql.DataSource;
-
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -37,8 +34,6 @@ public class JdbcAddressDao implements AddressDao {
 
     public void create(Address address) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
-
-	System.out.println("*****Actually got into addressDao.create");
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection

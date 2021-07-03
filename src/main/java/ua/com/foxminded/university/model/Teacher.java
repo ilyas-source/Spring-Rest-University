@@ -252,4 +252,11 @@ public class Teacher {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Teacher [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender + ", degree="
+		+ degree + ", subjects=" + subjects + ", email=" + email + ", phone=" + phone + ", address=" + address
+		+ ", vacations=" + vacations + "]";
+    }
 }

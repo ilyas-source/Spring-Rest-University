@@ -162,4 +162,10 @@ public class Address {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Address [id=" + id + ", country=" + country + ", postalCode=" + postalCode + ", region=" + region + ", city="
+		+ city + ", streetAddress=" + streetAddress + "]";
+    }
 }
