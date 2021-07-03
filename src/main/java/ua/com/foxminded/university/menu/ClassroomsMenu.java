@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
@@ -18,11 +19,11 @@ import ua.com.foxminded.university.model.Location;
 public class ClassroomsMenu {
 
     private LocationsMenu locationsMenu;
-    private JdbcClassroomDao jdbcClassroomDao;
+    private ClassroomDao classroomDao;
 
-    public ClassroomsMenu(LocationsMenu locationsMenu, JdbcClassroomDao jdbcClassroomDao) {
+    public ClassroomsMenu(LocationsMenu locationsMenu, ClassroomDao jdbcClassroomDao) {
 	this.locationsMenu = locationsMenu;
-	this.jdbcClassroomDao = jdbcClassroomDao;
+	this.classroomDao = jdbcClassroomDao;
     }
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
@@ -42,7 +43,7 @@ public class ClassroomsMenu {
     }
 
     public void addClassroom() {
-	jdbcClassroomDao.create(createClassroom());
+	classroomDao.create(createClassroom());
     }
 
     public Classroom createClassroom() {
@@ -57,14 +58,14 @@ public class ClassroomsMenu {
     }
 
     public Classroom selectClassroom() {
-	List<Classroom> classrooms = jdbcClassroomDao.findAll();
+	List<Classroom> classrooms = classroomDao.findAll();
 	Classroom result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select classroom: ");
 	    System.out.print(getStringOfClassrooms(classrooms));
 	    int choice = getIntFromScanner();
-	    Optional<Classroom> selectedClassroom = jdbcClassroomDao.findById(choice);
+	    Optional<Classroom> selectedClassroom = classroomDao.findById(choice);
 	    if (selectedClassroom.isEmpty()) {
 		System.out.println("No such subject.");
 	    } else {
@@ -80,16 +81,16 @@ public class ClassroomsMenu {
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());
 	newClassroom.getLocation().setId(oldClassroom.getLocation().getId());
-	jdbcClassroomDao.update(newClassroom);
+	classroomDao.update(newClassroom);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteClassroom() {
-	jdbcClassroomDao.delete(selectClassroom().getId());
+	classroomDao.delete(selectClassroom().getId());
 	System.out.println("Classroom deleted successfully.");
     }
 
     public void printClassrooms() {
-	System.out.println(getStringOfClassrooms(jdbcClassroomDao.findAll()));
+	System.out.println(getStringOfClassrooms(classroomDao.findAll()));
     }
 }

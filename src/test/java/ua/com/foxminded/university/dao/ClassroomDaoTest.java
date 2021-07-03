@@ -36,12 +36,13 @@ class ClassroomDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Mock
-    private JdbcLocationDao locationDao;
-    @InjectMocks
+//    @Mock
     @Autowired
-    private JdbcClassroomDao classroomDao;
-    @InjectMocks
+    private LocationDao locationDao;
+    // @InjectMocks
+    @Autowired
+    private ClassroomDao classroomDao;
+    // @InjectMocks
     @Autowired
     private ClassroomMapper classroomMapper;
 
@@ -53,7 +54,6 @@ class ClassroomDaoTest {
 		"classrooms", TEST_WHERE_CLAUSE);
 
 	classroomDao.create(classroom);
-	verify(locationDao).create(TEST_LOCATION);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", TEST_WHERE_CLAUSE);
@@ -64,12 +64,10 @@ class ClassroomDaoTest {
     @Test
     void givenClassroomWithExistingId_onUpdate_shouldUpdateCorrectly() {
 	Classroom classroom = new Classroom(2, TEST_LOCATION, "Test room", 5);
-
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
 	classroomDao.update(classroom);
-	verify(locationDao).update(TEST_LOCATION);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -81,12 +79,9 @@ class ClassroomDaoTest {
     @Test
     void givenCorrectClassroomId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
 	Location location = new Location(2, "Chem building", 1, 12);
-	when(locationDao.findById(2)).thenReturn(Optional.of(location));
-
 	Optional<Classroom> expected = Optional.of(new Classroom(2, location, "Small chemistry auditory", 30));
 
 	Optional<Classroom> actual = classroomDao.findById(2);
-	verify(locationDao).findById(2);
 
 	assertEquals(expected, actual);
     }
@@ -106,20 +101,14 @@ class ClassroomDaoTest {
 
 	Location location1 = new Location(1, "Phys building", 2, 22);
 	expected.add(new Classroom(1, location1, "Big physics auditory", 500));
-	when(locationDao.findById(1)).thenReturn(Optional.of(location1));
 
 	Location location2 = new Location(2, "Chem building", 1, 12);
 	expected.add(new Classroom(2, location2, "Small chemistry auditory", 30));
-	when(locationDao.findById(2)).thenReturn(Optional.of(location2));
 
 	Location location3 = new Location(3, "Chem building", 2, 12);
 	expected.add(new Classroom(3, location3, "Chemistry laboratory", 15));
-	when(locationDao.findById(3)).thenReturn(Optional.of(location3));
 
 	List<Classroom> actual = classroomDao.findAll();
-
-	verify(locationDao, times(3)).findById(anyInt());
-
 	assertEquals(expected, actual);
     }
 

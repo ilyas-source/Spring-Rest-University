@@ -44,7 +44,7 @@ public class UniversityMenu {
     public UniversityMenu(TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, StudentsMenu studentsMenu,
 	    LecturesMenu lecturesMenu, HolidaysMenu holidaysMenu, GroupsMenu groupsMenu, SubjectsMenu subjectsMenu,
 	    TimeslotsMenu timeslotsMenu, TeacherDao TeacherDao, StudentDao StudentDao,
-	    JdbcSubjectDao SubjectDao, JdbcClassroomDao ClassroomDao, JdbcGroupDao GroupDao,
+	    JdbcSubjectDao SubjectDao, ClassroomDao ClassroomDao, JdbcGroupDao GroupDao,
 	    LectureDao LectureDao, JdbcHolidayDao HolidayDao, JdbcTimeslotDao TimeslotDao) {
 	this.teachersMenu = teachersMenu;
 	this.classroomsMenu = classroomsMenu;

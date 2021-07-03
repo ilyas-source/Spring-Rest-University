@@ -10,8 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
+import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.model.Classroom;
 
@@ -26,17 +28,18 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     private JdbcTemplate jdbcTemplate;
     private ClassroomMapper classroomMapper;
-    private JdbcLocationDao jdbcLocationDao;
+    private LocationDao LocationDao;
 
-    public JdbcClassroomDao(JdbcTemplate jdbcTemplate, ClassroomMapper classroomMapper, JdbcLocationDao jdbcLocationDao) {
+    public JdbcClassroomDao(JdbcTemplate jdbcTemplate, ClassroomMapper classroomMapper, LocationDao locationDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.classroomMapper = classroomMapper;
-	this.jdbcLocationDao = jdbcLocationDao;
+	this.LocationDao = locationDao;
     }
 
     @Override
+    @Transactional
     public void create(Classroom classroom) {
-	jdbcLocationDao.create(classroom.getLocation());
+	LocationDao.create(classroom.getLocation());
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -65,8 +68,9 @@ public class JdbcClassroomDao implements ClassroomDao {
     }
 
     @Override
+    @Transactional
     public void update(Classroom classroom) {
-	jdbcLocationDao.update(classroom.getLocation());
+	LocationDao.update(classroom.getLocation());
 	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
 		classroom.getId());
     }
