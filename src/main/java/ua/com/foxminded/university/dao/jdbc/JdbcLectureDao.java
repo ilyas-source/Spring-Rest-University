@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
@@ -42,6 +43,7 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
+    @Transactional
     public void create(Lecture lecture) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 

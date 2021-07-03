@@ -9,16 +9,14 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
@@ -42,20 +40,20 @@ public class JdbcTeacherDao implements TeacherDao {
 
     private JdbcTemplate jdbcTemplate;
     private TeacherMapper teacherMapper;
-    private JdbcAddressDao jdbcAddressDao;
+    private AddressDao addressDao;
 
-    public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, JdbcAddressDao jdbcAddressDao) {
+    public JdbcTeacherDao(JdbcTemplate jdbcTemplate, TeacherMapper teacherMapper, AddressDao jdbcAddressDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.teacherMapper = teacherMapper;
-	this.jdbcAddressDao = jdbcAddressDao;
+	this.addressDao = jdbcAddressDao;
     }
 
     @Override
-    // @Transactional
+    @Transactional
     public void create(Teacher teacher) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcAddressDao.create(teacher.getAddress());
+	addressDao.create(teacher.getAddress());
 
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
@@ -82,8 +80,9 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
+    @Transactional
     public void update(Teacher teacher) {
-	jdbcAddressDao.update(teacher.getAddress());
+	addressDao.update(teacher.getAddress());
 
 	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(),
 		teacher.getGender().toString(), teacher.getDegree().toString(),

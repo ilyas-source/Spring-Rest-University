@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
@@ -15,11 +16,11 @@ import ua.com.foxminded.university.model.Teacher;
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
 
-    private JdbcAddressDao jdbcAddressDao;
+    private AddressDao jdbcAddressDao;
     private JdbcSubjectDao jdbcSubjectDao;
     private JdbcVacationDao jdbcVacationDao;
 
-    public TeacherMapper(JdbcAddressDao jdbcAddressDao, JdbcSubjectDao jdbcSubjectDao, JdbcVacationDao jdbcVacationDao) {
+    public TeacherMapper(AddressDao jdbcAddressDao, JdbcSubjectDao jdbcSubjectDao, JdbcVacationDao jdbcVacationDao) {
 	this.jdbcAddressDao = jdbcAddressDao;
 	this.jdbcSubjectDao = jdbcSubjectDao;
 	this.jdbcVacationDao = jdbcVacationDao;

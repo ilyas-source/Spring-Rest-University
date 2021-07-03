@@ -46,12 +46,12 @@ class StudentDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Mock
-    private JdbcAddressDao addressDao;
+    private AddressDao addressDao;
     @Mock
-    private JdbcGroupDao groupDao;
+    private GroupDao groupDao;
     @InjectMocks
     @Autowired
-    private JdbcStudentDao studentDao;
+    private StudentDao studentDao;
     @InjectMocks
     @Autowired
     private StudentMapper studentMapper;

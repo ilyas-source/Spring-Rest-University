@@ -25,7 +25,7 @@ class AddressDaoTest {
     private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";
 
     @Autowired
-    private JdbcAddressDao addressDao;
+    private AddressDao addressDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

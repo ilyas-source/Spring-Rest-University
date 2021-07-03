@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
@@ -36,12 +38,10 @@ import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql"
-})
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class TeacherDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' " +
-	    "AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone' AND address_id=4";
+    private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone' AND address_id=4";
     private static final String VACATIONS_WHERE_CLAUSE = "id=5 AND teacher_id=3 AND start_date='2020-01-01' AND end_date='2020-02-01'";
     private static final Subject TEST_SUBJECT = new Subject(2, "Test Subject", "For testing");
     private static final List<Subject> TEST_SUBJECTS = new ArrayList<Subject>(Arrays.asList(TEST_SUBJECT));
@@ -55,22 +55,25 @@ class TeacherDaoTest {
     @Mock
     private JdbcSubjectDao subjectDao;
     @Mock
-    private JdbcAddressDao addressDao;
+    private AddressDao addressDao;
     @Mock
     private JdbcVacationDao vacationDao;
     @InjectMocks
     @Autowired
-    private TeacherDao teacherDao;
+    private TeacherMapper teacherMapper;
     @InjectMocks
     @Autowired
-    private TeacherMapper teacherMapper;
+    private TeacherDao teacherDao;
 
+    @Transactional
     @Test
     void givenNewTeacher_onCreate_shouldCreateTeacherAndAssignSubjects() {
 	Teacher teacher = new Teacher.Builder("Test", "Teacher").id(3)
 		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(TEST_SUBJECTS)
 		.email("test@mail").phoneNumber("phone").address(TEST_ADDRESS)
 		.vacations(TEST_VACATIONS).build();
+
+	System.out.println(teacher.getAddress().getId());
 
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
@@ -79,13 +82,15 @@ class TeacherDaoTest {
 
 	teacherDao.create(teacher);
 
+	verify(addressDao).create(TEST_ADDRESS);
+
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 3 AND " + TEST_WHERE_CLAUSE);
 	int vacationsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"vacations", VACATIONS_WHERE_CLAUSE);
 
-	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
 	assertEquals(vacationsAfterCreate, vacationsBeforeCreate + 1);
+	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test

@@ -4,6 +4,8 @@ import static ua.com.foxminded.university.Menu.*;
 
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
@@ -26,19 +28,19 @@ public class UniversityMenu {
     private SubjectsMenu subjectsMenu;
     private TimeslotsMenu timeslotsMenu;
     private TeacherDao jdbcTeacherDao;
-    private JdbcStudentDao jdbcStudentDao;
+    private StudentDao jdbcStudentDao;
     private JdbcSubjectDao jdbcSubjectDao;
     private JdbcClassroomDao jdbcClassroomDao;
     private JdbcGroupDao jdbcGroupDao;
-    private JdbcLectureDao jdbcLectureDao;
+    private LectureDao jdbcLectureDao;
     private JdbcHolidayDao jdbcHolidayDao;
     private JdbcTimeslotDao jdbcTimeslotDao;
 
     public UniversityMenu(TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, StudentsMenu studentsMenu,
 	    LecturesMenu lecturesMenu, HolidaysMenu holidaysMenu, GroupsMenu groupsMenu, SubjectsMenu subjectsMenu,
-	    TimeslotsMenu timeslotsMenu, TeacherDao jdbcTeacherDao, JdbcStudentDao jdbcStudentDao,
+	    TimeslotsMenu timeslotsMenu, TeacherDao jdbcTeacherDao, StudentDao jdbcStudentDao,
 	    JdbcSubjectDao jdbcSubjectDao, JdbcClassroomDao jdbcClassroomDao, JdbcGroupDao jdbcGroupDao,
-	    JdbcLectureDao jdbcLectureDao, JdbcHolidayDao jdbcHolidayDao, JdbcTimeslotDao jdbcTimeslotDao) {
+	    LectureDao jdbcLectureDao, JdbcHolidayDao jdbcHolidayDao, JdbcTimeslotDao jdbcTimeslotDao) {
 	this.teachersMenu = teachersMenu;
 	this.classroomsMenu = classroomsMenu;
 	this.studentsMenu = studentsMenu;

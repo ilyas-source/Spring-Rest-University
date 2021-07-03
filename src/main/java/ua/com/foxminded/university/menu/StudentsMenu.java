@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
@@ -23,9 +24,9 @@ public class StudentsMenu {
     private AddressesMenu addressMenu;
     private GroupsMenu groupsMenu;
     private GenderMenu genderMenu;
-    private JdbcStudentDao jdbcStudentDao;
+    private StudentDao jdbcStudentDao;
 
-    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, JdbcStudentDao jdbcStudentDao) {
+    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, StudentDao jdbcStudentDao) {
 	this.addressMenu = addressMenu;
 	this.groupsMenu = groupsMenu;
 	this.genderMenu = genderMenu;

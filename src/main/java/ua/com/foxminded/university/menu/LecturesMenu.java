@@ -10,6 +10,7 @@ import static java.util.Objects.isNull;
 
 import org.springframework.stereotype.Component;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
@@ -24,13 +25,13 @@ import static ua.com.foxminded.university.Menu.*;
 public class LecturesMenu {
 
     private GroupsMenu groupsMenu;
-    private JdbcLectureDao jdbcLectureDao;
+    private LectureDao jdbcLectureDao;
     private SubjectsMenu subjectsMenu;
     private TeachersMenu teachersMenu;
     private ClassroomsMenu classroomsMenu;
     private TimeslotsMenu timeslotsMenu;
 
-    public LecturesMenu(GroupsMenu groupsMenu, JdbcLectureDao jdbcLectureDao, SubjectsMenu subjectsMenu,
+    public LecturesMenu(GroupsMenu groupsMenu, LectureDao jdbcLectureDao, SubjectsMenu subjectsMenu,
 	    TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, TimeslotsMenu timeslotsMenu) {
 	this.groupsMenu = groupsMenu;
 	this.jdbcLectureDao = jdbcLectureDao;

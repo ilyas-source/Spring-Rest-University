@@ -11,7 +11,9 @@ import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Address;
@@ -30,15 +32,16 @@ public class JdbcStudentDao implements StudentDao {
 
     private JdbcTemplate jdbcTemplate;
     private StudentMapper studentMapper;
-    private JdbcAddressDao jdbcAddressDao;
+    private AddressDao jdbcAddressDao;
 
-    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentMapper studentMapper, JdbcAddressDao jdbcAddressDao) {
+    public JdbcStudentDao(JdbcTemplate jdbcTemplate, StudentMapper studentMapper, AddressDao jdbcAddressDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.studentMapper = studentMapper;
 	this.jdbcAddressDao = jdbcAddressDao;
     }
 
     @Override
+    @Transactional
     public void create(Student student) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
