@@ -64,6 +64,7 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
+    @Transactional
     public void update(Lecture lecture) {
 	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
@@ -74,7 +75,6 @@ public class JdbcLectureDao implements LectureDao {
 	oldGroups.stream()
 		.filter(not(newGroups::contains))
 		.forEach(g -> removeGroup(g, lecture));
-
 	newGroups.stream()
 		.filter(not(oldGroups::contains))
 		.forEach(g -> assignGroup(g, lecture));
