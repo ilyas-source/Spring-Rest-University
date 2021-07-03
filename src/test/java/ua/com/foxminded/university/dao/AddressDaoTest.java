@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.model.Address;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -23,7 +22,6 @@ import ua.com.foxminded.university.model.Address;
 class AddressDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";
-
     @Autowired
     private AddressDao addressDao;
     @Autowired
@@ -33,7 +31,6 @@ class AddressDaoTest {
     void givenNewAddress_onCreate_shouldCreateAddress() {
 	Address address = new Address.Builder("test").id(4).postalCode("test").region("test")
 		.city("test").streetAddress("test").build();
-
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
 

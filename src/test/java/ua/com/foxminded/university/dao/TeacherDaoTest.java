@@ -54,11 +54,10 @@ class TeacherDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Mock
-    private JdbcSubjectDao subjectDao;
-//   @Mock
     @Autowired
     private AddressDao addressDao;
+    @Mock
+    private JdbcSubjectDao subjectDao;
     @Mock
     private JdbcVacationDao vacationDao;
     @InjectMocks
@@ -104,14 +103,12 @@ class TeacherDaoTest {
 		.gender(Gender.FEMALE).degree(Degree.MASTER).subjects(TEST_SUBJECTS)
 		.email("marie@curie.com").phoneNumber("+322223").address(expectedAddress)
 		.vacations(TEST_VACATIONS).build();
-
 	Optional<Teacher> expected = Optional.of(expectedTeacher);
 
 	Optional<Teacher> actual = teacherDao.findById(2);
 
 	verify(subjectDao).getSubjectsByTeacherId(2);
 	verify(vacationDao).getVacationsByTeacherId(2);
-
 	assertEquals(expected, actual);
     }
 
@@ -126,21 +123,17 @@ class TeacherDaoTest {
 
     @Test
     void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
-
 	when(vacationDao.getVacationsByTeacherId(anyInt())).thenReturn(TEST_VACATIONS);
 	when(subjectDao.getSubjectsByTeacherId(anyInt())).thenReturn(TEST_SUBJECTS);
 
 	Address expectedAddress1 = new Address.Builder("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
 		.city("Edinburgh").streetAddress("Panmure House").build();
-
 	Teacher teacher1 = new Teacher.Builder("Adam", "Smith").id(1)
 		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(TEST_SUBJECTS)
 		.email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
 		.vacations(TEST_VACATIONS).build();
-
 	Address expectedAddress2 = new Address.Builder("Poland").id(2).postalCode("54321").region("Central region")
 		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
-
 	Teacher teacher2 = new Teacher.Builder("Marie", "Curie").id(2)
 		.gender(Gender.FEMALE).degree(Degree.MASTER).subjects(TEST_SUBJECTS)
 		.email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
@@ -169,10 +162,8 @@ class TeacherDaoTest {
 
     @Test
     void givenTeacher_onUpdate_shouldUpdateCorrectly() {
-
 	Address updatedAddress = new Address.Builder("test").id(2).postalCode("test").region("test")
 		.city("test").streetAddress("test").build();
-
 	Teacher teacher = new Teacher.Builder("Test", "Teacher").id(2)
 		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(TEST_SUBJECTS)
 		.email("test@mail").phoneNumber("phone").address(updatedAddress)

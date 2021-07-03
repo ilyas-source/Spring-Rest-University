@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -41,12 +40,10 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    // @Transactional
+    @Transactional
     public void create(Student student) {
 	KeyHolder keyHolder = new GeneratedKeyHolder();
-
 	jdbcAddressDao.create(student.getAddress());
-
 	jdbcTemplate.update(connection -> {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
@@ -64,10 +61,10 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    @Transactional
     public void update(Student student) {
 	Address address = student.getAddress();
 	jdbcAddressDao.update(address);
-
 	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(),
 		student.getGender().toString(), student.getBirthDate(), student.getEmail(),
 		student.getPhoneNumber(), student.getAddress().getId(),
