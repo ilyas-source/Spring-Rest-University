@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sound.midi.Soundbank;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +19,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
@@ -40,7 +37,8 @@ import ua.com.foxminded.university.model.Student;
 class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
-	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' AND group_id = 2";
+	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
+	    "AND address_id = 4 AND group_id = 2";
     private static final Address TEST_ADDRESS = new Address.Builder("test").id(4).postalCode("test").region("test")
 	    .city("test").streetAddress("test").build();
     private static final Group TEST_GROUP = new Group(2, "test-01");
@@ -79,8 +77,10 @@ class StudentDaoTest {
 
     @Test
     void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
+
 	when(groupDao.findById(2)).thenReturn(Optional.of(TEST_GROUP));
 	when(addressDao.findById(4)).thenReturn(Optional.of(TEST_ADDRESS));
+
 	Student expectedStudent = new Student.Builder("John", "Doe")
 		.id(2).gender(Gender.MALE)
 		.birthDate(LocalDate.of(1981, 11, 1))
@@ -152,13 +152,14 @@ class StudentDaoTest {
     }
 
     @Test
-    void givenCorrectStudent_onUpdate_shouldUpdateCorrectly() {
+    void givenStudent_onUpdate_shouldUpdateCorrectly() {
 	Student student = new Student.Builder("Name", "Lastname")
 		.id(2).gender(Gender.MALE)
 		.birthDate(LocalDate.of(1980, 2, 2))
 		.email("test@mail").phone("+phone")
 		.address(TEST_ADDRESS).group(TEST_GROUP)
 		.build();
+
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"students", "id = 2 AND " + TEST_WHERE_CLAUSE);
 

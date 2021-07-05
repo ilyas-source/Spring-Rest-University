@@ -23,6 +23,7 @@ import ua.com.foxminded.university.model.Group;
 class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";
+
     @Autowired
     private JdbcGroupDao groupDao;
     @Autowired

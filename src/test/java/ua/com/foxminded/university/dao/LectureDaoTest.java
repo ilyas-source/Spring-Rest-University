@@ -84,11 +84,16 @@ class LectureDaoTest {
     @InjectMocks
     @Autowired
     private LectureMapper lectureMapper;
+    @Autowired
+    private TeachersMenu teachersMenu;
 
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
-	Lecture lecture = new Lecture.Builder(TEST_DATE, TEST_SUBJECT).timeslot(TEST_TIMESLOT)
-		.groups(TEST_GROUPS).teacher(TEST_TEACHER).classroom(TEST_CLASSROOM)
+	Lecture lecture = new Lecture.Builder(TEST_DATE, TEST_SUBJECT)
+		.timeslot(TEST_TIMESLOT)
+		.groups(TEST_GROUPS)
+		.teacher(TEST_TEACHER)
+		.classroom(TEST_CLASSROOM)
 		.build();
 
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
@@ -114,6 +119,7 @@ class LectureDaoTest {
 
     @Test
     void givenCorrectLectureId_onFindById_shouldReturnOptionalWithCorrectLecture() {
+
 	when(timeslotDao.findById(2)).thenReturn(Optional.of(TEST_TIMESLOT));
 	when(subjectDao.findById(2)).thenReturn(Optional.of(TEST_SUBJECT));
 	when(teacherDao.findById(2)).thenReturn(Optional.of(TEST_TEACHER));
@@ -127,6 +133,7 @@ class LectureDaoTest {
 		.teacher(TEST_TEACHER)
 		.classroom(TEST_CLASSROOM)
 		.build();
+
 	Optional<Lecture> expected = Optional.of(expectedLecture);
 
 	Optional<Lecture> actual = lectureDao.findById(2);
@@ -151,6 +158,7 @@ class LectureDaoTest {
 
     @Test
     void ifDatabaseHasLectures_onFindAll_shouldReturnCorrectListOfLectures() {
+
 	when(timeslotDao.findById(anyInt())).thenReturn(Optional.of(TEST_TIMESLOT));
 	when(subjectDao.findById(anyInt())).thenReturn(Optional.of(TEST_SUBJECT));
 	when(teacherDao.findById(anyInt())).thenReturn(Optional.of(TEST_TEACHER));
