@@ -12,7 +12,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
@@ -21,7 +22,7 @@ import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";

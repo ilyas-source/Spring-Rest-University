@@ -67,7 +67,6 @@ public class JdbcStudentDao implements StudentDao {
     @Transactional
     public void update(Student student) {
 	Address address = student.getAddress();
-	System.out.println("giving address to update: " + address);
 	jdbcAddressDao.update(address);
 
 	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(),

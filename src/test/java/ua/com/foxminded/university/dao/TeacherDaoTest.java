@@ -15,7 +15,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
@@ -27,11 +28,10 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class TeacherDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
-    private static final String VACATIONS_WHERE_CLAUSE = "id=5 AND teacher_id=3 AND start_date='2020-01-01' AND end_date='2020-02-01'";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
