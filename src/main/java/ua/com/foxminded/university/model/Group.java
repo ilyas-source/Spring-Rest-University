@@ -60,4 +60,9 @@ public class Group {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Group [id=" + id + ", " + name + "]";
+    }
 }

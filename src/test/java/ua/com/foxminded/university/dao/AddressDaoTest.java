@@ -21,7 +21,7 @@ import ua.com.foxminded.university.model.Address;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:fill-addresses.sql" })
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class AddressDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";
@@ -34,12 +34,12 @@ class AddressDaoTest {
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id=4 AND " + TEST_WHERE_CLAUSE);
+		"addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
 
 	addressDao.create(addressToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id=4 AND " + TEST_WHERE_CLAUSE);
+		"addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
 
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
@@ -103,7 +103,7 @@ class AddressDaoTest {
 	Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")
 		.city("test").streetAddress("test").build();
 
-	Address addressToCreate = Address.builder().country("test").id(4).postalCode("test").region("test").city("test")
+	Address addressToCreate = Address.builder().country("test").id(7).postalCode("test").region("test").city("test")
 		.streetAddress("test").build();
 
 	Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
@@ -112,8 +112,15 @@ class AddressDaoTest {
 		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
 	Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
 		.city("Perm").streetAddress("Lenina 5").build();
+	Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")
+		.city("LA").streetAddress("Grove St. 15").build();
+	Address expectedAddress5 = Address.builder().country("France").id(5).postalCode("21012").region("Central")
+		.city("Paris").streetAddress("Rue 15").build();
+	Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
+		.city("Beijin").streetAddress("Main St. 125").build();
 
-	List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3));
+	List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
+		expectedAddress4, expectedAddress5, expectedAddress6));
     }
 
 }

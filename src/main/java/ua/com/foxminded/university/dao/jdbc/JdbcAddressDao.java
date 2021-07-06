@@ -46,7 +46,6 @@ public class JdbcAddressDao implements AddressDao {
 	    return ps;
 	}, keyHolder);
 	address.setId((int) keyHolder.getKeys().get("id"));
-	System.out.println("TODO generated Address Id " + address.getId());
     }
 
     @Override

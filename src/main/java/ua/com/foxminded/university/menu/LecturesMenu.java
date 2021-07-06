@@ -88,11 +88,8 @@ public class LecturesMenu {
 	Teacher teacher = teachersMenu.selectTeacher();
 	Classroom classroom = classroomsMenu.selectClassroom();
 
-	return new Lecture.Builder(date, subject)
-		.timeslot(timeslot)
-		.groups(groups)
-		.teacher(teacher)
-		.classroom(classroom)
+	return Lecture.builder().date(date).subject(subject).timeslot(timeslot)
+		.groups(groups).teacher(teacher).classroom(classroom)
 		.build();
     }
 

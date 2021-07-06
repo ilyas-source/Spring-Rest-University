@@ -235,4 +235,10 @@ public class Student {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Student [id=" + id + ", " + firstName + ", " + lastName + ", " + gender + ", "
+		+ birthDate + ", " + email + ", " + phone + ", " + address + ", " + group + "]";
+    }
 }

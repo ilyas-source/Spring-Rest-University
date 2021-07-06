@@ -173,7 +173,7 @@ public class Address {
 
     @Override
     public String toString() {
-	return "Address [id=" + id + ", country=" + country + ", postalCode=" + postalCode + ", region=" + region + ", city="
-		+ city + ", streetAddress=" + streetAddress + "]";
+	return "Address [id=" + id + ", " + country + ", " + postalCode + ", " + region + ", "
+		+ city + ", " + streetAddress + "]";
     }
 }

@@ -103,8 +103,6 @@ class LectureDaoTest {
 
 	lectureDao.update(lectureToUpdate);
 
-	System.out.println(lectureToUpdate);
-
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
 	boolean group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);

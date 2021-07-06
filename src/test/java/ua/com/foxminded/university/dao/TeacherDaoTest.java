@@ -39,20 +39,15 @@ class TeacherDaoTest {
     private TeacherDao teacherDao;
 
     @Test
-    void givenNewTeacher_onCreate_shouldCreateTeacherAndAssignSubjects() {
+    void givenNewTeacher_onCreate_shouldCreateTeacher() {
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
-	int vacationsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"vacations", VACATIONS_WHERE_CLAUSE);
 
 	teacherDao.create(teacherToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
-	int vacationsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"vacations", VACATIONS_WHERE_CLAUSE);
 
-	assertEquals(vacationsAfterCreate, vacationsBeforeCreate + 1);
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
@@ -116,16 +111,17 @@ class TeacherDaoTest {
     }
 
     interface TestData {
-	List<Subject> subjectsToCreate = new ArrayList<>(Arrays.asList(subjectToCreate));
-	List<Subject> subjectsToUpdate = new ArrayList<>(Arrays.asList(subjectToUpdate));
+	List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
 	List<Vacation> vacationsToCreate = new ArrayList<Vacation>(Arrays.asList(vacationToCreate));
 	List<Vacation> vacationsToUpdate = new ArrayList<Vacation>(Arrays.asList(vacationToUpdate));
+
 	Teacher teacherToCreate = Teacher.builder().firstName("Test").lastName("Teacher").id(3)
-		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(subjectsToCreate)
+		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
 		.email("test@mail").phoneNumber("phone").address(addressToCreate)
 		.vacations(vacationsToCreate).build();
+
 	Teacher teacherToUpdate = Teacher.builder().firstName("Test").lastName("Teacher").id(2)
-		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(subjectsToUpdate)
+		.gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
 		.email("test@mail").phoneNumber("phone").address(addressToUpdate)
 		.vacations(vacationsToUpdate).build();
 
