@@ -1,7 +1,11 @@
 package ua.com.foxminded.university.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,14 +16,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:fill-groups.sql" })
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";
@@ -31,11 +33,10 @@ class GroupDaoTest {
 
     @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {
-	Group group = new Group(3, "test");
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
 
-	groupDao.create(group);
+	groupDao.create(groupToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
@@ -45,7 +46,7 @@ class GroupDaoTest {
 
     @Test
     void givenCorrectGroupId_onFindById_shouldReturnOptionalWithCorrectGroup() {
-	Optional<Group> expected = Optional.of(new Group(2, "ZI-08"));
+	Optional<Group> expected = Optional.of(expectedGroup2);
 
 	Optional<Group> actual = groupDao.findById(2);
 
@@ -63,13 +64,9 @@ class GroupDaoTest {
 
     @Test
     void ifDatabaseHasGroups_onFindAll_shouldReturnCorrectListOfGroups() {
-	List<Group> expected = new ArrayList<>();
-	expected.add(new Group(1, "AB-11"));
-	expected.add(new Group(2, "ZI-08"));
-
 	List<Group> actual = groupDao.findAll();
 
-	assertEquals(expected, actual);
+	assertEquals(expectedGroups, actual);
     }
 
     @Test
@@ -83,9 +80,7 @@ class GroupDaoTest {
 
     @Test
     void givenGroup_onUpdate_shouldUpdateCorrectly() {
-	Group group = new Group(2, "test");
-
-	groupDao.update(group);
+	groupDao.update(groupToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"groups", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -102,5 +97,16 @@ class GroupDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    interface TestData {
+	Group groupToCreate = new Group(3, "test");
+	Group groupToUpdate = new Group(2, "test");
+
+	Group expectedGroup1 = new Group(1, "AB-11");
+	Group expectedGroup2 = new Group(2, "ZI-08");
+
+	List<Group> expectedGroups = new ArrayList<>(
+		Arrays.asList(expectedGroup1, expectedGroup2));
     }
 }

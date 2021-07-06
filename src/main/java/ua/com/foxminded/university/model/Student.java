@@ -14,6 +14,10 @@ public class Student {
     private Address address;
     private Group group;
 
+    public static Builder builder() {
+	return new Builder();
+    }
+
     public static class Builder {
 	private int id = 0;
 	private String firstName;
@@ -25,9 +29,17 @@ public class Student {
 	private Address address;
 	private Group group;
 
-	public Builder(String firstName, String lastName) {
-	    this.firstName = firstName;
-	    this.lastName = lastName;
+	public Builder() {
+	}
+
+	public Builder firstName(String val) {
+	    this.firstName = val;
+	    return this;
+	}
+
+	public Builder lastName(String val) {
+	    this.lastName = val;
+	    return this;
 	}
 
 	public Builder id(int val) {

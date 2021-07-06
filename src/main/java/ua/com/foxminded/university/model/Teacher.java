@@ -15,6 +15,10 @@ public class Teacher {
     private Address address;
     private List<Vacation> vacations;
 
+    public static Builder builder() {
+	return new Builder();
+    }
+
     public static class Builder {
 	private int id = 0;
 	private String firstName;
@@ -27,14 +31,7 @@ public class Teacher {
 	private Address address;
 	private List<Vacation> vacations;
 
-	public Builder(String firstName, String lastName) {
-	    this.firstName = firstName;
-	    this.lastName = lastName;
-	}
-
-	public Builder id(int val) {
-	    this.id = val;
-	    return this;
+	public Builder() {
 	}
 
 	public Builder firstName(String val) {
@@ -44,6 +41,11 @@ public class Teacher {
 
 	public Builder lastName(String val) {
 	    this.lastName = val;
+	    return this;
+	}
+
+	public Builder id(int val) {
+	    this.id = val;
 	    return this;
 	}
 

@@ -1,8 +1,11 @@
 package ua.com.foxminded.university.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,14 +16,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.model.Location;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:fill-locations.sql" })
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class LocationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "building='test' AND floor=10 and room_number=100";
@@ -32,11 +33,10 @@ class LocationDaoTest {
 
     @Test
     void givenNewLocation_onCreate_shouldCreateLocation() {
-	Location location = new Location(4, "test", 10, 100);
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	locationDao.create(location);
+	locationDao.create(locationToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 4 AND " + TEST_WHERE_CLAUSE);
@@ -46,7 +46,7 @@ class LocationDaoTest {
 
     @Test
     void givenCorrectLocationId_onFindById_shouldReturnOptionalWithCorrectLocation() {
-	Optional<Location> expected = Optional.of(new Location(2, "Chem building", 1, 12));
+	Optional<Location> expected = Optional.of(expectedLocation2);
 
 	Optional<Location> actual = locationDao.findById(2);
 
@@ -64,14 +64,9 @@ class LocationDaoTest {
 
     @Test
     void ifDatabaseHasLocations_onFindAll_shouldReturnCorrectListOfLocations() {
-	List<Location> expected = new ArrayList<>();
-	expected.add(new Location(1, "Phys building", 2, 22));
-	expected.add(new Location(2, "Chem building", 1, 12));
-	expected.add(new Location(3, "Chem building", 2, 12));
-
 	List<Location> actual = locationDao.findAll();
 
-	assertEquals(expected, actual);
+	assertEquals(expectedLocations, actual);
     }
 
     @Test
@@ -85,9 +80,7 @@ class LocationDaoTest {
 
     @Test
     void givenLocation_onUpdate_shouldUpdateCorrectly() {
-	Location location = new Location(2, "test", 10, 100);
-
-	locationDao.update(location);
+	locationDao.update(locationToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"locations", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -104,5 +97,17 @@ class LocationDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "locations", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    interface TestData {
+	Location locationToCreate = new Location(4, "test", 10, 100);
+	Location locationToUpdate = new Location(2, "test", 10, 100);
+
+	Location expectedLocation1 = new Location(1, "Phys building", 2, 22);
+	Location expectedLocation2 = new Location(2, "Chem building", 1, 12);
+	Location expectedLocation3 = new Location(3, "Chem building", 2, 12);
+
+	List<Location> expectedLocations = new ArrayList<>(
+		Arrays.asList(expectedLocation1, expectedLocation2, expectedLocation3));
     }
 }

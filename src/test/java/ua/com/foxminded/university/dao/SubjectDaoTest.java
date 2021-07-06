@@ -1,7 +1,11 @@
 package ua.com.foxminded.university.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +16,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
-import ua.com.foxminded.university.menu.SubjectsMenu;
 import ua.com.foxminded.university.model.Subject;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -32,11 +33,10 @@ class SubjectDaoTest {
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
-	Subject subject = new Subject(5, "test", "test");
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
 
-	subjectDao.create(subject);
+	subjectDao.create(subjectToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
@@ -46,7 +46,7 @@ class SubjectDaoTest {
 
     @Test
     void givenCorrectSubjectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
-	Optional<Subject> expected = Optional.of(new Subject(2, "Test Philosophy", "Base philosophy"));
+	Optional<Subject> expected = Optional.of(expectedSubject2);
 
 	Optional<Subject> actual = subjectDao.findById(2);
 
@@ -64,15 +64,9 @@ class SubjectDaoTest {
 
     @Test
     void ifDatabaseHasSubjects_onFindAll_shouldReturnCorrectListOfSubjects() {
-	List<Subject> expected = new ArrayList<>();
-	expected.add(new Subject(1, "Test Economics", "Base economics"));
-	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
-	expected.add(new Subject(3, "Test Chemistry", "Base chemistry"));
-	expected.add(new Subject(4, "Test Radiology", "Explore radiation"));
-
 	List<Subject> actual = subjectDao.findAll();
 
-	assertEquals(expected, actual);
+	assertEquals(expectedSubjects, actual);
     }
 
     @Test
@@ -86,9 +80,7 @@ class SubjectDaoTest {
 
     @Test
     void givenSubject_onUpdate_shouldUpdateCorrectly() {
-	Subject subject = new Subject(2, "test", "test");
-
-	subjectDao.update(subject);
+	subjectDao.update(subjectToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"subjects", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -109,13 +101,9 @@ class SubjectDaoTest {
 
     @Test
     void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
-	List<Subject> expected = new ArrayList<>();
-	expected.add(new Subject(1, "Test Economics", "Base economics"));
-	expected.add(new Subject(2, "Test Philosophy", "Base philosophy"));
-
 	List<Subject> actual = subjectDao.getSubjectsByTeacherId(1);
 
-	assertEquals(expected, actual);
+	assertEquals(expectedSubjectsForTeacher1, actual);
     }
 
     @Test
@@ -124,5 +112,21 @@ class SubjectDaoTest {
 	List<Subject> actual = subjectDao.getSubjectsByTeacherId(3);
 
 	assertThat(actual).isEmpty();
+    }
+
+    interface TestData {
+	Subject subjectToCreate = new Subject(5, "test", "test");
+	Subject subjectToUpdate = new Subject(2, "test", "test");
+
+	Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
+	Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");
+	Subject expectedSubject3 = new Subject(3, "Test Chemistry", "Base chemistry");
+	Subject expectedSubject4 = new Subject(4, "Test Radiology", "Explore radiation");
+
+	List<Subject> expectedSubjects = new ArrayList<>(
+		Arrays.asList(expectedSubject1, expectedSubject2, expectedSubject3, expectedSubject4));
+
+	List<Subject> expectedSubjectsForTeacher1 = new ArrayList<>(
+		Arrays.asList(expectedSubject1, expectedSubject2));
     }
 }

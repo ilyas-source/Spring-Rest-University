@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -36,6 +38,8 @@ public class JdbcLectureDao implements LectureDao {
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
+    @Autowired
+    JdbcTimeslotDao timeslotDao;
 
     public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper) {
 	this.jdbcTemplate = jdbcTemplate;

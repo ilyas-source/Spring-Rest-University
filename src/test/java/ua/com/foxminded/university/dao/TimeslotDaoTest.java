@@ -1,9 +1,12 @@
 package ua.com.foxminded.university.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,14 +17,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:fill-timeslots.sql" })
+@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class TimeslotDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
@@ -33,11 +34,10 @@ class TimeslotDaoTest {
 
     @Test
     void givenNewTimeslot_onCreate_shouldCreateTimeslot() {
-	Timeslot timeslot = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
 
-	timeslotDao.create(timeslot);
+	timeslotDao.create(timeslotToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
@@ -47,7 +47,7 @@ class TimeslotDaoTest {
 
     @Test
     void givenCorrectTimeslotId_onFindById_shouldReturnOptionalWithCorrectTimeslot() {
-	Optional<Timeslot> expected = Optional.of(new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45)));
+	Optional<Timeslot> expected = Optional.of(expectedTimeslot2);
 
 	Optional<Timeslot> actual = timeslotDao.findById(2);
 
@@ -65,15 +65,8 @@ class TimeslotDaoTest {
 
     @Test
     void ifDatabaseHasTimeslots_onFindAll_shouldReturnCorrectListOfTimeslots() {
-	List<Timeslot> expected = new ArrayList<>();
-
-	expected.add(new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45)));
-	expected.add(new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45)));
-	expected.add(new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45)));
-
 	List<Timeslot> actual = timeslotDao.findAll();
-
-	assertEquals(expected, actual);
+	assertEquals(expectedTimeslots, actual);
     }
 
     @Test
@@ -87,9 +80,7 @@ class TimeslotDaoTest {
 
     @Test
     void givenTimeslot_onUpdate_shouldUpdateCorrectly() {
-	Timeslot timeslot = new Timeslot(2, LocalTime.of(12, 00), LocalTime.of(12, 15));
-
-	timeslotDao.update(timeslot);
+	timeslotDao.update(timeslotToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"timeslots", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -106,5 +97,16 @@ class TimeslotDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    interface TestData {
+	Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
+	Timeslot timeslotToUpdate = new Timeslot(2, LocalTime.of(12, 00), LocalTime.of(12, 15));
+
+	Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45));
+	Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));
+	Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45));
+	List<Timeslot> expectedTimeslots = new ArrayList<>(
+		Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));
     }
 }

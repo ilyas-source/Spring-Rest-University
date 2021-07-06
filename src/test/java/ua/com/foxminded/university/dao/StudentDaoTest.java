@@ -1,8 +1,8 @@
 package ua.com.foxminded.university.dao;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,49 +10,35 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
+import sun.security.util.math.IntegerFieldModuloP;
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
-import ua.com.foxminded.university.menu.StudentsMenu;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
-@ExtendWith(MockitoExtension.class)
 @SpringJUnitConfig(SpringTestConfig.class)
-@Sql(scripts = { "classpath:schema.sql", "classpath:test-data.sql" })
 class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' " +
 	    "AND address_id = 4 AND group_id = 2";
-    private static final Address TEST_ADDRESS = new Address.Builder("test").id(4).postalCode("test").region("test")
-	    .city("test").streetAddress("test").build();
-    private static final Group TEST_GROUP = new Group(2, "test-01");
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Mock
+    @Autowired
     private AddressDao addressDao;
-    @Mock
+    @Autowired
     private JdbcGroupDao groupDao;
-    @InjectMocks
     @Autowired
     private StudentDao studentDao;
-    @InjectMocks
     @Autowired
     private StudentMapper studentMapper;
 
@@ -77,24 +63,9 @@ class StudentDaoTest {
 
     @Test
     void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
-
-	when(groupDao.findById(2)).thenReturn(Optional.of(TEST_GROUP));
-	when(addressDao.findById(4)).thenReturn(Optional.of(TEST_ADDRESS));
-
-	Student expectedStudent = new Student.Builder("John", "Doe")
-		.id(2).gender(Gender.MALE)
-		.birthDate(LocalDate.of(1981, 11, 1))
-		.email("qwe@qwe.com")
-		.phone("1231223")
-		.address(TEST_ADDRESS)
-		.group(TEST_GROUP)
-		.build();
-	Optional<Student> expected = Optional.of(expectedStudent);
+	Optional<Student> expected = Optional.of(expectedStudent2);
 
 	Optional<Student> actual = studentDao.findById(2);
-
-	verify(groupDao).findById(2);
-	verify(addressDao).findById(4);
 
 	assertEquals(expected, actual);
     }
@@ -110,36 +81,9 @@ class StudentDaoTest {
 
     @Test
     void ifDatabaseHasStudents_onFindAll_shouldReturnCorrectListOfStudents() {
-	when(groupDao.findById(anyInt())).thenReturn(Optional.of(TEST_GROUP));
-	when(addressDao.findById(anyInt())).thenReturn(Optional.of(TEST_ADDRESS));
-
-	Student student1 = new Student.Builder("Ivan", "Petrov")
-		.id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
-		.email("qwe@rty.com").phone("123123123").address(TEST_ADDRESS)
-		.group(TEST_GROUP).build();
-	Student student2 = new Student.Builder("John", "Doe")
-		.id(2).gender(Gender.MALE).birthDate(LocalDate.of(1981, 11, 1))
-		.email("qwe@qwe.com").phone("1231223").address(TEST_ADDRESS)
-		.group(TEST_GROUP).build();
-	Student student3 = new Student.Builder("Janna", "DArk")
-		.id(3).gender(Gender.FEMALE).birthDate(LocalDate.of(1881, 11, 1))
-		.email("qwe@no.fr").phone("1231223").address(TEST_ADDRESS)
-		.group(TEST_GROUP).build();
-	Student student4 = new Student.Builder("Mao", "Zedun")
-		.id(4).gender(Gender.MALE).birthDate(LocalDate.of(1921, 9, 14))
-		.email("qwe@no.cn").phone("1145223").address(TEST_ADDRESS)
-		.group(TEST_GROUP).build();
-	List<Student> expected = new ArrayList<>();
-	expected.add(student1);
-	expected.add(student2);
-	expected.add(student3);
-	expected.add(student4);
-
 	List<Student> actual = studentDao.findAll();
 
-	verify(groupDao, times(4)).findById(anyInt());
-	verify(addressDao, times(4)).findById(anyInt());
-	assertEquals(expected, actual);
+	assertEquals(expectedStudents, actual);
     }
 
     @Test
@@ -181,5 +125,9 @@ class StudentDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    interface TestData {
+
     }
 }

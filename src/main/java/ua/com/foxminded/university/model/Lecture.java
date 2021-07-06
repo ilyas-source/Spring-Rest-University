@@ -13,6 +13,10 @@ public class Lecture {
     private Teacher teacher;
     private Classroom classroom;
 
+    public static Builder builder() {
+	return new Builder();
+    }
+
     public static class Builder {
 	private int id = 0;
 	private LocalDate date;
@@ -22,9 +26,17 @@ public class Lecture {
 	private Teacher teacher;
 	private Classroom classroom;
 
-	public Builder(LocalDate date, Subject subject) {
-	    this.date = date;
-	    this.subject = subject;
+	private Builder() {
+	}
+
+	public Builder date(LocalDate val) {
+	    this.date = val;
+	    return this;
+	}
+
+	public Builder subject(Subject val) {
+	    this.subject = val;
+	    return this;
 	}
 
 	public Builder id(int val) {
@@ -182,5 +194,11 @@ public class Lecture {
 	} else if (!timeslot.equals(other.timeslot))
 	    return false;
 	return true;
+    }
+
+    @Override
+    public String toString() {
+	return "Lecture [id=" + id + ", date=" + date + ", timeslot=" + timeslot + ", groups=" + groups + ", subject=" + subject
+		+ ", teacher=" + teacher + ", classroom=" + classroom + "]";
     }
 }

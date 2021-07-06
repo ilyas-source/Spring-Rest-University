@@ -9,6 +9,10 @@ public class Address {
     private String city;
     private String streetAddress;
 
+    public static Builder builder() {
+	return new Builder();
+    }
+
     public static class Builder {
 	private int id = 0;
 	private String country;
@@ -17,8 +21,12 @@ public class Address {
 	private String city;
 	private String streetAddress;
 
-	public Builder(String country) {
-	    this.country = country;
+	private Builder() {
+	}
+
+	public Builder country(String val) {
+	    this.country = val;
+	    return this;
 	}
 
 	public Builder id(int val) {

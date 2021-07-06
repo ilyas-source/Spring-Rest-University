@@ -1,9 +1,10 @@
 package ua.com.foxminded.university.dao;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.model.Address;
+
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @Sql(scripts = { "classpath:schema.sql", "classpath:fill-addresses.sql" })
@@ -31,25 +33,20 @@ class AddressDaoTest {
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
-	Address address = new Address.Builder("test").id(4).postalCode("test").region("test")
-		.city("test").streetAddress("test").build();
-
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
+		"addresses", "id=4 AND " + TEST_WHERE_CLAUSE);
 
-	addressDao.create(address);
+	addressDao.create(addressToCreate);
 
 	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id = 4 AND " + TEST_WHERE_CLAUSE);
+		"addresses", "id=4 AND " + TEST_WHERE_CLAUSE);
 
 	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
     void givenCorrectAddressId_onFindById_shouldReturnOptionalWithCorrectAddress() {
-	Optional<Address> expected = Optional
-		.of(new Address.Builder("Poland").id(2).postalCode("54321").region("Central region").city("Warsaw")
-			.streetAddress("Urszuli Ledochowskiej 3").build());
+	Optional<Address> expected = Optional.of(expectedAddress2);
 
 	Optional<Address> actual = addressDao.findById(2);
 
@@ -67,17 +64,9 @@ class AddressDaoTest {
 
     @Test
     void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
-	List<Address> expected = new ArrayList<>();
-	expected.add(new Address.Builder("UK").id(1).postalCode("12345").region("City-Of-Edinburgh").city("Edinburgh")
-		.streetAddress("Panmure House").build());
-	expected.add(new Address.Builder("Poland").id(2).postalCode("54321").region("Central region").city("Warsaw")
-		.streetAddress("Urszuli Ledochowskiej 3").build());
-	expected.add(new Address.Builder("Russia").id(3).postalCode("450080").region("Permskiy kray").city("Perm")
-		.streetAddress("Lenina 5").build());
-
 	List<Address> actual = addressDao.findAll();
 
-	assertEquals(expected, actual);
+	assertEquals(expectedAddresses, actual);
     }
 
     @Test
@@ -91,10 +80,7 @@ class AddressDaoTest {
 
     @Test
     void givenAddress_onUpdate_shouldUpdateCorrectly() {
-	Address address = new Address.Builder("test").id(2).postalCode("test").region("test")
-		.city("test").streetAddress("test").build();
-
-	addressDao.update(address);
+	addressDao.update(addressToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"addresses", "id = 2 AND " + TEST_WHERE_CLAUSE);
@@ -112,4 +98,22 @@ class AddressDaoTest {
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
+
+    interface TestData {
+	Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")
+		.city("test").streetAddress("test").build();
+
+	Address addressToCreate = Address.builder().country("test").id(4).postalCode("test").region("test").city("test")
+		.streetAddress("test").build();
+
+	Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
+		.city("Edinburgh").streetAddress("Panmure House").build();
+	Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region("Central region")
+		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
+	Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
+		.city("Perm").streetAddress("Lenina 5").build();
+
+	List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3));
+    }
+
 }
