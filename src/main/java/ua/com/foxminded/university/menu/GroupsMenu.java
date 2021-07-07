@@ -16,12 +16,6 @@ import static ua.com.foxminded.university.Menu.*;
 @Component
 public class GroupsMenu {
 
-    // private JdbcGroupDao jdbcGroupDao;
-
-//    public GroupsMenu(JdbcGroupDao jdbcGroupDao) {
-//	this.jdbcGroupDao = jdbcGroupDao;
-//    }
-
     private GroupService groupService;
 
     public GroupsMenu(GroupService groupService) {
@@ -42,7 +36,6 @@ public class GroupsMenu {
     }
 
     public void addGroup() {
-//	jdbcGroupDao.create(createGroup());
 	groupService.create(createGroup());
     }
 
@@ -53,7 +46,6 @@ public class GroupsMenu {
     }
 
     public Group selectGroup() {
-	// List<Group> groups = jdbcGroupDao.findAll();
 	List<Group> groups = groupService.findAll();
 	Group result = null;
 	boolean correctEntry = false;

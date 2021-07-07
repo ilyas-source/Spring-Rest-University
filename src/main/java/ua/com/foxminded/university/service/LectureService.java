@@ -5,35 +5,35 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.model.Lecture;
 
 @Service
 public class LectureService {
 
-    private JdbcLectureDao jdbcLectureDao;
+    private LectureDao lectureDao;
 
-    public LectureService(JdbcLectureDao jdbcLectureDao) {
-	this.jdbcLectureDao = jdbcLectureDao;
+    public LectureService(LectureDao lectureDao) {
+	this.lectureDao = lectureDao;
     }
 
     public void create(Lecture createLecture) {
-	jdbcLectureDao.create(createLecture);
+	lectureDao.create(createLecture);
     }
 
     public List<Lecture> findAll() {
-	return jdbcLectureDao.findAll();
+	return lectureDao.findAll();
     }
 
     public Optional<Lecture> findById(int choice) {
-	return jdbcLectureDao.findById(choice);
+	return lectureDao.findById(choice);
     }
 
     public void update(Lecture newLecture) {
-	jdbcLectureDao.update(newLecture);
+	lectureDao.update(newLecture);
     }
 
     public void delete(int id) {
-	jdbcLectureDao.delete(id);
+	lectureDao.delete(id);
     }
 }

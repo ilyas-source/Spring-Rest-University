@@ -17,6 +17,7 @@ import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.service.StudentService;
 
 @Component
 public class StudentsMenu {
@@ -24,13 +25,13 @@ public class StudentsMenu {
     private AddressesMenu addressMenu;
     private GroupsMenu groupsMenu;
     private GenderMenu genderMenu;
-    private StudentDao jdbcStudentDao;
+    private StudentService studentService;
 
-    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, StudentDao jdbcStudentDao) {
+    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, StudentService studentService) {
 	this.addressMenu = addressMenu;
 	this.groupsMenu = groupsMenu;
 	this.genderMenu = genderMenu;
-	this.jdbcStudentDao = jdbcStudentDao;
+	this.studentService = studentService;
     }
 
     public String getStringOfStudents(List<Student> students) {
@@ -54,7 +55,7 @@ public class StudentsMenu {
     }
 
     public void addStudent() {
-	jdbcStudentDao.create(createStudent());
+	studentService.create(createStudent());
     }
 
     public Student createStudent() {
@@ -78,18 +79,18 @@ public class StudentsMenu {
     }
 
     public void printStudents() {
-	System.out.println(getStringOfStudents(jdbcStudentDao.findAll()));
+	System.out.println(getStringOfStudents(studentService.findAll()));
     }
 
     public Student selectStudent() {
-	List<Student> students = jdbcStudentDao.findAll();
+	List<Student> students = studentService.findAll();
 	Student result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select student: ");
 	    System.out.print(getStringOfStudents(students));
 	    int choice = getIntFromScanner();
-	    Optional<Student> selectedStudent = jdbcStudentDao.findById(choice);
+	    Optional<Student> selectedStudent = studentService.findById(choice);
 	    if (selectedStudent.isEmpty()) {
 		System.out.println("No such student.");
 	    } else {
@@ -105,12 +106,12 @@ public class StudentsMenu {
 	Student newStudent = createStudent();
 	newStudent.setId(oldStudent.getId());
 	newStudent.getAddress().setId(oldStudent.getAddress().getId());
-	jdbcStudentDao.update(newStudent);
+	studentService.update(newStudent);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteStudent() {
-	jdbcStudentDao.delete(selectStudent().getId());
+	studentService.delete(selectStudent().getId());
 	System.out.println("Student deleted successfully.");
     }
 }

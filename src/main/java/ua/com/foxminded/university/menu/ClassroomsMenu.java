@@ -14,16 +14,17 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.service.ClassroomService;
 
 @Component
 public class ClassroomsMenu {
 
     private LocationsMenu locationsMenu;
-    private ClassroomDao classroomDao;
+    private ClassroomService classroomService;
 
-    public ClassroomsMenu(LocationsMenu locationsMenu, ClassroomDao jdbcClassroomDao) {
+    public ClassroomsMenu(LocationsMenu locationsMenu, ClassroomService classroomService) {
 	this.locationsMenu = locationsMenu;
-	this.classroomDao = jdbcClassroomDao;
+	this.classroomService = classroomService;
     }
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
@@ -43,7 +44,7 @@ public class ClassroomsMenu {
     }
 
     public void addClassroom() {
-	classroomDao.create(createClassroom());
+	classroomService.create(createClassroom());
     }
 
     public Classroom createClassroom() {
@@ -58,14 +59,14 @@ public class ClassroomsMenu {
     }
 
     public Classroom selectClassroom() {
-	List<Classroom> classrooms = classroomDao.findAll();
+	List<Classroom> classrooms = classroomService.findAll();
 	Classroom result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select classroom: ");
 	    System.out.print(getStringOfClassrooms(classrooms));
 	    int choice = getIntFromScanner();
-	    Optional<Classroom> selectedClassroom = classroomDao.findById(choice);
+	    Optional<Classroom> selectedClassroom = classroomService.findById(choice);
 	    if (selectedClassroom.isEmpty()) {
 		System.out.println("No such subject.");
 	    } else {
@@ -81,16 +82,16 @@ public class ClassroomsMenu {
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());
 	newClassroom.getLocation().setId(oldClassroom.getLocation().getId());
-	classroomDao.update(newClassroom);
+	classroomService.update(newClassroom);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteClassroom() {
-	classroomDao.delete(selectClassroom().getId());
+	classroomService.delete(selectClassroom().getId());
 	System.out.println("Classroom deleted successfully.");
     }
 
     public void printClassrooms() {
-	System.out.println(getStringOfClassrooms(classroomDao.findAll()));
+	System.out.println(getStringOfClassrooms(classroomService.findAll()));
     }
 }

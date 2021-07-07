@@ -5,35 +5,35 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Student;
 
 @Service
 public class StudentService {
 
-    private JdbcStudentDao jdbcStudentDao;
+    private StudentDao studentDao;
 
-    public StudentService(JdbcStudentDao jdbcStudentDao) {
-	this.jdbcStudentDao = jdbcStudentDao;
+    public StudentService(StudentDao studentDao) {
+	this.studentDao = studentDao;
     }
 
     public void create(Student createStudent) {
-	jdbcStudentDao.create(createStudent);
+	studentDao.create(createStudent);
     }
 
     public List<Student> findAll() {
-	return jdbcStudentDao.findAll();
+	return studentDao.findAll();
     }
 
     public Optional<Student> findById(int choice) {
-	return jdbcStudentDao.findById(choice);
+	return studentDao.findById(choice);
     }
 
     public void update(Student newStudent) {
-	jdbcStudentDao.update(newStudent);
+	studentDao.update(newStudent);
     }
 
     public void delete(int id) {
-	jdbcStudentDao.delete(id);
+	studentDao.delete(id);
     }
 }
