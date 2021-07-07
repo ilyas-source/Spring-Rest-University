@@ -9,15 +9,23 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.service.GroupService;
+
 import static ua.com.foxminded.university.Menu.*;
 
 @Component
 public class GroupsMenu {
 
-    private JdbcGroupDao jdbcGroupDao;
+    // private JdbcGroupDao jdbcGroupDao;
 
-    public GroupsMenu(JdbcGroupDao jdbcGroupDao) {
-	this.jdbcGroupDao = jdbcGroupDao;
+//    public GroupsMenu(JdbcGroupDao jdbcGroupDao) {
+//	this.jdbcGroupDao = jdbcGroupDao;
+//    }
+
+    private GroupService groupService;
+
+    public GroupsMenu(GroupService groupService) {
+	this.groupService = groupService;
     }
 
     public String getStringOfGroups(List<Group> groups) {
@@ -30,11 +38,12 @@ public class GroupsMenu {
     }
 
     public void printGroups() {
-	System.out.println(getStringOfGroups(jdbcGroupDao.findAll()));
+	System.out.println(getStringOfGroups(groupService.findAll()));
     }
 
     public void addGroup() {
-	jdbcGroupDao.create(createGroup());
+//	jdbcGroupDao.create(createGroup());
+	groupService.create(createGroup());
     }
 
     public Group createGroup() {
@@ -44,14 +53,15 @@ public class GroupsMenu {
     }
 
     public Group selectGroup() {
-	List<Group> groups = jdbcGroupDao.findAll();
+	// List<Group> groups = jdbcGroupDao.findAll();
+	List<Group> groups = groupService.findAll();
 	Group result = null;
 	boolean correctEntry = false;
 	while (!correctEntry) {
 	    System.out.println("Select a group:");
 	    System.out.print(getStringOfGroups(groups));
 	    int choice = getIntFromScanner();
-	    Optional<Group> selectedGroup = jdbcGroupDao.findById(choice);
+	    Optional<Group> selectedGroup = groupService.findById(choice);
 	    if (selectedGroup.isEmpty()) {
 		System.out.println("No such group, try again.");
 	    } else {
@@ -94,12 +104,12 @@ public class GroupsMenu {
 	Group oldGroup = selectGroup();
 	Group newGroup = createGroup();
 	newGroup.setId(oldGroup.getId());
-	jdbcGroupDao.update(newGroup);
+	groupService.update(newGroup);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteGroup() {
-	jdbcGroupDao.delete(selectGroup().getId());
+	groupService.delete(selectGroup().getId());
 	System.out.println("Group deleted successfully.");
     }
 }
