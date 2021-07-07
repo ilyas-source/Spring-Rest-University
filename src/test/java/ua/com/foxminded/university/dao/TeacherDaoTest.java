@@ -29,7 +29,7 @@ import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class TeacherDaoTest {
+public class TeacherDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
 
@@ -110,7 +110,7 @@ class TeacherDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
 	List<Vacation> vacationsToCreate = new ArrayList<Vacation>(Arrays.asList(vacationToCreate));
 	List<Vacation> vacationsToUpdate = new ArrayList<Vacation>(Arrays.asList(vacationToUpdate));

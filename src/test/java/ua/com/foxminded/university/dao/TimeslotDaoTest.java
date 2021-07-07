@@ -24,7 +24,7 @@ import ua.com.foxminded.university.model.Timeslot;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class TimeslotDaoTest {
+public class TimeslotDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
 
@@ -100,7 +100,7 @@ class TimeslotDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
 	Timeslot timeslotToUpdate = new Timeslot(2, LocalTime.of(12, 00), LocalTime.of(12, 15));
 

@@ -29,7 +29,7 @@ import ua.com.foxminded.university.model.Lecture;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class LectureDaoTest {
+public class LectureDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=1 AND teacher_id=1 AND classroom_id=1";
 
@@ -136,7 +136,7 @@ class LectureDaoTest {
 	return false;
     }
 
-    interface TestData {
+    public interface TestData {
 	List<Group> testGroups = new ArrayList<Group>(Arrays.asList(expectedGroup1, expectedGroup2));
 
 	Lecture lectureToCreate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)

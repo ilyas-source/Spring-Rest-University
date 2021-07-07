@@ -23,7 +23,7 @@ import ua.com.foxminded.university.model.Location;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class LocationDaoTest {
+public class LocationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "building='test' AND floor=10 and room_number=100";
 
@@ -100,7 +100,7 @@ class LocationDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Location locationToCreate = new Location(4, "test", 10, 100);
 	Location locationToUpdate = new Location(2, "test", 10, 100);
 

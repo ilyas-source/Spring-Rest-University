@@ -23,7 +23,7 @@ import ua.com.foxminded.university.model.Subject;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class SubjectDaoTest {
+public class SubjectDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
 
@@ -115,7 +115,7 @@ class SubjectDaoTest {
 	assertThat(actual).isEmpty();
     }
 
-    interface TestData {
+    public interface TestData {
 	Subject subjectToCreate = new Subject(5, "test", "test");
 	Subject subjectToUpdate = new Subject(2, "test", "test");
 

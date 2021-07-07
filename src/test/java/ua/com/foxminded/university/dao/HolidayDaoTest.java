@@ -24,7 +24,7 @@ import ua.com.foxminded.university.model.Holiday;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class HolidayDaoTest {
+public class HolidayDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "date='2000-01-01' AND name = 'test'";
 
@@ -101,7 +101,7 @@ class HolidayDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 01, 01), "test");
 	Holiday holidayToUpdate = new Holiday(2, LocalDate.of(2000, 01, 01), "test");
 

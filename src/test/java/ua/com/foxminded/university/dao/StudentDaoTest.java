@@ -26,7 +26,7 @@ import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class StudentDaoTest {
+public class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' AND group_id = 2";
@@ -108,7 +108,7 @@ class StudentDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Student studentToCreate = Student.builder().firstName("Name").lastName("Lastname")
 		.id(5).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))
 		.email("test@mail").phone("+phone").address(expectedAddress3)

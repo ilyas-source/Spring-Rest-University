@@ -24,7 +24,7 @@ import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class VacationDaoTest {
+public class VacationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
 
@@ -104,7 +104,7 @@ class VacationDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Vacation vacationToCreate = new Vacation(5, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
 	Vacation vacationToUpdate = new Vacation(2, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
 
