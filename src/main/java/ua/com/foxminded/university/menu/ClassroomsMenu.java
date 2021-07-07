@@ -2,33 +2,48 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.ClassroomDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.University;
 
+@Component
 public class ClassroomsMenu {
 
-    private LocationsMenu locationsMenu = new LocationsMenu();
-    private University university;
+    private LocationsMenu locationsMenu;
+    private ClassroomDao classroomDao;
 
-    public ClassroomsMenu(University university) {
-	this.university = university;
+    public ClassroomsMenu(LocationsMenu locationsMenu, ClassroomDao jdbcClassroomDao) {
+	this.locationsMenu = locationsMenu;
+	this.classroomDao = jdbcClassroomDao;
     }
 
     public String getStringOfClassrooms(List<Classroom> classrooms) {
 	StringBuilder result = new StringBuilder();
-	for (Classroom classroom : classrooms) {
-	    result.append(classrooms.indexOf(classroom) + 1).append(". " + getStringFromClassroom(classroom) + CR);
+	classrooms.sort(Comparator.comparing(Classroom::getId));
+
+	for (Classroom c : classrooms) {
+	    result.append(getStringFromClassroom(c) + CR);
 	}
 	return result.toString();
     }
 
     public String getStringFromClassroom(Classroom classroom) {
-	return classroom.getName() + ": " + locationsMenu.getStringFromLocation(classroom.getLocation()) + ". Capacity: "
-		+ classroom.getCapacity();
+	return classroom.getId() + ". " + classroom.getName() + ": "
+		+ locationsMenu.getStringFromLocation(classroom.getLocation())
+		+ ". Capacity: " + classroom.getCapacity();
+    }
+
+    public void addClassroom() {
+	classroomDao.create(createClassroom());
     }
 
     public Classroom createClassroom() {
@@ -43,48 +58,39 @@ public class ClassroomsMenu {
     }
 
     public Classroom selectClassroom() {
-	List<Classroom> classrooms = university.getClassrooms();
+	List<Classroom> classrooms = classroomDao.findAll();
 	Classroom result = null;
 
 	while (isNull(result)) {
-	    System.out.println("Select a classroom: ");
+	    System.out.println("Select classroom: ");
 	    System.out.print(getStringOfClassrooms(classrooms));
 	    int choice = getIntFromScanner();
-	    if (choice <= classrooms.size()) {
-		result = classrooms.get(choice - 1);
-		System.out.println("Success.");
+	    Optional<Classroom> selectedClassroom = classroomDao.findById(choice);
+	    if (selectedClassroom.isEmpty()) {
+		System.out.println("No such subject.");
 	    } else {
-		System.out.println("No such classroom.");
+		result = selectedClassroom.get();
+		System.out.println("Success.");
 	    }
 	}
 	return result;
     }
 
     public void updateClassroom() {
-	List<Classroom> classrooms = university.getClassrooms();
-
-	System.out.println("Select a classroom to update: ");
-	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner();
-	if (choice > classrooms.size()) {
-	    System.out.println("No such classroom, returning...");
-	} else {
-	    classrooms.set(choice - 1, createClassroom());
-	    System.out.println("Overwrite successful.");
-	}
+	Classroom oldClassroom = selectClassroom();
+	Classroom newClassroom = createClassroom();
+	newClassroom.setId(oldClassroom.getId());
+	newClassroom.getLocation().setId(oldClassroom.getLocation().getId());
+	classroomDao.update(newClassroom);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteClassroom() {
-	List<Classroom> classrooms = university.getClassrooms();
+	classroomDao.delete(selectClassroom().getId());
+	System.out.println("Classroom deleted successfully.");
+    }
 
-	System.out.println("Select a classroom to delete: ");
-	System.out.println(getStringOfClassrooms(classrooms));
-	int choice = getIntFromScanner();
-	if (choice > classrooms.size()) {
-	    System.out.println("No such classroom, returning...");
-	} else {
-	    classrooms.remove(choice - 1);
-	    System.out.println("Classroom deleted successfully.");
-	}
+    public void printClassrooms() {
+	System.out.println(getStringOfClassrooms(classroomDao.findAll()));
     }
 }

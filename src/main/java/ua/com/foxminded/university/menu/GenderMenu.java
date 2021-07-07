@@ -3,8 +3,11 @@ package ua.com.foxminded.university.menu;
 import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.scanner;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.Gender;
 
+@Component
 public class GenderMenu {
 
     public Gender getGender() {

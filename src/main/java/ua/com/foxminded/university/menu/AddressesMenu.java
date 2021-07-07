@@ -2,9 +2,12 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.scanner;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.Address;
 
-public class AddressMenu {
+@Component
+public class AddressesMenu {
 
     public Address createAddress() {
 	System.out.println("Entering address.");
@@ -19,7 +22,9 @@ public class AddressMenu {
 	System.out.print("Street Address:");
 	String streetAddress = scanner.nextLine();
 
-	return new Address(country, index, region, city, streetAddress);
+	return Address.builder().country(country).postalCode(index)
+		.region(region).city(city).streetAddress(streetAddress)
+		.build();
     }
 
     public String getStringFromAddress(Address address) {

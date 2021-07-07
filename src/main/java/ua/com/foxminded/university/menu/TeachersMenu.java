@@ -2,28 +2,60 @@ package ua.com.foxminded.university.menu;
 
 import static ua.com.foxminded.university.Menu.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
+import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.University;
 import ua.com.foxminded.university.model.Vacation;
 
+@Component
 public class TeachersMenu {
 
-    private University university;
-    private GenderMenu genderMenu = new GenderMenu();
-    private VacationsMenu vacationsMenu = new VacationsMenu();
-    private AddressMenu addressMenu = new AddressMenu();
+    private GenderMenu genderMenu;
+    private VacationsMenu vacationsMenu;
+    private AddressesMenu addressMenu;
     private SubjectsMenu subjectsMenu;
+    private TeacherDao jdbcTeacherDao;
 
-    public TeachersMenu(University university) {
-	this.university = university;
-	this.subjectsMenu = new SubjectsMenu(university);
+    public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
+	    TeacherDao jdbcTeacherDao) {
+	this.genderMenu = genderMenu;
+	this.vacationsMenu = vacationsMenu;
+	this.addressMenu = addressMenu;
+	this.subjectsMenu = subjectsMenu;
+	this.jdbcTeacherDao = jdbcTeacherDao;
+    }
+
+    public String getStringOfTeachers(List<Teacher> teachers) {
+	StringBuilder result = new StringBuilder();
+	teachers.sort(Comparator.comparing(Teacher::getId));
+	for (Teacher teacher : teachers) {
+	    result.append(teacher.getId()).append(". " + getStringFromTeacher(teacher) + CR);
+	}
+	return result.toString();
+    }
+
+    public String getStringFromTeacher(Teacher teacher) {
+	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
+		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
+		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
+		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects())
+		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
+    }
+
+    public void addTeacher() {
+	jdbcTeacherDao.create(createTeacher());
     }
 
     public Teacher createTeacher() {
@@ -36,17 +68,24 @@ public class TeachersMenu {
 	Gender gender = genderMenu.getGender();
 	Degree degree = getDegree();
 
-	System.out.println("Email:");
+	System.out.print("Email:");
 	String email = scanner.nextLine();
 
-	System.out.println("Phone:");
+	System.out.print("Phone:");
 	String phone = scanner.nextLine();
 
 	Address address = addressMenu.createAddress();
 	List<Subject> subjects = subjectsMenu.selectSubjects();
-	List<Vacation> vacations = vacationsMenu.createVacations();
 
-	return new Teacher(firstName, lastName, gender, degree, subjects, email, phone, address, vacations);
+	Teacher result = Teacher.builder().firstName(firstName).lastName(lastName)
+		.gender(gender).degree(degree).subjects(subjects)
+		.email(email).phoneNumber(phone).address(address)
+		.build();
+
+	List<Vacation> vacations = vacationsMenu.createVacations();
+	result.setVacations(vacations);
+
+	return result;
     }
 
     private Degree getDegree() {
@@ -72,65 +111,40 @@ public class TeachersMenu {
 	return degree;
     }
 
-    public String getStringOfTeachers(List<Teacher> teachers) {
-	StringBuilder result = new StringBuilder();
-	for (Teacher teacher : teachers) {
-	    result.append(teachers.indexOf(teacher) + 1).append(". " + getStringFromTeacher(teacher) + CR);
-	}
-	return result.toString();
-    }
-
-    public String getStringFromTeacher(Teacher teacher) {
-	return teacher.getFirstName() + " " + teacher.getLastName() + ", " + teacher.getGender()
-		+ ", degree: " + teacher.getDegree() + ", " + teacher.getEmail() + ", " + teacher.getPhoneNumber() + CR
-		+ "Postal address: " + addressMenu.getStringFromAddress(teacher.getAddress()) + CR
-		+ "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects()) + CR
-		+ "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
+    public void printTeachers() {
+	System.out.println(getStringOfTeachers(jdbcTeacherDao.findAll()));
     }
 
     public Teacher selectTeacher() {
-	List<Teacher> teachers = university.getTeachers();
+	List<Teacher> teachers = jdbcTeacherDao.findAll();
 	Teacher result = null;
 
 	while (isNull(result)) {
-	    System.out.println("Select a teacher: ");
+	    System.out.println("Select teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
 	    int choice = getIntFromScanner();
-	    if (choice <= teachers.size()) {
-		result = teachers.get(choice - 1);
-		System.out.println("Success.");
+	    Optional<Teacher> selectedTeacher = jdbcTeacherDao.findById(choice);
+	    if (selectedTeacher.isEmpty()) {
+		System.out.println("No such teacher.");
 	    } else {
-		System.out.println("No such object.");
+		result = selectedTeacher.get();
+		System.out.println("Success.");
 	    }
 	}
 	return result;
     }
 
     public void updateTeacher() {
-	List<Teacher> teachers = university.getTeachers();
-
-	System.out.println("Select a teacher to update: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	if (choice > teachers.size()) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    teachers.set(choice - 1, createTeacher());
-	    System.out.println("Overwrite successful.");
-	}
+	Teacher oldTeacher = selectTeacher();
+	Teacher newTeacher = createTeacher();
+	newTeacher.setId(oldTeacher.getId());
+	newTeacher.getAddress().setId(oldTeacher.getAddress().getId());
+	jdbcTeacherDao.update(newTeacher);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteTeacher() {
-	List<Teacher> teachers = university.getTeachers();
-
-	System.out.println("Select a teacher to delete: ");
-	System.out.println(getStringOfTeachers(teachers));
-	int choice = getIntFromScanner();
-	if (choice > teachers.size()) {
-	    System.out.println("No such teacher, returning...");
-	} else {
-	    teachers.remove(choice - 1);
-	    System.out.println("Teacher deleted successfully.");
-	}
+	jdbcTeacherDao.delete(selectTeacher().getId());
+	System.out.println("Teacher deleted successfully.");
     }
 }

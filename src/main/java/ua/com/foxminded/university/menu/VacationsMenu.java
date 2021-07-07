@@ -4,52 +4,59 @@ import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import static java.util.Objects.isNull;
 
-import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
+@Component
 public class VacationsMenu {
 
     public String getStringOfVacations(List<Vacation> vacations) {
 	StringBuilder result = new StringBuilder();
+	vacations.sort(Comparator.comparing(Vacation::getId));
 	for (Vacation vacation : vacations) {
-	    result.append(vacations.indexOf(vacation) + 1).append(". " + getStringOfVacation(vacation) + CR);
+	    result.append(vacation.getId()).append(". " + getStringFromVacation(vacation) + CR);
 	}
 	return result.toString();
     }
 
-    public String getStringOfVacation(Vacation vacation) {
-	return vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString();
+    public String getStringFromVacation(Vacation vacation) {
+	StringBuilder result = new StringBuilder();
+	result.append(vacation.getStartDate().toString() + "-" + vacation.getEndDate().toString());
+
+	return result.toString();
     }
 
     public List<Vacation> createVacations() {
-	List<Vacation> vacations = new ArrayList<>();
+	List<Vacation> result = new ArrayList<>();
 	boolean finished = false;
-
-	System.out.println("Entering vacations.");
-
 	while (!finished) {
-	    Vacation vacation = createVacation();
-	    vacations.add(vacation);
-	    System.out.print("Done. Add another vacation? (y/n): ");
-	    String choice = scanner.nextLine().toLowerCase();
-	    if (choice != "y") {
+	    System.out.println("Add new vacation for teacher? (y/n):");
+	    String entry = scanner.nextLine().toLowerCase();
+	    if (!entry.equals("y")) {
 		finished = true;
+	    } else {
+		Vacation vacation = createVacation();
+		result.add(new Vacation(vacation.getStartDate(), vacation.getEndDate()));
 	    }
 	}
-	return vacations;
+	return result;
     }
 
-    public Vacation createVacation() {
+    private Vacation createVacation() {
 	Vacation result = null;
 
 	while (isNull(result)) {
-	    System.out.print("Enter vacation start date: ");
-	    LocalDate startDate = Menu.getDateFromScanner();
+	    System.out.print("Start date: ");
+	    LocalDate startDate = getDateFromScanner();
 
-	    System.out.print("Enter vacation end date: ");
+	    System.out.print("End date: ");
 	    LocalDate endDate = getDateFromScanner();
 
 	    if (endDate.isBefore(startDate)) {

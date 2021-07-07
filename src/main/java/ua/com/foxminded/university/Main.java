@@ -1,18 +1,17 @@
 package ua.com.foxminded.university;
 
-import ua.com.foxminded.university.model.University;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
 
     public static void main(String[] args) {
+	AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 
-	University university = new University();
+	JdbcUniversityPopulator jdbcUniversityPopulator = context.getBean(JdbcUniversityPopulator.class);
+	jdbcUniversityPopulator.populate();
 
-	UniversityPopulator universityPopulator = new UniversityPopulator(university);
-	universityPopulator.populate();
-
-	Menu menu = new Menu(university);
+	Menu menu = context.getBean(Menu.class);
 	menu.start(0);
+	context.close();
     }
-
 }

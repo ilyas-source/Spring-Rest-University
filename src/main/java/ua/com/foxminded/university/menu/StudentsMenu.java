@@ -1,31 +1,43 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
 import static ua.com.foxminded.university.Menu.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
+import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.University;
 
+@Component
 public class StudentsMenu {
 
-    private University university;
-    private AddressMenu addressMenu = new AddressMenu();
-    private GenderMenu genderMenu = new GenderMenu();
+    private AddressesMenu addressMenu;
+    private GroupsMenu groupsMenu;
+    private GenderMenu genderMenu;
+    private StudentDao jdbcStudentDao;
 
-    public StudentsMenu(University university) {
-	this.university = university;
+    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, GenderMenu genderMenu, StudentDao jdbcStudentDao) {
+	this.addressMenu = addressMenu;
+	this.groupsMenu = groupsMenu;
+	this.genderMenu = genderMenu;
+	this.jdbcStudentDao = jdbcStudentDao;
     }
 
     public String getStringOfStudents(List<Student> students) {
 	StringBuilder result = new StringBuilder();
+	students.sort(Comparator.comparing(Student::getId));
 	for (Student student : students) {
-	    result.append(students.indexOf(student) + 1).append(". " + getStringFromStudent(student) + CR);
+	    result.append(student.getId()).append(". " + getStringFromStudent(student) + CR);
 	}
 	return result.toString();
     }
@@ -33,11 +45,16 @@ public class StudentsMenu {
     public String getStringFromStudent(Student student) {
 	StringBuilder result = new StringBuilder();
 	result.append(student.getFirstName() + " " + student.getLastName() + ", " + student.getGender()
-		+ ", born " + student.getBirthDate() + ", admission year " + student.getEntryYear().getYear() + CR);
+		+ ", born " + student.getBirthDate() + ", " + CR);
 	result.append("Mail: " + student.getEmail() + ", phone number " + student.getPhoneNumber() + CR);
-	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()));
+	result.append("Postal address: " + addressMenu.getStringFromAddress(student.getAddress()) + CR);
+	result.append("Assigned to group " + student.getGroup().getName());
 
 	return result.toString();
+    }
+
+    public void addStudent() {
+	jdbcStudentDao.create(createStudent());
     }
 
     public Student createStudent() {
@@ -45,84 +62,55 @@ public class StudentsMenu {
 	String firstName = scanner.nextLine();
 	System.out.print("Last name: ");
 	String lastName = scanner.nextLine();
+	Address address = addressMenu.createAddress();
 	Gender gender = genderMenu.getGender();
 	System.out.print("Birth date: ");
 	LocalDate birthDate = Menu.getDateFromScanner();
-	System.out.print("Entry year: ");
-	LocalDate entryYear = LocalDate.of(getIntFromScanner(), 1, 1);
 	System.out.print("Email: ");
 	String email = scanner.nextLine();
 	System.out.print("Phone number: ");
 	String phone = scanner.nextLine();
-	Address address = addressMenu.createAddress();
+	Group group = groupsMenu.selectGroup();
 
-	return new Student(firstName, lastName, gender, birthDate, entryYear, email, phone, address);
+	return Student.builder().firstName(firstName).lastName(lastName).gender(gender)
+		.birthDate(birthDate).email(email).phone(phone)
+		.address(address).group(group).build();
     }
 
-    public List<Student> selectStudents() {
-	List<Student> result = new ArrayList<>();
-	List<Student> students = university.getStudents();
-	boolean finished = false;
-	boolean correctEntry = false;
+    public void printStudents() {
+	System.out.println(getStringOfStudents(jdbcStudentDao.findAll()));
+    }
 
-	while (!(finished && correctEntry)) {
-	    if (!result.isEmpty()) {
-		System.out.println("Assigned students:");
-		System.out.print(getStringOfStudents(result));
-	    }
-	    System.out.println("Enter a new student number to add: ");
+    public Student selectStudent() {
+	List<Student> students = jdbcStudentDao.findAll();
+	Student result = null;
+
+	while (isNull(result)) {
+	    System.out.println("Select student: ");
 	    System.out.print(getStringOfStudents(students));
-	    correctEntry = false;
 	    int choice = getIntFromScanner();
-	    if (choice > students.size()) {
+	    Optional<Student> selectedStudent = jdbcStudentDao.findById(choice);
+	    if (selectedStudent.isEmpty()) {
 		System.out.println("No such student.");
 	    } else {
-		Student selected = students.get(choice - 1);
-		if (result.contains(selected)) {
-		    System.out.println("Student already assigned to the group.");
-		} else {
-		    correctEntry = true;
-		    result.add(new Student(selected.getFirstName(), selected.getLastName(),
-			    selected.getGender(), selected.getBirthDate(),
-			    selected.getEntryYear(), selected.getEmail(),
-			    selected.getPhoneNumber(), selected.getAddress()));
-		    System.out.println("Success.");
-		}
-	    }
-	    System.out.print("Add another student? (y/n): ");
-	    String entry = scanner.nextLine().toLowerCase();
-	    if (!entry.equals("y")) {
-		finished = true;
+		result = selectedStudent.get();
+		System.out.println("Success.");
 	    }
 	}
 	return result;
     }
 
     public void updateStudent() {
-	List<Student> students = university.getStudents();
-
-	System.out.println("Select a student to update: ");
-	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner();
-	if (choice > students.size()) {
-	    System.out.println("No such student, returning...");
-	} else {
-	    students.set(choice - 1, createStudent());
-	    System.out.println("Overwrite successful.");
-	}
+	Student oldStudent = selectStudent();
+	Student newStudent = createStudent();
+	newStudent.setId(oldStudent.getId());
+	newStudent.getAddress().setId(oldStudent.getAddress().getId());
+	jdbcStudentDao.update(newStudent);
+	System.out.println("Overwrite successful.");
     }
 
     public void deleteStudent() {
-	List<Student> students = university.getStudents();
-
-	System.out.println("Select a student to update: ");
-	System.out.println(getStringOfStudents(students));
-	int choice = getIntFromScanner();
-	if (choice > students.size()) {
-	    System.out.println("No such student, returning...");
-	} else {
-	    students.remove(choice - 1);
-	    System.out.println("Student deleted successfully.");
-	}
+	jdbcStudentDao.delete(selectStudent().getId());
+	System.out.println("Student deleted successfully.");
     }
 }
