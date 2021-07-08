@@ -18,6 +18,7 @@ public class SubjectService {
     }
 
     public void create(Subject createSubject) {
+	// проверить на уникальность названия
 	jdbcSubjectDao.create(createSubject);
     }
 
@@ -30,10 +31,13 @@ public class SubjectService {
     }
 
     public void update(Subject newSubject) {
+	// проверить на уникальность названия
 	jdbcSubjectDao.update(newSubject);
     }
 
     public void delete(int id) {
+	// проверить что предмет не привязан к преподавателям
+	// проверить что по предмету не запланированы лекции
 	jdbcSubjectDao.delete(id);
     }
 }

@@ -18,6 +18,9 @@ public class TimeslotService {
     }
 
     public void create(Timeslot createTimeslot) {
+	// проверить, что таймслот не пересекает существующие
+	// проверить что от других таймслотов минимум 15 минут
+	// проверить, что он не короче 15 минут
 	jdbcTimeslotDao.create(createTimeslot);
     }
 
@@ -30,10 +33,14 @@ public class TimeslotService {
     }
 
     public void update(Timeslot newTimeslot) {
+	// проверить, что таймслот не пересекает существующие
+	// проверить что от других таймслотов минимум 15 минут
+	// проверить, что он не короче 15 минут
 	jdbcTimeslotDao.update(newTimeslot);
     }
 
     public void delete(int id) {
+	// проверить, что в этот таймслот не запланированы лекции
 	jdbcTimeslotDao.delete(id);
     }
 }

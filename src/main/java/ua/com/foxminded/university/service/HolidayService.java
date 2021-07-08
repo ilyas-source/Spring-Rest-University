@@ -18,6 +18,7 @@ public class HolidayService {
     }
 
     public void create(Holiday createHoliday) {
+	// проверить что на эту дату не запланирован другой праздник
 	jdbcHolidayDao.create(createHoliday);
     }
 
@@ -30,6 +31,7 @@ public class HolidayService {
     }
 
     public void update(Holiday newHoliday) {
+	// проверить что на эту дату не запланирован другой праздник
 	jdbcHolidayDao.update(newHoliday);
     }
 

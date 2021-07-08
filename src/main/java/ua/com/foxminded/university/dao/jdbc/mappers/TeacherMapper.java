@@ -2,10 +2,10 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
@@ -16,12 +16,12 @@ import ua.com.foxminded.university.model.Teacher;
 @Component
 public class TeacherMapper implements RowMapper<Teacher> {
 
-    private AddressDao jdbcAddressDao;
+    private JdbcAddressDao addressDao;
     private JdbcSubjectDao jdbcSubjectDao;
     private JdbcVacationDao jdbcVacationDao;
 
-    public TeacherMapper(AddressDao jdbcAddressDao, JdbcSubjectDao jdbcSubjectDao, JdbcVacationDao jdbcVacationDao) {
-	this.jdbcAddressDao = jdbcAddressDao;
+    public TeacherMapper(JdbcAddressDao addressDao, JdbcSubjectDao jdbcSubjectDao, JdbcVacationDao jdbcVacationDao) {
+	this.addressDao = addressDao;
 	this.jdbcSubjectDao = jdbcSubjectDao;
 	this.jdbcVacationDao = jdbcVacationDao;
     }
@@ -36,7 +36,7 @@ public class TeacherMapper implements RowMapper<Teacher> {
 	teacher.setPhoneNumber(rs.getString("phone"));
 	teacher.setGender(Gender.valueOf(rs.getString("gender")));
 	teacher.setDegree(Degree.valueOf(rs.getString("degree")));
-	jdbcAddressDao.findById(rs.getInt("address_id")).ifPresent(teacher::setAddress);
+	addressDao.findById(rs.getInt("address_id")).ifPresent(teacher::setAddress);
 	teacher.setSubjects(jdbcSubjectDao.getSubjectsByTeacherId(teacher.getId()));
 	teacher.setVacations(jdbcVacationDao.getVacationsByTeacherId(teacher.getId()));
 

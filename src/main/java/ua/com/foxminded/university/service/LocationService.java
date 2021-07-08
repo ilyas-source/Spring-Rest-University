@@ -34,6 +34,7 @@ public class LocationService {
     }
 
     public void delete(int id) {
+	// проверить что в этой локации нет аудиторий
 	jdbcLocationDao.delete(id);
     }
 }

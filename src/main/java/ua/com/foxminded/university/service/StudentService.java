@@ -18,6 +18,7 @@ public class StudentService {
     }
 
     public void create(Student createStudent) {
+	// проверить что это уникальный студент (придумать исходя из каких полей)
 	studentDao.create(createStudent);
     }
 
@@ -30,6 +31,7 @@ public class StudentService {
     }
 
     public void update(Student newStudent) {
+	// проверить что это уникальный студент (придумать исходя из каких полей)
 	studentDao.update(newStudent);
     }
 

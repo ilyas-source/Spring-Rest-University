@@ -18,6 +18,7 @@ public class TeacherService {
     }
 
     public void create(Teacher createTeacher) {
+	// проверить уникальность препода
 	jdbcTeacherDao.create(createTeacher);
     }
 
@@ -30,10 +31,13 @@ public class TeacherService {
     }
 
     public void update(Teacher newTeacher) {
+	// проверить уникальность препода
+	// проверить, что с новыми предметами препод сможет вести свои лекции
 	jdbcTeacherDao.update(newTeacher);
     }
 
     public void delete(int id) {
+	// проверить, что он не ведет лекций
 	jdbcTeacherDao.delete(id);
     }
 }

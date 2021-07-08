@@ -16,12 +16,14 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.model.Group;
 
 @Component
 public class JdbcClassroomDao implements ClassroomDao {
 
     private static final String CREATE = "INSERT INTO classrooms (location_id, name, capacity) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM classrooms WHERE id = ?";
+    private static final String FIND_BY_NAME = "SELECT * FROM classrooms WHERE name = ?";
     private static final String FIND_ALL = "SELECT * FROM classrooms";
     private static final String UPDATE = "UPDATE classrooms SET location_id = ?, name = ?, capacity = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM classrooms WHERE id = ?";
@@ -78,5 +80,13 @@ public class JdbcClassroomDao implements ClassroomDao {
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    public Optional<Classroom> findByName(String name) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_NAME, classroomMapper, name));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 }

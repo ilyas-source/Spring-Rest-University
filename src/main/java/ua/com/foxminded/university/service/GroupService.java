@@ -34,6 +34,7 @@ public class GroupService {
     }
 
     public void delete(int id) throws Exception {
+	// проверить, что в группе нет студентов
 	if (idExists(id)) {
 	    groupDao.delete(id);
 	} else {

@@ -43,7 +43,7 @@ public class ClassroomsMenu {
 		+ ". Capacity: " + classroom.getCapacity();
     }
 
-    public void addClassroom() {
+    public void addClassroom() throws Exception {
 	classroomService.create(createClassroom());
     }
 
@@ -77,7 +77,7 @@ public class ClassroomsMenu {
 	return result;
     }
 
-    public void updateClassroom() {
+    public void updateClassroom() throws Exception {
 	Classroom oldClassroom = selectClassroom();
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());

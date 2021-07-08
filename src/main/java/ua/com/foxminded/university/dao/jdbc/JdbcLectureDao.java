@@ -1,12 +1,11 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import static java.util.function.Predicate.not;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.function.Predicate.not;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 
@@ -28,6 +27,7 @@ public class JdbcLectureDao implements LectureDao {
     private static final String CREATE = "INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, " +
 	    "classroom_id) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
+    private static final String FIND_BY_CLASSROOM_ID = "SELECT * FROM lectures WHERE classroom_id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
@@ -38,12 +38,14 @@ public class JdbcLectureDao implements LectureDao {
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
+    private JdbcGroupDao groupDao;
     @Autowired
     JdbcTimeslotDao timeslotDao;
 
-    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper) {
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao groupDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lectureMapper = lectureMapper;
+	this.groupDao = groupDao;
     }
 
     @Override
@@ -105,6 +107,16 @@ public class JdbcLectureDao implements LectureDao {
     public List<Lecture> findAll() {
 	return jdbcTemplate.query(FIND_ALL, lectureMapper);
     }
+
+    public List<Lecture> findByClassroom(Classroom classroom) {
+	return jdbcTemplate.query(FIND_BY_CLASSROOM_ID, lectureMapper, classroom.getId());
+    }
+
+//    public int countStudentsOnLecture(Lecture lecture) {
+//	Stream<Group> groupsStream = lecture.getGroups().stream();
+//	Stream<Integer> studentQuantities = groupsStream.map(g -> groupDao.countStudents(g));
+//	return studentQuantities.reduce(0, Integer::sum);
+//    }
 
     @Override
     public void delete(int id) {

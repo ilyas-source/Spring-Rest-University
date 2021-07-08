@@ -38,14 +38,14 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenClassroom_onCreate_shouldCallCreate() {
+    void givenClassroom_onCreate_shouldCallCreate() throws Exception {
 	classroomService.create(expectedClassroom1);
 
 	verify(classroomDao).create(expectedClassroom1);
     }
 
     @Test
-    void givenClassroom_onUpdate_shouldCallUpdate() {
+    void givenClassroom_onUpdate_shouldCallUpdate() throws Exception {
 	classroomService.update(expectedClassroom1);
 
 	verify(classroomDao).update(expectedClassroom1);

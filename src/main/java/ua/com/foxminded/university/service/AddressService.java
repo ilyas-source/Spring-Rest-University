@@ -1,39 +1,68 @@
 package ua.com.foxminded.university.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
+import ua.com.foxminded.university.dao.AddressDao;
+import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Address;
 
 @Service
 public class AddressService {
 
-    private JdbcAddressDao jdbcAddressDao;
+    private AddressDao addressDao;
+    private TeacherDao teacherDao;
+    private StudentDao studentDao;
 
-    public AddressService(JdbcAddressDao jdbcAddressDao) {
-	this.jdbcAddressDao = jdbcAddressDao;
+    public AddressService(AddressDao jdbcAddressDao, TeacherDao teacherDao, StudentDao studentDao) {
+	this.addressDao = jdbcAddressDao;
+	this.teacherDao = teacherDao;
+	this.studentDao = studentDao;
     }
 
-    public void create(Address createAddress) {
-	jdbcAddressDao.create(createAddress);
+    public void create(Address address) throws Exception {
+	addressDao.create(address);
+    }
+
+    public void update(Address address) throws Exception {
+	addressDao.update(address);
     }
 
     public List<Address> findAll() {
-	return jdbcAddressDao.findAll();
+	return addressDao.findAll();
     }
 
-    public Optional<Address> findById(int choice) {
-	return jdbcAddressDao.findById(choice);
+    public Optional<Address> findById(int id) {
+	return addressDao.findById(id);
     }
 
-    public void update(Address newAddress) {
-	jdbcAddressDao.update(newAddress);
+    public void delete(int id) throws Exception {
+	verifyAddressCanBeDeleted(id);
+	addressDao.delete(id);
     }
 
-    public void delete(int id) {
-	jdbcAddressDao.delete(id);
+    private void verifyAddressCanBeDeleted(int id) throws Exception {
+	Address address = addressDao.findById(id).orElseThrow(() -> new Exception("Address not found"));
+	List<Address> teacherAddresses = teacherDao.findAll()
+		.stream()
+		.flatMap(p -> Stream.of(p.getAddress()))
+		.collect(toList());
+	if (teacherAddresses.contains(address)) {
+	    throw new Exception("Address is used by a teacher account, can't delete address");
+	}
+	List<Address> studentAddresses = studentDao.findAll()
+		.stream()
+		.flatMap(p -> Stream.of(p.getAddress()))
+		.collect(toList());
+	if (studentAddresses.contains(address)) {
+	    throw new Exception("Address is used by a student account, can't delete address");
+	}
     }
+
 }
