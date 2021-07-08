@@ -11,29 +11,49 @@ import ua.com.foxminded.university.model.Group;
 @Service
 public class GroupService {
 
-    private JdbcGroupDao jdbcGroupDao;
+    private JdbcGroupDao groupDao;
 
     public GroupService(JdbcGroupDao jdbcGroupDao) {
-	this.jdbcGroupDao = jdbcGroupDao;
+	this.groupDao = jdbcGroupDao;
     }
 
-    public void create(Group createGroup) {
-	jdbcGroupDao.create(createGroup);
+    public void create(Group group) throws Exception {
+	if (groupNameIsNew(group)) {
+	    groupDao.create(group);
+	} else {
+	    throw new Exception(String.format("Group with name %s already exists, can't create", group.getName()));
+	}
+    }
+
+    public void update(Group group) throws Exception {
+	if (groupNameIsNew(group)) {
+	    groupDao.update(group);
+	} else {
+	    throw new Exception(String.format("Group with name %s already exists, can't update", group.getName()));
+	}
+    }
+
+    public void delete(int id) throws Exception {
+	if (idExists(id)) {
+	    groupDao.delete(id);
+	} else {
+	    throw new Exception(String.format("Group with id %s does not exist, nothing to delete", id));
+	}
     }
 
     public List<Group> findAll() {
-	return jdbcGroupDao.findAll();
+	return groupDao.findAll();
     }
 
-    public Optional<Group> findById(int choice) {
-	return jdbcGroupDao.findById(choice);
+    public Optional<Group> findById(int id) {
+	return groupDao.findById(id);
     }
 
-    public void update(Group newGroup) {
-	jdbcGroupDao.update(newGroup);
+    private boolean groupNameIsNew(Group group) {
+	return groupDao.findByName(group.getName()).isEmpty();
     }
 
-    public void delete(int id) {
-	jdbcGroupDao.delete(id);
+    private boolean idExists(int id) {
+	return groupDao.findById(id).isPresent();
     }
 }

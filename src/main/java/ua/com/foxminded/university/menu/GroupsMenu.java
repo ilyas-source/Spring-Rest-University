@@ -35,7 +35,7 @@ public class GroupsMenu {
 	System.out.println(getStringOfGroups(groupService.findAll()));
     }
 
-    public void addGroup() {
+    public void addGroup() throws Exception {
 	groupService.create(createGroup());
     }
 
@@ -92,7 +92,7 @@ public class GroupsMenu {
 	return result;
     }
 
-    public void updateGroup() {
+    public void updateGroup() throws Exception {
 	Group oldGroup = selectGroup();
 	Group newGroup = createGroup();
 	newGroup.setId(oldGroup.getId());
@@ -100,7 +100,7 @@ public class GroupsMenu {
 	System.out.println("Overwrite successful.");
     }
 
-    public void deleteGroup() {
+    public void deleteGroup() throws Exception {
 	groupService.delete(selectGroup().getId());
 	System.out.println("Group deleted successfully.");
     }

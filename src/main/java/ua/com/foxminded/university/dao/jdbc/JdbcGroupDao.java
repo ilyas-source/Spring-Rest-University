@@ -20,6 +20,7 @@ public class JdbcGroupDao implements GroupDao {
 
     private static final String CREATE = "INSERT INTO groups (name) VALUES (?)";
     private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
+    private static final String FIND_BY_NAME = "SELECT * FROM groups WHERE name = ?";
     private static final String FIND_ALL = "SELECT * FROM groups";
     private static final String UPDATE = "UPDATE groups SET name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
@@ -73,5 +74,13 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    public Optional<Group> findByName(String name) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, groupMapper, name));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 }
