@@ -79,4 +79,9 @@ public class Vacation {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Vacation [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+    }
 }

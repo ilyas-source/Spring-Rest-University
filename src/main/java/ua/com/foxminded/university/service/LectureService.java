@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,8 @@ import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
@@ -31,11 +34,20 @@ public class LectureService {
 	verifyIsNotHoliday(lecture);
 	verifyTeacherIsNotBusy(lecture);
 	verifyTeacherIsWorking(lecture);
-	// проверить что препод умеет это преподавать
+	verifyTeacherCanTeach(lecture);
 	// проверить что студенты не заняты другой лекцией
 	// проверить что аудитория не занята другой лекцией
 	// проверить что не воскресенье
 	lectureDao.create(lecture);
+    }
+
+    private void verifyTeacherCanTeach(Lecture lecture) throws Exception {
+	Teacher teacher = lecture.getTeacher();
+	Subject subject = lecture.getSubject();
+	if (!teacher.getSubjects().contains(subject)) {
+	    throw new Exception(String.format("%s %s can't teach %s, can't assign lecture", teacher.getFirstName(),
+		    teacher.getLastName(), subject.getName()));
+	}
     }
 
     private void verifyTeacherIsWorking(Lecture lecture) throws Exception {
@@ -50,10 +62,8 @@ public class LectureService {
     }
 
     private boolean vacationContainsDay(Vacation vacation, LocalDate date) {
-	if (date.isAfter(vacation.getStartDate()) ||
-		date.isBefore(vacation.getEndDate()) ||
-		date.equals(vacation.getStartDate()) ||
-		date.equals(vacation.getEndDate())) {
+	if (date.isAfter(vacation.getStartDate().minus(1, ChronoUnit.DAYS)) &&
+		date.isBefore(vacation.getEndDate().plus(1, ChronoUnit.DAYS))) {
 	    return true;
 	}
 	return false;

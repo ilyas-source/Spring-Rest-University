@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,10 +19,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.remoting.soap.SoapFaultException;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,7 +92,6 @@ class LectureServiceTest {
     @Test
     void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() throws Exception {
 	String expected = "Teacher is on vacation, can't assign this lecture";
-	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    lectureService.create(expectedLecture1);
@@ -97,6 +100,29 @@ class LectureServiceTest {
 	assertEquals(expected, thrown.getMessage());
     }
 
+    @Test
+    void givenLectureWithTeacherCantTeach_onCreate_shouldThrowException() throws Exception {
+	String expected = "Adam Smith can't teach Test Radiology, can't assign lecture";
+	expectedLecture1.setSubject(expectedSubject4);
+	expectedLecture1.setDate(LocalDate.of(2020, 1, 1));
+
+	System.out.println(expectedLecture1);
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    lectureService.create(expectedLecture1);
+	});
+
+	assertEquals(expected, thrown.getMessage());
+    }
+
+//    private void verifyTeacherCanTeach(Lecture lecture) throws Exception {
+//	Teacher teacher = lecture.getTeacher();
+//	Subject subject = lecture.getSubject();
+//	if (!teacher.getSubjects().contains(subject)) {
+//	    throw new Exception(String.format("%s %s can't teach %s, can't assign lecture", teacher.getFirstName(),
+//		    teacher.getLastName(), subject.getName()));
+//	}
+//    }
     @Test
     void givenGoodLecture_onCreate_shouldCallCreate() throws Exception {
 	lectureService.create(expectedLecture1);
