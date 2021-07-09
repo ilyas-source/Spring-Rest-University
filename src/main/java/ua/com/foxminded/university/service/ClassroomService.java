@@ -67,7 +67,7 @@ public class ClassroomService {
     }
 
     private void verifyNameIsNew(Classroom classroom) throws Exception {
-	if (groupDao.findByName(classroom.getName()).isPresent()) {
+	if (classroomDao.findByName(classroom.getName()).isPresent()) {
 	    throw new Exception(String.format("Classroom with name %s already exists, can't create", classroom.getName()));
 	}
     }

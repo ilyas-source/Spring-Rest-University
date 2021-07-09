@@ -82,6 +82,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    @Override
     public Optional<Classroom> findByName(String name) {
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_NAME, classroomMapper, name));
