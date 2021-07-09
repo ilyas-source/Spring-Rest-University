@@ -43,12 +43,12 @@ public class AddressService {
     }
 
     public void delete(int id) throws Exception {
-	verifyAddressExists(id);
+	verifyIdExists(id);
 	verifyAddressIsFree(id);
 	addressDao.delete(id);
     }
 
-    private void verifyAddressExists(int id) throws Exception {
+    private void verifyIdExists(int id) throws Exception {
 	if (!addressDao.findById(id).isPresent()) {
 	    throw new Exception("Address not found");
 	}

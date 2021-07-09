@@ -65,7 +65,7 @@ class GroupServiceTest {
     @Test
     void givenExistingGroup_onCreate_shouldThrowException() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.of(expectedGroup1));
-	String expected = String.format("Group with name %s already exists, can't create", expectedGroup1.getName());
+	String expected = String.format("Group with name %s already exists, can't create/update", expectedGroup1.getName());
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    groupService.create(expectedGroup1);
@@ -77,7 +77,7 @@ class GroupServiceTest {
     @Test
     void givenExistingGroup_onUpdate_shouldThrowException() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.of(expectedGroup1));
-	String expected = String.format("Group with name %s already exists, can't update", expectedGroup1.getName());
+	String expected = String.format("Group with name %s already exists, can't create/update", expectedGroup1.getName());
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    groupService.update(expectedGroup1);

@@ -77,9 +77,58 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenClassroom_onDelete_shouldCallDelete() {
+    void givenExistingClassroom_onDelete_shouldCallDelete() throws Exception {
+	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	classroomService.delete(1);
 
 	verify(classroomDao).delete(1);
+    }
+
+    @Test
+    void givenNonExistingClassroom_onDelete_shouldThrowException() throws Exception {
+	String expected = "Classroom with id 1 does not exist, nothing to delete";
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    classroomService.delete(1);
+	});
+
+	assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    void givenOccupiedClassroom_onDelete_shouldThrowException() throws Exception {
+	String expected = "Classroom has scheduled lecture(s), can't delete";
+	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    classroomService.delete(expectedClassroom1.getId());
+	});
+
+	assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    void givenClassroomWithExistingName_onCreate_shouldThrowException() {
+	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
+	String expected = String.format("Classroom with name %s already exists, can't create", expectedClassroom1.getName());
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    classroomService.create(expectedClassroom1);
+	});
+
+	assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    void givenClassroomWithInvalidCapacity_onCreate_shouldThrowException() {
+	String expected = "Wrong classroom capacity, can't create";
+	expectedClassroom1.setCapacity(-5);
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    classroomService.create(expectedClassroom1);
+	});
+
+	assertEquals(expected, thrown.getMessage());
     }
 }

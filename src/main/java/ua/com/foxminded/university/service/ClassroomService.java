@@ -2,7 +2,6 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
@@ -11,7 +10,6 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Lecture;
 
 @Service
 public class ClassroomService {
@@ -46,7 +44,7 @@ public class ClassroomService {
 	classroomDao.update(newClassroom);
     }
 
-    public void verifyCapacityIsEnough(Classroom newClassroom) throws Exception {
+    private void verifyCapacityIsEnough(Classroom newClassroom) throws Exception {
 	int requiredCapacity = lectureDao.findByClassroom(newClassroom)
 		.stream()
 		.flatMap(l -> Stream.of(lectureDao.countStudentsInLecture(l)))
@@ -60,10 +58,22 @@ public class ClassroomService {
 	}
     }
 
-    public void delete(int id) {
-//	verifyIdExists(id);
-//	verifyTheresNoLectures(classroomDao.findById(id).get());
+    public void delete(int id) throws Exception {
+	verifyIdExists(id);
+	verifyTheresNoLectures(classroomDao.findById(id).get());
 	classroomDao.delete(id);
+    }
+
+    private void verifyTheresNoLectures(Classroom classroom) throws Exception {
+	if (!lectureDao.findByClassroom(classroom).isEmpty()) {
+	    throw new Exception("Classroom has scheduled lecture(s), can't delete");
+	}
+    }
+
+    private void verifyIdExists(int id) throws Exception {
+	if (classroomDao.findById(id).isEmpty()) {
+	    throw new Exception(String.format("Classroom with id %s does not exist, nothing to delete", id));
+	}
     }
 
     private void verifyNameIsNew(Classroom classroom) throws Exception {

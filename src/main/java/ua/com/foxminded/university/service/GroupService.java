@@ -18,26 +18,25 @@ public class GroupService {
     }
 
     public void create(Group group) throws Exception {
-	if (groupNameIsNew(group)) {
-	    groupDao.create(group);
-	} else {
-	    throw new Exception(String.format("Group with name %s already exists, can't create", group.getName()));
-	}
+	verifyNameIsNew(group);
+	groupDao.create(group);
+
     }
 
     public void update(Group group) throws Exception {
-	if (groupNameIsNew(group)) {
-	    groupDao.update(group);
-	} else {
-	    throw new Exception(String.format("Group with name %s already exists, can't update", group.getName()));
-	}
+	verifyNameIsNew(group);
+	groupDao.update(group);
+
     }
 
     public void delete(int id) throws Exception {
 	// проверить, что в группе нет студентов
-	if (idExists(id)) {
-	    groupDao.delete(id);
-	} else {
+	verifyIdExists(id);
+	groupDao.delete(id);
+    }
+
+    private void verifyIdExists(int id) throws Exception {
+	if (groupDao.findById(id).isEmpty()) {
 	    throw new Exception(String.format("Group with id %s does not exist, nothing to delete", id));
 	}
     }
@@ -50,11 +49,9 @@ public class GroupService {
 	return groupDao.findById(id);
     }
 
-    private boolean groupNameIsNew(Group group) {
-	return groupDao.findByName(group.getName()).isEmpty();
-    }
-
-    private boolean idExists(int id) {
-	return groupDao.findById(id).isPresent();
+    private void verifyNameIsNew(Group group) throws Exception {
+	if (groupDao.findByName(group.getName()).isPresent()) {
+	    throw new Exception(String.format("Group with name %s already exists, can't create/update", group.getName()));
+	}
     }
 }

@@ -86,7 +86,7 @@ public class ClassroomsMenu {
 	System.out.println("Overwrite successful.");
     }
 
-    public void deleteClassroom() {
+    public void deleteClassroom() throws Exception {
 	classroomService.delete(selectClassroom().getId());
 	System.out.println("Classroom deleted successfully.");
     }
