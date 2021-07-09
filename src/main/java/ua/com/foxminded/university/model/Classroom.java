@@ -91,4 +91,9 @@ public class Classroom {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Classroom [id=" + id + ", location=" + location + ", name=" + name + ", capacity=" + capacity + "]";
+    }
 }

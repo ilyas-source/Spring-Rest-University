@@ -21,7 +21,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -106,6 +108,15 @@ public class StudentDaoTest {
 	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
 
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    @Test
+    void givenGroup_onCountStudentsInGroup_shouldReturnCorrectNumber() {
+	int expected = 2;
+
+	int actual = studentDao.countStudentsInGroup(expectedGroup1);
+
+	assertEquals(expected, actual);
     }
 
     public interface TestData {

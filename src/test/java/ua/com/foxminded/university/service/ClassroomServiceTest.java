@@ -1,9 +1,12 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -13,15 +16,34 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
+import ua.com.foxminded.university.model.Classroom;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomServiceTest {
 
     @Mock
     private JdbcClassroomDao classroomDao;
+    @Mock
+    private LectureDao lectureDao;
     @InjectMocks
     private ClassroomService classroomService;
+
+    @Test
+    void givenSmallClassroom_onVerifyCapacityIsEnough_shouldThrowException() {
+	Classroom smallClassroom = expectedClassroom1;
+	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
+	when(lectureDao.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+	when(lectureDao.countStudentsInLecture(expectedLecture2)).thenReturn(200);
+	String expected = "Required minumum capacity 1000, but was 500";
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    classroomService.verifyCapacityIsEnough(smallClassroom);
+	});
+
+	assertEquals(expected, thrown.getMessage());
+    }
 
     @Test
     void onFindAll_shouldReturnAllClassrooms() {

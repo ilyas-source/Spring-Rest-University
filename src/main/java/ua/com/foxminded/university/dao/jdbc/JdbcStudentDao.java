@@ -17,6 +17,7 @@ import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @Component
@@ -87,6 +88,11 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public List<Student> findAll() {
 	return jdbcTemplate.query(FIND_ALL, studentMapper);
+    }
+
+    @Override
+    public int countStudentsInGroup(Group group) {
+	return (int) findAll().stream().filter(s -> s.getGroup().equals(group)).count();
     }
 
     @Override

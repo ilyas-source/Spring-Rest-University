@@ -2,6 +2,8 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,7 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.model.Lecture;
 
 @Service
 public class ClassroomService {
@@ -38,28 +41,24 @@ public class ClassroomService {
     }
 
     public void update(Classroom newClassroom) throws Exception {
-	verifyCapacityCorrect(newClassroom);
 	verifyNameIsNew(newClassroom);
-//	verifyCapacityIsEnough(newClassroom);
+	verifyCapacityIsEnough(newClassroom);
 	classroomDao.update(newClassroom);
     }
 
-//    private void verifyCapacityIsEnough(Classroom newClassroom) {
-//	Stream<Lecture> lecturesInClassroom = lectureDao.findByClassroom(newClassroom).stream();
-//	
-//	
-//						.flatMap(p->Stream.of(p.getGroups()))
-//						.flatMap(p->Stream.of(groupDao.countStudents(p)))
-//						.reduce(0,Integer::sum);
+    public void verifyCapacityIsEnough(Classroom newClassroom) throws Exception {
+	int requiredCapacity = lectureDao.findByClassroom(newClassroom)
+		.stream()
+		.flatMap(l -> Stream.of(lectureDao.countStudentsInLecture(l)))
+		.mapToInt(v -> v)
+		.max()
+		.orElse(1);
 
-//	Address address = addressDao.findById(id).orElseThrow(() -> new Exception("Address not found"));
-//	List<Address> teacherAddresses = teacherDao.findAll()
-//		.stream()
-//		.flatMap(p -> Stream.of(p.getAddress()))
-//		.collect(toList());
-//	if (teacherAddresses.contains(address)) {
-//	    throw new Exception("Address is used by a teacher account, can't delete address");
-//	}
+	if (newClassroom.getCapacity() < requiredCapacity) {
+	    throw new Exception(
+		    String.format("Required minimum capacity %s, but was %s", requiredCapacity, newClassroom.getCapacity()));
+	}
+    }
 
     public void delete(int id) {
 //	verifyIdExists(id);

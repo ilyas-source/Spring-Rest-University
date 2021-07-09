@@ -2,12 +2,12 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
@@ -45,6 +45,14 @@ public class LectureDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private LectureDao lectureDao;
+
+    @Test
+    void givenLecture_onCountStudentsInLecture_shouldReturnCorrectNumber() {
+	int expected = 4;
+	int actual = lectureDao.countStudentsInLecture(expectedLecture1);
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {

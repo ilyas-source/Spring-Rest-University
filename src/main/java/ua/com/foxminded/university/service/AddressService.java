@@ -43,12 +43,19 @@ public class AddressService {
     }
 
     public void delete(int id) throws Exception {
-	verifyAddressCanBeDeleted(id);
+	verifyAddressExists(id);
+	verifyAddressIsFree(id);
 	addressDao.delete(id);
     }
 
-    private void verifyAddressCanBeDeleted(int id) throws Exception {
-	Address address = addressDao.findById(id).orElseThrow(() -> new Exception("Address not found"));
+    private void verifyAddressExists(int id) throws Exception {
+	if (!addressDao.findById(id).isPresent()) {
+	    throw new Exception("Address not found");
+	}
+    }
+
+    private void verifyAddressIsFree(int id) throws Exception {
+	var address = addressDao.findById(id).get();
 	List<Address> teacherAddresses = teacherDao.findAll()
 		.stream()
 		.flatMap(p -> Stream.of(p.getAddress()))

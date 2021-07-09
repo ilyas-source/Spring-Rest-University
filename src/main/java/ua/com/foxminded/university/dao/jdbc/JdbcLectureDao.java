@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
@@ -39,13 +42,16 @@ public class JdbcLectureDao implements LectureDao {
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
     private JdbcGroupDao groupDao;
-    @Autowired
-    JdbcTimeslotDao timeslotDao;
+    private StudentDao studentDao;
+    private TimeslotDao timeslotDao;
 
-    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao groupDao) {
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao groupDao, TimeslotDao timeslotDao,
+	    StudentDao studentDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lectureMapper = lectureMapper;
 	this.groupDao = groupDao;
+	this.studentDao = studentDao;
+	this.timeslotDao = timeslotDao;
     }
 
     @Override
@@ -108,19 +114,24 @@ public class JdbcLectureDao implements LectureDao {
 	return jdbcTemplate.query(FIND_ALL, lectureMapper);
     }
 
+    @Override
     public List<Lecture> findByClassroom(Classroom classroom) {
+	// TODO
+	System.out.println(classroom.getId());
 	return jdbcTemplate.query(FIND_BY_CLASSROOM_ID, lectureMapper, classroom.getId());
     }
-
-//    public int countStudentsOnLecture(Lecture lecture) {
-//	Stream<Group> groupsStream = lecture.getGroups().stream();
-//	Stream<Integer> studentQuantities = groupsStream.map(g -> groupDao.countStudents(g));
-//	return studentQuantities.reduce(0, Integer::sum);
-//    }
 
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    @Override
+    public int countStudentsInLecture(Lecture lecture) {
+	return lecture.getGroups()
+		.stream()
+		.flatMap(g -> Stream.of(studentDao.countStudentsInGroup(g)))
+		.reduce(0, Integer::sum);
     }
 
     public void assignGroupsToLecture(Lecture lecture) {
