@@ -18,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class JdbcLectureDao implements LectureDao {
@@ -31,6 +33,7 @@ public class JdbcLectureDao implements LectureDao {
 	    "classroom_id) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
     private static final String FIND_BY_CLASSROOM_ID = "SELECT * FROM lectures WHERE classroom_id = ?";
+    private static final String FIND_BY_TEACHER_ID = "SELECT * FROM lectures WHERE teacher_id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
@@ -116,9 +119,12 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByClassroom(Classroom classroom) {
-	// TODO
-	System.out.println(classroom.getId());
 	return jdbcTemplate.query(FIND_BY_CLASSROOM_ID, lectureMapper, classroom.getId());
+    }
+
+    @Override
+    public List<Lecture> findByTeacher(Teacher teacher) {
+	return jdbcTemplate.query(FIND_BY_TEACHER_ID, lectureMapper, teacher.getId());
     }
 
     @Override

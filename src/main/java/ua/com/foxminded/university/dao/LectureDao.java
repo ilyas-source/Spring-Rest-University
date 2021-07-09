@@ -4,10 +4,13 @@ import java.util.List;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Teacher;
 
 public interface LectureDao extends GeneralDao<Lecture> {
 
-    public List<Lecture> findByClassroom(Classroom classroom);
+    List<Lecture> findByClassroom(Classroom classroom);
 
     int countStudentsInLecture(Lecture lecture);
+
+    List<Lecture> findByTeacher(Teacher teacher);
 }
