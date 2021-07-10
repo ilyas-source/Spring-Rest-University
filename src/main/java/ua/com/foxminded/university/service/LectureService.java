@@ -5,12 +5,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -35,10 +37,26 @@ public class LectureService {
 	verifyTeacherIsNotBusy(lecture);
 	verifyTeacherIsWorking(lecture);
 	verifyTeacherCanTeach(lecture);
-	// проверить что студенты не заняты другой лекцией
+	verifyAllGroupsCanAttend(lecture);
 	// проверить что аудитория не занята другой лекцией
 	// проверить что не воскресенье
 	lectureDao.create(lecture);
+    }
+
+    private void verifyAllGroupsCanAttend(Lecture lecture) throws Exception {
+	boolean groupIsOnAnotherLecture = lectureDao.findAll()
+		.stream()
+		.filter(l -> l.getDate().equals(lecture.getDate()))
+		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
+		.flatMap(l -> Stream.of(l.getGroups()))
+		.flatMap(List::stream)
+		.distinct()
+		.filter(lecture.getGroups()::contains)
+		.findFirst()
+		.isPresent();
+	if (groupIsOnAnotherLecture) {
+	    throw new Exception("At least one group is on another lecture");
+	}
     }
 
     private void verifyTeacherCanTeach(Lecture lecture) throws Exception {
@@ -75,7 +93,7 @@ public class LectureService {
 		.filter(l -> l.getDate().equals(lecture.getDate()))
 		.collect(Collectors.toList());
 	boolean teacherHasLectureTodayOnThisTimeslot = thisTeacherLecturesToday.stream()
-		.filter(l -> l.getTimeSlot().equals(lecture.getTimeSlot()))
+		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
 		.findFirst()
 		.isPresent();
 	if (teacherHasLectureTodayOnThisTimeslot) {

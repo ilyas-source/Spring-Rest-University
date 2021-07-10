@@ -170,11 +170,11 @@ public class LectureDaoTest {
 	List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
 	List<Group> expectedGroups2 = new ArrayList<>(Arrays.asList(expectedGroup1));
 
-	Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
+	Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
 		.id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
 		.teacher(expectedTeacher1).classroom(expectedClassroom1).build();
 
-	Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2000, 1, 2)).subject(expectedSubject2)
+	Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2020, 1, 2)).subject(expectedSubject2)
 		.id(2).timeslot(expectedTimeslot2).groups(expectedGroups2)
 		.teacher(expectedTeacher2).classroom(expectedClassroom2).build();
 

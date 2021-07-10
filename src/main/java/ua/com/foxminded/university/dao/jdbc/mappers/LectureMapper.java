@@ -49,7 +49,7 @@ public class LectureMapper implements RowMapper<Lecture> {
 	lecture.setGroups(jdbcGroupDao.findByLectureId(rs.getInt("id")));
 	jdbcSubjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
 	jdbcTeacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);
-	jdbcTimeslotDao.findById(rs.getInt("timeslot_id")).ifPresent(lecture::setTimeSlot);
+	jdbcTimeslotDao.findById(rs.getInt("timeslot_id")).ifPresent(lecture::setTimeslot);
 
 	return lecture;
     }

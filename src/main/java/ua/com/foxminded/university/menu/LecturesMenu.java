@@ -60,8 +60,8 @@ public class LecturesMenu {
 	result.append(
 		"Lecture on (" + subject.getId() + ")" + subject.getName() + " will take place on " + lecture.getDate()
 			+ ", from "
-			+ lecture.getTimeSlot().getBeginTime() + " to " + lecture.getTimeSlot().getEndTime() + " (timeslot #"
-			+ lecture.getTimeSlot().getId() + ")" + CR);
+			+ lecture.getTimeslot().getBeginTime() + " to " + lecture.getTimeslot().getEndTime() + " (timeslot #"
+			+ lecture.getTimeslot().getId() + ")" + CR);
 	result.append("Read by (" + teacher.getId() + ")" + teacher.getFirstName() + " " + teacher.getLastName() + " in ("
 		+ classroom.getId() + ")" + classroom.getName() + "." + CR);
 

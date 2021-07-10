@@ -55,8 +55,8 @@ INSERT INTO timeslots (begin_time, end_time) VALUES
 ('11:00:00', '11:45:00');
    
 INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, classroom_id) VALUES
-('2000-1-1', 1, 1, 1, 1),
-('2000-1-2', 2, 2, 2, 2);
+('2020-1-1', 1, 1, 1, 1),
+('2020-1-2', 2, 2, 2, 2);
     
 INSERT INTO holidays (date, name) VALUES
 ('2000-12-25', 'Christmas'),

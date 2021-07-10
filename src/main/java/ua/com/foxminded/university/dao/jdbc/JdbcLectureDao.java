@@ -66,7 +66,7 @@ public class JdbcLectureDao implements LectureDao {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setObject(1, lecture.getDate());
-	    ps.setObject(2, lecture.getTimeSlot().getId());
+	    ps.setObject(2, lecture.getTimeslot().getId());
 	    ps.setInt(3, lecture.getSubject().getId());
 	    ps.setInt(4, lecture.getTeacher().getId());
 	    ps.setInt(5, lecture.getClassroom().getId());
@@ -81,7 +81,7 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     @Transactional
     public void update(Lecture lecture) {
-	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
+	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
 	List<Group> newGroups = lecture.getGroups();

@@ -26,6 +26,7 @@ import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,12 +69,14 @@ class LectureServiceTest {
     void givenLectureOnHoliday_onCreate_shouldThrowException() throws Exception {
 	String expected = "Can't schedule lecture to a holiday";
 	when(holidayDao.findAll()).thenReturn(expectedHolidays);
+	LocalDate dateBackup = expectedLecture1.getDate();
 	expectedLecture1.setDate(LocalDate.of(2000, 3, 8));
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    lectureService.create(expectedLecture1);
 	});
 
+	expectedLecture1.setDate(dateBackup);
 	assertEquals(expected, thrown.getMessage());
     }
 
@@ -92,11 +95,14 @@ class LectureServiceTest {
     @Test
     void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() throws Exception {
 	String expected = "Teacher is on vacation, can't assign this lecture";
+	LocalDate dateBackup = expectedLecture1.getDate();
+	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    lectureService.create(expectedLecture1);
 	});
 
+	expectedLecture1.setDate(dateBackup);
 	assertEquals(expected, thrown.getMessage());
     }
 
@@ -104,25 +110,33 @@ class LectureServiceTest {
     void givenLectureWithTeacherCantTeach_onCreate_shouldThrowException() throws Exception {
 	String expected = "Adam Smith can't teach Test Radiology, can't assign lecture";
 	expectedLecture1.setSubject(expectedSubject4);
-	expectedLecture1.setDate(LocalDate.of(2020, 1, 1));
-
-	System.out.println(expectedLecture1);
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    lectureService.create(expectedLecture1);
 	});
 
+	expectedLecture1.setSubject(expectedSubject1);
 	assertEquals(expected, thrown.getMessage());
     }
 
-//    private void verifyTeacherCanTeach(Lecture lecture) throws Exception {
-//	Teacher teacher = lecture.getTeacher();
-//	Subject subject = lecture.getSubject();
-//	if (!teacher.getSubjects().contains(subject)) {
-//	    throw new Exception(String.format("%s %s can't teach %s, can't assign lecture", teacher.getFirstName(),
-//		    teacher.getLastName(), subject.getName()));
-//	}
-//    }
+    @Test
+    void givenLectureWithBusyGroup_onCreate_shouldThrowException() throws Exception {
+	String expected = "At least one group is on another lecture";
+	when(lectureDao.findAll()).thenReturn(expectedLectures);
+	LocalDate dateBackup = expectedLecture1.getDate();
+	Timeslot timeslotBackup = expectedLecture1.getTimeslot();
+	expectedLecture1.setDate(expectedLecture2.getDate());
+	expectedLecture1.setTimeslot(expectedLecture2.getTimeslot());
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    lectureService.create(expectedLecture1);
+	});
+
+	expectedLecture1.setDate(dateBackup);
+	expectedLecture1.setTimeslot(timeslotBackup);
+	assertEquals(expected, thrown.getMessage());
+    }
+
     @Test
     void givenGoodLecture_onCreate_shouldCallCreate() throws Exception {
 	lectureService.create(expectedLecture1);
