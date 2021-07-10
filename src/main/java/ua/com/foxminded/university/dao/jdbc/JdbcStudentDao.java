@@ -19,6 +19,7 @@ import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class JdbcStudentDao implements StudentDao {
@@ -26,6 +27,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String CREATE = "INSERT INTO students (first_name, last_name, gender, birth_date," +
 	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
+    private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
 	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
@@ -80,6 +82,16 @@ public class JdbcStudentDao implements StudentDao {
     public Optional<Student> findById(int id) {
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, studentMapper, id));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
+    public Optional<Student> findByAddressId(int id) {
+	try {
+	    Optional<Student> found = Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
+	    return found;
 	} catch (EmptyResultDataAccessException e) {
 	    return Optional.empty();
 	}

@@ -2,7 +2,9 @@ package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
@@ -75,16 +77,13 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenStudentsAddressId_onDelete_shouldThrowException() throws Exception {
-	when(studentDao.findAll()).thenReturn(expectedStudents);
-	when(addressDao.findById(3)).thenReturn(Optional.of(expectedAddress3));
-	String expected = "Address is used by a student account, can't delete address";
+    void givenStudentsAddressId_onDelete_shouldNotCallDaoDelete() throws Exception {
+	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
+	when(studentDao.findByAddressId(1)).thenReturn(Optional.of(expectedStudent1));
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    addressService.delete(3);
-	});
+	addressService.delete(expectedAddress1.getId());
 
-	assertEquals(expected, thrown.getMessage());
+	verify(addressDao, never()).delete(expectedAddress1.getId());
     }
 
     @Test
@@ -100,7 +99,7 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenCorrectUnusedId_onDelete_shouldCallDaoDelete() throws Exception {
+    void givenCorrectUnusedAddressId_onDelete_shouldCallDaoDelete() throws Exception {
 	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
 
 	addressService.delete(1);
