@@ -23,6 +23,7 @@ import org.springframework.remoting.soap.SoapFaultException;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -134,6 +135,21 @@ class LectureServiceTest {
 
 	expectedLecture1.setDate(dateBackup);
 	expectedLecture1.setTimeslot(timeslotBackup);
+	assertEquals(expected, thrown.getMessage());
+    }
+
+    @Test
+    void givenLectureWithBusyClassroom_onCreate_shouldThrowException() throws Exception {
+	String expected = "Classroom is busy, can't schedule lecture";
+	when(lectureDao.findAll()).thenReturn(expectedLectures);
+	Classroom classroomBackup = expectedLecture1.getClassroom();
+	expectedLecture1.setClassroom(expectedLecture2.getClassroom());
+
+	Throwable thrown = assertThrows(Exception.class, () -> {
+	    lectureService.create(expectedLecture1);
+	});
+
+	expectedLecture1.setClassroom(classroomBackup);
 	assertEquals(expected, thrown.getMessage());
     }
 

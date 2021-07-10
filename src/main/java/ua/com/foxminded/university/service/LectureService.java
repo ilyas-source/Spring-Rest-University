@@ -38,9 +38,21 @@ public class LectureService {
 	verifyTeacherIsWorking(lecture);
 	verifyTeacherCanTeach(lecture);
 	verifyAllGroupsCanAttend(lecture);
-	// проверить что аудитория не занята другой лекцией
-	// проверить что не воскресенье
+	verifyClassroomIsAvailable(lecture);
 	lectureDao.create(lecture);
+    }
+
+    private void verifyClassroomIsAvailable(Lecture lecture) throws Exception {
+	boolean classroomIsBusy = lectureDao.findAll()
+		.stream()
+		.filter(l -> l.getDate().equals(lecture.getDate()))
+		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
+		.filter(l -> l.getClassroom().equals(lecture.getClassroom()))
+		.findFirst()
+		.isPresent();
+	if (classroomIsBusy) {
+	    throw new Exception("Classroom is busy, can't schedule lecture");
+	}
     }
 
     private void verifyAllGroupsCanAttend(Lecture lecture) throws Exception {

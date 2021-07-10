@@ -123,12 +123,14 @@ class ClassroomServiceTest {
     @Test
     void givenClassroomWithInvalidCapacity_onCreate_shouldThrowException() {
 	String expected = "Wrong classroom capacity, can't create";
+	int capacityBackup = expectedClassroom1.getCapacity();
 	expectedClassroom1.setCapacity(-5);
 
 	Throwable thrown = assertThrows(Exception.class, () -> {
 	    classroomService.create(expectedClassroom1);
 	});
 
+	expectedClassroom1.setCapacity(capacityBackup);
 	assertEquals(expected, thrown.getMessage());
     }
 }
