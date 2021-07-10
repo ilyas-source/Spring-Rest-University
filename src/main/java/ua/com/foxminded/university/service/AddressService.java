@@ -42,9 +42,7 @@ public class AddressService {
     }
 
     public void delete(int id) {
-	var canDelete = true;
-	canDelete = canDelete && verifyIdExists(id);
-	canDelete = canDelete && verifyAddressIsFree(id);
+	var canDelete = idExists(id) && addressIsFree(id);
 	if (canDelete) {
 	    addressDao.delete(id);
 	} else {
@@ -53,11 +51,11 @@ public class AddressService {
 
     }
 
-    private boolean verifyIdExists(int id) {
+    private boolean idExists(int id) {
 	return addressDao.findById(id).isPresent();
     }
 
-    private boolean verifyAddressIsFree(int id) {
+    private boolean addressIsFree(int id) {
 	Optional<Teacher> teacher = teacherDao.findByAddressId(id);
 	Optional<Student> student = studentDao.findByAddressId(id);
 	return teacher.isEmpty() && student.isEmpty();

@@ -43,7 +43,7 @@ public class ClassroomsMenu {
 		+ ". Capacity: " + classroom.getCapacity();
     }
 
-    public void addClassroom() throws Exception {
+    public void addClassroom() {
 	classroomService.create(createClassroom());
     }
 
@@ -77,7 +77,7 @@ public class ClassroomsMenu {
 	return result;
     }
 
-    public void updateClassroom() throws Exception {
+    public void updateClassroom() {
 	Classroom oldClassroom = selectClassroom();
 	Classroom newClassroom = createClassroom();
 	newClassroom.setId(oldClassroom.getId());
@@ -86,7 +86,7 @@ public class ClassroomsMenu {
 	System.out.println("Overwrite successful.");
     }
 
-    public void deleteClassroom() throws Exception {
+    public void deleteClassroom() {
 	classroomService.delete(selectClassroom().getId());
 	System.out.println("Classroom deleted successfully.");
     }
