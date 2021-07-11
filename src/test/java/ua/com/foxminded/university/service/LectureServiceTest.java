@@ -125,7 +125,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenGoodLecture_onCreate_shouldCallCreate() {
+    void givenGoodLecture_onCreate_shouldCallDaoCreate() {
 	lectureService.create(expectedLecture1);
 
 	verify(lectureDao).create(expectedLecture1);
@@ -139,7 +139,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenExistingLectureId_onDelete_shouldCallDelete() {
+    void givenExistingLectureId_onDelete_shouldCallDaoDelete() {
 	when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
 
 	lectureService.delete(1);

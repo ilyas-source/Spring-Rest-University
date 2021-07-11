@@ -5,36 +5,46 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
+import ua.com.foxminded.university.dao.ClassroomDao;
+import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.model.Location;
 
 @Service
 public class LocationService {
 
-    private JdbcLocationDao jdbcLocationDao;
+    private LocationDao locationDao;
+    private ClassroomDao classroomDao;
 
-    public LocationService(JdbcLocationDao jdbcLocationDao) {
-	this.jdbcLocationDao = jdbcLocationDao;
+    public LocationService(LocationDao locationDao, ClassroomDao classroomDao) {
+	this.locationDao = locationDao;
+	this.classroomDao = classroomDao;
     }
 
     public void create(Location createLocation) {
-	jdbcLocationDao.create(createLocation);
+	locationDao.create(createLocation);
     }
 
     public List<Location> findAll() {
-	return jdbcLocationDao.findAll();
+	return locationDao.findAll();
     }
 
     public Optional<Location> findById(int choice) {
-	return jdbcLocationDao.findById(choice);
+	return locationDao.findById(choice);
     }
 
     public void update(Location newLocation) {
-	jdbcLocationDao.update(newLocation);
+	locationDao.update(newLocation);
     }
 
     public void delete(int id) {
-	// проверить что в этой локации нет аудиторий
-	jdbcLocationDao.delete(id);
+	if (locationIsNotUsed(locationDao.findById(id).get())) {
+	    locationDao.delete(id);
+	} else {
+	    System.out.println("Can't delete, location is used for a classroom");
+	}
+    }
+
+    private boolean locationIsNotUsed(Location location) {
+	return classroomDao.findByLocation(location).isEmpty();
     }
 }

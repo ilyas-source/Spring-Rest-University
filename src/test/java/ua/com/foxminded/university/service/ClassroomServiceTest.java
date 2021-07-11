@@ -1,14 +1,14 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 
 import java.util.Optional;
 
@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
-import ua.com.foxminded.university.model.Classroom;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomServiceTest {
@@ -50,14 +49,14 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenGoodClassroom_onCreate_shouldCallCreate() {
+    void givenGoodClassroom_onCreate_shouldCallDaoCreate() {
 	classroomService.create(expectedClassroom1);
 
 	verify(classroomDao).create(expectedClassroom1);
     }
 
     @Test
-    void givenGoodClassroom_onUpdate_shouldCallUpdate() {
+    void givenGoodClassroom_onUpdate_shouldCallDaoUpdate() {
 	classroomService.update(expectedClassroom1);
 
 	verify(classroomDao).update(expectedClassroom1);
@@ -75,7 +74,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenExistingClassroom_onDelete_shouldCallDelete() {
+    void givenExistingClassroom_onDelete_shouldCallDaoDelete() {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	classroomService.delete(1);
 
@@ -90,7 +89,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenOccupiedClassroom_onDelete_shouldThrowException() {
+    void givenOccupiedClassroom_onDelete_shouldNotCallDaoDelete() {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 
@@ -100,7 +99,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenClassroomWithExistingName_onCreate_shouldThrowException() {
+    void givenClassroomWithExistingName_onCreate_shouldNotCallDaoCreate() {
 	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 
 	classroomService.create(expectedClassroom1);
@@ -109,7 +108,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenClassroomWithInvalidCapacity_onCreate_shouldThrowException() {
+    void givenClassroomWithInvalidCapacity_onCreate_shouldNotCallDaoCreate() {
 	int capacityBackup = expectedClassroom1.getCapacity();
 	expectedClassroom1.setCapacity(-5);
 

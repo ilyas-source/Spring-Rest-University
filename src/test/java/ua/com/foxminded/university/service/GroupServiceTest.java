@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +41,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenNewGroup_onCreate_shouldCallDaoCreate() throws Exception {
+    void givenNewGroup_onCreate_shouldCallDaoCreate() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
 	groupService.create(expectedGroup1);
 
@@ -51,7 +49,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenNewGroup_onUpdate_shouldCallUpdate() throws Exception {
+    void givenNewGroup_onUpdate_shouldCallDaoUpdate() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
 	groupService.update(expectedGroup1);
 
@@ -59,7 +57,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenCorrectId_onDelete_shouldCallDelete() throws Exception {
+    void givenCorrectId_onDelete_shouldCallDaoDelete() {
 	when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
 	groupService.delete(1);
 

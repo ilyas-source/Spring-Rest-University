@@ -38,21 +38,21 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenHoliday_onCreate_shouldCallCreate() {
+    void givenHoliday_onCreate_shouldCallDaoCreate() {
 	holidayService.create(expectedHoliday1);
 
 	verify(holidayDao).create(expectedHoliday1);
     }
 
     @Test
-    void givenHoliday_onUpdate_shouldCallUpdate() {
+    void givenHoliday_onUpdate_shouldCallDaoUpdate() {
 	holidayService.update(expectedHoliday1);
 
 	verify(holidayDao).update(expectedHoliday1);
     }
 
     @Test
-    void givenHoliday_onDelete_shouldCallDelete() {
+    void givenHoliday_onDelete_shouldCallDaoDelete() {
 	holidayService.delete(1);
 
 	verify(holidayDao).delete(1);

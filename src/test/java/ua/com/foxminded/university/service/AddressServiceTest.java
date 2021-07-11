@@ -77,7 +77,7 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenStudentsAddressId_onDelete_shouldNotCallDaoDelete() throws Exception {
+    void givenStudentsAddressId_onDelete_shouldNotCallDaoDelete() {
 	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
 	when(studentDao.findByAddressId(1)).thenReturn(Optional.of(expectedStudent1));
 
@@ -87,19 +87,16 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenWrongId_onDelete_shouldThrowException() throws Exception {
+    void givenWrongId_onDelete_shouldNotCallDaoDelete() {
 	when(addressDao.findById(10)).thenReturn(Optional.empty());
-	String expected = String.format("Address not found", expectedAddress1.getId());
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    addressService.delete(10);
-	});
+	addressService.delete(10);
 
-	assertEquals(expected, thrown.getMessage());
+	verify(addressDao, never()).delete(10);
     }
 
     @Test
-    void givenCorrectUnusedAddressId_onDelete_shouldCallDaoDelete() throws Exception {
+    void givenCorrectUnusedAddressId_onDelete_shouldCallDaoDelete() {
 	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
 
 	addressService.delete(1);
