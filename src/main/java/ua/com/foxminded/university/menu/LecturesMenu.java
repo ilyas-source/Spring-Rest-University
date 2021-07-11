@@ -1,17 +1,17 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getDateFromScanner;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -19,8 +19,6 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.service.LectureService;
-
-import static ua.com.foxminded.university.Menu.*;
 
 @Component
 public class LecturesMenu {

@@ -8,8 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.AddressDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 
@@ -17,11 +16,11 @@ import ua.com.foxminded.university.model.Student;
 public class StudentMapper implements RowMapper<Student> {
 
     private AddressDao jdbcAddressDao;
-    private JdbcGroupDao jdbcGroupDao;
+    private GroupDao groupDao;
 
-    public StudentMapper(AddressDao jdbcAddressDao, JdbcGroupDao jdbcGroupDao) {
+    public StudentMapper(AddressDao jdbcAddressDao, GroupDao groupDao) {
 	this.jdbcAddressDao = jdbcAddressDao;
-	this.jdbcGroupDao = jdbcGroupDao;
+	this.groupDao = groupDao;
     }
 
     @Override
@@ -35,7 +34,7 @@ public class StudentMapper implements RowMapper<Student> {
 	student.setPhoneNumber(rs.getString("phone"));
 	student.setLastName(rs.getString("last_name"));
 	student.setGender(Gender.valueOf(rs.getString("gender")));
-	jdbcGroupDao.findById(rs.getInt("group_id")).ifPresent(student::setGroup);
+	groupDao.findById(rs.getInt("group_id")).ifPresent(student::setGroup);
 
 	return student;
     }

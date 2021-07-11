@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;

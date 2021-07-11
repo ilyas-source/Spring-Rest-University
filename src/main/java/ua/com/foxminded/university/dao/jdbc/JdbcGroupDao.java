@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.GroupDao;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.GroupMapper;
 import ua.com.foxminded.university.model.Group;
 
@@ -25,19 +24,16 @@ public class JdbcGroupDao implements GroupDao {
     private static final String FIND_ALL = "SELECT * FROM groups";
     private static final String UPDATE = "UPDATE groups SET name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
-    private static final String COUNT_STUDENTS = "COUNT (*) FROM students WHERE group_id = ?";
+//    private static final String COUNT_STUDENTS = "COUNT (*) FROM students WHERE group_id = ?";
     private static final String FIND_BY_LECTURE_ID = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
 	    "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?";
 
     private JdbcTemplate jdbcTemplate;
     private GroupMapper groupMapper;
-    // private StudentDao studentDao;
 
-//    public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper, StudentDao studentDao) {
     public JdbcGroupDao(JdbcTemplate jdbcTemplate, GroupMapper groupMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.groupMapper = groupMapper;
-//	this.studentDao = studentDao;
     }
 
     @Override
@@ -53,6 +49,7 @@ public class JdbcGroupDao implements GroupDao {
 	group.setId((int) keyHolder.getKeys().get("id"));
     }
 
+    @Override
     public List<Group> findByLectureId(int lectureId) {
 	return jdbcTemplate.query(FIND_BY_LECTURE_ID, groupMapper, lectureId);
     }
@@ -88,11 +85,4 @@ public class JdbcGroupDao implements GroupDao {
 	    return Optional.empty();
 	}
     }
-
-//    public Integer countStudents(Group group) {
-//	return (int) studentDao.findAll()
-//		.stream()
-//		.filter(s -> s.getGroup().getId() == group.getId())
-//		.count();
-//    }
 }

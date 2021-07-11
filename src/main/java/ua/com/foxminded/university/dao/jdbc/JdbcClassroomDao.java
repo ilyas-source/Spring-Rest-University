@@ -16,7 +16,6 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
 import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Location;
 
 @Component

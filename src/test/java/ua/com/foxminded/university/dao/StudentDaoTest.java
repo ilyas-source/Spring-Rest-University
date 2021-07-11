@@ -2,9 +2,16 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress3;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress4;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress5;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress6;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.studentToCreate;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.studentToUpdate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,9 +28,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
 import ua.com.foxminded.university.model.Gender;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)

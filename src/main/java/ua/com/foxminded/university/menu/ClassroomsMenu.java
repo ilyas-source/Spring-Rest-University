@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.menu;
 
-import static ua.com.foxminded.university.Menu.*;
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import java.util.Comparator;
 import java.util.List;
@@ -8,10 +11,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
-import ua.com.foxminded.university.dao.ClassroomDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;

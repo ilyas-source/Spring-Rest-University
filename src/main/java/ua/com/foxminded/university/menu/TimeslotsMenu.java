@@ -1,18 +1,17 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.getTimeFromScanner;
+
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
-import static ua.com.foxminded.university.Menu.*;
-
-import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.service.TimeslotService;
 

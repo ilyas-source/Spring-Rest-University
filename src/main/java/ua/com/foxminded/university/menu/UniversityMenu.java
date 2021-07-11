@@ -5,14 +5,6 @@ import static ua.com.foxminded.university.Menu.FORMAT_DIVIDER;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.ClassroomDao;
-import ua.com.foxminded.university.dao.GroupDao;
-import ua.com.foxminded.university.dao.HolidayDao;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.dao.SubjectDao;
-import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.service.ClassroomService;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.HolidayService;

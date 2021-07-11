@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class LocationsMenu {

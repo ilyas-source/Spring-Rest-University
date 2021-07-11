@@ -1,5 +1,9 @@
 package ua.com.foxminded.university.menu;
 
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,11 +11,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
-
-import static ua.com.foxminded.university.Menu.*;
 
 @Component
 public class GroupsMenu {

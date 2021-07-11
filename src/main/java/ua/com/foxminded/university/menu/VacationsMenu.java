@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.menu;
 
-import static ua.com.foxminded.university.Menu.*;
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getDateFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,9 +12,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Component

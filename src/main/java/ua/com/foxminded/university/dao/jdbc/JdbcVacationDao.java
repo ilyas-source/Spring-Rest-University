@@ -72,6 +72,7 @@ public class JdbcVacationDao implements VacationDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    @Override
     public List<Vacation> getVacationsByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, vacationMapper, id);
     }

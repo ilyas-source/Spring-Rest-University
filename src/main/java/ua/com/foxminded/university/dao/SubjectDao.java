@@ -6,5 +6,5 @@ import ua.com.foxminded.university.model.Subject;
 
 public interface SubjectDao extends GeneralDao<Subject> {
 
-    public List<Subject> getSubjectsByTeacherId(int id);
+    List<Subject> getSubjectsByTeacherId(int id);
 }
