@@ -4,11 +4,11 @@ import static java.util.function.Predicate.not;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,13 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class JdbcLectureDao implements LectureDao {
@@ -34,6 +33,9 @@ public class JdbcLectureDao implements LectureDao {
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
     private static final String FIND_BY_CLASSROOM_ID = "SELECT * FROM lectures WHERE classroom_id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT * FROM lectures WHERE teacher_id = ?";
+    private static final String FIND_BY_DATETIMECLASSROOM = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND classroom_id = ?";
+    private static final String FIND_BY_DATETIMETEACHER = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND teacher_id = ?";
+    private static final String FIND_BY_DATETIME = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
@@ -44,17 +46,12 @@ public class JdbcLectureDao implements LectureDao {
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
-    private JdbcGroupDao groupDao;
     private StudentDao studentDao;
-    private TimeslotDao timeslotDao;
 
-    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, JdbcGroupDao groupDao, TimeslotDao timeslotDao,
-	    StudentDao studentDao) {
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, StudentDao studentDao) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lectureMapper = lectureMapper;
-	this.groupDao = groupDao;
 	this.studentDao = studentDao;
-	this.timeslotDao = timeslotDao;
     }
 
     @Override
@@ -125,6 +122,31 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     public List<Lecture> findByTeacher(Teacher teacher) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, lectureMapper, teacher.getId());
+    }
+
+    @Override
+    public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
+	try {
+	    return Optional.of(
+		    jdbcTemplate.queryForObject(FIND_BY_DATETIMECLASSROOM, lectureMapper, date, timeslot.getId(),
+			    classroom.getId()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
+    public List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot) {
+	return jdbcTemplate.query(FIND_BY_DATETIME, lectureMapper, date, timeslot.getId());
+    }
+
+    public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
+	try {
+	    return Optional.of(
+		    jdbcTemplate.queryForObject(FIND_BY_DATETIMETEACHER, lectureMapper, date, timeslot.getId(), teacher.getId()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override

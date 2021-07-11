@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
@@ -55,106 +56,76 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTooSmallClassroom_onCreate_shouldThrowException() throws Exception {
-	String expected = "Required minimum classroom capacity 1000, but was 500";
+    void givenLectureWithTooSmallClassroom_onCreate_shouldNotCallDaoCreate() {
 	when(lectureDao.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureOnHoliday_onCreate_shouldThrowException() throws Exception {
-	String expected = "Can't schedule lecture to a holiday";
-	when(holidayDao.findAll()).thenReturn(expectedHolidays);
-	LocalDate dateBackup = expectedLecture1.getDate();
-	expectedLecture1.setDate(LocalDate.of(2000, 3, 8));
+    void givenLectureOnHoliday_onCreate_shouldNotCallDaoCreate() {
+	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
-	expectedLecture1.setDate(dateBackup);
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyTeacher_onCreate_shouldThrowException() throws Exception {
-	String expected = "Teacher is busy, can't assign this lecture";
-	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
+    void givenLectureWithBusyTeacher_onCreate_shouldNotCallDaoCreate() {
+	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() throws Exception {
-	String expected = "Teacher is on vacation, can't assign this lecture";
+    void givenLectureWithTeacherOnVacation_onCreate_shouldNotCallDaoCreate() {
+
 	LocalDate dateBackup = expectedLecture1.getDate();
 	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
 	expectedLecture1.setDate(dateBackup);
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherCantTeach_onCreate_shouldThrowException() throws Exception {
-	String expected = "Adam Smith can't teach Test Radiology, can't assign lecture";
+    void givenLectureWithTeacherCantTeach_onCreate_shouldNotCallDaoCreate() {
 	expectedLecture1.setSubject(expectedSubject4);
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
 	expectedLecture1.setSubject(expectedSubject1);
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyGroup_onCreate_shouldThrowException() throws Exception {
-	String expected = "At least one group is on another lecture";
-	when(lectureDao.findAll()).thenReturn(expectedLectures);
-	LocalDate dateBackup = expectedLecture1.getDate();
-	Timeslot timeslotBackup = expectedLecture1.getTimeslot();
-	expectedLecture1.setDate(expectedLecture2.getDate());
-	expectedLecture1.setTimeslot(expectedLecture2.getTimeslot());
+    void givenLectureWithBusyGroup_onCreate_shouldNotCallDaoCreate() {
+	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
-	expectedLecture1.setDate(dateBackup);
-	expectedLecture1.setTimeslot(timeslotBackup);
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyClassroom_onCreate_shouldThrowException() throws Exception {
-	String expected = "Classroom is busy, can't schedule lecture";
-	when(lectureDao.findAll()).thenReturn(expectedLectures);
-	Classroom classroomBackup = expectedLecture1.getClassroom();
-	expectedLecture1.setClassroom(expectedLecture2.getClassroom());
+    void givenLectureWithBusyClassroom_onCreate_shouldNotCallDaoCreate() {
+	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    lectureService.create(expectedLecture1);
-	});
+	lectureService.create(expectedLecture1);
 
-	expectedLecture1.setClassroom(classroomBackup);
-	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenGoodLecture_onCreate_shouldCallCreate() throws Exception {
+    void givenGoodLecture_onCreate_shouldCallCreate() {
 	lectureService.create(expectedLecture1);
 
 	verify(lectureDao).create(expectedLecture1);

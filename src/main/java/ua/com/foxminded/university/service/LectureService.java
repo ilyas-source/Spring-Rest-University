@@ -23,112 +23,89 @@ public class LectureService {
 
     private LectureDao lectureDao;
     private HolidayDao holidayDao;
-    private TeacherDao teacherDao;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, TeacherDao teacherDao) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao) {
 	this.lectureDao = lectureDao;
 	this.holidayDao = holidayDao;
-	this.teacherDao = teacherDao;
     }
 
-    public void create(Lecture lecture) throws Exception {
-	verifyClassroomCapacityIsEnough(lecture);
-	verifyIsNotHoliday(lecture);
-	verifyTeacherIsNotBusy(lecture);
-	verifyTeacherIsWorking(lecture);
-	verifyTeacherCanTeach(lecture);
-	verifyAllGroupsCanAttend(lecture);
-	verifyClassroomIsAvailable(lecture);
-	lectureDao.create(lecture);
-    }
-
-    private void verifyClassroomIsAvailable(Lecture lecture) throws Exception {
-	boolean classroomIsBusy = lectureDao.findAll()
-		.stream()
-		.filter(l -> l.getDate().equals(lecture.getDate()))
-		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
-		.filter(l -> l.getClassroom().equals(lecture.getClassroom()))
-		.findFirst()
-		.isPresent();
-	if (classroomIsBusy) {
-	    throw new Exception("Classroom is busy, can't schedule lecture");
+    public void create(Lecture lecture) {
+	boolean canCreate = classroomCapacityIsEnough(lecture);
+	canCreate = canCreate && classroomIsAvailable(lecture);
+	canCreate = canCreate && isNotHoliday(lecture);
+	canCreate = canCreate && teacherIsNotBusy(lecture);
+	canCreate = canCreate && teacherIsWorking(lecture);
+	canCreate = canCreate && teacherCanTeach(lecture);
+	canCreate = canCreate && allGroupsCanAttend(lecture);
+	if (canCreate) {
+	    lectureDao.create(lecture);
+	} else {
+	    System.out.println("Can't create lecture");
 	}
+
     }
 
-    private void verifyAllGroupsCanAttend(Lecture lecture) throws Exception {
-	boolean groupIsOnAnotherLecture = lectureDao.findAll()
-		.stream()
-		.filter(l -> l.getDate().equals(lecture.getDate()))
-		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
+    private boolean classroomIsAvailable(Lecture lecture) {
+	boolean result = lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+		.isEmpty();
+	System.out.println("Classroom is available: " + result);
+	return result;
+    }
+
+    private boolean allGroupsCanAttend(Lecture lecture) {
+	List<Lecture> lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
+	boolean result = lecturesOnThisDateAndTime.stream()
 		.flatMap(l -> Stream.of(l.getGroups()))
 		.flatMap(List::stream)
-		.distinct()
 		.filter(lecture.getGroups()::contains)
 		.findFirst()
-		.isPresent();
-	if (groupIsOnAnotherLecture) {
-	    throw new Exception("At least one group is on another lecture");
-	}
+		.isEmpty();
+	System.out.println("All groups can attend: " + result);
+	return result;
     }
 
-    private void verifyTeacherCanTeach(Lecture lecture) throws Exception {
+    private boolean teacherCanTeach(Lecture lecture) {
 	Teacher teacher = lecture.getTeacher();
 	Subject subject = lecture.getSubject();
-	if (!teacher.getSubjects().contains(subject)) {
-	    throw new Exception(String.format("%s %s can't teach %s, can't assign lecture", teacher.getFirstName(),
-		    teacher.getLastName(), subject.getName()));
-	}
+	boolean result = teacher.getSubjects().contains(subject);
+	System.out.println("Teacher can teach needed subject: " + result);
+	return result;
     }
 
-    private void verifyTeacherIsWorking(Lecture lecture) throws Exception {
-	List<Vacation> vacations = lecture.getTeacher().getVacations();
-	boolean teacherIsOnVacation = vacations.stream()
+    private boolean teacherIsWorking(Lecture lecture) {
+	boolean result = lecture.getTeacher()
+		.getVacations()
+		.stream()
 		.filter(v -> vacationContainsDay(v, lecture.getDate()))
 		.findFirst()
-		.isPresent();
-	if (teacherIsOnVacation) {
-	    throw new Exception("Teacher is on vacation, can't assign this lecture");
-	}
+		.isEmpty();
+	System.out.println("Teacher is not on a vacation: " + result);
+	return result;
     }
 
     private boolean vacationContainsDay(Vacation vacation, LocalDate date) {
-	if (date.isAfter(vacation.getStartDate().minus(1, ChronoUnit.DAYS)) &&
-		date.isBefore(vacation.getEndDate().plus(1, ChronoUnit.DAYS))) {
-	    return true;
-	}
-	return false;
+	return (date.isAfter(vacation.getStartDate().minus(1, ChronoUnit.DAYS)) &&
+		date.isBefore(vacation.getEndDate().plus(1, ChronoUnit.DAYS)));
     }
 
-    private void verifyTeacherIsNotBusy(Lecture lecture) throws Exception {
-	List<Lecture> thisTeacherLectures = lectureDao.findByTeacher(lecture.getTeacher());
-	List<Lecture> thisTeacherLecturesToday = thisTeacherLectures.stream()
-		.filter(l -> l.getDate().equals(lecture.getDate()))
-		.collect(Collectors.toList());
-	boolean teacherHasLectureTodayOnThisTimeslot = thisTeacherLecturesToday.stream()
-		.filter(l -> l.getTimeslot().equals(lecture.getTimeslot()))
-		.findFirst()
-		.isPresent();
-	if (teacherHasLectureTodayOnThisTimeslot) {
-	    throw new Exception("Teacher is busy, can't assign this lecture");
-	}
+    private boolean teacherIsNotBusy(Lecture lecture) {
+	boolean result = lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), lecture.getTeacher())
+		.isEmpty();
+	System.out.println("Teacher is not on another lecture: " + result);
+	return result;
     }
 
-    private void verifyIsNotHoliday(Lecture lecture) throws Exception {
-	if (holidayDao.findAll()
-		.stream()
-		.filter(h -> h.getDate().equals(lecture.getDate()))
-		.findFirst()
-		.isPresent()) {
-	    throw new Exception("Can't schedule lecture to a holiday");
-	}
+    private boolean isNotHoliday(Lecture lecture) {
+	boolean result = holidayDao.findByDate(lecture.getDate()).isEmpty();
+	System.out.println("Lecture is not scheduled to a holiday: " + result);
+	return result;
     }
 
-    private void verifyClassroomCapacityIsEnough(Lecture lecture) throws Exception {
+    private boolean classroomCapacityIsEnough(Lecture lecture) {
 	int requiredCapacity = lectureDao.countStudentsInLecture(lecture);
-	if (lecture.getClassroom().getCapacity() < requiredCapacity) {
-	    throw new Exception(String.format("Required minimum classroom capacity %s, but was %s", requiredCapacity,
-		    lecture.getClassroom().getCapacity()));
-	}
+	boolean result = lecture.getClassroom().getCapacity() >= requiredCapacity;
+	System.out.println("Classroom is big enough: " + result);
+	return result;
     }
 
     public List<Lecture> findAll() {
@@ -145,7 +122,6 @@ public class LectureService {
 	// проверить что препод не занят другой лекцией
 	// проверить что студенты не заняты другой лекцией
 	// проверить что аудитория не занята другой лекцией
-	// проверить что не воскресенье
 	lectureDao.update(newLecture);
     }
 
