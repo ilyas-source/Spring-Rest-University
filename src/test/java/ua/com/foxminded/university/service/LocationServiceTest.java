@@ -37,10 +37,10 @@ class LocationServiceTest {
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectLocation() {
-	when(locationDao.findById(1)).thenReturn(Optional.of(expectedLocation1));
+    void onFindAll_shouldCallDaoFindAll() {
+	locationService.findAll();
 
-	assertEquals(Optional.of(expectedLocation1), locationService.findById(1));
+	verify(locationDao).findAll();
     }
 
     @Test

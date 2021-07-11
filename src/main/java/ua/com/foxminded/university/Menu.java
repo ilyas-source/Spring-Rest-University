@@ -69,7 +69,7 @@ public class Menu {
 	this.timeslotsMenu = timeslotsMenu;
     }
 
-    public void start(int menuEntryPoint) throws Exception {
+    public void start(int menuEntryPoint) {
 	int menuChoice;
 
 	if (menuEntryPoint == 0) {
@@ -118,7 +118,7 @@ public class Menu {
 	}
     }
 
-    private void manageTeachers() throws Exception {
+    private void manageTeachers() {
 	System.out.println(FORMAT_DIVIDER + "Manage teachers:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -144,7 +144,7 @@ public class Menu {
 	}
     }
 
-    private void manageGroups() throws Exception {
+    private void manageGroups() {
 	System.out.println(FORMAT_DIVIDER + "Manage groups:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -170,7 +170,7 @@ public class Menu {
 	}
     }
 
-    private void manageSubjects() throws Exception {
+    private void manageSubjects() {
 	System.out.println(FORMAT_DIVIDER + "Manage subjects:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -196,7 +196,7 @@ public class Menu {
 	}
     }
 
-    private void manageLectures() throws Exception {
+    private void manageLectures() {
 	System.out.println(FORMAT_DIVIDER + "Manage lectures:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -222,7 +222,7 @@ public class Menu {
 	}
     }
 
-    private void manageClassrooms() throws Exception {
+    private void manageClassrooms() {
 	System.out.println(FORMAT_DIVIDER + "Manage classrooms:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -248,7 +248,7 @@ public class Menu {
 	}
     }
 
-    private void manageStudents() throws Exception {
+    private void manageStudents() {
 	System.out.println(FORMAT_DIVIDER + "Manage students:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -274,7 +274,7 @@ public class Menu {
 	}
     }
 
-    private void manageTimeslots() throws Exception {
+    private void manageTimeslots() {
 	System.out.println(FORMAT_DIVIDER + "Manage time slots:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:
@@ -300,7 +300,7 @@ public class Menu {
 	}
     }
 
-    private void manageHolidays() throws Exception {
+    private void manageHolidays() {
 	System.out.println(FORMAT_DIVIDER + "Manage holidays:" + CRUD_MENU_TEXT);
 	switch (getIntFromScanner()) {
 	case 1:

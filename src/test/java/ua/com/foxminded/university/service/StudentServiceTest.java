@@ -3,9 +3,8 @@ package ua.com.foxminded.university.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
-
-import java.util.Optional;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,13 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcStudentDao;
+import ua.com.foxminded.university.dao.StudentDao;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
     @Mock
-    private JdbcStudentDao studentDao;
+    private StudentDao studentDao;
     @InjectMocks
     private StudentService studentService;
 
@@ -31,10 +30,10 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectStudent() {
-	when(studentDao.findById(1)).thenReturn(Optional.of(expectedStudent1));
+    void onFindAll_shouldCallDaoFindAll() {
+	studentService.findAll();
 
-	assertEquals(Optional.of(expectedStudent1), studentService.findById(1));
+	verify(studentDao).findAll();
     }
 
     @Test

@@ -14,7 +14,7 @@ public class TimeslotMapper implements RowMapper<Timeslot> {
 
     @Override
     public Timeslot mapRow(ResultSet rs, int rowNum) throws SQLException {
-	Timeslot timeslot = new Timeslot();
+	var timeslot = new Timeslot();
 	timeslot.setId(rs.getInt("id"));
 	timeslot.setBeginTime(rs.getObject("begin_time", LocalTime.class));
 	timeslot.setEndTime(rs.getObject("end_time", LocalTime.class));

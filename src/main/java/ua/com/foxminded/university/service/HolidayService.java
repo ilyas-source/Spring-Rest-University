@@ -5,35 +5,35 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
+import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.model.Holiday;
 
 @Service
 public class HolidayService {
 
-    private JdbcHolidayDao jdbcHolidayDao;
+    private HolidayDao holidayDao;
 
-    public HolidayService(JdbcHolidayDao jdbcHolidayDao) {
-	this.jdbcHolidayDao = jdbcHolidayDao;
+    public HolidayService(HolidayDao holidayDao) {
+	this.holidayDao = holidayDao;
     }
 
     public void create(Holiday createHoliday) {
-	jdbcHolidayDao.create(createHoliday);
+	holidayDao.create(createHoliday);
     }
 
     public List<Holiday> findAll() {
-	return jdbcHolidayDao.findAll();
+	return holidayDao.findAll();
     }
 
     public Optional<Holiday> findById(int choice) {
-	return jdbcHolidayDao.findById(choice);
+	return holidayDao.findById(choice);
     }
 
     public void update(Holiday newHoliday) {
-	jdbcHolidayDao.update(newHoliday);
+	holidayDao.update(newHoliday);
     }
 
     public void delete(int id) {
-	jdbcHolidayDao.delete(id);
+	holidayDao.delete(id);
     }
 }

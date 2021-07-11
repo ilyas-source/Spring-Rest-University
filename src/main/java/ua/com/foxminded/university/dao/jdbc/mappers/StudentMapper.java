@@ -26,7 +26,7 @@ public class StudentMapper implements RowMapper<Student> {
 
     @Override
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-	Student student = new Student();
+	var student = new Student();
 	student.setId(rs.getInt("id"));
 	jdbcAddressDao.findById(rs.getInt("address_id")).ifPresent(student::setAddress);
 	student.setBirthDate(rs.getObject("birth_date", LocalDate.class));

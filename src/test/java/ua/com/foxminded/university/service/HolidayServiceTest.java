@@ -3,7 +3,7 @@ package ua.com.foxminded.university.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday1;
 
 import java.util.Optional;
 
@@ -13,21 +13,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
+import ua.com.foxminded.university.dao.HolidayDao;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayServiceTest {
 
     @Mock
-    private JdbcHolidayDao holidayDao;
+    private HolidayDao holidayDao;
     @InjectMocks
     private HolidayService holidayService;
 
     @Test
-    void onFindAll_shouldReturnAllHolidays() {
-	when(holidayDao.findAll()).thenReturn(expectedHolidays);
+    void onFindAll_shouldCallDaoFindAll() {
+	holidayService.findAll();
 
-	assertEquals(expectedHolidays, holidayService.findAll());
+	verify(holidayDao).findAll();
     }
 
     @Test

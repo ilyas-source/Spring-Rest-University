@@ -5,7 +5,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
@@ -18,15 +17,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomServiceTest {
 
     @Mock
-    private JdbcClassroomDao classroomDao;
+    private ClassroomDao classroomDao;
     @Mock
     private LectureDao lectureDao;
     @Mock
@@ -35,10 +34,10 @@ class ClassroomServiceTest {
     private ClassroomService classroomService;
 
     @Test
-    void onFindAll_shouldReturnAllClassrooms() {
-	when(classroomDao.findAll()).thenReturn(expectedClassrooms);
+    void onFindAll_shouldCallDaoFindAll() {
+	classroomService.findAll();
 
-	assertEquals(expectedClassrooms, classroomService.findAll());
+	verify(classroomDao).findAll();
     }
 
     @Test

@@ -1,16 +1,12 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress1;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,15 +15,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcAddressDao;
 
 @ExtendWith(MockitoExtension.class)
 class AddressServiceTest {
 
     @Mock
-    private JdbcAddressDao addressDao;
+    private AddressDao addressDao;
     @Mock
     private TeacherDao teacherDao;
     @Mock
@@ -50,30 +46,27 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenAddress_onCreate_shouldCallDaoCreate() throws Exception {
+    void givenAddress_onCreate_shouldCallDaoCreate() {
 	addressService.create(expectedAddress1);
 
 	verify(addressDao).create(expectedAddress1);
     }
 
     @Test
-    void givenAddress_onUpdate_shouldCallUpdate() throws Exception {
+    void givenAddress_onUpdate_shouldCallUpdate() {
 	addressService.update(expectedAddress1);
 
 	verify(addressDao).update(expectedAddress1);
     }
 
     @Test
-    void givenTeachersAddressId_onDelete_shouldThrowException() throws Exception {
-	when(teacherDao.findAll()).thenReturn(expectedTeachers);
+    void givenTeachersAddressId_onDelete_shouldNotCallDaoDelete() {
 	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
-	String expected = "Address is used by a teacher account, can't delete address";
+	when(teacherDao.findByAddressId(1)).thenReturn(Optional.of(expectedTeacher1));
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    addressService.delete(1);
-	});
+	addressService.delete(expectedAddress1.getId());
 
-	assertEquals(expected, thrown.getMessage());
+	verify(addressDao, never()).delete(expectedAddress1.getId());
     }
 
     @Test

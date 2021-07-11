@@ -71,7 +71,7 @@ public class LecturesMenu {
 	return result.toString();
     }
 
-    public void addLecture() throws Exception {
+    public void addLecture() {
 	lectureService.create(createLecture());
     }
 

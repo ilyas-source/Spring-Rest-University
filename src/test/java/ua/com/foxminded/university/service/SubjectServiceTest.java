@@ -1,11 +1,7 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-
-import java.util.Optional;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,28 +9,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
+import ua.com.foxminded.university.dao.SubjectDao;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
 
     @Mock
-    private JdbcSubjectDao subjectDao;
+    private SubjectDao subjectDao;
     @InjectMocks
     private SubjectService subjectService;
 
     @Test
-    void onFindAll_shouldReturnAllSubjects() {
-	when(subjectDao.findAll()).thenReturn(expectedSubjects);
+    void onFindAll_shouldCallDaoFindAll() {
+	subjectService.findAll();
 
-	assertEquals(expectedSubjects, subjectService.findAll());
-    }
-
-    @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
-	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-
-	assertEquals(Optional.of(expectedSubject1), subjectService.findById(1));
+	verify(subjectDao).findAll();
     }
 
     @Test

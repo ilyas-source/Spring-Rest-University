@@ -28,7 +28,7 @@ public class TeacherMapper implements RowMapper<Teacher> {
 
     @Override
     public Teacher mapRow(ResultSet rs, int rowNum) throws SQLException {
-	Teacher teacher = new Teacher();
+	var teacher = new Teacher();
 	teacher.setId(rs.getInt("id"));
 	teacher.setFirstName(rs.getString("first_name"));
 	teacher.setLastName(rs.getString("last_name"));

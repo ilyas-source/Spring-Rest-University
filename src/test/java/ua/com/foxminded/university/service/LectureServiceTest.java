@@ -1,35 +1,27 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.remoting.soap.SoapFaultException;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Timeslot;
-import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -49,10 +41,10 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectLecture() {
-	when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
+    void onFindAll_shouldCallDaoFindAll() {
+	lectureService.findAll();
 
-	assertEquals(Optional.of(expectedLecture1), lectureService.findById(1));
+	verify(lectureDao).findAll();
     }
 
     @Test

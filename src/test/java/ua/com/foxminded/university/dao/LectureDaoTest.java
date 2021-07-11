@@ -2,14 +2,13 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
