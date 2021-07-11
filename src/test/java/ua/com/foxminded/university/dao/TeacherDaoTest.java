@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +25,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
@@ -37,6 +40,24 @@ public class TeacherDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private TeacherDao teacherDao;
+
+    @Test
+    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectTeacher() {
+	Optional<Teacher> expected = Optional.of(expectedTeacher1);
+
+	Optional<Teacher> actual = teacherDao.findByAddressId(1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenNameAndEmail_onFindByNameAndEmail_shouldReturnOptionalwithCorrectTeacher() {
+	Optional<Teacher> expected = Optional.of(expectedTeacher1);
+
+	Optional<Teacher> actual = teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com");
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewTeacher_onCreate_shouldCreateTeacher() {

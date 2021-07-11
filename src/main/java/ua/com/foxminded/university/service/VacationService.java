@@ -2,10 +2,12 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
@@ -18,7 +20,22 @@ public class VacationService {
     }
 
     public void create(Vacation vacation) {
-	vacationDao.create(vacation);
+	if (noIntersections(vacation)) {
+	    vacationDao.create(vacation);
+	} else {
+	    System.out.println("Can't create vacation");
+	}
+    }
+
+    private boolean noIntersections(Vacation vacation) {
+	boolean result = vacationDao.findAll()
+		.stream()
+		.flatMap(v -> Stream.of(v.intersects(vacation)))
+		.filter(b -> b == true)
+		.findFirst()
+		.isEmpty();
+	System.out.println("No intersections with existing vacations: " + result);
+	return result;
     }
 
     public List<Vacation> findAll() {

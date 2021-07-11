@@ -22,6 +22,7 @@ import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
 
@@ -33,6 +34,8 @@ public class JdbcLectureDao implements LectureDao {
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
     private static final String FIND_BY_CLASSROOM_ID = "SELECT * FROM lectures WHERE classroom_id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT * FROM lectures WHERE teacher_id = ?";
+    private static final String FIND_BY_SUBJECT_ID = "SELECT * FROM lectures WHERE subject_id = ?";
+    private static final String FIND_BY_TIMESLOT_ID = "SELECT * FROM lectures WHERE timeslot_id = ?";
     private static final String FIND_BY_DATETIMECLASSROOM = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND classroom_id = ?";
     private static final String FIND_BY_DATETIMETEACHER = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND teacher_id = ?";
     private static final String FIND_BY_DATETIME = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ?";
@@ -125,6 +128,16 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
+    public List<Lecture> findBySubject(Subject subject) {
+	return jdbcTemplate.query(FIND_BY_SUBJECT_ID, lectureMapper, subject.getId());
+    }
+
+    @Override
+    public List<Lecture> findByTimeslot(Timeslot timeslot) {
+	return jdbcTemplate.query(FIND_BY_TIMESLOT_ID, lectureMapper, timeslot.getId());
+    }
+
+    @Override
     public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
 	try {
 	    return Optional.of(
@@ -168,4 +181,5 @@ public class JdbcLectureDao implements LectureDao {
 	    jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
 	}
     }
+
 }

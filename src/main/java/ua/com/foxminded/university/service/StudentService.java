@@ -18,14 +18,14 @@ public class StudentService {
     }
 
     public void create(Student student) {
-	if (studentIsUnique(student)) {
+	if (isUnique(student)) {
 	    studentDao.create(student);
 	} else {
 	    System.out.println("Student with this name and birthdate already exists, can't create");
 	}
     }
 
-    public boolean studentIsUnique(Student student) {
+    public boolean isUnique(Student student) {
 	return studentDao.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate()).isEmpty();
     }
 

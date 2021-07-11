@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.groupToCreate;
@@ -33,6 +34,15 @@ public class GroupDaoTest {
     private GroupDao groupDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectGroup() {
+	Optional<Group> expected = Optional.of(expectedGroup1);
+
+	Optional<Group> actual = groupDao.findByName(expectedGroup1.getName());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {

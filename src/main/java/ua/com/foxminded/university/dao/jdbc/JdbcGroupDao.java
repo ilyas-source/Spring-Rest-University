@@ -78,6 +78,7 @@ public class JdbcGroupDao implements GroupDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    @Override
     public Optional<Group> findByName(String name) {
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_NAME, groupMapper, name));

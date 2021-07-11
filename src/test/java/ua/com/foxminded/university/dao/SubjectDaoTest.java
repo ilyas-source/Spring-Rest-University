@@ -2,8 +2,8 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjectsForTeacher1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToCreate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToUpdate;
@@ -34,6 +34,22 @@ public class SubjectDaoTest {
     private SubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectSubject() {
+	Optional<Subject> expected = Optional.of(expectedSubject1);
+
+	Optional<Subject> actual = subjectDao.findByName(expectedSubject1.getName());
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenSubject_onCountAssignments_shouldReturnCount() {
+	int actual = subjectDao.countAssignments(expectedSubject1);
+
+	assertEquals(1, actual);
+    }
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
@@ -105,7 +121,7 @@ public class SubjectDaoTest {
 
     @Test
     void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
-	List<Subject> actual = subjectDao.getSubjectsByTeacherId(1);
+	List<Subject> actual = subjectDao.getByTeacherId(1);
 
 	assertEquals(expectedSubjectsForTeacher1, actual);
     }
@@ -113,7 +129,7 @@ public class SubjectDaoTest {
     @Test
     void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
 
-	List<Subject> actual = subjectDao.getSubjectsByTeacherId(3);
+	List<Subject> actual = subjectDao.getByTeacherId(3);
 
 	assertThat(actual).isEmpty();
     }

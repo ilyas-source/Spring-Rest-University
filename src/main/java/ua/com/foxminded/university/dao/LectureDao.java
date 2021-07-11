@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
 
@@ -22,4 +23,8 @@ public interface LectureDao extends GeneralDao<Lecture> {
     List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot);
 
     Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher);
+
+    List<Lecture> findBySubject(Subject subject);
+
+    List<Lecture> findByTimeslot(Timeslot timeslot);
 }

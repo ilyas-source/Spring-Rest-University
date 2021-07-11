@@ -2,7 +2,9 @@ package ua.com.foxminded.university.service;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,6 +20,8 @@ class TeacherServiceTest {
 
     @Mock
     private TeacherDao teacherDao;
+    @Mock
+    private LectureDao lectureDao;
     @InjectMocks
     private TeacherService teacherService;
 
@@ -42,7 +47,7 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenTeacher_onUpdate_shouldCallDaoUpdate() {
+    void givenSuitableTeacher_onUpdate_shouldCallDaoUpdate() {
 	teacherService.update(expectedTeacher1);
 
 	verify(teacherDao).update(expectedTeacher1);

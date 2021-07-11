@@ -26,7 +26,6 @@ public class GroupService {
 	} else {
 	    System.out.println("Group with this name already exists, can't create new");
 	}
-
     }
 
     public void update(Group group) {

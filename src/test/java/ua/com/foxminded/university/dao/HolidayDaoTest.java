@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday1;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday2;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.holidayToCreate;
@@ -34,6 +35,16 @@ public class HolidayDaoTest {
     private HolidayDao holidayDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void givenDate_onFindByDate_shouldReturnListWithCorrectHolidays() {
+	List<Holiday> expected = new ArrayList<>(
+		Arrays.asList(expectedHoliday1));
+
+	List<Holiday> actual = holidayDao.findByDate(expectedHoliday1.getDate());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewHoliday_onCreate_shouldCreateHoliday() {

@@ -3,7 +3,9 @@ package ua.com.foxminded.university.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -31,6 +34,24 @@ public class ClassroomDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ClassroomDao classroomDao;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectClassroom() {
+	Optional<Classroom> expected = Optional.of(expectedClassroom1);
+
+	Optional<Classroom> actual = classroomDao.findByName(expectedClassroom1.getName());
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenLocation_onFindByLocation_shouldReturnOptionalwithCorrectClassroom() {
+	Optional<Classroom> expected = Optional.of(expectedClassroom1);
+
+	Optional<Classroom> actual = classroomDao.findByLocation(expectedClassroom1.getLocation());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {

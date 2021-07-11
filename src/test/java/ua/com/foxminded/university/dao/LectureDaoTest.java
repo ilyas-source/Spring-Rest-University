@@ -48,6 +48,71 @@ public class LectureDaoTest {
     private LectureDao lectureDao;
 
     @Test
+    void givenClassroom_onFindByClassroom_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByClassroom(expectedClassroom1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTeacher_onFindByTeacher_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByTeacher(expectedTeacher1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenSubject_onFindBySubject_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findBySubject(expectedSubject1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTimeslot_onFindByTimeslot_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByTimeslot(expectedTimeslot1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateAndTimeslot_onFindByDateTime_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByDateTime(LocalDate.of(2020, 1, 1), expectedTimeslot1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateTimeslotAndClassroom_onFindByDateTimeClassroom_shouldReturnOptionalwithCorrectLecture() {
+	Optional<Lecture> expected = Optional.of(expectedLecture1);
+
+	Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2020, 1, 1), expectedTimeslot1,
+		expectedClassroom1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateTimeslotAndTeacher_onFindByDateTimeTeacher_shouldReturnOptionalwithCorrectLecture() {
+	Optional<Lecture> expected = Optional.of(expectedLecture1);
+
+	Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2020, 1, 1), expectedTimeslot1,
+		expectedTeacher1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
     void givenLecture_onCountStudentsInLecture_shouldReturnCorrectNumber() {
 	int expected = 4;
 	int actual = lectureDao.countStudentsInLecture(expectedLecture1);

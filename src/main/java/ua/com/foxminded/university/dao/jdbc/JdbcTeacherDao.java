@@ -30,6 +30,7 @@ public class JdbcTeacherDao implements TeacherDao {
 	    " degree = ?, email = ?, phone = ?, address_id = ? WHERE id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM teachers WHERE address_id = ?";
+    private static final String FIND_BY_NAME_AND_EMAIL = "SELECT * FROM teachers WHERE first_name = ? AND last_name = ? AND email = ?";
     private static final String FIND_ALL = "SELECT * FROM teachers";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
@@ -156,5 +157,14 @@ public class JdbcTeacherDao implements TeacherDao {
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    @Override
+    public Optional<Teacher> findByNameAndEmail(String firstName, String lastName, String email) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_EMAIL, teacherMapper, firstName, lastName, email));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 }

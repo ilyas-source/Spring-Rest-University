@@ -8,4 +8,6 @@ public interface TeacherDao extends GeneralDao<Teacher> {
 
     Optional<Teacher> findByAddressId(int id);
 
+    Optional<Teacher> findByNameAndEmail(String firstName, String lastName, String email);
+
 }

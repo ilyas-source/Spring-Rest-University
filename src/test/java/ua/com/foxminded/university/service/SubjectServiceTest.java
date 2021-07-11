@@ -2,7 +2,11 @@ package ua.com.foxminded.university.service;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,6 +22,8 @@ class SubjectServiceTest {
 
     @Mock
     private SubjectDao subjectDao;
+    @Mock
+    private LectureDao lectureDao;
     @InjectMocks
     private SubjectService subjectService;
 
@@ -49,7 +56,27 @@ class SubjectServiceTest {
     }
 
     @Test
-    void givenIncorrectSubject_onDelete_shouldNotCallDaoDelete() {
+    void givenAssignedSubjectId_onDelete_shouldNotCallDaoDelete() {
+	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
+	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3);
+
+	subjectService.delete(1);
+
+	verify(subjectDao, never()).delete(1);
+    }
+
+    @Test
+    void givenScheduledSubjectId_onDelete_shouldNotCallDaoDelete() {
+	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
+	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
+
+	subjectService.delete(1);
+
+	verify(subjectDao, never()).delete(1);
+    }
+
+    @Test
+    void givenIncorrectSubjectId_onDelete_shouldNotCallDaoDelete() {
 	subjectService.delete(1);
 
 	verify(subjectDao, never()).delete(1);
