@@ -2,9 +2,10 @@ package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 
 import java.util.Optional;
 
@@ -14,13 +15,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.StudentDao;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
 
     @Mock
-    private JdbcGroupDao groupDao;
+    private GroupDao groupDao;
+    @Mock
+    private StudentDao studentDao;
     @InjectMocks
     private GroupService groupService;
 
@@ -63,38 +67,28 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenExistingGroup_onCreate_shouldThrowException() {
+    void givenExistingGroup_onCreate_shouldNotCallDaoCreate() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.of(expectedGroup1));
-	String expected = String.format("Group with name %s already exists, can't create/update", expectedGroup1.getName());
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    groupService.create(expectedGroup1);
-	});
+	groupService.create(expectedGroup1);
 
-	assertEquals(expected, thrown.getMessage());
+	verify(groupDao, never()).create(expectedGroup1);
     }
 
     @Test
-    void givenExistingGroup_onUpdate_shouldThrowException() {
+    void givenExistingGroup_onUpdate_shouldNotCallDaoUpdate() {
 	when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.of(expectedGroup1));
-	String expected = String.format("Group with name %s already exists, can't create/update", expectedGroup1.getName());
+	groupService.update(expectedGroup1);
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    groupService.update(expectedGroup1);
-	});
-
-	assertEquals(expected, thrown.getMessage());
+	verify(groupDao, never()).update(expectedGroup1);
     }
 
     @Test
-    void givenWrongId_onDelete_shouldThrowException() throws Exception {
+    void givenWrongId_onDelete_shouldNotCallDaoDelete() throws Exception {
 	when(groupDao.findById(1)).thenReturn(Optional.empty());
-	String expected = String.format("Group with id %s does not exist, nothing to delete", expectedGroup1.getId());
 
-	Throwable thrown = assertThrows(Exception.class, () -> {
-	    groupService.delete(1);
-	});
+	groupService.delete(1);
 
-	assertEquals(expected, thrown.getMessage());
+	verify(groupDao, never()).delete(1);
     }
 }

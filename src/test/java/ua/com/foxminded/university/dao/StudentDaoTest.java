@@ -114,7 +114,7 @@ public class StudentDaoTest {
     void givenGroup_onCountStudentsInGroup_shouldReturnCorrectNumber() {
 	int expected = 2;
 
-	int actual = studentDao.countStudentsInGroup(expectedGroup1);
+	int actual = studentDao.countInGroup(expectedGroup1);
 
 	assertEquals(expected, actual);
     }

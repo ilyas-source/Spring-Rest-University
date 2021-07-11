@@ -5,40 +5,53 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
+import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Group;
 
 @Service
 public class GroupService {
 
-    private JdbcGroupDao groupDao;
+    private GroupDao groupDao;
+    private StudentDao studentDao;
 
-    public GroupService(JdbcGroupDao jdbcGroupDao) {
-	this.groupDao = jdbcGroupDao;
+    public GroupService(GroupDao GroupDao, StudentDao studentDao) {
+	this.groupDao = GroupDao;
+	this.studentDao = studentDao;
     }
 
-    public void create(Group group) throws Exception {
-	verifyNameIsNew(group);
-	groupDao.create(group);
-
-    }
-
-    public void update(Group group) throws Exception {
-	verifyNameIsNew(group);
-	groupDao.update(group);
-
-    }
-
-    public void delete(int id) throws Exception {
-	// проверить, что в группе нет студентов
-	verifyIdExists(id);
-	groupDao.delete(id);
-    }
-
-    private void verifyIdExists(int id) throws Exception {
-	if (groupDao.findById(id).isEmpty()) {
-	    throw new Exception(String.format("Group with id %s does not exist, nothing to delete", id));
+    public void create(Group group) {
+	if (nameIsNew(group)) {
+	    groupDao.create(group);
+	} else {
+	    System.out.println("Group with this name already exists, can't create new");
 	}
+
+    }
+
+    public void update(Group group) {
+	if (nameIsNew(group)) {
+	    groupDao.update(group);
+	} else {
+	    System.out.println("Group with this name already exists, can't update");
+	}
+    }
+
+    public void delete(int id) {
+	boolean canDelete = idExists(id) && isEmpty(groupDao.findById(id).get());
+	if (canDelete) {
+	    groupDao.delete(id);
+	} else {
+	    System.out.println("Can't delete group");
+	}
+    }
+
+    private boolean isEmpty(Group group) {
+	return studentDao.findByGroup(group).isEmpty();
+    }
+
+    private boolean idExists(int id) {
+	return groupDao.findById(id).isPresent();
     }
 
     public List<Group> findAll() {
@@ -49,9 +62,7 @@ public class GroupService {
 	return groupDao.findById(id);
     }
 
-    private void verifyNameIsNew(Group group) throws Exception {
-	if (groupDao.findByName(group.getName()).isPresent()) {
-	    throw new Exception(String.format("Group with name %s already exists, can't create/update", group.getName()));
-	}
+    private boolean nameIsNew(Group group) {
+	return groupDao.findByName(group.getName()).isEmpty();
     }
 }

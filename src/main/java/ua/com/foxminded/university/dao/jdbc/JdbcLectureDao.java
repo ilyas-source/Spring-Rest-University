@@ -136,7 +136,7 @@ public class JdbcLectureDao implements LectureDao {
     public int countStudentsInLecture(Lecture lecture) {
 	return lecture.getGroups()
 		.stream()
-		.flatMap(g -> Stream.of(studentDao.countStudentsInGroup(g)))
+		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
 		.reduce(0, Integer::sum);
     }
 

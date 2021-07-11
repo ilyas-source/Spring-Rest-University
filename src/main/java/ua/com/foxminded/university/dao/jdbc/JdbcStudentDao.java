@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,6 @@ import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
-import ua.com.foxminded.university.model.Teacher;
 
 @Component
 public class JdbcStudentDao implements StudentDao {
@@ -28,6 +26,7 @@ public class JdbcStudentDao implements StudentDao {
 	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
+    private static final String FIND_BY_GROUP_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
 	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
@@ -103,7 +102,12 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public int countStudentsInGroup(Group group) {
+    public List<Student> findByGroup(Group group) {
+	return jdbcTemplate.query(FIND_BY_GROUP_ID, studentMapper, group.getId());
+    }
+
+    @Override
+    public int countInGroup(Group group) {
 	return (int) findAll().stream().filter(s -> s.getGroup().equals(group)).count();
     }
 
@@ -111,4 +115,5 @@ public class JdbcStudentDao implements StudentDao {
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
+
 }
