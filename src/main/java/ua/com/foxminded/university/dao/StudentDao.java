@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,4 +14,6 @@ public interface StudentDao extends GeneralDao<Student> {
     Optional<Student> findByAddressId(int id);
 
     List<Student> findByGroup(Group group);
+
+    Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 }

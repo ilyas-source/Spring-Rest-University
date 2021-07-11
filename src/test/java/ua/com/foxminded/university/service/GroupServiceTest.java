@@ -82,9 +82,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenWrongId_onDelete_shouldNotCallDaoDelete() {
-	when(groupDao.findById(1)).thenReturn(Optional.empty());
-
+    void givenIncorrectGroupId_onDelete_shouldNotCallDaoDelete() {
 	groupService.delete(1);
 
 	verify(groupDao, never()).delete(1);

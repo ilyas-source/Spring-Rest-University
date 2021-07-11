@@ -17,9 +17,9 @@ public class SubjectService {
 	this.subjectDao = subjectDao;
     }
 
-    public void create(Subject createSubject) {
+    public void create(Subject subject) {
 	// проверить на уникальность названи€
-	subjectDao.create(createSubject);
+	subjectDao.create(subject);
     }
 
     public List<Subject> findAll() {
@@ -36,8 +36,17 @@ public class SubjectService {
     }
 
     public void delete(int id) {
+	boolean canDelete = idExists(id);
 	// проверить что предмет не прив€зан к преподавател€м
 	// проверить что по предмету не запланированы лекции
-	subjectDao.delete(id);
+	if (canDelete) {
+	    subjectDao.delete(id);
+	} else {
+	    System.out.println("Can't delete subject");
+	}
+    }
+
+    private boolean idExists(int id) {
+	return subjectDao.findById(id).isPresent();
     }
 }

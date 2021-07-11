@@ -20,8 +20,8 @@ public class LocationService {
 	this.classroomDao = classroomDao;
     }
 
-    public void create(Location createLocation) {
-	locationDao.create(createLocation);
+    public void create(Location location) {
+	locationDao.create(location);
     }
 
     public List<Location> findAll() {
@@ -36,15 +36,20 @@ public class LocationService {
 	locationDao.update(newLocation);
     }
 
+    private boolean locationIsNotUsed(Location location) {
+	return classroomDao.findByLocation(location).isEmpty();
+    }
+
     public void delete(int id) {
-	if (locationIsNotUsed(locationDao.findById(id).get())) {
+	boolean canDelete = idExists(id) && locationIsNotUsed(locationDao.findById(id).get());
+	if (canDelete) {
 	    locationDao.delete(id);
 	} else {
-	    System.out.println("Can't delete, location is used for a classroom");
+	    System.out.println("Can't delete location");
 	}
     }
 
-    private boolean locationIsNotUsed(Location location) {
-	return classroomDao.findByLocation(location).isEmpty();
+    private boolean idExists(int id) {
+	return locationDao.findById(id).isPresent();
     }
 }

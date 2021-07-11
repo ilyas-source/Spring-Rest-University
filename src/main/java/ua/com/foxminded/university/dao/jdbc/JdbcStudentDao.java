@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
     private static final String FIND_BY_GROUP_ID = "SELECT * FROM students WHERE group_id = ?";
+    private static final String FIND_BY_NAME_AND_BIRTH = "SELECT * FROM students WHERE first_name = ? AND last_name = ? AND birth_date = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
 	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
@@ -97,6 +99,17 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
+	try {
+	    Optional<Student> found = Optional
+		    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, birthDate));
+	    return found;
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
     public List<Student> findAll() {
 	return jdbcTemplate.query(FIND_ALL, studentMapper);
     }
@@ -115,5 +128,4 @@ public class JdbcStudentDao implements StudentDao {
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
-
 }

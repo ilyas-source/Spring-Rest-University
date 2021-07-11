@@ -17,8 +17,8 @@ public class VacationService {
 	this.vacationDao = vacationDao;
     }
 
-    public void create(Vacation createVacation) {
-	vacationDao.create(createVacation);
+    public void create(Vacation vacation) {
+	vacationDao.create(vacation);
     }
 
     public List<Vacation> findAll() {
@@ -34,6 +34,15 @@ public class VacationService {
     }
 
     public void delete(int id) {
-	vacationDao.delete(id);
+	boolean canDelete = idExists(id);
+	if (canDelete) {
+	    vacationDao.delete(id);
+	} else {
+	    System.out.println("Can't delete vacation");
+	}
+    }
+
+    private boolean idExists(int id) {
+	return vacationDao.findById(id).isPresent();
     }
 }

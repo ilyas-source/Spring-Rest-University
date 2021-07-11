@@ -80,13 +80,6 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenNonExistingClassroom_onDelete_shouldNotCallDaoDelete() {
-	classroomService.delete(1);
-
-	verify(classroomDao, never()).delete(1);
-    }
-
-    @Test
     void givenOccupiedClassroom_onDelete_shouldNotCallDaoDelete() {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
@@ -114,5 +107,12 @@ class ClassroomServiceTest {
 
 	expectedClassroom1.setCapacity(capacityBackup);
 	verify(classroomDao, never()).create(expectedClassroom1);
+    }
+
+    @Test
+    void givenIncorrectClassroomId_onDelete_shouldNotCallDaoDelete() {
+	classroomService.delete(1);
+
+	verify(classroomDao, never()).delete(1);
     }
 }

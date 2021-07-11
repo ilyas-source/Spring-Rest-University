@@ -11,33 +11,42 @@ import ua.com.foxminded.university.model.Teacher;
 @Service
 public class TeacherService {
 
-    private TeacherDao jdbcTeacherDao;
+    private TeacherDao teacherDao;
 
     public TeacherService(TeacherDao jdbcTeacherDao) {
-	this.jdbcTeacherDao = jdbcTeacherDao;
+	this.teacherDao = jdbcTeacherDao;
     }
 
-    public void create(Teacher createTeacher) {
+    public void create(Teacher teacher) {
 	// проверить уникальность препода
-	jdbcTeacherDao.create(createTeacher);
+	teacherDao.create(teacher);
     }
 
     public List<Teacher> findAll() {
-	return jdbcTeacherDao.findAll();
+	return teacherDao.findAll();
     }
 
     public Optional<Teacher> findById(int choice) {
-	return jdbcTeacherDao.findById(choice);
+	return teacherDao.findById(choice);
     }
 
     public void update(Teacher newTeacher) {
 	// проверить уникальность препода
 	// проверить, что с новыми предметами препод сможет вести свои лекции
-	jdbcTeacherDao.update(newTeacher);
+	teacherDao.update(newTeacher);
     }
 
     public void delete(int id) {
-	// проверить, что он не ведет лекций
-	jdbcTeacherDao.delete(id);
+	boolean canDelete = idExists(id);
+	// // проверить, что он не ведет лекций
+	if (canDelete) {
+	    teacherDao.delete(id);
+	} else {
+	    System.out.println("Can't delete teacher");
+	}
+    }
+
+    private boolean idExists(int id) {
+	return teacherDao.findById(id).isPresent();
     }
 }

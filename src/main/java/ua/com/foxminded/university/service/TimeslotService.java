@@ -17,11 +17,11 @@ public class TimeslotService {
 	this.timeslotDao = timeslotDao;
     }
 
-    public void create(Timeslot createTimeslot) {
+    public void create(Timeslot timeslot) {
 	// проверить, что таймслот не пересекает существующие
 	// проверить что от других таймслотов минимум 15 минут
 	// проверить, что он не короче 15 минут
-	timeslotDao.create(createTimeslot);
+	timeslotDao.create(timeslot);
     }
 
     public List<Timeslot> findAll() {
@@ -40,7 +40,16 @@ public class TimeslotService {
     }
 
     public void delete(int id) {
+	boolean canDelete = idExists(id);
 	// проверить, что в этот таймслот не запланированы лекции
-	timeslotDao.delete(id);
+	if (canDelete) {
+	    timeslotDao.delete(id);
+	} else {
+	    System.out.println("Can't delete timeslot");
+	}
+    }
+
+    private boolean idExists(int id) {
+	return timeslotDao.findById(id).isPresent();
     }
 }

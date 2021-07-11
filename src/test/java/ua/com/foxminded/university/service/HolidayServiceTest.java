@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday1;
 
@@ -48,9 +49,9 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenHoliday_onDelete_shouldCallDaoDelete() {
+    void givenIncorrectHolidayId_onDelete_shouldNotCallDaoDelete() {
 	holidayService.delete(1);
 
-	verify(holidayDao).delete(1);
+	verify(holidayDao, never()).delete(1);
     }
 }

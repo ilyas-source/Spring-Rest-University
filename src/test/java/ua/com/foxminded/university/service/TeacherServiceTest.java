@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 
@@ -34,23 +35,23 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenTeacher_onCreate_shouldCallCreate() {
+    void givenTeacher_onCreate_shouldCallDaoCreate() {
 	teacherService.create(expectedTeacher1);
 
 	verify(teacherDao).create(expectedTeacher1);
     }
 
     @Test
-    void givenTeacher_onUpdate_shouldCallUpdate() {
+    void givenTeacher_onUpdate_shouldCallDaoUpdate() {
 	teacherService.update(expectedTeacher1);
 
 	verify(teacherDao).update(expectedTeacher1);
     }
 
     @Test
-    void givenTeacher_onDelete_shouldCallDelete() {
+    void givenIncorrectTeacherId_onDelete_shouldNotCallDaoDelete() {
 	teacherService.delete(1);
 
-	verify(teacherDao).delete(1);
+	verify(teacherDao, never()).delete(1);
     }
 }

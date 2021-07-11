@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 
@@ -34,23 +35,23 @@ class TimeslotServiceTest {
     }
 
     @Test
-    void givenTimeslot_onCreate_shouldCallCreate() {
+    void givenTimeslot_onCreate_shouldCallDaoCreate() {
 	timeslotService.create(expectedTimeslot1);
 
 	verify(timeslotDao).create(expectedTimeslot1);
     }
 
     @Test
-    void givenTimeslot_onUpdate_shouldCallUpdate() {
+    void givenTimeslot_onUpdate_shouldCallDaoUpdate() {
 	timeslotService.update(expectedTimeslot1);
 
 	verify(timeslotDao).update(expectedTimeslot1);
     }
 
     @Test
-    void givenTimeslot_onDelete_shouldCallDelete() {
+    void givenIncorrect0TimeslotId_onDelete_shouldNotCallDaoDelete() {
 	timeslotService.delete(1);
 
-	verify(timeslotDao).delete(1);
+	verify(timeslotDao, never()).delete(1);
     }
 }

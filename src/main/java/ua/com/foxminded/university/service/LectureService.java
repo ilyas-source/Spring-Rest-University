@@ -102,10 +102,6 @@ public class LectureService {
 	return result;
     }
 
-    private boolean idExists(int id) {
-	return lectureDao.findById(id).isPresent();
-    }
-
     public List<Lecture> findAll() {
 	return lectureDao.findAll();
     }
@@ -131,10 +127,15 @@ public class LectureService {
     }
 
     public void delete(int id) {
-	if (idExists(id)) {
+	boolean canDelete = idExists(id);
+	if (canDelete) {
 	    lectureDao.delete(id);
 	} else {
-	    System.out.println("Lecture does not exist, nothing to delete");
+	    System.out.println("Can't delete lecture");
 	}
+    }
+
+    private boolean idExists(int id) {
+	return lectureDao.findById(id).isPresent();
     }
 }

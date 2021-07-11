@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
 
@@ -48,9 +49,9 @@ class VacationServiceTest {
     }
 
     @Test
-    void givenVacation_onDelete_shouldCallDelete() {
+    void givenIncorrectVacationId_onDelete_shouldCallNotDelete() {
 	vacationService.delete(1);
 
-	verify(vacationDao).delete(1);
+	verify(vacationDao, never()).delete(1);
     }
 }

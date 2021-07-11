@@ -139,9 +139,9 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenNonExistentLectureId_onDelete_shouldNotCallDaoDelete() {
-	lectureService.delete(100);
+    void givenIncorrectLectureId_onDelete_shouldNotCallDaoDelete() {
+	lectureService.delete(1);
 
-	verify(lectureDao, never()).delete(100);
+	verify(lectureDao, never()).delete(1);
     }
 }

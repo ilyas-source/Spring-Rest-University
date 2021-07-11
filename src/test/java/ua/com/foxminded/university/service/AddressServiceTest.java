@@ -80,20 +80,18 @@ class AddressServiceTest {
     }
 
     @Test
-    void givenWrongId_onDelete_shouldNotCallDaoDelete() {
-	when(addressDao.findById(10)).thenReturn(Optional.empty());
-
-	addressService.delete(10);
-
-	verify(addressDao, never()).delete(10);
-    }
-
-    @Test
     void givenCorrectUnusedAddressId_onDelete_shouldCallDaoDelete() {
 	when(addressDao.findById(1)).thenReturn(Optional.of(expectedAddress1));
 
 	addressService.delete(1);
 
 	verify(addressDao).delete(1);
+    }
+
+    @Test
+    void givenIncorrectAddressId_onDelete_shouldNotCallDaoDelete() {
+	addressService.delete(1);
+
+	verify(addressDao, never()).delete(10);
     }
 }

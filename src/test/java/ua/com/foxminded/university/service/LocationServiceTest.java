@@ -72,4 +72,11 @@ class LocationServiceTest {
 
 	verify(locationDao, never()).delete(expectedLocation1.getId());
     }
+
+    @Test
+    void givenIncorrectLocationId_onDelete_shouldNotCallDaoDelete() {
+	locationService.delete(1);
+
+	verify(locationDao, never()).delete(1);
+    }
 }

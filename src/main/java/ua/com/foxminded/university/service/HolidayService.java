@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.HolidayDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Holiday;
 
 @Service
@@ -17,8 +18,8 @@ public class HolidayService {
 	this.holidayDao = holidayDao;
     }
 
-    public void create(Holiday createHoliday) {
-	holidayDao.create(createHoliday);
+    public void create(Holiday holiday) {
+	holidayDao.create(holiday);
     }
 
     public List<Holiday> findAll() {
@@ -34,6 +35,15 @@ public class HolidayService {
     }
 
     public void delete(int id) {
-	holidayDao.delete(id);
+	boolean canDelete = idExists(id);
+	if (canDelete) {
+	    holidayDao.delete(id);
+	} else {
+	    System.out.println("Can't delete holiday");
+	}
+    }
+
+    private boolean idExists(int id) {
+	return holidayDao.findById(id).isPresent();
     }
 }
