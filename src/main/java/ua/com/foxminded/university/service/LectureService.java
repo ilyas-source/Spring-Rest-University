@@ -42,7 +42,6 @@ public class LectureService {
 	} else {
 	    System.out.println("Can't create lecture");
 	}
-
     }
 
     private boolean classroomIsAvailable(Lecture lecture) {
@@ -84,8 +83,7 @@ public class LectureService {
     }
 
     private boolean vacationContainsDay(Vacation vacation, LocalDate date) {
-	return (date.isAfter(vacation.getStartDate().minus(1, ChronoUnit.DAYS)) &&
-		date.isBefore(vacation.getEndDate().plus(1, ChronoUnit.DAYS)));
+	return !date.isBefore(vacation.getStartDate()) && !date.isAfter(vacation.getEndDate());
     }
 
     private boolean teacherIsNotBusy(Lecture lecture) {
@@ -108,6 +106,10 @@ public class LectureService {
 	return result;
     }
 
+    private boolean idExists(int id) {
+	return lectureDao.findById(id).isPresent();
+    }
+
     public List<Lecture> findAll() {
 	return lectureDao.findAll();
     }
@@ -116,17 +118,27 @@ public class LectureService {
 	return lectureDao.findById(choice);
     }
 
-    public void update(Lecture newLecture) {
-	// проверить что все студенты влезут
-	// проверить что не выходной
-	// проверить что препод не занят другой лекцией
-	// проверить что студенты не заняты другой лекцией
-	// проверить что аудитория не занята другой лекцией
-	lectureDao.update(newLecture);
+    public void update(Lecture lecture) {
+	boolean canUpdate = classroomCapacityIsEnough(lecture);
+	canUpdate = canUpdate && classroomIsAvailable(lecture);
+	canUpdate = canUpdate && isNotHoliday(lecture);
+	canUpdate = canUpdate && teacherIsNotBusy(lecture);
+	canUpdate = canUpdate && teacherIsWorking(lecture);
+	canUpdate = canUpdate && teacherCanTeach(lecture);
+	canUpdate = canUpdate && allGroupsCanAttend(lecture);
+
+	if (canUpdate) {
+	    lectureDao.update(lecture);
+	} else {
+	    System.out.println("Can't create lecture");
+	}
     }
 
     public void delete(int id) {
-	// проверить что лекция существует
-	lectureDao.delete(id);
+	if (idExists(id)) {
+	    lectureDao.delete(id);
+	} else {
+	    System.out.println("Lecture does not exist, nothing to delete");
+	}
     }
 }

@@ -139,9 +139,18 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLecture_onDelete_shouldCallDelete() {
+    void givenExistingLectureId_onDelete_shouldCallDelete() {
+	when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
+
 	lectureService.delete(1);
 
 	verify(lectureDao).delete(1);
+    }
+
+    @Test
+    void givenNonExistentLectureId_onDelete_shouldNotCallDaoDelete() {
+	lectureService.delete(100);
+
+	verify(lectureDao, never()).delete(100);
     }
 }
