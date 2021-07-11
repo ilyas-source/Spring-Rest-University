@@ -14,8 +14,6 @@ public interface LectureDao extends GeneralDao<Lecture> {
 
     List<Lecture> findByClassroom(Classroom classroom);
 
-    int countStudentsInLecture(Lecture lecture);
-
     List<Lecture> findByTeacher(Teacher teacher);
 
     Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom);

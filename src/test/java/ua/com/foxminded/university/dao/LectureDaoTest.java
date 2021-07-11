@@ -113,14 +113,6 @@ public class LectureDaoTest {
     }
 
     @Test
-    void givenLecture_onCountStudentsInLecture_shouldReturnCorrectNumber() {
-	int expected = 4;
-	int actual = lectureDao.countStudentsInLecture(expectedLecture1);
-
-	assertEquals(expected, actual);
-    }
-
-    @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
 	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);

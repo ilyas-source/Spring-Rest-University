@@ -29,6 +29,8 @@ class ClassroomServiceTest {
     private LectureDao lectureDao;
     @Mock
     private GroupDao groupDao;
+    @Mock
+    private LectureService lectureService;
     @InjectMocks
     private ClassroomService classroomService;
 
@@ -63,8 +65,8 @@ class ClassroomServiceTest {
     @Test
     void givenSmallClassroom_onUpdate_shouldNotCallDaoUpdate() {
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
-	when(lectureDao.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
-	when(lectureDao.countStudentsInLecture(expectedLecture2)).thenReturn(200);
+	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+	when(lectureService.countStudentsInLecture(expectedLecture2)).thenReturn(200);
 
 	classroomService.update(expectedClassroom1);
 

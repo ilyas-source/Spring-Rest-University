@@ -15,10 +15,12 @@ public class ClassroomService {
 
     private ClassroomDao classroomDao;
     private LectureDao lectureDao;
+    private LectureService lectureService;
 
-    public ClassroomService(ClassroomDao classroomDao, LectureDao lectureDao) {
+    public ClassroomService(ClassroomDao classroomDao, LectureDao lectureDao, LectureService lectureService) {
 	this.classroomDao = classroomDao;
 	this.lectureDao = lectureDao;
+	this.lectureService = lectureService;
     }
 
     public void create(Classroom classroom) {
@@ -59,7 +61,7 @@ public class ClassroomService {
     private boolean verifyCapacityIsEnough(Classroom newClassroom) {
 	int requiredCapacity = lectureDao.findByClassroom(newClassroom)
 		.stream()
-		.flatMap(l -> Stream.of(lectureDao.countStudentsInLecture(l)))
+		.flatMap(l -> Stream.of(lectureService.countStudentsInLecture(l)))
 		.mapToInt(v -> v)
 		.max().orElse(0);
 

@@ -2,8 +2,9 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjectsForTeacher1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToCreate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToUpdate;

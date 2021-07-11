@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -19,10 +20,12 @@ public class LectureService {
 
     private LectureDao lectureDao;
     private HolidayDao holidayDao;
+    private StudentDao studentDao;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao) {
 	this.lectureDao = lectureDao;
 	this.holidayDao = holidayDao;
+	this.studentDao = studentDao;
     }
 
     public void create(Lecture lecture) {
@@ -96,7 +99,7 @@ public class LectureService {
     }
 
     private boolean classroomCapacityIsEnough(Lecture lecture) {
-	int requiredCapacity = lectureDao.countStudentsInLecture(lecture);
+	int requiredCapacity = countStudentsInLecture(lecture);
 	boolean result = lecture.getClassroom().getCapacity() >= requiredCapacity;
 	System.out.println("Classroom is big enough: " + result);
 	return result;
@@ -124,6 +127,13 @@ public class LectureService {
 	} else {
 	    System.out.println("Can't create lecture");
 	}
+    }
+
+    public int countStudentsInLecture(Lecture lecture) {
+	return lecture.getGroups()
+		.stream()
+		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
+		.reduce(0, Integer::sum);
     }
 
     public void delete(int id) {

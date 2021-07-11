@@ -2,10 +2,12 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.classroomToCreate;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.classroomToUpdate;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +24,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
-import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

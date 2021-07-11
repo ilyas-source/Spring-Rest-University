@@ -17,7 +17,7 @@ public class TimeslotService {
     private TimeslotDao timeslotDao;
     private LectureDao lectureDao;
 
-    public TimeslotService(TimeslotDao timeslotDao) {
+    public TimeslotService(TimeslotDao timeslotDao, LectureDao lectureDao) {
 	this.timeslotDao = timeslotDao;
 	this.lectureDao = lectureDao;
     }

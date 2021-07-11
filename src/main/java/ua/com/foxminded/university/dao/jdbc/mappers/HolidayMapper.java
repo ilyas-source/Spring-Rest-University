@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.dao.jdbc.mappers;
 
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 

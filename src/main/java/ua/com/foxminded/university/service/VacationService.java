@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
-import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service

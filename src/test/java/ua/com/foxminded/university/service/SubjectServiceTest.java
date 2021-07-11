@@ -3,8 +3,8 @@ package ua.com.foxminded.university.service;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 
 import java.util.Optional;
 

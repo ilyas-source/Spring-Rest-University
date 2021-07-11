@@ -2,9 +2,7 @@ package ua.com.foxminded.university.service;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

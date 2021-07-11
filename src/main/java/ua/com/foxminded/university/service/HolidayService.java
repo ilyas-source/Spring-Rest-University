@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.HolidayDao;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Holiday;
 
 @Service

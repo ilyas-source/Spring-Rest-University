@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.*;
+import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TimeslotMapper;
 import ua.com.foxminded.university.model.Timeslot;
 

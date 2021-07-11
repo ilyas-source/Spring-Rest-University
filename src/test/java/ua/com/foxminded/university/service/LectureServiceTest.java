@@ -48,7 +48,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithTooSmallClassroom_onCreate_shouldNotCallDaoCreate() {
-	when(lectureDao.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
 
 	lectureService.create(expectedLecture1);
 

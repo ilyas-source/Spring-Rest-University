@@ -2,6 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToCreate;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToUpdate;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress2;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddresses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,8 +22,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Address;
-
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

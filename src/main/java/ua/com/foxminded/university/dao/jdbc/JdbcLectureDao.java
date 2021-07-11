@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
@@ -49,12 +47,10 @@ public class JdbcLectureDao implements LectureDao {
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
-    private StudentDao studentDao;
 
-    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper, StudentDao studentDao) {
+    public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.lectureMapper = lectureMapper;
-	this.studentDao = studentDao;
     }
 
     @Override
@@ -167,13 +163,13 @@ public class JdbcLectureDao implements LectureDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    @Override
-    public int countStudentsInLecture(Lecture lecture) {
-	return lecture.getGroups()
-		.stream()
-		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
-		.reduce(0, Integer::sum);
-    }
+//    @Override
+//    public int countStudentsInLecture(Lecture lecture) {
+//	return lecture.getGroups()
+//		.stream()
+//		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
+//		.reduce(0, Integer::sum);
+//    }
 
     public void assignGroupsToLecture(Lecture lecture) {
 	List<Group> groups = lecture.getGroups();
