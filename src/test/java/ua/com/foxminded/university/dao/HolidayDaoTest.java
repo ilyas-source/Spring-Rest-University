@@ -2,7 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday2;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.holidayToCreate;
+import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.holidayToUpdate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +22,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
 import ua.com.foxminded.university.model.Holiday;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -29,7 +31,7 @@ public class HolidayDaoTest {
     private static final String TEST_WHERE_CLAUSE = "date='2000-01-01' AND name = 'test'";
 
     @Autowired
-    private JdbcHolidayDao holidayDao;
+    private HolidayDao holidayDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

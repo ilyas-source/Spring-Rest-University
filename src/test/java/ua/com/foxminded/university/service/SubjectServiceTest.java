@@ -27,6 +27,13 @@ class SubjectServiceTest {
     }
 
     @Test
+    void givenId_onFindById_shouldCallDaoFindById() {
+	subjectService.findById(1);
+
+	verify(subjectDao).findById(1);
+    }
+
+    @Test
     void givenSubject_onCreate_shouldCallCreate() {
 	subjectService.create(expectedSubject1);
 

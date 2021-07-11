@@ -1,12 +1,10 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
 
 import java.util.Optional;
 
@@ -30,17 +28,17 @@ class LocationServiceTest {
     private LocationService locationService;
 
     @Test
-    void onFindAll_shouldReturnAllLocations() {
-	when(locationDao.findAll()).thenReturn(expectedLocations);
-
-	assertEquals(expectedLocations, locationService.findAll());
-    }
-
-    @Test
     void onFindAll_shouldCallDaoFindAll() {
 	locationService.findAll();
 
 	verify(locationDao).findAll();
+    }
+
+    @Test
+    void givenId_onFindById_shouldCallDaoFindById() {
+	locationService.findById(1);
+
+	verify(locationDao).findById(1);
     }
 
     @Test

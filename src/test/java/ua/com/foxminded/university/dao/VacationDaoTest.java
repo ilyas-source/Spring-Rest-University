@@ -2,7 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation2;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacations;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToCreate;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToUpdate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +22,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -29,7 +31,7 @@ public class VacationDaoTest {
     private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
 
     @Autowired
-    private JdbcVacationDao vacationDao;
+    private VacationDao vacationDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

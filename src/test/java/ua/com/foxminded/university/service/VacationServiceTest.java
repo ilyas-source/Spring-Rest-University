@@ -1,11 +1,7 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
-
-import java.util.Optional;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,28 +9,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
+import ua.com.foxminded.university.dao.VacationDao;
 
 @ExtendWith(MockitoExtension.class)
 class VacationServiceTest {
 
     @Mock
-    private JdbcVacationDao vacationDao;
+    private VacationDao vacationDao;
     @InjectMocks
     private VacationService vacationService;
 
     @Test
-    void onFindAll_shouldReturnAllVacations() {
-	when(vacationDao.findAll()).thenReturn(expectedVacations);
+    void onFindAll_shouldCallDaoFindAll() {
+	vacationService.findAll();
 
-	assertEquals(expectedVacations, vacationService.findAll());
+	verify(vacationDao).findAll();
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectVacation() {
-	when(vacationDao.findById(1)).thenReturn(Optional.of(expectedVacation1));
+    void givenId_onFindById_shouldCallDaoFindById() {
+	vacationService.findById(1);
 
-	assertEquals(Optional.of(expectedVacation1), vacationService.findById(1));
+	verify(vacationDao).findById(1);
     }
 
     @Test

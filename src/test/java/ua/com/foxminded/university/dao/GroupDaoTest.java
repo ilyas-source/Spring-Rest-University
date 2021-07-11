@@ -2,7 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.groupToCreate;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.groupToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +21,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -28,7 +30,7 @@ public class GroupDaoTest {
     private static final String TEST_WHERE_CLAUSE = "name='test'";
 
     @Autowired
-    private JdbcGroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

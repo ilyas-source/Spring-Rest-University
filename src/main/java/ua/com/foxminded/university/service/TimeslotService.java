@@ -5,42 +5,42 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
+import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 
 @Service
 public class TimeslotService {
 
-    private JdbcTimeslotDao jdbcTimeslotDao;
+    private TimeslotDao timeslotDao;
 
-    public TimeslotService(JdbcTimeslotDao jdbcTimeslotDao) {
-	this.jdbcTimeslotDao = jdbcTimeslotDao;
+    public TimeslotService(TimeslotDao timeslotDao) {
+	this.timeslotDao = timeslotDao;
     }
 
     public void create(Timeslot createTimeslot) {
 	// проверить, что таймслот не пересекает существующие
 	// проверить что от других таймслотов минимум 15 минут
 	// проверить, что он не короче 15 минут
-	jdbcTimeslotDao.create(createTimeslot);
+	timeslotDao.create(createTimeslot);
     }
 
     public List<Timeslot> findAll() {
-	return jdbcTimeslotDao.findAll();
+	return timeslotDao.findAll();
     }
 
     public Optional<Timeslot> findById(int choice) {
-	return jdbcTimeslotDao.findById(choice);
+	return timeslotDao.findById(choice);
     }
 
     public void update(Timeslot newTimeslot) {
 	// проверить, что таймслот не пересекает существующие
 	// проверить что от других таймслотов минимум 15 минут
 	// проверить, что он не короче 15 минут
-	jdbcTimeslotDao.update(newTimeslot);
+	timeslotDao.update(newTimeslot);
     }
 
     public void delete(int id) {
 	// проверить, что в этот таймслот не запланированы лекции
-	jdbcTimeslotDao.delete(id);
+	timeslotDao.delete(id);
     }
 }

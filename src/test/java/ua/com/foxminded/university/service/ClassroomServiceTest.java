@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,10 +40,10 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
-	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+    void givenId_onFindById_shouldCallDaoFindById() {
+	classroomService.findById(1);
 
-	assertEquals(Optional.of(expectedClassroom1), classroomService.findById(1));
+	verify(classroomDao).findById(1);
     }
 
     @Test

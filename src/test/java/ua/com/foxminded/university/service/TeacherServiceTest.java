@@ -1,11 +1,7 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-
-import java.util.Optional;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,28 +9,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
+import ua.com.foxminded.university.dao.TeacherDao;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
 
     @Mock
-    private JdbcTeacherDao teacherDao;
+    private TeacherDao teacherDao;
     @InjectMocks
     private TeacherService teacherService;
 
     @Test
-    void onFindAll_shouldReturnAllTeachers() {
-	when(teacherDao.findAll()).thenReturn(expectedTeachers);
+    void onFindAll_shouldCallDaoFindAll() {
+	teacherService.findAll();
 
-	assertEquals(expectedTeachers, teacherService.findAll());
+	verify(teacherDao).findAll();
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
-	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+    void givenId_onFindById_shouldCallDaoFindById() {
+	teacherService.findById(1);
 
-	assertEquals(Optional.of(expectedTeacher1), teacherService.findById(1));
+	verify(teacherDao).findById(1);
     }
 
     @Test

@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.*;
+import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.SubjectMapper;
 import ua.com.foxminded.university.model.Subject;
 
@@ -72,6 +72,7 @@ public class JdbcSubjectDao implements SubjectDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
+    @Override
     public List<Subject> getSubjectsByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, subjectMapper, id);
     }

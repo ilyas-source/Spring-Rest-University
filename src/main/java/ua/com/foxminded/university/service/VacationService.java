@@ -5,35 +5,35 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
+import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
 public class VacationService {
 
-    private JdbcVacationDao jdbcVacationDao;
+    private VacationDao vacationDao;
 
-    public VacationService(JdbcVacationDao jdbcVacationDao) {
-	this.jdbcVacationDao = jdbcVacationDao;
+    public VacationService(VacationDao vacationDao) {
+	this.vacationDao = vacationDao;
     }
 
     public void create(Vacation createVacation) {
-	jdbcVacationDao.create(createVacation);
+	vacationDao.create(createVacation);
     }
 
     public List<Vacation> findAll() {
-	return jdbcVacationDao.findAll();
+	return vacationDao.findAll();
     }
 
     public Optional<Vacation> findById(int choice) {
-	return jdbcVacationDao.findById(choice);
+	return vacationDao.findById(choice);
     }
 
     public void update(Vacation newVacation) {
-	jdbcVacationDao.update(newVacation);
+	vacationDao.update(newVacation);
     }
 
     public void delete(int id) {
-	jdbcVacationDao.delete(id);
+	vacationDao.delete(id);
     }
 }

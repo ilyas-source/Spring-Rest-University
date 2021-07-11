@@ -2,7 +2,11 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjectsForTeacher1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToCreate;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +22,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.model.Subject;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -28,7 +31,7 @@ public class SubjectDaoTest {
     private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
 
     @Autowired
-    private JdbcSubjectDao subjectDao;
+    private SubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

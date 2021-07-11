@@ -1,10 +1,7 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,17 +20,17 @@ class StudentServiceTest {
     private StudentService studentService;
 
     @Test
-    void onFindAll_shouldReturnAllStudents() {
-	when(studentDao.findAll()).thenReturn(expectedStudents);
-
-	assertEquals(expectedStudents, studentService.findAll());
-    }
-
-    @Test
     void onFindAll_shouldCallDaoFindAll() {
 	studentService.findAll();
 
 	verify(studentDao).findAll();
+    }
+
+    @Test
+    void givenId_onFindById_shouldCallDaoFindById() {
+	studentService.findById(1);
+
+	verify(studentDao).findById(1);
     }
 
     @Test

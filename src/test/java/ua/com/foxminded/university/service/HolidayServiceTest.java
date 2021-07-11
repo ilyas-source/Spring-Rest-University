@@ -1,11 +1,7 @@
 package ua.com.foxminded.university.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday1;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,10 +27,10 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenCorrectId_onFindById_shouldReturnOptionalWithCorrectHoliday() {
-	when(holidayDao.findById(1)).thenReturn(Optional.of(expectedHoliday1));
+    void givenId_onFindById_shouldCallDaoFindById() {
+	holidayService.findById(1);
 
-	assertEquals(Optional.of(expectedHoliday1), holidayService.findById(1));
+	verify(holidayDao).findById(1);
     }
 
     @Test
