@@ -24,11 +24,9 @@ public class ClassroomService {
     }
 
     public void create(Classroom classroom) {
-	boolean canCreate = capacityIsCorrect(classroom) && nameIsNew(classroom);
+	boolean canCreate = isCapacityCorrect(classroom) && hasNewName(classroom);
 	if (canCreate) {
 	    classroomDao.create(classroom);
-	} else {
-	    System.out.println("Can't create classroom");
 	}
     }
 
@@ -41,47 +39,39 @@ public class ClassroomService {
     }
 
     public void update(Classroom newClassroom) {
-	boolean canUpdate = nameIsNew(newClassroom) && verifyCapacityIsEnough(newClassroom);
+	boolean canUpdate = hasNewName(newClassroom) && isCapacityEnough(newClassroom);
 	if (canUpdate) {
 	    classroomDao.update(newClassroom);
-	} else {
-	    System.out.println("Can't update classroom");
 	}
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id) && theresNoLectures(classroomDao.findById(id).get());
+	Optional<Classroom> optionalClassroom = classroomDao.findById(id);
+	boolean canDelete = optionalClassroom.isPresent() && hasNoLectures(optionalClassroom.get());
 	if (canDelete) {
 	    classroomDao.delete(id);
-	} else {
-	    System.out.println("Can't delete classroom");
 	}
     }
 
-    private boolean verifyCapacityIsEnough(Classroom newClassroom) {
+    private boolean isCapacityEnough(Classroom newClassroom) {
 	int requiredCapacity = lectureDao.findByClassroom(newClassroom)
 		.stream()
 		.flatMap(l -> Stream.of(lectureService.countStudentsInLecture(l)))
 		.mapToInt(v -> v)
 		.max().orElse(0);
 
-	return newClassroom.getCapacity() > requiredCapacity;
+	return newClassroom.getCapacity() >= requiredCapacity;
     }
 
-    private boolean theresNoLectures(Classroom classroom) {
+    private boolean hasNoLectures(Classroom classroom) {
 	return lectureDao.findByClassroom(classroom).isEmpty();
     }
 
-    private boolean idExists(int id) {
-	return classroomDao.findById(id).isPresent();
-
-    }
-
-    private boolean nameIsNew(Classroom classroom) {
+    private boolean hasNewName(Classroom classroom) {
 	return classroomDao.findByName(classroom.getName()).isEmpty();
     }
 
-    private boolean capacityIsCorrect(Classroom classroom) {
+    private boolean isCapacityCorrect(Classroom classroom) {
 	return classroom.getCapacity() > 0;
     }
 }

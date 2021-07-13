@@ -19,22 +19,18 @@ public class VacationService {
     }
 
     public void create(Vacation vacation) {
-	if (noIntersections(vacation)) {
+	if (hasNoIntersections(vacation)) {
 	    vacationDao.create(vacation);
-	} else {
-	    System.out.println("Can't create vacation");
 	}
     }
 
-    private boolean noIntersections(Vacation vacation) {
-	boolean result = vacationDao.findAll()
+    private boolean hasNoIntersections(Vacation vacation) {
+	return vacationDao.findAll()
 		.stream()
 		.flatMap(v -> Stream.of(v.intersects(vacation)))
 		.filter(b -> b == true)
 		.findFirst()
 		.isEmpty();
-	System.out.println("No intersections with existing vacations: " + result);
-	return result;
     }
 
     public List<Vacation> findAll() {
@@ -53,8 +49,6 @@ public class VacationService {
 	boolean canDelete = idExists(id);
 	if (canDelete) {
 	    vacationDao.delete(id);
-	} else {
-	    System.out.println("Can't delete vacation");
 	}
     }
 

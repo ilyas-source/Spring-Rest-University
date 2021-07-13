@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Timeslot;
 
 @Service
@@ -23,32 +24,24 @@ public class TimeslotService {
     }
 
     public void create(Timeslot timeslot) {
-	boolean canCreate = noIntersections(timeslot);
-	canCreate = canCreate && longEnough(timeslot);
-
+	boolean canCreate = hasNoIntersections(timeslot)
+		&& isLongEnough(timeslot);
 	if (canCreate) {
 	    timeslotDao.create(timeslot);
-	} else {
-	    System.out.println("Can't create this timeslot");
 	}
     }
 
-    private boolean noIntersections(Timeslot timeslot) {
-	boolean result = timeslotDao.findAll()
+    private boolean hasNoIntersections(Timeslot timeslot) {
+	return timeslotDao.findAll()
 		.stream()
 		.flatMap(t -> Stream.of(t.intersects(timeslot)))
 		.filter(b -> b == true)
 		.findFirst()
 		.isEmpty();
-	System.out.println("No intersections with existing timeslots: " + result);
-	return result;
     }
 
-    private boolean longEnough(Timeslot timeslot) {
-	boolean result = Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds() >= 900;
-	System.out.println("New timeslot is long enough: " + result);
-
-	return result;
+    private boolean isLongEnough(Timeslot timeslot) {
+	return Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds() >= 900;
     }
 
     public List<Timeslot> findAll() {
@@ -60,30 +53,22 @@ public class TimeslotService {
     }
 
     public void update(Timeslot timeslot) {
-	boolean canUpdate = noIntersections(timeslot) && longEnough(timeslot);
+	boolean canUpdate = hasNoIntersections(timeslot) && isLongEnough(timeslot);
 	if (canUpdate) {
 	    timeslotDao.update(timeslot);
-	} else {
-	    System.out.println("Can't update timeslot");
 	}
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id) && noLecturesScheduled(timeslotDao.findById(id).get());
+
+	Optional<Timeslot> optionalTimeslot = timeslotDao.findById(id);
+	boolean canDelete = optionalTimeslot.isPresent() && hasNoLecturesScheduled(optionalTimeslot.get());
 	if (canDelete) {
 	    timeslotDao.delete(id);
-	} else {
-	    System.out.println("Can't delete timeslot");
 	}
     }
 
-    private boolean noLecturesScheduled(Timeslot timeslot) {
-	boolean result = lectureDao.findByTimeslot(timeslot).isEmpty();
-	System.out.println("No lectures scheduled to timeslot: " + result);
-	return result;
-    }
-
-    private boolean idExists(int id) {
-	return timeslotDao.findById(id).isPresent();
+    private boolean hasNoLecturesScheduled(Timeslot timeslot) {
+	return lectureDao.findByTimeslot(timeslot).isEmpty();
     }
 }

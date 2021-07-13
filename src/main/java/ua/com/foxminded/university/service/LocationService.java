@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Location;
 
 @Service
@@ -36,20 +37,15 @@ public class LocationService {
 	locationDao.update(newLocation);
     }
 
-    private boolean locationIsNotUsed(Location location) {
+    private boolean hasNoClassrooms(Location location) {
 	return classroomDao.findByLocation(location).isEmpty();
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id) && locationIsNotUsed(locationDao.findById(id).get());
+	Optional<Location> optionalLocation = locationDao.findById(id);
+	boolean canDelete = optionalLocation.isPresent() && hasNoClassrooms(optionalLocation.get());
 	if (canDelete) {
 	    locationDao.delete(id);
-	} else {
-	    System.out.println("Can't delete location");
 	}
-    }
-
-    private boolean idExists(int id) {
-	return locationDao.findById(id).isPresent();
     }
 }

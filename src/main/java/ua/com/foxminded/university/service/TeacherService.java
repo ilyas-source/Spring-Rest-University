@@ -26,8 +26,6 @@ public class TeacherService {
     public void create(Teacher teacher) {
 	if (isUnique(teacher)) {
 	    teacherDao.create(teacher);
-	} else {
-	    System.out.println("Teacher with this name and email already exists, can't create");
 	}
     }
 
@@ -46,8 +44,6 @@ public class TeacherService {
     public void update(Teacher teacher) {
 	if (canTeachAllScheduledLectures(teacher)) {
 	    teacherDao.update(teacher);
-	} else {
-	    System.out.println("New teacher can't teach all needed subjects, can't update");
 	}
     }
 
@@ -60,20 +56,16 @@ public class TeacherService {
 	return teacher.getSubjects().containsAll(requiredSubjects);
     }
 
-    private boolean noLecturesScheduled(Teacher teacher) {
+    private boolean hasNoLectures(Teacher teacher) {
 	return lectureDao.findByTeacher(teacher).isEmpty();
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id) && noLecturesScheduled(teacherDao.findById(id).get());
+
+	Optional<Teacher> optionalTeacher = teacherDao.findById(id);
+	boolean canDelete = optionalTeacher.isPresent() && hasNoLectures(optionalTeacher.get());
 	if (canDelete) {
 	    teacherDao.delete(id);
-	} else {
-	    System.out.println("Can't delete teacher");
 	}
-    }
-
-    private boolean idExists(int id) {
-	return teacherDao.findById(id).isPresent();
     }
 }

@@ -23,8 +23,6 @@ public class SubjectService {
     public void create(Subject subject) {
 	if (nameIsNew(subject)) {
 	    subjectDao.create(subject);
-	} else {
-	    System.out.println("Subject with this name already exists, can't create");
 	}
     }
 
@@ -45,29 +43,21 @@ public class SubjectService {
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id);
-	canDelete = canDelete && subjectIsNotAssigned(subjectDao.findById(id).get());
-	canDelete = canDelete && subjectIsNotScheduled(subjectDao.findById(id).get());
+
+	Optional<Subject> optionalSubject = subjectDao.findById(id);
+	boolean canDelete = optionalSubject.isPresent()
+		&& isNotAssigned(optionalSubject.get())
+		&& isNotScheduled(optionalSubject.get());
 	if (canDelete) {
 	    subjectDao.delete(id);
-	} else {
-	    System.out.println("Can't delete subject");
 	}
     }
 
-    private boolean subjectIsNotScheduled(Subject subject) {
-	boolean result = lectureDao.findBySubject(subject).isEmpty();
-	System.out.println("Subject is not scheduled to lectures: " + result);
-	return result;
+    private boolean isNotScheduled(Subject subject) {
+	return lectureDao.findBySubject(subject).isEmpty();
     }
 
-    private boolean subjectIsNotAssigned(Subject subject) {
-	boolean result = subjectDao.countAssignments(subject) == 0;
-	System.out.println("Subject is not assigned to teachers: " + result);
-	return result;
-    }
-
-    private boolean idExists(int id) {
-	return subjectDao.findById(id).isPresent();
+    private boolean isNotAssigned(Subject subject) {
+	return subjectDao.countAssignments(subject) == 0;
     }
 }

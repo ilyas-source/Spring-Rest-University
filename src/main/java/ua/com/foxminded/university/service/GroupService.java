@@ -15,42 +15,33 @@ public class GroupService {
     private GroupDao groupDao;
     private StudentDao studentDao;
 
-    public GroupService(GroupDao GroupDao, StudentDao studentDao) {
-	this.groupDao = GroupDao;
+    public GroupService(GroupDao groupDao, StudentDao studentDao) {
+	this.groupDao = groupDao;
 	this.studentDao = studentDao;
     }
 
     public void create(Group group) {
-	if (nameIsNew(group)) {
+	if (hasNewName(group)) {
 	    groupDao.create(group);
-	} else {
-	    System.out.println("Group with this name already exists, can't create new");
 	}
     }
 
     public void update(Group group) {
-	if (nameIsNew(group)) {
+	if (hasNewName(group)) {
 	    groupDao.update(group);
-	} else {
-	    System.out.println("Group with this name already exists, can't update");
 	}
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id) && isEmpty(groupDao.findById(id).get());
+	Optional<Group> optionalGroup = groupDao.findById(id);
+	boolean canDelete = optionalGroup.isPresent() && isEmpty(optionalGroup.get());
 	if (canDelete) {
 	    groupDao.delete(id);
-	} else {
-	    System.out.println("Can't delete group");
 	}
     }
 
     private boolean isEmpty(Group group) {
 	return studentDao.findByGroup(group).isEmpty();
-    }
-
-    private boolean idExists(int id) {
-	return groupDao.findById(id).isPresent();
     }
 
     public List<Group> findAll() {
@@ -61,7 +52,7 @@ public class GroupService {
 	return groupDao.findById(id);
     }
 
-    private boolean nameIsNew(Group group) {
+    private boolean hasNewName(Group group) {
 	return groupDao.findByName(group.getName()).isEmpty();
     }
 }

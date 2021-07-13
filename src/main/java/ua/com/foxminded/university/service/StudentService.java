@@ -20,8 +20,6 @@ public class StudentService {
     public void create(Student student) {
 	if (isUnique(student)) {
 	    studentDao.create(student);
-	} else {
-	    System.out.println("Student with this name and birthdate already exists, can't create");
 	}
     }
 
@@ -45,8 +43,6 @@ public class StudentService {
 	boolean canDelete = idExists(id);
 	if (canDelete) {
 	    studentDao.delete(id);
-	} else {
-	    System.out.println("Can't delete student");
 	}
     }
 
