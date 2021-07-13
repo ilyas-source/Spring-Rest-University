@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.StudentDao;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -29,6 +30,8 @@ class LectureServiceTest {
     private LectureDao lectureDao;
     @Mock
     private HolidayDao holidayDao;
+    @Mock
+    private StudentDao studentDao;
     @InjectMocks
     private LectureService lectureService;
 
