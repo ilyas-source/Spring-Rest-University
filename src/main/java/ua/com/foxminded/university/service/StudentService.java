@@ -3,16 +3,21 @@ package ua.com.foxminded.university.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Student;
 
+@PropertySource("classpath:university.properties")
 @Service
 public class StudentService {
 
     private StudentDao studentDao;
+
+    @Value("${group.maxstudents}")
+    public int maxStudentsInGroup;
 
     public StudentService(StudentDao studentDao) {
 	this.studentDao = studentDao;
@@ -30,7 +35,7 @@ public class StudentService {
     }
 
     public boolean isNotOverpopulatingGroup(Student student) {
-	return studentDao.countInGroup(student.getGroup()) <= 30;
+	return studentDao.countInGroup(student.getGroup()) <= maxStudentsInGroup - 1;
     }
 
     public List<Student> findAll() {

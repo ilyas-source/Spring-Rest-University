@@ -6,5 +6,5 @@ import ua.com.foxminded.university.model.Vacation;
 
 public interface VacationDao extends GeneralDao<Vacation> {
 
-    List<Vacation> getVacationsByTeacherId(int id);
+    List<Vacation> findByTeacherId(int id);
 }

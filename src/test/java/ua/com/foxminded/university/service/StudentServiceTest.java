@@ -8,16 +8,25 @@ import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedSt
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.StudentDao;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
+
+    private static final int MAX_STUDENTS_IN_GROUP = 30;
+
+    @BeforeEach
+    void init() {
+	ReflectionTestUtils.setField(studentService, "maxStudentsInGroup", MAX_STUDENTS_IN_GROUP);
+    }
 
     @Mock
     private StudentDao studentDao;
@@ -40,9 +49,18 @@ class StudentServiceTest {
 
     @Test
     void givenUniqueStudent_onCreate_shouldCallDaoCreate() {
+	System.out.println(studentService.maxStudentsInGroup);
 	studentService.create(expectedStudent1);
 
 	verify(studentDao).create(expectedStudent1);
+    }
+
+    @Test
+    void givenExcessiveStudent_onCreate_shouldNotCallDaoCreate() {
+	when(studentDao.countInGroup(expectedStudent1.getGroup())).thenReturn(30);
+	studentService.create(expectedStudent1);
+
+	verify(studentDao, never()).create(expectedStudent1);
     }
 
     @Test

@@ -14,31 +14,56 @@ import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:university.properties")
 @Service
 public class TeacherService {
 
     private TeacherDao teacherDao;
     private LectureDao lectureDao;
+    private VacationService vacationService;
 
     @Value("${bachelor.vacationdays}")
-    private int bachelorVacationDays;
+    public int bachelorVacationDays;
 
     @Value("${doctor.vacationdays}")
-    private int doctorVacationDays;
+    public int doctorVacationDays;
 
     @Value("${master.vacationdays}")
-    private int masterVacationDays;
+    public int masterVacationDays;
 
-    public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao) {
+    public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationService vacationService) {
 	this.teacherDao = jdbcTeacherDao;
 	this.lectureDao = lectureDao;
+	this.vacationService = vacationService;
     }
 
     public void create(Teacher teacher) {
-	if (isUnique(teacher)) {
+	boolean canCreate = isUnique(teacher) && hasEnoughVacationDays(teacher);
+	if (canCreate) {
 	    teacherDao.create(teacher);
 	}
+    }
+
+    private boolean hasEnoughVacationDays(Teacher teacher) {
+	int allowedDays = 0;
+	switch (teacher.getDegree()) {
+	case BACHELOR:
+	    allowedDays = bachelorVacationDays;
+	    break;
+	case DOCTOR:
+	    allowedDays = doctorVacationDays;
+	    break;
+	case MASTER:
+	    allowedDays = masterVacationDays;
+	    break;
+	default:
+	    break;
+	}
+	int totalVacations = teacher.getVacations()
+		.stream()
+		.flatMap(v -> Stream.of(vacationService.countLength(v)))
+		.reduce(0, Integer::sum);
+	return totalVacations <= allowedDays;
     }
 
     public boolean isUnique(Teacher teacher) {
@@ -54,7 +79,9 @@ public class TeacherService {
     }
 
     public void update(Teacher teacher) {
-	if (canTeachAllScheduledLectures(teacher)) {
+	boolean canUpdate = canTeachAllScheduledLectures(teacher)
+		&& hasEnoughVacationDays(teacher);
+	if (canUpdate) {
 	    teacherDao.update(teacher);
 	}
     }
@@ -73,7 +100,6 @@ public class TeacherService {
     }
 
     public void delete(int id) {
-
 	Optional<Teacher> optionalTeacher = teacherDao.findById(id);
 	boolean canDelete = optionalTeacher.isPresent() && hasNoLectures(optionalTeacher.get());
 	if (canDelete) {

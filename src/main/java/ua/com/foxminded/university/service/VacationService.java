@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -54,5 +55,9 @@ public class VacationService {
 
     private boolean idExists(int id) {
 	return vacationDao.findById(id).isPresent();
+    }
+
+    public int countLength(Vacation vacation) {
+	return (int) (Duration.between(vacation.getStartDate(), vacation.getEndDate()).toDays() + 1);
     }
 }

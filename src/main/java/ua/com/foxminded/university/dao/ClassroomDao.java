@@ -10,4 +10,6 @@ public interface ClassroomDao extends GeneralDao<Classroom> {
     Optional<Classroom> findByName(String name);
 
     Optional<Classroom> findByLocation(Location location);
+
+    Optional<Classroom> findByNameAndId(String name, int id);
 }

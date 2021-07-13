@@ -163,14 +163,6 @@ public class JdbcLectureDao implements LectureDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-//    @Override
-//    public int countStudentsInLecture(Lecture lecture) {
-//	return lecture.getGroups()
-//		.stream()
-//		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
-//		.reduce(0, Integer::sum);
-//    }
-
     public void assignGroupsToLecture(Lecture lecture) {
 	List<Group> groups = lecture.getGroups();
 	for (Group group : groups) {

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Location;
 
 @Service

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
-import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Timeslot;
 
 @Service

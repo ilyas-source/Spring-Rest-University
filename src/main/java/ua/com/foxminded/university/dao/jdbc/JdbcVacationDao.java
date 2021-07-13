@@ -73,7 +73,7 @@ public class JdbcVacationDao implements VacationDao {
     }
 
     @Override
-    public List<Vacation> getVacationsByTeacherId(int id) {
+    public List<Vacation> findByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, vacationMapper, id);
     }
 }

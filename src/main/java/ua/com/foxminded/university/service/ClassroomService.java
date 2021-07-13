@@ -39,10 +39,15 @@ public class ClassroomService {
     }
 
     public void update(Classroom newClassroom) {
-	boolean canUpdate = hasNewName(newClassroom) && isCapacityEnough(newClassroom);
+	boolean canUpdate = (isNotUpdatingName(newClassroom) || hasNewName(newClassroom))
+		&& isCapacityEnough(newClassroom);
 	if (canUpdate) {
 	    classroomDao.update(newClassroom);
 	}
+    }
+
+    public boolean isNotUpdatingName(Classroom classroom) {
+	return classroomDao.findByNameAndId(classroom.getName(), classroom.getId()).isPresent();
     }
 
     public void delete(int id) {

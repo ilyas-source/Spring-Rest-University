@@ -11,8 +11,6 @@ import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
