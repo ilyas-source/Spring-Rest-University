@@ -24,7 +24,6 @@ public class JdbcGroupDao implements GroupDao {
     private static final String FIND_ALL = "SELECT * FROM groups";
     private static final String UPDATE = "UPDATE groups SET name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
-//    private static final String COUNT_STUDENTS = "COUNT (*) FROM students WHERE group_id = ?";
     private static final String FIND_BY_LECTURE_ID = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
 	    "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?";
 
