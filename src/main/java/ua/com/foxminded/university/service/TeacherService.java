@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
@@ -12,11 +14,21 @@ import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 
+@PropertySource("classpath:application.properties")
 @Service
 public class TeacherService {
 
     private TeacherDao teacherDao;
     private LectureDao lectureDao;
+
+    @Value("${bachelor.vacationdays}")
+    private int bachelorVacationDays;
+
+    @Value("${doctor.vacationdays}")
+    private int doctorVacationDays;
+
+    @Value("${master.vacationdays}")
+    private int masterVacationDays;
 
     public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao) {
 	this.teacherDao = jdbcTeacherDao;

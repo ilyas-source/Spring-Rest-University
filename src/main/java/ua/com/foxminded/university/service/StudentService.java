@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Student;
 
@@ -18,13 +19,18 @@ public class StudentService {
     }
 
     public void create(Student student) {
-	if (isUnique(student)) {
+	boolean canCreate = isUnique(student) && isNotOverpopulatingGroup(student);
+	if (canCreate) {
 	    studentDao.create(student);
 	}
     }
 
     public boolean isUnique(Student student) {
 	return studentDao.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate()).isEmpty();
+    }
+
+    public boolean isNotOverpopulatingGroup(Student student) {
+	return studentDao.countInGroup(student.getGroup()) <= 30;
     }
 
     public List<Student> findAll() {
