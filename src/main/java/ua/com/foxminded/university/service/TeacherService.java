@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,14 +23,8 @@ public class TeacherService {
     private LectureDao lectureDao;
     private VacationService vacationService;
 
-    @Value("${bachelor.vacationdays}")
-    public int bachelorVacationDays;
-
-    @Value("${doctor.vacationdays}")
-    public int doctorVacationDays;
-
-    @Value("${master.vacationdays}")
-    public int masterVacationDays;
+    @Value("#{${vacationdays.map}}")
+    public Map<String, Integer> vacationDays;
 
     public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationService vacationService) {
 	this.teacherDao = jdbcTeacherDao;
@@ -45,20 +40,8 @@ public class TeacherService {
     }
 
     private boolean hasEnoughVacationDays(Teacher teacher) {
-	int allowedDays = 0;
-	switch (teacher.getDegree()) {
-	case BACHELOR:
-	    allowedDays = bachelorVacationDays;
-	    break;
-	case DOCTOR:
-	    allowedDays = doctorVacationDays;
-	    break;
-	case MASTER:
-	    allowedDays = masterVacationDays;
-	    break;
-	default:
-	    break;
-	}
+	int allowedDays = vacationDays.get(teacher.getDegree().toString());
+
 	int totalVacations = teacher.getVacations()
 		.stream()
 		.flatMap(v -> Stream.of(vacationService.countLength(v)))
@@ -100,8 +83,8 @@ public class TeacherService {
     }
 
     public void delete(int id) {
-	Optional<Teacher> optionalTeacher = teacherDao.findById(id);
-	boolean canDelete = optionalTeacher.isPresent() && hasNoLectures(optionalTeacher.get());
+	Optional<Teacher> teacher = teacherDao.findById(id);
+	boolean canDelete = teacher.isPresent() && hasNoLectures(teacher.get());
 	if (canDelete) {
 	    teacherDao.delete(id);
 	}

@@ -46,10 +46,9 @@ public class Timeslot {
 	this.endTime = endTime;
     }
 
-    public boolean intersects(Timeslot timeslot) {
-	int breakTime = 15;
-	return timeslot.getBeginTime().isAfter(this.endTime.plusMinutes(breakTime)) ||
-		timeslot.getEndTime().isBefore(this.beginTime.minusMinutes(breakTime));
+    public boolean intersects(Timeslot timeslot, int breakLength) {
+	return timeslot.getBeginTime().isAfter(this.endTime.plusMinutes(breakLength)) ||
+		timeslot.getEndTime().isBefore(this.beginTime.minusMinutes(breakLength));
     }
 
     @Override

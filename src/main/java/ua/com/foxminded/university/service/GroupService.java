@@ -33,8 +33,8 @@ public class GroupService {
     }
 
     public void delete(int id) {
-	Optional<Group> optionalGroup = groupDao.findById(id);
-	boolean canDelete = optionalGroup.isPresent() && isEmpty(optionalGroup.get());
+	Optional<Group> group = groupDao.findById(id);
+	boolean canDelete = group.isPresent() && isEmpty(group.get());
 	if (canDelete) {
 	    groupDao.delete(id);
 	}

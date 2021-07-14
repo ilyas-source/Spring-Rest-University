@@ -5,17 +5,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 
+@PropertySource("classpath:university.properties")
 @Service
 public class TimeslotService {
 
     private TimeslotDao timeslotDao;
     private LectureDao lectureDao;
+
+    @Value("${timeslot.minimumlength}")
+    public int minimumTimeslotLength;
+
+    @Value("${timeslot.minimumbreaklength}")
+    public int minimumBreakLength;
 
     public TimeslotService(TimeslotDao timeslotDao, LectureDao lectureDao) {
 	this.timeslotDao = timeslotDao;
@@ -23,9 +32,7 @@ public class TimeslotService {
     }
 
     public void create(Timeslot timeslot) {
-	boolean canCreate = hasNoIntersections(timeslot)
-		&& isLongEnough(timeslot);
-	if (canCreate) {
+	if (hasNoIntersections(timeslot) && isLongEnough(timeslot)) {
 	    timeslotDao.create(timeslot);
 	}
     }
@@ -33,12 +40,12 @@ public class TimeslotService {
     private boolean hasNoIntersections(Timeslot timeslot) {
 	return timeslotDao.findAll()
 		.stream()
-		.flatMap(t -> Stream.of(t.intersects(timeslot)))
-		.noneMatch(b -> b == true);
+		.flatMap(t -> Stream.of(t.intersects(timeslot, minimumBreakLength * 60)))
+		.noneMatch(b -> b);
     }
 
     private boolean isLongEnough(Timeslot timeslot) {
-	return Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds() >= 900;
+	return Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds() >= minimumTimeslotLength * 60;
     }
 
     public List<Timeslot> findAll() {
@@ -57,9 +64,8 @@ public class TimeslotService {
     }
 
     public void delete(int id) {
-
-	Optional<Timeslot> optionalTimeslot = timeslotDao.findById(id);
-	boolean canDelete = optionalTimeslot.isPresent() && hasNoLecturesScheduled(optionalTimeslot.get());
+	Optional<Timeslot> timeslot = timeslotDao.findById(id);
+	boolean canDelete = timeslot.isPresent() && hasNoLecturesScheduled(timeslot.get());
 	if (canDelete) {
 	    timeslotDao.delete(id);
 	}

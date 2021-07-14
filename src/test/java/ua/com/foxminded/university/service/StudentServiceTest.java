@@ -49,7 +49,6 @@ class StudentServiceTest {
 
     @Test
     void givenUniqueStudent_onCreate_shouldCallDaoCreate() {
-	System.out.println(studentService.maxStudentsInGroup);
 	studentService.create(expectedStudent1);
 
 	verify(studentDao).create(expectedStudent1);
