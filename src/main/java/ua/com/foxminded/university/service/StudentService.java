@@ -42,8 +42,8 @@ public class StudentService {
 	return studentDao.findAll();
     }
 
-    public Optional<Student> findById(int choice) {
-	return studentDao.findById(choice);
+    public Optional<Student> findById(int id) {
+	return studentDao.findById(id);
     }
 
     public void update(Student student) {

@@ -74,8 +74,8 @@ public class TeacherService {
 	return teacherDao.findAll();
     }
 
-    public Optional<Teacher> findById(int choice) {
-	return teacherDao.findById(choice);
+    public Optional<Teacher> findById(int id) {
+	return teacherDao.findById(id);
     }
 
     public void update(Teacher teacher) {

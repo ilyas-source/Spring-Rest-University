@@ -29,21 +29,19 @@ public class VacationService {
 	return vacationDao.findAll()
 		.stream()
 		.flatMap(v -> Stream.of(v.intersects(vacation)))
-		.filter(b -> b == true)
-		.findFirst()
-		.isEmpty();
+		.noneMatch(b -> b == true);
     }
 
     public List<Vacation> findAll() {
 	return vacationDao.findAll();
     }
 
-    public Optional<Vacation> findById(int choice) {
-	return vacationDao.findById(choice);
+    public Optional<Vacation> findById(int id) {
+	return vacationDao.findById(id);
     }
 
-    public void update(Vacation newVacation) {
-	vacationDao.update(newVacation);
+    public void update(Vacation vacation) {
+	vacationDao.update(vacation);
     }
 
     public void delete(int id) {

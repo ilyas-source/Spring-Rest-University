@@ -28,12 +28,12 @@ public class LocationService {
 	return locationDao.findAll();
     }
 
-    public Optional<Location> findById(int choice) {
-	return locationDao.findById(choice);
+    public Optional<Location> findById(int id) {
+	return locationDao.findById(id);
     }
 
-    public void update(Location newLocation) {
-	locationDao.update(newLocation);
+    public void update(Location location) {
+	locationDao.update(location);
     }
 
     private boolean hasNoClassrooms(Location location) {

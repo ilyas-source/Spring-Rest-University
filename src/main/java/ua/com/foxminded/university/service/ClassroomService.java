@@ -34,15 +34,15 @@ public class ClassroomService {
 	return classroomDao.findAll();
     }
 
-    public Optional<Classroom> findById(int choice) {
-	return classroomDao.findById(choice);
+    public Optional<Classroom> findById(int id) {
+	return classroomDao.findById(id);
     }
 
-    public void update(Classroom newClassroom) {
-	boolean canUpdate = (isNotUpdatingName(newClassroom) || hasNewName(newClassroom))
-		&& isCapacityEnough(newClassroom);
+    public void update(Classroom classroom) {
+	boolean canUpdate = (isNotUpdatingName(classroom) || hasNewName(classroom))
+		&& isCapacityEnough(classroom);
 	if (canUpdate) {
-	    classroomDao.update(newClassroom);
+	    classroomDao.update(classroom);
 	}
     }
 

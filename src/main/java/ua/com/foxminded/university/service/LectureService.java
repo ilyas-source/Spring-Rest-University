@@ -1,6 +1,10 @@
 package ua.com.foxminded.university.service;
 
+import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -33,9 +37,21 @@ public class LectureService {
 		&& isTeacherAvailable(lecture)
 		&& isTeacherWorking(lecture)
 		&& canTeacherTeach(lecture)
-		&& canAllGroupsAttend(lecture);
+		&& canAllGroupsAttend(lecture)
+		&& isWeekDay(lecture);
 	if (canCreate) {
 	    lectureDao.create(lecture);
+	}
+    }
+
+    private boolean isWeekDay(Lecture lecture) {
+	var dayOfWeek = DayOfWeek.of(lecture.getDate().get(ChronoField.DAY_OF_WEEK));
+	switch (dayOfWeek) {
+	case SATURDAY:
+	case SUNDAY:
+	    return false;
+	default:
+	    return true;
 	}
     }
 
@@ -50,9 +66,7 @@ public class LectureService {
 	return lecturesOnThisDateAndTime.stream()
 		.flatMap(l -> Stream.of(l.getGroups()))
 		.flatMap(List::stream)
-		.filter(lecture.getGroups()::contains)
-		.findFirst()
-		.isEmpty();
+		.noneMatch(lecture.getGroups()::contains);
     }
 
     private boolean canTeacherTeach(Lecture lecture) {
@@ -65,9 +79,7 @@ public class LectureService {
 	return lecture.getTeacher()
 		.getVacations()
 		.stream()
-		.filter(v -> isDayWithinVacation(lecture.getDate(), v))
-		.findFirst()
-		.isEmpty();
+		.noneMatch(v -> isDayWithinVacation(lecture.getDate(), v));
     }
 
     private boolean isDayWithinVacation(LocalDate date, Vacation vacation) {
@@ -92,8 +104,8 @@ public class LectureService {
 	return lectureDao.findAll();
     }
 
-    public Optional<Lecture> findById(int choice) {
-	return lectureDao.findById(choice);
+    public Optional<Lecture> findById(int id) {
+	return lectureDao.findById(id);
     }
 
     public void update(Lecture lecture) {

@@ -34,9 +34,7 @@ public class TimeslotService {
 	return timeslotDao.findAll()
 		.stream()
 		.flatMap(t -> Stream.of(t.intersects(timeslot)))
-		.filter(b -> b == true)
-		.findFirst()
-		.isEmpty();
+		.noneMatch(b -> b == true);
     }
 
     private boolean isLongEnough(Timeslot timeslot) {
@@ -47,8 +45,8 @@ public class TimeslotService {
 	return timeslotDao.findAll();
     }
 
-    public Optional<Timeslot> findById(int choice) {
-	return timeslotDao.findById(choice);
+    public Optional<Timeslot> findById(int id) {
+	return timeslotDao.findById(id);
     }
 
     public void update(Timeslot timeslot) {

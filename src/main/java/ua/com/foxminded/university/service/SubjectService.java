@@ -34,8 +34,8 @@ public class SubjectService {
 	return subjectDao.findAll();
     }
 
-    public Optional<Subject> findById(int choice) {
-	return subjectDao.findById(choice);
+    public Optional<Subject> findById(int id) {
+	return subjectDao.findById(id);
     }
 
     public void update(Subject subject) {

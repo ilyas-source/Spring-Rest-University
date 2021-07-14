@@ -25,12 +25,12 @@ public class HolidayService {
 	return holidayDao.findAll();
     }
 
-    public Optional<Holiday> findById(int choice) {
-	return holidayDao.findById(choice);
+    public Optional<Holiday> findById(int id) {
+	return holidayDao.findById(id);
     }
 
-    public void update(Holiday newHoliday) {
-	holidayDao.update(newHoliday);
+    public void update(Holiday holiday) {
+	holidayDao.update(holiday);
     }
 
     public void delete(int id) {
