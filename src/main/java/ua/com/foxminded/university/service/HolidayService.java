@@ -34,8 +34,7 @@ public class HolidayService {
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id);
-	if (canDelete) {
+	if (idExists(id)) {
 	    holidayDao.delete(id);
 	}
     }

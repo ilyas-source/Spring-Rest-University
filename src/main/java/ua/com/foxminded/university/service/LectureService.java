@@ -31,7 +31,7 @@ public class LectureService {
     }
 
     public void create(Lecture lecture) {
-	boolean canCreate = isClassroomCapacityEnough(lecture)
+	var canCreate = isClassroomCapacityEnough(lecture)
 		&& isClassroomAvailable(lecture)
 		&& isNotHoliday(lecture)
 		&& isTeacherAvailable(lecture)
@@ -109,7 +109,7 @@ public class LectureService {
     }
 
     public void update(Lecture lecture) {
-	boolean canUpdate = isClassroomCapacityEnough(lecture)
+	var canUpdate = isClassroomCapacityEnough(lecture)
 		&& isClassroomAvailable(lecture)
 		&& isNotHoliday(lecture)
 		&& isTeacherAvailable(lecture)
@@ -129,8 +129,7 @@ public class LectureService {
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id);
-	if (canDelete) {
+	if (idExists(id)) {
 	    lectureDao.delete(id);
 	}
     }

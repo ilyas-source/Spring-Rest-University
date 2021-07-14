@@ -35,7 +35,7 @@ public class VacationsMenu {
 
     public List<Vacation> createVacations() {
 	List<Vacation> result = new ArrayList<>();
-	boolean finished = false;
+	var finished = false;
 	while (!finished) {
 	    System.out.println("Add new vacation for teacher? (y/n):");
 	    String entry = scanner.nextLine().toLowerCase();

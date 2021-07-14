@@ -173,15 +173,15 @@ public class LectureDaoTest {
     void givenLecture_onUpdate_shouldUpdateCorrectly() {
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-	boolean group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-	boolean group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
+	var group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	var group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	lectureDao.update(lectureToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-	boolean group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-	boolean group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
+	var group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	var group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	assertThat(rowsBeforeUpdate).isZero();
 	assertThat(rowsAfterUpdate).isEqualTo(1);

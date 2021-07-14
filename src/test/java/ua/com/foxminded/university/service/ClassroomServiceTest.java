@@ -56,10 +56,18 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenGoodClassroom_onUpdate_shouldCallDaoUpdate() {
+    void givenClassroomWithSameNameAndId_onUpdate_shouldCallDaoUpdate() {
+	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 	classroomService.update(expectedClassroom1);
 
 	verify(classroomDao).update(expectedClassroom1);
+    }
+
+    @Test
+    void givenTotallyNewClassroom_onUpdate_shouldNotCallDaoUpdate() {
+	classroomService.update(expectedClassroom1);
+
+	verify(classroomDao, never()).update(expectedClassroom1);
     }
 
     @Test

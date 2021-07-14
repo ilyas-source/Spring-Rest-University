@@ -24,7 +24,7 @@ public class StudentService {
     }
 
     public void create(Student student) {
-	boolean canCreate = isUnique(student) && isNotOverpopulatingGroup(student);
+	var canCreate = isUnique(student) && isNotOverpopulatingGroup(student);
 	if (canCreate) {
 	    studentDao.create(student);
 	}
@@ -51,8 +51,7 @@ public class StudentService {
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id);
-	if (canDelete) {
+	if (idExists(id)) {
 	    studentDao.delete(id);
 	}
     }

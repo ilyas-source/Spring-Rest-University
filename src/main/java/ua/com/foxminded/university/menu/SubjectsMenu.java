@@ -90,8 +90,8 @@ public class SubjectsMenu {
     public List<Subject> selectSubjects() {
 	List<Subject> result = new ArrayList<>();
 	List<Subject> subjects = subjectService.findAll();
-	boolean finished = false;
-	boolean correctEntry = false;
+	var finished = false;
+	var correctEntry = false;
 
 	System.out.println("Selecting subjects.");
 

@@ -33,7 +33,7 @@ public class TeacherService {
     }
 
     public void create(Teacher teacher) {
-	boolean canCreate = isUnique(teacher) && hasEnoughVacationDays(teacher);
+	var canCreate = isUnique(teacher) && hasEnoughVacationDays(teacher);
 	if (canCreate) {
 	    teacherDao.create(teacher);
 	}
@@ -62,7 +62,7 @@ public class TeacherService {
     }
 
     public void update(Teacher teacher) {
-	boolean canUpdate = canTeachAllScheduledLectures(teacher)
+	var canUpdate = canTeachAllScheduledLectures(teacher)
 		&& hasEnoughVacationDays(teacher);
 	if (canUpdate) {
 	    teacherDao.update(teacher);
@@ -84,7 +84,7 @@ public class TeacherService {
 
     public void delete(int id) {
 	Optional<Teacher> teacher = teacherDao.findById(id);
-	boolean canDelete = teacher.isPresent() && hasNoLectures(teacher.get());
+	var canDelete = teacher.isPresent() && hasNoLectures(teacher.get());
 	if (canDelete) {
 	    teacherDao.delete(id);
 	}

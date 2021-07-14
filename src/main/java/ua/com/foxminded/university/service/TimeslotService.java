@@ -57,7 +57,7 @@ public class TimeslotService {
     }
 
     public void update(Timeslot timeslot) {
-	boolean canUpdate = hasNoIntersections(timeslot) && isLongEnough(timeslot);
+	var canUpdate = hasNoIntersections(timeslot) && isLongEnough(timeslot);
 	if (canUpdate) {
 	    timeslotDao.update(timeslot);
 	}
@@ -65,7 +65,7 @@ public class TimeslotService {
 
     public void delete(int id) {
 	Optional<Timeslot> timeslot = timeslotDao.findById(id);
-	boolean canDelete = timeslot.isPresent() && hasNoLecturesScheduled(timeslot.get());
+	var canDelete = timeslot.isPresent() && hasNoLecturesScheduled(timeslot.get());
 	if (canDelete) {
 	    timeslotDao.delete(id);
 	}

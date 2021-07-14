@@ -2,7 +2,10 @@ package ua.com.foxminded.university.service;
 
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
+import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +45,15 @@ class VacationServiceTest {
     }
 
     @Test
+    void givenIntersectingVacation_onCreate_shoultNotCallCreate() {
+	when(vacationDao.findAll()).thenReturn(expectedVacations);
+
+	vacationService.create(expectedVacation1);
+
+	verify(vacationDao, never()).create(expectedVacation1);
+    }
+
+    @Test
     void givenVacation_onUpdate_shouldCallUpdate() {
 	vacationService.update(expectedVacation1);
 
@@ -49,9 +61,18 @@ class VacationServiceTest {
     }
 
     @Test
-    void givenIncorrectVacationId_onDelete_shouldCallNotDelete() {
+    void givenIncorrectVacationId_onDelete_shouldNotCallDelete() {
 	vacationService.delete(1);
 
 	verify(vacationDao, never()).delete(1);
+    }
+
+    @Test
+    void givenCorrectVacationId_onDelete_shouldCallDelete() {
+	when(vacationDao.findById(1)).thenReturn(Optional.of(expectedVacation1));
+
+	vacationService.delete(1);
+
+	verify(vacationDao).delete(1);
     }
 }

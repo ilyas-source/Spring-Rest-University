@@ -44,7 +44,7 @@ public class SubjectService {
 
     public void delete(int id) {
 	Optional<Subject> subject = subjectDao.findById(id);
-	boolean canDelete = subject.isPresent()
+	var canDelete = subject.isPresent()
 		&& isNotAssigned(subject.get())
 		&& isNotScheduled(subject.get());
 	if (canDelete) {

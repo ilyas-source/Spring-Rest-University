@@ -49,7 +49,7 @@ public class GroupsMenu {
     public Group selectGroup() {
 	List<Group> groups = groupService.findAll();
 	Group result = null;
-	boolean correctEntry = false;
+	var correctEntry = false;
 	while (!correctEntry) {
 	    System.out.println("Select a group:");
 	    System.out.print(getStringOfGroups(groups));
@@ -67,8 +67,8 @@ public class GroupsMenu {
 
     public List<Group> selectGroups() {
 	List<Group> result = new ArrayList<>();
-	boolean finished = false;
-	boolean correctEntry = false;
+	var finished = false;
+	var correctEntry = false;
 
 	while (!(finished && correctEntry)) {
 	    if (!result.isEmpty()) {

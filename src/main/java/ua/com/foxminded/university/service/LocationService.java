@@ -42,7 +42,7 @@ public class LocationService {
 
     public void delete(int id) {
 	Optional<Location> location = locationDao.findById(id);
-	boolean canDelete = location.isPresent() && hasNoClassrooms(location.get());
+	var canDelete = location.isPresent() && hasNoClassrooms(location.get());
 	if (canDelete) {
 	    locationDao.delete(id);
 	}

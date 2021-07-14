@@ -24,7 +24,7 @@ public class ClassroomService {
     }
 
     public void create(Classroom classroom) {
-	boolean canCreate = isCapacityCorrect(classroom) && hasNewName(classroom);
+	var canCreate = isCapacityCorrect(classroom) && hasNewName(classroom);
 	if (canCreate) {
 	    classroomDao.create(classroom);
 	}
@@ -39,15 +39,15 @@ public class ClassroomService {
     }
 
     public void update(Classroom classroom) {
-	boolean canUpdate = hasExistingClassroom(classroom)
-		&& isCapacityEnough(classroom);
-	if (canUpdate) {
+	var idExists = idExists(classroom.getId());
+	var idIsTheSame = false;
+	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
+	if (classroomByName.isPresent()) {
+	    idIsTheSame = (classroomByName.get().getId() == classroom.getId());
+	}
+	if (isCapacityEnough(classroom) && idExists && idIsTheSame) {
 	    classroomDao.update(classroom);
 	}
-    }
-
-    public boolean hasExistingClassroom(Classroom classroom) {
-	return classroomDao.findByNameAndId(classroom.getName(), classroom.getId()).isPresent();
     }
 
     private boolean hasNewName(Classroom classroom) {
@@ -56,7 +56,7 @@ public class ClassroomService {
 
     public void delete(int id) {
 	Optional<Classroom> classroom = classroomDao.findById(id);
-	boolean canDelete = classroom.isPresent() && hasNoLectures(classroom.get());
+	var canDelete = classroom.isPresent() && hasNoLectures(classroom.get());
 	if (canDelete) {
 	    classroomDao.delete(id);
 	}
@@ -78,5 +78,9 @@ public class ClassroomService {
 
     private boolean isCapacityCorrect(Classroom classroom) {
 	return classroom.getCapacity() > 0;
+    }
+
+    private boolean idExists(int id) {
+	return classroomDao.findById(id).isPresent();
     }
 }

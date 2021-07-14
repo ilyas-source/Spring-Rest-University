@@ -29,7 +29,7 @@ public class VacationService {
 	return vacationDao.findAll()
 		.stream()
 		.flatMap(v -> Stream.of(v.intersects(vacation)))
-		.noneMatch(b -> b == true);
+		.noneMatch(b -> b);
     }
 
     public List<Vacation> findAll() {
@@ -45,8 +45,7 @@ public class VacationService {
     }
 
     public void delete(int id) {
-	boolean canDelete = idExists(id);
-	if (canDelete) {
+	if (idExists(id)) {
 	    vacationDao.delete(id);
 	}
     }
