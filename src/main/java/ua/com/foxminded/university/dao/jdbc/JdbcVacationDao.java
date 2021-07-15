@@ -24,6 +24,7 @@ public class JdbcVacationDao implements VacationDao {
     private static final String UPDATE = "UPDATE vacations SET start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT id, teacher_id, start_date, end_date from vacations WHERE teacher_id = ?";
+    private static final String COUNT_INTERSECTING_VACATIONS = "SELECT count(*) FROM vacations WHERE end_date >= ? AND start_date <= ?";
 
     private JdbcTemplate jdbcTemplate;
     private VacationMapper vacationMapper;
@@ -31,6 +32,12 @@ public class JdbcVacationDao implements VacationDao {
     public JdbcVacationDao(JdbcTemplate jdbcTemplate, VacationMapper vacationMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.vacationMapper = vacationMapper;
+    }
+
+    @Override
+    public int countIntersectingVacations(Vacation vacation) {
+	return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, vacation.getStartDate(),
+		vacation.getEndDate());
     }
 
     @Override

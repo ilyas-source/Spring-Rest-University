@@ -23,6 +23,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
     private static final String FIND_ALL = "SELECT * FROM timeslots";
     private static final String UPDATE = "UPDATE timeslots SET begin_time = ?, end_time = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM timeslots WHERE id = ?";
+    private static final String COUNT_INTERSECTING_TIMESLOTS = "SELECT count(*) FROM timeslots WHERE end_time >= ? AND begin_time <= ?";
 
     private JdbcTemplate jdbcTemplate;
     private TimeslotMapper timeslotMapper;
@@ -30,6 +31,12 @@ public class JdbcTimeslotDao implements TimeslotDao {
     public JdbcTimeslotDao(JdbcTemplate jdbcTemplate, TimeslotMapper timeslotMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.timeslotMapper = timeslotMapper;
+    }
+
+    @Override
+    public int countIntersectingTimeslots(Timeslot timeslot) {
+	return jdbcTemplate.queryForObject(COUNT_INTERSECTING_TIMESLOTS, Integer.class, timeslot.getBeginTime(),
+		timeslot.getEndTime());
     }
 
     @Override

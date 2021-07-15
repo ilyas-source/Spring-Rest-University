@@ -80,9 +80,6 @@ class ClassroomServiceTest {
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(501);
 	when(lectureService.countStudentsInLecture(expectedLecture2)).thenReturn(200);
-	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
-	when(classroomDao.findById(expectedClassroom1.getId())).thenReturn(Optional.of(expectedClassroom1));
-//	expectedClassroom1.setCapacity(3);
 
 	classroomService.update(expectedClassroom1);
 

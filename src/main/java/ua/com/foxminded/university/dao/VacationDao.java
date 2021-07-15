@@ -7,4 +7,6 @@ import ua.com.foxminded.university.model.Vacation;
 public interface VacationDao extends GeneralDao<Vacation> {
 
     List<Vacation> findByTeacherId(int id);
+
+    int countIntersectingVacations(Vacation vacation);
 }

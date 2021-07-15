@@ -37,10 +37,9 @@ public class TimeslotService {
     }
 
     private boolean hasNoIntersections(Timeslot timeslot) {
-	return timeslotDao.findAll()
-		.stream()
-		.map(t -> t.intersects(timeslot, minimumBreakLength * 60))
-		.noneMatch(b -> b);
+	var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
+		timeslot.getEndTime().plusMinutes(minimumBreakLength));
+	return timeslotDao.countIntersectingTimeslots(timeslotWithBreaks) == 0;
     }
 
     private boolean isLongEnough(Timeslot timeslot) {

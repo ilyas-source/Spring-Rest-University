@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
@@ -25,10 +26,7 @@ public class VacationService {
     }
 
     private boolean hasNoIntersections(Vacation vacation) {
-	return vacationDao.findAll()
-		.stream()
-		.map(v -> v.intersects(vacation))
-		.noneMatch(b -> b);
+	return vacationDao.countIntersectingVacations(vacation) == 0;
     }
 
     public List<Vacation> findAll() {
