@@ -20,6 +20,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     private static final String CREATE = "INSERT INTO timeslots (begin_time, end_time) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM timeslots WHERE id = ?";
+    private static final String FIND_BY_BOTH_TIMES = "SELECT * FROM timeslots WHERE begin_time = ? AND end_time = ?";
     private static final String FIND_ALL = "SELECT * FROM timeslots";
     private static final String UPDATE = "UPDATE timeslots SET begin_time = ?, end_time = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM timeslots WHERE id = ?";
@@ -51,6 +52,16 @@ public class JdbcTimeslotDao implements TimeslotDao {
 	    return ps;
 	}, keyHolder);
 	timeslot.setId((int) keyHolder.getKeys().get("id"));
+    }
+
+    @Override
+    public Optional<Timeslot> findByBothTimes(Timeslot timeslot) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_TIMES, timeslotMapper, timeslot.getBeginTime(),
+		    timeslot.getEndTime()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override

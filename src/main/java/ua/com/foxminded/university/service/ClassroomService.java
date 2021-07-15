@@ -41,16 +41,13 @@ public class ClassroomService {
 	if (!isCapacityEnough(classroom)) {
 	    return;
 	}
-	if (!idExists(classroom.getId())) {
-	    return;
-	}
-	var idIsTheSame = false;
 	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
-	if (classroomByName.isPresent()) {
-	    idIsTheSame = (classroomByName.get().getId() == classroom.getId());
-	}
-	if (idIsTheSame) {
+	if (classroomByName.isEmpty()) {
 	    classroomDao.update(classroom);
+	} else {
+	    if (classroomByName.get().getId() == classroom.getId()) {
+		classroomDao.update(classroom);
+	    }
 	}
     }
 
@@ -81,9 +78,5 @@ public class ClassroomService {
 
     private boolean isCapacityCorrect(Classroom classroom) {
 	return classroom.getCapacity() > 0;
-    }
-
-    private boolean idExists(int id) {
-	return classroomDao.findById(id).isPresent();
     }
 }

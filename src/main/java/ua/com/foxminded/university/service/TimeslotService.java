@@ -37,6 +37,9 @@ public class TimeslotService {
     }
 
     private boolean hasNoIntersections(Timeslot timeslot) {
+	if (timeslotDao.findByBothTimes(timeslot).isPresent()) {
+	    return true;
+	}
 	var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
 		timeslot.getEndTime().plusMinutes(minimumBreakLength));
 	return timeslotDao.countIntersectingTimeslots(timeslotWithBreaks) == 0;

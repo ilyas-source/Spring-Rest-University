@@ -1,9 +1,13 @@
 package ua.com.foxminded.university.dao;
 
+import java.util.Optional;
+
 import ua.com.foxminded.university.model.Timeslot;
 
 public interface TimeslotDao extends GeneralDao<Timeslot> {
 
     int countIntersectingTimeslots(Timeslot timeslot);
+
+    Optional<Timeslot> findByBothTimes(Timeslot timeslot);
 
 }

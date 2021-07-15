@@ -27,8 +27,13 @@ public class GroupService {
     }
 
     public void update(Group group) {
-	if (hasNewName(group)) {
+	Optional<Group> groupByName = groupDao.findByName(group.getName());
+	if (groupByName.isEmpty()) {
 	    groupDao.update(group);
+	} else {
+	    if (groupByName.get().getId() == group.getId()) {
+		groupDao.update(group);
+	    }
 	}
     }
 
