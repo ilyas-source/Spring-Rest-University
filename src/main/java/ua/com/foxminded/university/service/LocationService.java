@@ -41,9 +41,9 @@ public class LocationService {
     }
 
     public void delete(int id) {
-	Optional<Location> location = locationDao.findById(id);
-	var canDelete = location.isPresent() && hasNoClassrooms(location.get());
-	if (canDelete) {
+	if (locationDao.findById(id)
+		.filter(this::hasNoClassrooms)
+		.isPresent()) {
 	    locationDao.delete(id);
 	}
     }

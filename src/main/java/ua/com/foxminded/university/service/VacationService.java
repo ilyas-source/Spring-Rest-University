@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,7 @@ public class VacationService {
     private boolean hasNoIntersections(Vacation vacation) {
 	return vacationDao.findAll()
 		.stream()
-		.flatMap(v -> Stream.of(v.intersects(vacation)))
+		.map(v -> v.intersects(vacation))
 		.noneMatch(b -> b);
     }
 
@@ -54,7 +53,7 @@ public class VacationService {
 	return vacationDao.findById(id).isPresent();
     }
 
-    public int countLength(Vacation vacation) {
-	return (int) (Duration.between(vacation.getStartDate(), vacation.getEndDate()).toDays() + 1);
+    public long getDaysDuration(Vacation vacation) {
+	return Duration.between(vacation.getStartDate(), vacation.getEndDate()).toDays() + 1;
     }
 }

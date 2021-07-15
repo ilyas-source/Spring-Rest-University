@@ -1,12 +1,15 @@
 package ua.com.foxminded.university.service;
 
 import static java.util.Map.entry;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Teacher;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
@@ -42,23 +46,26 @@ class TeacherServiceTest {
     private TeacherService teacherService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	teacherService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(teacherDao.findAll()).thenReturn(expectedTeachers);
 
-	verify(teacherDao).findAll();
+	assertEquals(expectedTeachers, teacherService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	teacherService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
+	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+	Optional<Teacher> expected = Optional.of(expectedTeacher1);
 
-	verify(teacherDao).findById(1);
+	Optional<Teacher> actual = teacherService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test
     void givenTeacherWithTooLongVacations_onCreate_shouldNotCallDaoCreate() {
-	when(vacationService.countLength(expectedTeacher1.getVacations().get(0))).thenReturn(20);
-	when(vacationService.countLength(expectedTeacher1.getVacations().get(1))).thenReturn(20);
+	when(vacationService.getDaysDuration(expectedTeacher1.getVacations().get(0))).thenReturn(20L);
+	when(vacationService.getDaysDuration(expectedTeacher1.getVacations().get(1))).thenReturn(20L);
 
 	teacherService.create(expectedTeacher1);
 

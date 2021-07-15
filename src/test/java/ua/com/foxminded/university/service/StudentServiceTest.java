@@ -1,10 +1,10 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.model.Student;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -34,17 +35,20 @@ class StudentServiceTest {
     private StudentService studentService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	studentService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(studentDao.findAll()).thenReturn(expectedStudents);
 
-	verify(studentDao).findAll();
+	assertEquals(expectedStudents, studentService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	studentService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectStudent() {
+	when(studentDao.findById(1)).thenReturn(Optional.of(expectedStudent1));
+	Optional<Student> expected = Optional.of(expectedStudent1);
 
-	verify(studentDao).findById(1);
+	Optional<Student> actual = studentService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test

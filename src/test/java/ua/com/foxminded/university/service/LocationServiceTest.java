@@ -1,10 +1,11 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.model.Location;
 
 @ExtendWith(MockitoExtension.class)
 class LocationServiceTest {
@@ -28,17 +30,20 @@ class LocationServiceTest {
     private LocationService locationService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	locationService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(locationDao.findAll()).thenReturn(expectedLocations);
 
-	verify(locationDao).findAll();
+	assertEquals(expectedLocations, locationService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	locationService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectLocation() {
+	when(locationDao.findById(1)).thenReturn(Optional.of(expectedLocation1));
+	Optional<Location> expected = Optional.of(expectedLocation1);
 
-	verify(locationDao).findById(1);
+	Optional<Location> actual = locationService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test

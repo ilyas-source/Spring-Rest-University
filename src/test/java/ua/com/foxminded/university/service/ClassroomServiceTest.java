@@ -1,9 +1,10 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.model.Classroom;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomServiceTest {
@@ -35,17 +37,20 @@ class ClassroomServiceTest {
     private ClassroomService classroomService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	classroomService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(classroomDao.findAll()).thenReturn(expectedClassrooms);
 
-	verify(classroomDao).findAll();
+	assertEquals(expectedClassrooms, classroomService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	classroomService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
+	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+	Optional<Classroom> expected = Optional.of(expectedClassroom1);
 
-	verify(classroomDao).findById(1);
+	Optional<Classroom> actual = classroomService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test
@@ -73,8 +78,11 @@ class ClassroomServiceTest {
     @Test
     void givenSmallClassroom_onUpdate_shouldNotCallDaoUpdate() {
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
-	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(501);
 	when(lectureService.countStudentsInLecture(expectedLecture2)).thenReturn(200);
+	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
+	when(classroomDao.findById(expectedClassroom1.getId())).thenReturn(Optional.of(expectedClassroom1));
+//	expectedClassroom1.setCapacity(3);
 
 	classroomService.update(expectedClassroom1);
 

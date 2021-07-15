@@ -1,10 +1,11 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
@@ -28,17 +30,20 @@ class SubjectServiceTest {
     private SubjectService subjectService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	subjectService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(subjectDao.findAll()).thenReturn(expectedSubjects);
 
-	verify(subjectDao).findAll();
+	assertEquals(expectedSubjects, subjectService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	subjectService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectSubject() {
+	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
+	Optional<Subject> expected = Optional.of(expectedSubject1);
 
-	verify(subjectDao).findById(1);
+	Optional<Subject> actual = subjectService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test

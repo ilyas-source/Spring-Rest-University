@@ -1,9 +1,14 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToCreate;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.TimeslotDao;
+import ua.com.foxminded.university.model.Timeslot;
 
 @ExtendWith(MockitoExtension.class)
 class TimeslotServiceTest {
@@ -33,17 +39,20 @@ class TimeslotServiceTest {
     private TimeslotService timeslotService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	timeslotService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(timeslotDao.findAll()).thenReturn(expectedTimeslots);
 
-	verify(timeslotDao).findAll();
+	assertEquals(expectedTimeslots, timeslotService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	timeslotService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectTimeslot() {
+	when(timeslotDao.findById(1)).thenReturn(Optional.of(expectedTimeslot1));
+	Optional<Timeslot> expected = Optional.of(expectedTimeslot1);
 
-	verify(timeslotDao).findById(1);
+	Optional<Timeslot> actual = timeslotService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 
@@ -42,10 +42,11 @@ public class TeacherService {
     private boolean hasEnoughVacationDays(Teacher teacher) {
 	int allowedDays = vacationDays.get(teacher.getDegree().toString());
 
-	int totalVacations = teacher.getVacations()
+	long totalVacations = teacher.getVacations()
 		.stream()
-		.flatMap(v -> Stream.of(vacationService.countLength(v)))
-		.reduce(0, Integer::sum);
+		.mapToLong(vacationService::getDaysDuration)
+		.sum();
+
 	return totalVacations <= allowedDays;
     }
 
@@ -72,7 +73,7 @@ public class TeacherService {
     private boolean canTeachAllScheduledLectures(Teacher teacher) {
 	List<Subject> requiredSubjects = lectureDao.findByTeacher(teacher)
 		.stream()
-		.flatMap(l -> Stream.of(l.getSubject()))
+		.map(Lecture::getSubject)
 		.collect(Collectors.toList());
 
 	return teacher.getSubjects().containsAll(requiredSubjects);
@@ -83,9 +84,9 @@ public class TeacherService {
     }
 
     public void delete(int id) {
-	Optional<Teacher> teacher = teacherDao.findById(id);
-	var canDelete = teacher.isPresent() && hasNoLectures(teacher.get());
-	if (canDelete) {
+	if (teacherDao.findById(id)
+		.filter(this::hasNoLectures)
+		.isPresent()) {
 	    teacherDao.delete(id);
 	}
     }

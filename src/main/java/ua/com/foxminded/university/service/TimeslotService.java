@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -40,7 +39,7 @@ public class TimeslotService {
     private boolean hasNoIntersections(Timeslot timeslot) {
 	return timeslotDao.findAll()
 		.stream()
-		.flatMap(t -> Stream.of(t.intersects(timeslot, minimumBreakLength * 60)))
+		.map(t -> t.intersects(timeslot, minimumBreakLength * 60))
 		.noneMatch(b -> b);
     }
 
@@ -64,9 +63,9 @@ public class TimeslotService {
     }
 
     public void delete(int id) {
-	Optional<Timeslot> timeslot = timeslotDao.findById(id);
-	var canDelete = timeslot.isPresent() && hasNoLecturesScheduled(timeslot.get());
-	if (canDelete) {
+	if (timeslotDao.findById(id)
+		.filter(this::hasNoLecturesScheduled)
+		.isPresent()) {
 	    timeslotDao.delete(id);
 	}
     }

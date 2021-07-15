@@ -1,10 +1,14 @@
 package ua.com.foxminded.university.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
 
@@ -20,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.model.Lecture;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -34,17 +39,20 @@ class LectureServiceTest {
     private LectureService lectureService;
 
     @Test
-    void onFindAll_shouldCallDaoFindAll() {
-	lectureService.findAll();
+    void onFindAll_shouldReturnCorrectList() {
+	when(lectureDao.findAll()).thenReturn(expectedLectures);
 
-	verify(lectureDao).findAll();
+	assertEquals(expectedLectures, lectureService.findAll());
     }
 
     @Test
-    void givenId_onFindById_shouldCallDaoFindById() {
-	lectureService.findById(1);
+    void givenId_onFindById_shouldReturnOptionalWithCorrectLecture() {
+	when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
+	Optional<Lecture> expected = Optional.of(expectedLecture1);
 
-	verify(lectureDao).findById(1);
+	Optional<Lecture> actual = lectureService.findById(1);
+
+	assertEquals(expected, actual);
     }
 
     @Test

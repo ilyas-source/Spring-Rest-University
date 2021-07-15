@@ -2,7 +2,6 @@ package ua.com.foxminded.university.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -41,12 +40,19 @@ public class ClassroomService {
     public void update(Classroom classroom) {
 	var idExists = idExists(classroom.getId());
 	var idIsTheSame = false;
+	var isCapacityEnough = isCapacityEnough(classroom);
+
 	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
 	if (classroomByName.isPresent()) {
+	    System.out.println("Found classroom with this name");
 	    idIsTheSame = (classroomByName.get().getId() == classroom.getId());
 	}
-	if (isCapacityEnough(classroom) && idExists && idIsTheSame) {
+	System.out.println("Id exists: " + idExists);
+	System.out.println("Id is the same, with same name: " + idIsTheSame);
+	System.out.println("capacity is enough: " + isCapacityEnough);
+	if (isCapacityEnough && idExists && idIsTheSame) {
 	    classroomDao.update(classroom);
+	    System.out.println("Update applied");
 	}
     }
 
@@ -55,21 +61,22 @@ public class ClassroomService {
     }
 
     public void delete(int id) {
-	Optional<Classroom> classroom = classroomDao.findById(id);
-	var canDelete = classroom.isPresent() && hasNoLectures(classroom.get());
-	if (canDelete) {
+	if (classroomDao.findById(id)
+		.filter(this::hasNoLectures)
+		.isPresent()) {
 	    classroomDao.delete(id);
 	}
     }
 
-    private boolean isCapacityEnough(Classroom newClassroom) {
-	int requiredCapacity = lectureDao.findByClassroom(newClassroom)
+    private boolean isCapacityEnough(Classroom classroom) {
+	int requiredCapacity = lectureDao.findByClassroom(classroom)
 		.stream()
-		.flatMap(l -> Stream.of(lectureService.countStudentsInLecture(l)))
+		.map(lectureService::countStudentsInLecture)
 		.mapToInt(v -> v)
 		.max().orElse(0);
 
-	return newClassroom.getCapacity() >= requiredCapacity;
+	System.out.println("Found required capacity: " + requiredCapacity);
+	return classroom.getCapacity() >= requiredCapacity;
     }
 
     private boolean hasNoLectures(Classroom classroom) {

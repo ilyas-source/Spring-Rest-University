@@ -1,13 +1,10 @@
 package ua.com.foxminded.university.service;
 
-import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -64,7 +61,7 @@ public class LectureService {
     private boolean canAllGroupsAttend(Lecture lecture) {
 	List<Lecture> lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
 	return lecturesOnThisDateAndTime.stream()
-		.flatMap(l -> Stream.of(l.getGroups()))
+		.map(Lecture::getGroups)
 		.flatMap(List::stream)
 		.noneMatch(lecture.getGroups()::contains);
     }
@@ -124,8 +121,8 @@ public class LectureService {
     public int countStudentsInLecture(Lecture lecture) {
 	return lecture.getGroups()
 		.stream()
-		.flatMap(g -> Stream.of(studentDao.countInGroup(g)))
-		.reduce(0, Integer::sum);
+		.mapToInt(studentDao::countInGroup)
+		.sum();
     }
 
     public void delete(int id) {
