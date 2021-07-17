@@ -21,20 +21,20 @@ public class GroupService {
     }
 
     public void create(Group group) {
-	if (hasNewName(group)) {
+	if (isUniqueName(group)) {
 	    groupDao.create(group);
 	}
     }
 
     public void update(Group group) {
-	Optional<Group> groupByName = groupDao.findByName(group.getName());
-	if (groupByName.isEmpty()) {
+	if (isUniqueName(group))
 	    groupDao.update(group);
-	} else {
-	    if (groupByName.get().getId() == group.getId()) {
-		groupDao.update(group);
-	    }
-	}
+    }
+
+    private boolean isUniqueName(Group group) {
+	Optional<Group> groupByName = groupDao.findByName(group.getName());
+	return !(groupByName.isPresent()
+		&& (groupByName.get().getId() != group.getId()));
     }
 
     public void delete(int id) {
@@ -55,9 +55,5 @@ public class GroupService {
 
     public Optional<Group> findById(int id) {
 	return groupDao.findById(id);
-    }
-
-    private boolean hasNewName(Group group) {
-	return groupDao.findByName(group.getName()).isEmpty();
     }
 }

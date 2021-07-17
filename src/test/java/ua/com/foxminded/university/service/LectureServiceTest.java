@@ -9,6 +9,7 @@ import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLe
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
 
@@ -92,7 +93,6 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithTeacherOnVacation_onCreate_shouldNotCallDaoCreate() {
-
 	LocalDate dateBackup = expectedLecture1.getDate();
 	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
 
@@ -139,7 +139,82 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLecture_onUpdate_shouldCallUpdate() {
+    void givenLectureWithTooSmallClassroom_onUpdate_shouldNotCallDaoUpdate() {
+	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+
+	lectureService.update(expectedLecture1);
+
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureOnHoliday_onUpdate_shouldNotCallDaoUpdate() {
+	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
+
+	lectureService.update(expectedLecture1);
+
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureOnSunday_onUpdate_shouldNotCallDaoUpdate() {
+	lectureService.update(lectureToUpdate);
+
+	verify(lectureDao, never()).update(lectureToUpdate);
+    }
+
+    @Test
+    void givenLectureWithBusyTeacher_onUpdate_shouldNotCallDaoUpdate() {
+	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
+
+	lectureService.update(expectedLecture1);
+
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureWithTeacherOnVacation_onUpdate_shouldNotCallDaoUpdate() {
+	LocalDate dateBackup = expectedLecture1.getDate();
+	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
+
+	lectureService.update(expectedLecture1);
+
+	expectedLecture1.setDate(dateBackup);
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureWithTeacherCantTeach_onUpdate_shouldNotCallDaoUpdate() {
+	expectedLecture1.setSubject(expectedSubject4);
+
+	lectureService.update(expectedLecture1);
+
+	expectedLecture1.setSubject(expectedSubject1);
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureWithBusyGroup_onUpdate_shouldNotCallDaoUpdate() {
+	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
+
+	lectureService.update(expectedLecture1);
+
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenLectureWithBusyClassroom_onUpdate_shouldNotCallDaoUpdate() {
+	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
+
+	lectureService.update(expectedLecture1);
+
+	verify(lectureDao, never()).update(expectedLecture1);
+    }
+
+    @Test
+    void givenGoodLecture_onUpdate_shouldCallUpdate() {
 	lectureService.update(expectedLecture1);
 
 	verify(lectureDao).update(expectedLecture1);

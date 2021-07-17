@@ -34,9 +34,9 @@ public class JdbcLectureDao implements LectureDao {
     private static final String FIND_BY_TEACHER_ID = "SELECT * FROM lectures WHERE teacher_id = ?";
     private static final String FIND_BY_SUBJECT_ID = "SELECT * FROM lectures WHERE subject_id = ?";
     private static final String FIND_BY_TIMESLOT_ID = "SELECT * FROM lectures WHERE timeslot_id = ?";
-    private static final String FIND_BY_DATETIMECLASSROOM = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND classroom_id = ?";
-    private static final String FIND_BY_DATETIMETEACHER = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND teacher_id = ?";
-    private static final String FIND_BY_DATETIME = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ?";
+    private static final String FIND_BY_DATE_TIME_CLASSROOM = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND classroom_id = ?";
+    private static final String FIND_BY_DATE_TIME_TEACHER = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND teacher_id = ?";
+    private static final String FIND_BY_DATE_TIME = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
@@ -137,7 +137,7 @@ public class JdbcLectureDao implements LectureDao {
     public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
 	try {
 	    return Optional.of(
-		    jdbcTemplate.queryForObject(FIND_BY_DATETIMECLASSROOM, lectureMapper, date, timeslot.getId(),
+		    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper, date, timeslot.getId(),
 			    classroom.getId()));
 	} catch (EmptyResultDataAccessException e) {
 	    return Optional.empty();
@@ -146,13 +146,14 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot) {
-	return jdbcTemplate.query(FIND_BY_DATETIME, lectureMapper, date, timeslot.getId());
+	return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, date, timeslot.getId());
     }
 
     public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
 	try {
 	    return Optional.of(
-		    jdbcTemplate.queryForObject(FIND_BY_DATETIMETEACHER, lectureMapper, date, timeslot.getId(), teacher.getId()));
+		    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date, timeslot.getId(),
+			    teacher.getId()));
 	} catch (EmptyResultDataAccessException e) {
 	    return Optional.empty();
 	}

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
 
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,15 +23,18 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Teacher;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
 
-    private static final Map<String, Integer> vacationDays = Map.ofEntries(
-	    entry("BACHELOR", 10),
-	    entry("DOCTOR", 20),
-	    entry("MASTER", 30));
+    private static final Map<Degree, Integer> vacationDaysMap = Map.ofEntries(
+	    entry(Degree.BACHELOR, 10),
+	    entry(Degree.DOCTOR, 20),
+	    entry(Degree.MASTER, 30));
+
+    private static final Map<Degree, Integer> vacationDays = new EnumMap<>(vacationDaysMap);
 
     @BeforeEach
     void init() {
@@ -64,8 +69,10 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherWithTooLongVacations_onCreate_shouldNotCallDaoCreate() {
-	when(vacationService.getDaysDuration(expectedTeacher1.getVacations().get(0))).thenReturn(20L);
-	when(vacationService.getDaysDuration(expectedTeacher1.getVacations().get(1))).thenReturn(20L);
+	Map<Integer, Long> daysByYearsMap = new HashMap<>();
+	daysByYearsMap.put(2000, 40L);
+	daysByYearsMap.put(2001, 20L);
+	when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
 	teacherService.create(expectedTeacher1);
 

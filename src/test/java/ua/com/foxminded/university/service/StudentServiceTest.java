@@ -61,6 +61,7 @@ class StudentServiceTest {
     @Test
     void givenExcessiveStudent_onCreate_shouldNotCallDaoCreate() {
 	when(studentDao.countInGroup(expectedStudent1.getGroup())).thenReturn(30);
+
 	studentService.create(expectedStudent1);
 
 	verify(studentDao, never()).create(expectedStudent1);
@@ -70,6 +71,7 @@ class StudentServiceTest {
     void givenNonUniqueStudent_onCreate_shouldNotCallDaoCreate() {
 	when(studentDao.findByNameAndBirthDate(expectedStudent1.getFirstName(), expectedStudent1.getLastName(),
 		expectedStudent1.getBirthDate())).thenReturn(Optional.of(expectedStudent2));
+
 	studentService.create(expectedStudent1);
 
 	verify(studentDao, never()).create(expectedStudent1);
@@ -85,6 +87,7 @@ class StudentServiceTest {
     @Test
     void givenExistingStudentId_onDelete_shouldCallDaoDelete() {
 	when(studentDao.findById(1)).thenReturn(Optional.of(expectedStudent1));
+
 	studentService.delete(1);
 
 	verify(studentDao).delete(1);

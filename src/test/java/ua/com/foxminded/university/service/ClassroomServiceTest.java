@@ -4,7 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
@@ -63,6 +64,7 @@ class ClassroomServiceTest {
     @Test
     void givenClassroomWithSameNameAndId_onUpdate_shouldCallDaoUpdate() {
 	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
+
 	classroomService.update(expectedClassroom1);
 
 	verify(classroomDao).update(expectedClassroom1);
@@ -89,6 +91,7 @@ class ClassroomServiceTest {
     @Test
     void givenExistingClassroom_onDelete_shouldCallDaoDelete() {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+
 	classroomService.delete(1);
 
 	verify(classroomDao).delete(1);

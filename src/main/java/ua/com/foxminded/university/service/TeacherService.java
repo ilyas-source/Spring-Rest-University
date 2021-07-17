@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.service;
 
+import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Vacation;
 
 @PropertySource("classpath:university.properties")
 @Service
@@ -23,8 +27,8 @@ public class TeacherService {
     private LectureDao lectureDao;
     private VacationService vacationService;
 
-    @Value("#{${vacationdays.map}}")
-    public Map<String, Integer> vacationDays;
+    @Value("#{${teacher.vacationdays}}")
+    public Map<Degree, Integer> vacationDays = new EnumMap<>(Degree.class);
 
     public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationService vacationService) {
 	this.teacherDao = jdbcTeacherDao;
@@ -40,14 +44,15 @@ public class TeacherService {
     }
 
     private boolean hasEnoughVacationDays(Teacher teacher) {
-	int allowedDays = vacationDays.get(teacher.getDegree().toString());
-
-	long totalVacations = teacher.getVacations()
+	int allowedDays = vacationDays.get(teacher.getDegree());
+	List<Vacation> vacations = teacher.getVacations();
+	Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
+	long maxDays = daysCountByYears.entrySet()
 		.stream()
-		.mapToLong(vacationService::getDaysDuration)
-		.sum();
-
-	return totalVacations <= allowedDays;
+		.max(Comparator.comparing(Map.Entry::getValue))
+		.get()
+		.getValue();
+	return maxDays <= allowedDays;
     }
 
     public boolean isUnique(Teacher teacher) {

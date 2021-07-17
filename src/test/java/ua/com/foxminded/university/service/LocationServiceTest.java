@@ -64,6 +64,7 @@ class LocationServiceTest {
     void givenFreeLocation_onDelete_shouldCallDaoDelete() {
 	when(classroomDao.findByLocation(expectedLocation1)).thenReturn(Optional.empty());
 	when(locationDao.findById(expectedLocation1.getId())).thenReturn(Optional.of(expectedLocation1));
+
 	locationService.delete(expectedLocation1.getId());
 
 	verify(locationDao).delete(1);
@@ -73,6 +74,7 @@ class LocationServiceTest {
     void givenUsedLocation_onDelete_shouldNotCallDaoDelete() {
 	when(classroomDao.findByLocation(expectedLocation1)).thenReturn(Optional.of(expectedClassroom1));
 	when(locationDao.findById(expectedLocation1.getId())).thenReturn(Optional.of(expectedLocation1));
+
 	locationService.delete(expectedLocation1.getId());
 
 	verify(locationDao, never()).delete(expectedLocation1.getId());

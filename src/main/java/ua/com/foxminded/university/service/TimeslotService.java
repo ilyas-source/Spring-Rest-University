@@ -58,8 +58,7 @@ public class TimeslotService {
     }
 
     public void update(Timeslot timeslot) {
-	var canUpdate = hasNoIntersections(timeslot) && isLongEnough(timeslot);
-	if (canUpdate) {
+	if (hasNoIntersections(timeslot) && isLongEnough(timeslot)) {
 	    timeslotDao.update(timeslot);
 	}
     }

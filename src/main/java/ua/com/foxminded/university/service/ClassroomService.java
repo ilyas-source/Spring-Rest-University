@@ -23,10 +23,27 @@ public class ClassroomService {
     }
 
     public void create(Classroom classroom) {
-	var canCreate = isCapacityCorrect(classroom) && hasNewName(classroom);
-	if (canCreate) {
+	if (!isCapacityCorrect(classroom)) {
+	    return;
+	}
+	if (isUniqueName(classroom)) {
 	    classroomDao.create(classroom);
 	}
+    }
+
+    public void update(Classroom classroom) {
+	if (!isCapacityEnough(classroom)) {
+	    return;
+	}
+	if (isUniqueName(classroom)) {
+	    classroomDao.update(classroom);
+	}
+    }
+
+    private boolean isUniqueName(Classroom classroom) {
+	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
+	return !(classroomByName.isPresent()
+		&& (classroomByName.get().getId() != classroom.getId()));
     }
 
     public List<Classroom> findAll() {
@@ -35,24 +52,6 @@ public class ClassroomService {
 
     public Optional<Classroom> findById(int id) {
 	return classroomDao.findById(id);
-    }
-
-    public void update(Classroom classroom) {
-	if (!isCapacityEnough(classroom)) {
-	    return;
-	}
-	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
-	if (classroomByName.isEmpty()) {
-	    classroomDao.update(classroom);
-	} else {
-	    if (classroomByName.get().getId() == classroom.getId()) {
-		classroomDao.update(classroom);
-	    }
-	}
-    }
-
-    private boolean hasNewName(Classroom classroom) {
-	return classroomDao.findByName(classroom.getName()).isEmpty();
     }
 
     public void delete(int id) {

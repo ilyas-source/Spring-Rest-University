@@ -20,6 +20,7 @@ public class JdbcVacationDao implements VacationDao {
 
     private static final String CREATE = "INSERT INTO vacations (start_date, end_date) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM vacations WHERE id = ?";
+    private static final String FIND_BY_BOTH_DATES = "SELECT * FROM vacations WHERE start_date = ? AND end_date = ?";
     private static final String FIND_ALL = "SELECT * FROM vacations";
     private static final String UPDATE = "UPDATE vacations SET start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
@@ -52,6 +53,16 @@ public class JdbcVacationDao implements VacationDao {
 	    return ps;
 	}, keyHolder);
 	vacation.setId((int) keyHolder.getKeys().get("id"));
+    }
+
+    @Override
+    public Optional<Vacation> findByBothDates(Vacation vacation) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
+		    vacation.getEndDate()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override

@@ -35,21 +35,16 @@ public class LectureService {
 		&& isTeacherWorking(lecture)
 		&& canTeacherTeach(lecture)
 		&& canAllGroupsAttend(lecture)
-		&& isWeekDay(lecture);
+		&& !isWeekEnd(lecture);
 	if (canCreate) {
 	    lectureDao.create(lecture);
 	}
     }
 
-    private boolean isWeekDay(Lecture lecture) {
+    private boolean isWeekEnd(Lecture lecture) {
 	var dayOfWeek = DayOfWeek.of(lecture.getDate().get(ChronoField.DAY_OF_WEEK));
-	switch (dayOfWeek) {
-	case SATURDAY:
-	case SUNDAY:
-	    return false;
-	default:
-	    return true;
-	}
+
+	return (dayOfWeek == DayOfWeek.SATURDAY) || (dayOfWeek == DayOfWeek.SUNDAY);
     }
 
     private boolean isClassroomAvailable(Lecture lecture) {
@@ -112,7 +107,8 @@ public class LectureService {
 		&& isTeacherAvailable(lecture)
 		&& isTeacherWorking(lecture)
 		&& canTeacherTeach(lecture)
-		&& canAllGroupsAttend(lecture);
+		&& canAllGroupsAttend(lecture)
+		&& !isWeekEnd(lecture);
 	if (canUpdate) {
 	    lectureDao.update(lecture);
 	}
