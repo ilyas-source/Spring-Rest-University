@@ -6,7 +6,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacations;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationGoingOverNewYear;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -80,5 +86,20 @@ class VacationServiceTest {
 	vacationService.delete(1);
 
 	verify(vacationDao).delete(1);
+    }
+
+    @Test
+    void givenVacations_onCountDaysByYears_shouldReturnCorrectMap() {
+	List<Vacation> vacationsToCount = new ArrayList<>(
+		Arrays.asList(expectedVacation1, vacationGoingOverNewYear));
+
+	Map<Integer, Long> expected = new HashMap<>();
+	expected.put(2000, 38L);
+	expected.put(2001, 9L);
+
+	Map<Integer, Long> actual = vacationService.countDaysByYears(vacationsToCount);
+	System.out.println(actual);
+
+	assertEquals(expected, actual);
     }
 }

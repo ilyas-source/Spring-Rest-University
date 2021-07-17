@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.daysByYearsMap;
 
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -80,7 +81,9 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenTeacher_onCreate_shouldCallDaoCreate() {
+    void givenSuitableTeacher_onCreate_shouldCallDaoCreate() {
+	when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
+
 	teacherService.create(expectedTeacher1);
 
 	verify(teacherDao).create(expectedTeacher1);
@@ -88,6 +91,8 @@ class TeacherServiceTest {
 
     @Test
     void givenSuitableTeacher_onUpdate_shouldCallDaoUpdate() {
+	when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
+
 	teacherService.update(expectedTeacher1);
 
 	verify(teacherDao).update(expectedTeacher1);

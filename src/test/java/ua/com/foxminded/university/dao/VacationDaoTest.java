@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation2;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -116,5 +118,9 @@ public class VacationDaoTest {
 	Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
 	List<Vacation> expectedVacations = new ArrayList<>(
 		Arrays.asList(expectedVacation1, expectedVacation2, expectedVacation3, expectedVacation4));
+
+	Vacation vacationGoingOverNewYear = new Vacation(LocalDate.of(2000, 12, 25), LocalDate.of(2001, 1, 10));
+
+	Map<Integer, Long> daysByYearsMap = Map.ofEntries(entry(2000, 20L));
     }
 }

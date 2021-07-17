@@ -88,7 +88,7 @@ public class VacationService {
     }
 
     public long getDaysDuration(Vacation vacation) {
-	return Duration.between(vacation.getStartDate(), vacation.getEndDate()).toDays() + 1;
+	return Duration.between(vacation.getStartDate().atStartOfDay(), vacation.getEndDate().atStartOfDay()).toDays() + 1;
     }
 
 }
