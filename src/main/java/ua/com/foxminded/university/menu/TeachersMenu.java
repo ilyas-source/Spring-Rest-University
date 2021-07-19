@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.menu;
 
-import static ua.com.foxminded.university.Menu.*;
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import java.util.Comparator;
 import java.util.List;
@@ -8,16 +11,13 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
-import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
+import ua.com.foxminded.university.service.TeacherService;
 
 @Component
 public class TeachersMenu {
@@ -26,15 +26,15 @@ public class TeachersMenu {
     private VacationsMenu vacationsMenu;
     private AddressesMenu addressMenu;
     private SubjectsMenu subjectsMenu;
-    private TeacherDao jdbcTeacherDao;
+    private TeacherService teacherService;
 
     public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
-	    TeacherDao jdbcTeacherDao) {
+	    TeacherService teacherService) {
 	this.genderMenu = genderMenu;
 	this.vacationsMenu = vacationsMenu;
 	this.addressMenu = addressMenu;
 	this.subjectsMenu = subjectsMenu;
-	this.jdbcTeacherDao = jdbcTeacherDao;
+	this.teacherService = teacherService;
     }
 
     public String getStringOfTeachers(List<Teacher> teachers) {
@@ -55,7 +55,7 @@ public class TeachersMenu {
     }
 
     public void addTeacher() {
-	jdbcTeacherDao.create(createTeacher());
+	teacherService.create(createTeacher());
     }
 
     public Teacher createTeacher() {
@@ -112,18 +112,18 @@ public class TeachersMenu {
     }
 
     public void printTeachers() {
-	System.out.println(getStringOfTeachers(jdbcTeacherDao.findAll()));
+	System.out.println(getStringOfTeachers(teacherService.findAll()));
     }
 
     public Teacher selectTeacher() {
-	List<Teacher> teachers = jdbcTeacherDao.findAll();
+	List<Teacher> teachers = teacherService.findAll();
 	Teacher result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
 	    int choice = getIntFromScanner();
-	    Optional<Teacher> selectedTeacher = jdbcTeacherDao.findById(choice);
+	    Optional<Teacher> selectedTeacher = teacherService.findById(choice);
 	    if (selectedTeacher.isEmpty()) {
 		System.out.println("No such teacher.");
 	    } else {
@@ -139,12 +139,12 @@ public class TeachersMenu {
 	Teacher newTeacher = createTeacher();
 	newTeacher.setId(oldTeacher.getId());
 	newTeacher.getAddress().setId(oldTeacher.getAddress().getId());
-	jdbcTeacherDao.update(newTeacher);
+	teacherService.update(newTeacher);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteTeacher() {
-	jdbcTeacherDao.delete(selectTeacher().getId());
+	teacherService.delete(selectTeacher().getId());
 	System.out.println("Teacher deleted successfully.");
     }
 }

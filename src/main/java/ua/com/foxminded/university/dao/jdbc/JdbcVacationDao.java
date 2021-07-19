@@ -20,10 +20,12 @@ public class JdbcVacationDao implements VacationDao {
 
     private static final String CREATE = "INSERT INTO vacations (start_date, end_date) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM vacations WHERE id = ?";
+    private static final String FIND_BY_BOTH_DATES = "SELECT * FROM vacations WHERE start_date = ? AND end_date = ?";
     private static final String FIND_ALL = "SELECT * FROM vacations";
     private static final String UPDATE = "UPDATE vacations SET start_date = ?, end_date = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM vacations WHERE id = ?";
     private static final String FIND_BY_TEACHER_ID = "SELECT id, teacher_id, start_date, end_date from vacations WHERE teacher_id = ?";
+    private static final String COUNT_INTERSECTING_VACATIONS = "SELECT count(*) FROM vacations WHERE end_date >= ? AND start_date <= ?";
 
     private JdbcTemplate jdbcTemplate;
     private VacationMapper vacationMapper;
@@ -31,6 +33,12 @@ public class JdbcVacationDao implements VacationDao {
     public JdbcVacationDao(JdbcTemplate jdbcTemplate, VacationMapper vacationMapper) {
 	this.jdbcTemplate = jdbcTemplate;
 	this.vacationMapper = vacationMapper;
+    }
+
+    @Override
+    public int countIntersectingVacations(Vacation vacation) {
+	return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, vacation.getStartDate(),
+		vacation.getEndDate());
     }
 
     @Override
@@ -45,6 +53,16 @@ public class JdbcVacationDao implements VacationDao {
 	    return ps;
 	}, keyHolder);
 	vacation.setId((int) keyHolder.getKeys().get("id"));
+    }
+
+    @Override
+    public Optional<Vacation> findByBothDates(Vacation vacation) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
+		    vacation.getEndDate()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
     }
 
     @Override
@@ -72,7 +90,8 @@ public class JdbcVacationDao implements VacationDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    public List<Vacation> getVacationsByTeacherId(int id) {
+    @Override
+    public List<Vacation> findByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, vacationMapper, id);
     }
 }

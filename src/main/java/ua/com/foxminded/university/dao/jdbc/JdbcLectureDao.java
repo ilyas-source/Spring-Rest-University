@@ -1,14 +1,13 @@
 package ua.com.foxminded.university.dao.jdbc;
 
+import static java.util.function.Predicate.not;
+
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.function.Predicate.not;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,10 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.LectureMapper;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class JdbcLectureDao implements LectureDao {
@@ -28,6 +30,13 @@ public class JdbcLectureDao implements LectureDao {
     private static final String CREATE = "INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, " +
 	    "classroom_id) VALUES (?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM lectures WHERE id = ?";
+    private static final String FIND_BY_CLASSROOM_ID = "SELECT * FROM lectures WHERE classroom_id = ?";
+    private static final String FIND_BY_TEACHER_ID = "SELECT * FROM lectures WHERE teacher_id = ?";
+    private static final String FIND_BY_SUBJECT_ID = "SELECT * FROM lectures WHERE subject_id = ?";
+    private static final String FIND_BY_TIMESLOT_ID = "SELECT * FROM lectures WHERE timeslot_id = ?";
+    private static final String FIND_BY_DATE_TIME_CLASSROOM = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND classroom_id = ?";
+    private static final String FIND_BY_DATE_TIME_TEACHER = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ? AND teacher_id = ?";
+    private static final String FIND_BY_DATE_TIME = "SELECT * FROM lectures WHERE date = ? AND timeslot_id = ?";
     private static final String FIND_ALL = "SELECT * FROM lectures";
     private static final String UPDATE = "UPDATE lectures SET date = ?, timeslot_id = ?, " +
 	    "subject_id = ?,  teacher_id = ?, classroom_id = ? WHERE id = ?";
@@ -38,8 +47,6 @@ public class JdbcLectureDao implements LectureDao {
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
-    @Autowired
-    JdbcTimeslotDao timeslotDao;
 
     public JdbcLectureDao(JdbcTemplate jdbcTemplate, LectureMapper lectureMapper) {
 	this.jdbcTemplate = jdbcTemplate;
@@ -55,7 +62,7 @@ public class JdbcLectureDao implements LectureDao {
 	    PreparedStatement ps = connection
 		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 	    ps.setObject(1, lecture.getDate());
-	    ps.setObject(2, lecture.getTimeSlot().getId());
+	    ps.setObject(2, lecture.getTimeslot().getId());
 	    ps.setInt(3, lecture.getSubject().getId());
 	    ps.setInt(4, lecture.getTeacher().getId());
 	    ps.setInt(5, lecture.getClassroom().getId());
@@ -70,7 +77,7 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     @Transactional
     public void update(Lecture lecture) {
-	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeSlot().getId(), lecture.getSubject().getId(),
+	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
 	List<Group> newGroups = lecture.getGroups();
@@ -107,6 +114,52 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
+    public List<Lecture> findByClassroom(Classroom classroom) {
+	return jdbcTemplate.query(FIND_BY_CLASSROOM_ID, lectureMapper, classroom.getId());
+    }
+
+    @Override
+    public List<Lecture> findByTeacher(Teacher teacher) {
+	return jdbcTemplate.query(FIND_BY_TEACHER_ID, lectureMapper, teacher.getId());
+    }
+
+    @Override
+    public List<Lecture> findBySubject(Subject subject) {
+	return jdbcTemplate.query(FIND_BY_SUBJECT_ID, lectureMapper, subject.getId());
+    }
+
+    @Override
+    public List<Lecture> findByTimeslot(Timeslot timeslot) {
+	return jdbcTemplate.query(FIND_BY_TIMESLOT_ID, lectureMapper, timeslot.getId());
+    }
+
+    @Override
+    public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
+	try {
+	    return Optional.of(
+		    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper, date, timeslot.getId(),
+			    classroom.getId()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
+    public List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot) {
+	return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, date, timeslot.getId());
+    }
+
+    public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
+	try {
+	    return Optional.of(
+		    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date, timeslot.getId(),
+			    teacher.getId()));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
@@ -117,4 +170,5 @@ public class JdbcLectureDao implements LectureDao {
 	    jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
 	}
     }
+
 }

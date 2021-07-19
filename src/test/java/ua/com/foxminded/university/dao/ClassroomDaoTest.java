@@ -2,7 +2,11 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.classroomToCreate;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.classroomToUpdate;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,7 +27,7 @@ import ua.com.foxminded.university.model.Location;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class ClassroomDaoTest {
+public class ClassroomDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
 
@@ -31,6 +35,24 @@ class ClassroomDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ClassroomDao classroomDao;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectClassroom() {
+	Optional<Classroom> expected = Optional.of(expectedClassroom1);
+
+	Optional<Classroom> actual = classroomDao.findByName(expectedClassroom1.getName());
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenLocation_onFindByLocation_shouldReturnOptionalwithCorrectClassroom() {
+	Optional<Classroom> expected = Optional.of(expectedClassroom1);
+
+	Optional<Classroom> actual = classroomDao.findByLocation(expectedClassroom1.getLocation());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {
@@ -104,7 +126,7 @@ class ClassroomDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Location testLocation = new Location(4, "Test location", 1, 1);
 	Classroom classroomToCreate = new Classroom(4, testLocation, "Test room", 5);
 	Classroom classroomToUpdate = new Classroom(2, testLocation, "Test room", 5);

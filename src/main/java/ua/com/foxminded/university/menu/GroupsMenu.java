@@ -1,5 +1,9 @@
 package ua.com.foxminded.university.menu;
 
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,17 +11,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
-import static ua.com.foxminded.university.Menu.*;
+import ua.com.foxminded.university.service.GroupService;
 
 @Component
 public class GroupsMenu {
 
-    private JdbcGroupDao jdbcGroupDao;
+    private GroupService groupService;
 
-    public GroupsMenu(JdbcGroupDao jdbcGroupDao) {
-	this.jdbcGroupDao = jdbcGroupDao;
+    public GroupsMenu(GroupService groupService) {
+	this.groupService = groupService;
     }
 
     public String getStringOfGroups(List<Group> groups) {
@@ -30,11 +33,11 @@ public class GroupsMenu {
     }
 
     public void printGroups() {
-	System.out.println(getStringOfGroups(jdbcGroupDao.findAll()));
+	System.out.println(getStringOfGroups(groupService.findAll()));
     }
 
     public void addGroup() {
-	jdbcGroupDao.create(createGroup());
+	groupService.create(createGroup());
     }
 
     public Group createGroup() {
@@ -44,14 +47,14 @@ public class GroupsMenu {
     }
 
     public Group selectGroup() {
-	List<Group> groups = jdbcGroupDao.findAll();
+	List<Group> groups = groupService.findAll();
 	Group result = null;
-	boolean correctEntry = false;
+	var correctEntry = false;
 	while (!correctEntry) {
 	    System.out.println("Select a group:");
 	    System.out.print(getStringOfGroups(groups));
 	    int choice = getIntFromScanner();
-	    Optional<Group> selectedGroup = jdbcGroupDao.findById(choice);
+	    Optional<Group> selectedGroup = groupService.findById(choice);
 	    if (selectedGroup.isEmpty()) {
 		System.out.println("No such group, try again.");
 	    } else {
@@ -64,8 +67,8 @@ public class GroupsMenu {
 
     public List<Group> selectGroups() {
 	List<Group> result = new ArrayList<>();
-	boolean finished = false;
-	boolean correctEntry = false;
+	var finished = false;
+	var correctEntry = false;
 
 	while (!(finished && correctEntry)) {
 	    if (!result.isEmpty()) {
@@ -94,12 +97,12 @@ public class GroupsMenu {
 	Group oldGroup = selectGroup();
 	Group newGroup = createGroup();
 	newGroup.setId(oldGroup.getId());
-	jdbcGroupDao.update(newGroup);
+	groupService.update(newGroup);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteGroup() {
-	jdbcGroupDao.delete(selectGroup().getId());
+	groupService.delete(selectGroup().getId());
 	System.out.println("Group deleted successfully.");
     }
 }

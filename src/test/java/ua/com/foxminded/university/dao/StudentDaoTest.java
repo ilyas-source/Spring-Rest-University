@@ -2,9 +2,18 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress3;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress4;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress5;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress6;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent3;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.studentToCreate;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.studentToUpdate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +35,7 @@ import ua.com.foxminded.university.model.Student;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class StudentDaoTest {
+public class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
 	    "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' AND group_id = 2";
@@ -35,6 +44,33 @@ class StudentDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private StudentDao studentDao;
+
+    @Test
+    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectStudent() {
+	Optional<Student> expected = Optional.of(expectedStudent1);
+
+	Optional<Student> actual = studentDao.findByAddressId(3);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenNameAndBirthdate_onFindByNameAndBirthdate_shouldReturnOptionalwithCorrectStudent() {
+	Optional<Student> expected = Optional.of(expectedStudent1);
+
+	Optional<Student> actual = studentDao.findByNameAndBirthDate("Ivan", "Petrov", LocalDate.of(1980, 11, 1));
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenGroup_onFindbyGroup_shouldReturnCorrectListOfStudents() {
+	List<Student> expected = new ArrayList<>(Arrays.asList(expectedStudent1, expectedStudent3));
+
+	List<Student> actual = studentDao.findByGroup(expectedGroup1);
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewStudent_onCreate_shouldCreateStudent() {
@@ -108,7 +144,16 @@ class StudentDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    @Test
+    void givenGroup_onCountStudentsInGroup_shouldReturnCorrectNumber() {
+	int expected = 2;
+
+	int actual = studentDao.countInGroup(expectedGroup1);
+
+	assertEquals(expected, actual);
+    }
+
+    public interface TestData {
 	Student studentToCreate = Student.builder().firstName("Name").lastName("Lastname")
 		.id(5).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))
 		.email("test@mail").phone("+phone").address(expectedAddress3)

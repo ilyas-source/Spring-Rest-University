@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.*;
+import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.SubjectMapper;
 import ua.com.foxminded.university.model.Subject;
 
@@ -20,6 +20,8 @@ public class JdbcSubjectDao implements SubjectDao {
 
     private static final String CREATE = "INSERT INTO subjects (name, description) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = ?";
+    private static final String FIND_BY_NAME = "SELECT * FROM subjects WHERE name = ?";
+    private static final String COUNT_ASSIGNMENTS = "SELECT COUNT(*) FROM teachers_subjects WHERE subject_id = ?";
     private static final String FIND_ALL = "SELECT * FROM subjects";
     private static final String UPDATE = "UPDATE subjects SET name = ?, description = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM subjects WHERE id = ?";
@@ -58,6 +60,15 @@ public class JdbcSubjectDao implements SubjectDao {
     }
 
     @Override
+    public Optional<Subject> findByName(String name) {
+	try {
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_NAME, subjectMapper, name));
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
     public List<Subject> findAll() {
 	return jdbcTemplate.query(FIND_ALL, subjectMapper);
     }
@@ -72,7 +83,13 @@ public class JdbcSubjectDao implements SubjectDao {
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 
-    public List<Subject> getSubjectsByTeacherId(int id) {
+    @Override
+    public List<Subject> getByTeacherId(int id) {
 	return jdbcTemplate.query(FIND_BY_TEACHER_ID, subjectMapper, id);
+    }
+
+    @Override
+    public int countAssignments(Subject subject) {
+	return jdbcTemplate.queryForObject(COUNT_ASSIGNMENTS, Integer.class, subject.getId());
     }
 }

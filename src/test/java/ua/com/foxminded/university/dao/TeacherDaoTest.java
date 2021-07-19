@@ -2,10 +2,26 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToCreate;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToUpdate;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress1;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress2;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject3;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToUpdate;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.teacherToCreate;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.teacherToUpdate;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation2;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation3;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation4;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToCreate;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +45,7 @@ import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class TeacherDaoTest {
+public class TeacherDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
 
@@ -37,6 +53,24 @@ class TeacherDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private TeacherDao teacherDao;
+
+    @Test
+    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectTeacher() {
+	Optional<Teacher> expected = Optional.of(expectedTeacher1);
+
+	Optional<Teacher> actual = teacherDao.findByAddressId(1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenNameAndEmail_onFindByNameAndEmail_shouldReturnOptionalwithCorrectTeacher() {
+	Optional<Teacher> expected = Optional.of(expectedTeacher1);
+
+	Optional<Teacher> actual = teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com");
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewTeacher_onCreate_shouldCreateTeacher() {
@@ -110,7 +144,7 @@ class TeacherDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
 	List<Vacation> vacationsToCreate = new ArrayList<Vacation>(Arrays.asList(vacationToCreate));
 	List<Vacation> vacationsToUpdate = new ArrayList<Vacation>(Arrays.asList(vacationToUpdate));

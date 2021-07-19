@@ -2,12 +2,12 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.SqlParameterValue;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,7 @@ import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
 import ua.com.foxminded.university.model.Address;
+import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
 @Component
@@ -25,6 +26,9 @@ public class JdbcStudentDao implements StudentDao {
     private static final String CREATE = "INSERT INTO students (first_name, last_name, gender, birth_date," +
 	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
+    private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
+    private static final String FIND_BY_GROUP_ID = "SELECT * FROM students WHERE group_id = ?";
+    private static final String FIND_BY_NAME_AND_BIRTH = "SELECT * FROM students WHERE first_name = ? AND last_name = ? AND birth_date = ?";
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
 	    " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
@@ -85,8 +89,39 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    public Optional<Student> findByAddressId(int id) {
+	try {
+	    Optional<Student> found = Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
+	    return found;
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
+    public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
+	try {
+	    Optional<Student> found = Optional
+		    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, birthDate));
+	    return found;
+	} catch (EmptyResultDataAccessException e) {
+	    return Optional.empty();
+	}
+    }
+
+    @Override
     public List<Student> findAll() {
 	return jdbcTemplate.query(FIND_ALL, studentMapper);
+    }
+
+    @Override
+    public List<Student> findByGroup(Group group) {
+	return jdbcTemplate.query(FIND_BY_GROUP_ID, studentMapper, group.getId());
+    }
+
+    @Override
+    public int countInGroup(Group group) {
+	return (int) findAll().stream().filter(s -> s.getGroup().equals(group)).count();
     }
 
     @Override

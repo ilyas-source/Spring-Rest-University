@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.menu;
 
 import static java.util.Objects.isNull;
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -11,16 +13,16 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.Menu;
-import ua.com.foxminded.university.dao.jdbc.JdbcHolidayDao;
 import ua.com.foxminded.university.model.Holiday;
+import ua.com.foxminded.university.service.HolidayService;
 
 @Component
 public class HolidaysMenu {
 
-    private JdbcHolidayDao jdbcHolidayDao;
+    private HolidayService holidayService;
 
-    public HolidaysMenu(JdbcHolidayDao jdbcHolidayDao) {
-	this.jdbcHolidayDao = jdbcHolidayDao;
+    public HolidaysMenu(HolidayService holidayService) {
+	this.holidayService = holidayService;
     }
 
     public String getStringOfHolidays(List<Holiday> holidays) {
@@ -47,18 +49,18 @@ public class HolidaysMenu {
     }
 
     public void printHolidays() {
-	System.out.println(getStringOfHolidays(jdbcHolidayDao.findAll()));
+	System.out.println(getStringOfHolidays(holidayService.findAll()));
     }
 
     public Holiday selectHoliday() {
-	List<Holiday> holidays = jdbcHolidayDao.findAll();
+	List<Holiday> holidays = holidayService.findAll();
 	Holiday result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select holiday: ");
 	    System.out.print(getStringOfHolidays(holidays));
 	    int choice = getIntFromScanner();
-	    Optional<Holiday> selectedHoliday = jdbcHolidayDao.findById(choice);
+	    Optional<Holiday> selectedHoliday = holidayService.findById(choice);
 	    if (selectedHoliday.isEmpty()) {
 		System.out.println("No such holiday.");
 	    } else {
@@ -73,17 +75,17 @@ public class HolidaysMenu {
 	Holiday oldHoliday = selectHoliday();
 	Holiday newHoliday = createHoliday();
 	newHoliday.setId(oldHoliday.getId());
-	jdbcHolidayDao.update(newHoliday);
+	holidayService.update(newHoliday);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteHoliday() {
-	jdbcHolidayDao.delete(selectHoliday().getId());
+	holidayService.delete(selectHoliday().getId());
 	System.out.println("Holiday deleted successfully.");
     }
 
     public void addHoliday() {
-	jdbcHolidayDao.create(createHoliday());
+	holidayService.create(createHoliday());
     }
 
 }

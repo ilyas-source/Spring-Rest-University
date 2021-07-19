@@ -1,13 +1,18 @@
 package ua.com.foxminded.university.dao;
 
+import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation2;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacations;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToCreate;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationToUpdate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -19,17 +24,16 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcVacationDao;
 import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class VacationDaoTest {
+public class VacationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
 
     @Autowired
-    private JdbcVacationDao vacationDao;
+    private VacationDao vacationDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -104,7 +108,7 @@ class VacationDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Vacation vacationToCreate = new Vacation(5, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
 	Vacation vacationToUpdate = new Vacation(2, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));
 
@@ -114,5 +118,9 @@ class VacationDaoTest {
 	Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
 	List<Vacation> expectedVacations = new ArrayList<>(
 		Arrays.asList(expectedVacation1, expectedVacation2, expectedVacation3, expectedVacation4));
+
+	Vacation vacationGoingOverNewYear = new Vacation(LocalDate.of(2000, 12, 25), LocalDate.of(2001, 1, 10));
+
+	Map<Integer, Long> daysByYearsMap = Map.ofEntries(entry(2000, 20L));
     }
 }

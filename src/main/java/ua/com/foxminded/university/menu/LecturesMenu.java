@@ -1,40 +1,39 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getDateFromScanner;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.isNull;
-
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcLectureDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Timeslot;
-
-import static ua.com.foxminded.university.Menu.*;
+import ua.com.foxminded.university.service.LectureService;
 
 @Component
 public class LecturesMenu {
 
     private GroupsMenu groupsMenu;
-    private LectureDao jdbcLectureDao;
+    private LectureService lectureService;
     private SubjectsMenu subjectsMenu;
     private TeachersMenu teachersMenu;
     private ClassroomsMenu classroomsMenu;
     private TimeslotsMenu timeslotsMenu;
 
-    public LecturesMenu(GroupsMenu groupsMenu, LectureDao jdbcLectureDao, SubjectsMenu subjectsMenu,
+    public LecturesMenu(GroupsMenu groupsMenu, LectureService lectureService, SubjectsMenu subjectsMenu,
 	    TeachersMenu teachersMenu, ClassroomsMenu classroomsMenu, TimeslotsMenu timeslotsMenu) {
 	this.groupsMenu = groupsMenu;
-	this.jdbcLectureDao = jdbcLectureDao;
+	this.lectureService = lectureService;
 	this.subjectsMenu = subjectsMenu;
 	this.teachersMenu = teachersMenu;
 	this.classroomsMenu = classroomsMenu;
@@ -59,8 +58,8 @@ public class LecturesMenu {
 	result.append(
 		"Lecture on (" + subject.getId() + ")" + subject.getName() + " will take place on " + lecture.getDate()
 			+ ", from "
-			+ lecture.getTimeSlot().getBeginTime() + " to " + lecture.getTimeSlot().getEndTime() + " (timeslot #"
-			+ lecture.getTimeSlot().getId() + ")" + CR);
+			+ lecture.getTimeslot().getBeginTime() + " to " + lecture.getTimeslot().getEndTime() + " (timeslot #"
+			+ lecture.getTimeslot().getId() + ")" + CR);
 	result.append("Read by (" + teacher.getId() + ")" + teacher.getFirstName() + " " + teacher.getLastName() + " in ("
 		+ classroom.getId() + ")" + classroom.getName() + "." + CR);
 
@@ -71,11 +70,11 @@ public class LecturesMenu {
     }
 
     public void addLecture() {
-	jdbcLectureDao.create(createLecture());
+	lectureService.create(createLecture());
     }
 
     public void printLectures() {
-	System.out.println(getStringOfLectures(jdbcLectureDao.findAll()));
+	System.out.println(getStringOfLectures(lectureService.findAll()));
     }
 
     public Lecture createLecture() {
@@ -94,14 +93,14 @@ public class LecturesMenu {
     }
 
     public Lecture selectLecture() {
-	List<Lecture> lectures = jdbcLectureDao.findAll();
+	List<Lecture> lectures = lectureService.findAll();
 	Lecture result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select lecture: ");
 	    System.out.print(getStringOfLectures(lectures));
 	    int choice = getIntFromScanner();
-	    Optional<Lecture> selectedLecture = jdbcLectureDao.findById(choice);
+	    Optional<Lecture> selectedLecture = lectureService.findById(choice);
 	    if (isNull(selectedLecture.isEmpty())) {
 		System.out.println("No such lecture.");
 	    } else {
@@ -116,12 +115,12 @@ public class LecturesMenu {
 	Lecture oldLecture = selectLecture();
 	Lecture newLecture = createLecture();
 	newLecture.setId(oldLecture.getId());
-	jdbcLectureDao.update(newLecture);
+	lectureService.update(newLecture);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteLecture() {
-	jdbcLectureDao.delete(selectLecture().getId());
+	lectureService.delete(selectLecture().getId());
 	System.out.println("Lecture deleted successfully.");
     }
 }

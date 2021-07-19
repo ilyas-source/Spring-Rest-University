@@ -3,53 +3,45 @@ package ua.com.foxminded.university.dao.jdbc.mappers;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
+
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
+import ua.com.foxminded.university.dao.GroupDao;
+import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcClassroomDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTeacherDao;
-import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
-import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class LectureMapper implements RowMapper<Lecture> {
 
-    private JdbcSubjectDao jdbcSubjectDao;
-    private TeacherDao jdbcTeacherDao;
-    private ClassroomDao jdbcClassroomDao;
-    private JdbcGroupDao jdbcGroupDao;
-    private JdbcTimeslotDao jdbcTimeslotDao;
+    private SubjectDao subjectDao;
+    private TeacherDao teacherDao;
+    private ClassroomDao classroomDao;
+    private GroupDao groupDao;
+    private TimeslotDao timeslotDao;
 
-    public LectureMapper(JdbcSubjectDao jdbcSubjectDao, TeacherDao jdbcTeacherDao, ClassroomDao jdbcClassroomDao,
-	    JdbcGroupDao jdbcGroupDao, JdbcTimeslotDao jdbcTimeslotDao) {
-	this.jdbcSubjectDao = jdbcSubjectDao;
-	this.jdbcTeacherDao = jdbcTeacherDao;
-	this.jdbcClassroomDao = jdbcClassroomDao;
-	this.jdbcGroupDao = jdbcGroupDao;
-	this.jdbcTimeslotDao = jdbcTimeslotDao;
+    public LectureMapper(SubjectDao subjectDao, TeacherDao teacherDao, ClassroomDao classroomDao,
+	    GroupDao groupDao, TimeslotDao timeslotDao) {
+	this.subjectDao = subjectDao;
+	this.teacherDao = teacherDao;
+	this.classroomDao = classroomDao;
+	this.groupDao = groupDao;
+	this.timeslotDao = timeslotDao;
     }
 
     @Override
     public Lecture mapRow(ResultSet rs, int rowNum) throws SQLException {
-	Lecture lecture = new Lecture();
+	var lecture = new Lecture();
 	lecture.setId(rs.getInt("id"));
-	jdbcClassroomDao.findById(rs.getInt("classroom_id")).ifPresent(lecture::setClassroom);
+	classroomDao.findById(rs.getInt("classroom_id")).ifPresent(lecture::setClassroom);
 	lecture.setDate(rs.getObject("date", LocalDate.class));
-	lecture.setGroups(jdbcGroupDao.findByLectureId(rs.getInt("id")));
-	jdbcSubjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
-	jdbcTeacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);
-	jdbcTimeslotDao.findById(rs.getInt("timeslot_id")).ifPresent(lecture::setTimeSlot);
+	lecture.setGroups(groupDao.findByLectureId(rs.getInt("id")));
+	subjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
+	teacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);
+	timeslotDao.findById(rs.getInt("timeslot_id")).ifPresent(lecture::setTimeslot);
 
 	return lecture;
     }

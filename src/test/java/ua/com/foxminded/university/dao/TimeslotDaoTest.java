@@ -2,7 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot2;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToCreate;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToUpdate;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -19,17 +22,16 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcTimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class TimeslotDaoTest {
+public class TimeslotDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
 
     @Autowired
-    private JdbcTimeslotDao timeslotDao;
+    private TimeslotDao timeslotDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -100,7 +102,7 @@ class TimeslotDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
 	Timeslot timeslotToUpdate = new Timeslot(2, LocalTime.of(12, 00), LocalTime.of(12, 15));
 

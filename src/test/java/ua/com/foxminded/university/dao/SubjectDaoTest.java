@@ -2,7 +2,12 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjectsForTeacher1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToCreate;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.subjectToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,19 +23,34 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.model.Subject;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class SubjectDaoTest {
+public class SubjectDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
 
     @Autowired
-    private JdbcSubjectDao subjectDao;
+    private SubjectDao subjectDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectSubject() {
+	Optional<Subject> expected = Optional.of(expectedSubject1);
+
+	Optional<Subject> actual = subjectDao.findByName(expectedSubject1.getName());
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenSubject_onCountAssignments_shouldReturnCount() {
+	int actual = subjectDao.countAssignments(expectedSubject1);
+
+	assertEquals(1, actual);
+    }
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
@@ -102,7 +122,7 @@ class SubjectDaoTest {
 
     @Test
     void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
-	List<Subject> actual = subjectDao.getSubjectsByTeacherId(1);
+	List<Subject> actual = subjectDao.getByTeacherId(1);
 
 	assertEquals(expectedSubjectsForTeacher1, actual);
     }
@@ -110,12 +130,12 @@ class SubjectDaoTest {
     @Test
     void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
 
-	List<Subject> actual = subjectDao.getSubjectsByTeacherId(3);
+	List<Subject> actual = subjectDao.getByTeacherId(3);
 
 	assertThat(actual).isEmpty();
     }
 
-    interface TestData {
+    public interface TestData {
 	Subject subjectToCreate = new Subject(5, "test", "test");
 	Subject subjectToUpdate = new Subject(2, "test", "test");
 

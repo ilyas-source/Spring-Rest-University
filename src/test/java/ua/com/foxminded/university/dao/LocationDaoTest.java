@@ -2,7 +2,10 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation2;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.locationToCreate;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.locationToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,17 +21,16 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcLocationDao;
 import ua.com.foxminded.university.model.Location;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class LocationDaoTest {
+public class LocationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "building='test' AND floor=10 and room_number=100";
 
     @Autowired
-    private JdbcLocationDao locationDao;
+    private LocationDao locationDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -100,7 +102,7 @@ class LocationDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Location locationToCreate = new Location(4, "test", 10, 100);
 	Location locationToUpdate = new Location(2, "test", 10, 100);
 

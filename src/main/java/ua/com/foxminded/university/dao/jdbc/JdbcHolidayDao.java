@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.jdbc;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class JdbcHolidayDao implements HolidayDao {
 
     private static final String CREATE = "INSERT INTO holidays (date, name) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM holidays WHERE id = ?";
+    private static final String FIND_BY_DATE = "SELECT * FROM holidays WHERE date = ?";
     private static final String FIND_ALL = "SELECT * FROM holidays";
     private static final String UPDATE = "UPDATE holidays SET date = ?, name = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM holidays WHERE id = ?";
@@ -68,5 +70,10 @@ public class JdbcHolidayDao implements HolidayDao {
     @Override
     public void delete(int id) {
 	jdbcTemplate.update(DELETE_BY_ID, id);
+    }
+
+    @Override
+    public List<Holiday> findByDate(LocalDate date) {
+	return jdbcTemplate.query(FIND_BY_DATE, holidayMapper, date);
     }
 }

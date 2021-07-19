@@ -98,11 +98,11 @@ public class Lecture {
 	this.date = date;
     }
 
-    public Timeslot getTimeSlot() {
+    public Timeslot getTimeslot() {
 	return timeslot;
     }
 
-    public void setTimeSlot(Timeslot timeSlot) {
+    public void setTimeslot(Timeslot timeSlot) {
 	this.timeslot = timeSlot;
     }
 

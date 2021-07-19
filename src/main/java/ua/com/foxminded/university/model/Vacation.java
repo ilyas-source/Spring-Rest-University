@@ -79,4 +79,14 @@ public class Vacation {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Vacation [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+    }
+
+    public boolean intersects(Vacation vacation) {
+	return vacation.getStartDate().isAfter(this.endDate) ||
+		vacation.getEndDate().isBefore(this.startDate);
+    }
 }

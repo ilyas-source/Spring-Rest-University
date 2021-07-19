@@ -2,12 +2,21 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot2;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +38,7 @@ import ua.com.foxminded.university.model.Lecture;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class LectureDaoTest {
+public class LectureDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=1 AND teacher_id=1 AND classroom_id=1";
 
@@ -37,6 +46,71 @@ class LectureDaoTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private LectureDao lectureDao;
+
+    @Test
+    void givenClassroom_onFindByClassroom_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByClassroom(expectedClassroom1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTeacher_onFindByTeacher_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByTeacher(expectedTeacher1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenSubject_onFindBySubject_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findBySubject(expectedSubject1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenTimeslot_onFindByTimeslot_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByTimeslot(expectedTimeslot1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateAndTimeslot_onFindByDateTime_shouldReturnCorrectListOfLectures() {
+	List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+
+	List<Lecture> actual = lectureDao.findByDateTime(LocalDate.of(2020, 1, 1), expectedTimeslot1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateTimeslotAndClassroom_onFindByDateTimeClassroom_shouldReturnOptionalwithCorrectLecture() {
+	Optional<Lecture> expected = Optional.of(expectedLecture1);
+
+	Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2020, 1, 1), expectedTimeslot1,
+		expectedClassroom1);
+
+	assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenDateTimeslotAndTeacher_onFindByDateTimeTeacher_shouldReturnOptionalwithCorrectLecture() {
+	Optional<Lecture> expected = Optional.of(expectedLecture1);
+
+	Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2020, 1, 1), expectedTimeslot1,
+		expectedTeacher1);
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
@@ -99,15 +173,15 @@ class LectureDaoTest {
     void givenLecture_onUpdate_shouldUpdateCorrectly() {
 	int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-	boolean group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-	boolean group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
+	var group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	var group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	lectureDao.update(lectureToUpdate);
 
 	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
 		"lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-	boolean group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-	boolean group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
+	var group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
+	var group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
 
 	assertThat(rowsBeforeUpdate).isZero();
 	assertThat(rowsAfterUpdate).isEqualTo(1);
@@ -136,7 +210,7 @@ class LectureDaoTest {
 	return false;
     }
 
-    interface TestData {
+    public interface TestData {
 	List<Group> testGroups = new ArrayList<Group>(Arrays.asList(expectedGroup1, expectedGroup2));
 
 	Lecture lectureToCreate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
@@ -152,11 +226,11 @@ class LectureDaoTest {
 	List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
 	List<Group> expectedGroups2 = new ArrayList<>(Arrays.asList(expectedGroup1));
 
-	Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
+	Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
 		.id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
 		.teacher(expectedTeacher1).classroom(expectedClassroom1).build();
 
-	Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2000, 1, 2)).subject(expectedSubject2)
+	Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2020, 1, 2)).subject(expectedSubject2)
 		.id(2).timeslot(expectedTimeslot2).groups(expectedGroups2)
 		.teacher(expectedTeacher2).classroom(expectedClassroom2).build();
 

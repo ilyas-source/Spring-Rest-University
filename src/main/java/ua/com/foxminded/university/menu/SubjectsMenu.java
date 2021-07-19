@@ -1,5 +1,10 @@
 package ua.com.foxminded.university.menu;
 
+import static java.util.Objects.isNull;
+import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Menu.getIntFromScanner;
+import static ua.com.foxminded.university.Menu.scanner;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -7,20 +12,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import static java.util.Objects.isNull;
-
-import static ua.com.foxminded.university.Menu.*;
-
-import ua.com.foxminded.university.dao.jdbc.JdbcSubjectDao;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.service.SubjectService;
 
 @Component
 public class SubjectsMenu {
 
-    JdbcSubjectDao jdbcSubjectDao;
+    SubjectService subjectService;
 
-    public SubjectsMenu(JdbcSubjectDao jdbcSubjectDao) {
-	this.jdbcSubjectDao = jdbcSubjectDao;
+    public SubjectsMenu(SubjectService subjectService) {
+	this.subjectService = subjectService;
     }
 
     public String getStringOfSubjects(List<Subject> subjects) {
@@ -38,7 +39,7 @@ public class SubjectsMenu {
     }
 
     public void addSubject() {
-	jdbcSubjectDao.create(createSubject());
+	subjectService.create(createSubject());
     }
 
     public Subject createSubject() {
@@ -51,31 +52,31 @@ public class SubjectsMenu {
     }
 
     public void printSubjects() {
-	System.out.println(getStringOfSubjects(jdbcSubjectDao.findAll()));
+	System.out.println(getStringOfSubjects(subjectService.findAll()));
     }
 
     public void updateSubject() {
 	Subject oldSubject = selectSubject();
 	Subject newSubject = createSubject();
 	newSubject.setId(oldSubject.getId());
-	jdbcSubjectDao.update(newSubject);
+	subjectService.update(newSubject);
 	System.out.println("Overwrite successful.");
     }
 
     public void deleteSubject() {
-	jdbcSubjectDao.delete(selectSubject().getId());
+	subjectService.delete(selectSubject().getId());
 	System.out.println("Subject deleted successfully.");
     }
 
     public Subject selectSubject() {
-	List<Subject> subjects = jdbcSubjectDao.findAll();
+	List<Subject> subjects = subjectService.findAll();
 	Subject result = null;
 
 	while (isNull(result)) {
 	    System.out.println("Select subject: ");
 	    System.out.print(getStringOfSubjects(subjects));
 	    int choice = getIntFromScanner();
-	    Optional<Subject> selectedSubject = jdbcSubjectDao.findById(choice);
+	    Optional<Subject> selectedSubject = subjectService.findById(choice);
 	    if (selectedSubject.isEmpty()) {
 		System.out.println("No such subject.");
 	    } else {
@@ -88,9 +89,9 @@ public class SubjectsMenu {
 
     public List<Subject> selectSubjects() {
 	List<Subject> result = new ArrayList<>();
-	List<Subject> subjects = jdbcSubjectDao.findAll();
-	boolean finished = false;
-	boolean correctEntry = false;
+	List<Subject> subjects = subjectService.findAll();
+	var finished = false;
+	var correctEntry = false;
 
 	System.out.println("Selecting subjects.");
 

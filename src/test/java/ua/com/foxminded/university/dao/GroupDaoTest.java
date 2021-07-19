@@ -2,7 +2,11 @@ package ua.com.foxminded.university.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.groupToCreate;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.groupToUpdate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,19 +22,27 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.jdbc.JdbcGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-class GroupDaoTest {
+public class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";
 
     @Autowired
-    private JdbcGroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalwithCorrectGroup() {
+	Optional<Group> expected = Optional.of(expectedGroup1);
+
+	Optional<Group> actual = groupDao.findByName(expectedGroup1.getName());
+
+	assertEquals(expected, actual);
+    }
 
     @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {
@@ -100,7 +112,7 @@ class GroupDaoTest {
 	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
-    interface TestData {
+    public interface TestData {
 	Group groupToCreate = new Group(3, "test");
 	Group groupToUpdate = new Group(2, "test");
 
