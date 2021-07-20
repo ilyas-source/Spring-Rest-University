@@ -6,6 +6,8 @@ import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.HolidayDao;
@@ -16,6 +18,8 @@ import ua.com.foxminded.university.model.Vacation;
 
 @Service
 public class LectureService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     private LectureDao lectureDao;
     private HolidayDao holidayDao;
@@ -28,6 +32,7 @@ public class LectureService {
     }
 
     public void create(Lecture lecture) {
+	logger.debug("Creating a new lecture: {} ", lecture);
 	var canCreate = isClassroomCapacityEnough(lecture)
 		&& isClassroomAvailable(lecture)
 		&& isNotHoliday(lecture)
@@ -101,6 +106,7 @@ public class LectureService {
     }
 
     public void update(Lecture lecture) {
+	logger.debug("Updating lecture: {} ", lecture);
 	var canUpdate = isClassroomCapacityEnough(lecture)
 		&& isClassroomAvailable(lecture)
 		&& isNotHoliday(lecture)
@@ -122,6 +128,7 @@ public class LectureService {
     }
 
     public void delete(int id) {
+	logger.debug("Deleting lecture by id: {} ", id);
 	if (idExists(id)) {
 	    lectureDao.delete(id);
 	}

@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
@@ -21,6 +23,8 @@ import ua.com.foxminded.university.model.Location;
 
 @ExtendWith(MockitoExtension.class)
 class LocationServiceTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     @Mock
     private LocationDao locationDao;

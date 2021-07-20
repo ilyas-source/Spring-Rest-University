@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import ua.com.foxminded.university.model.Vacation;
 @Service
 public class TeacherService {
 
+    private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
+
     private TeacherDao teacherDao;
     private LectureDao lectureDao;
     private VacationService vacationService;
@@ -37,6 +41,7 @@ public class TeacherService {
     }
 
     public void create(Teacher teacher) {
+	logger.debug("Creating a new teacher: {} ", teacher);
 	var canCreate = isUnique(teacher) && hasEnoughVacationDays(teacher);
 	if (canCreate) {
 	    teacherDao.create(teacher);
@@ -68,6 +73,7 @@ public class TeacherService {
     }
 
     public void update(Teacher teacher) {
+	logger.debug("Updating teacher: {} ", teacher);
 	var canUpdate = canTeachAllScheduledLectures(teacher)
 		&& hasEnoughVacationDays(teacher);
 	if (canUpdate) {
@@ -89,6 +95,7 @@ public class TeacherService {
     }
 
     public void delete(int id) {
+	logger.debug("Deleting teacher by id: {} ", id);
 	if (teacherDao.findById(id)
 		.filter(this::hasNoLectures)
 		.isPresent()) {

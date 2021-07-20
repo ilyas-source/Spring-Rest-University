@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
@@ -15,6 +17,8 @@ import ua.com.foxminded.university.model.Vacation;
 @Service
 public class VacationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(VacationService.class);
+
     private VacationDao vacationDao;
 
     public VacationService(VacationDao vacationDao) {
@@ -22,6 +26,7 @@ public class VacationService {
     }
 
     public void create(Vacation vacation) {
+	logger.debug("Creating a new vacation: {} ", vacation);
 	if (hasNoIntersections(vacation)) {
 	    vacationDao.create(vacation);
 	}
@@ -72,6 +77,7 @@ public class VacationService {
     }
 
     public void update(Vacation vacation) {
+	logger.debug("Updating vacation: {} ", vacation);
 	if (hasNoIntersections(vacation)) {
 	    vacationDao.update(vacation);
 	}
@@ -84,6 +90,7 @@ public class VacationService {
     }
 
     private boolean idExists(int id) {
+	logger.debug("Deleting vacation by id: {} ", id);
 	return vacationDao.findById(id).isPresent();
     }
 

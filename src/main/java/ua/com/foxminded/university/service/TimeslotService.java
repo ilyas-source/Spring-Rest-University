@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import ua.com.foxminded.university.model.Timeslot;
 @PropertySource("classpath:university.properties")
 @Service
 public class TimeslotService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TimeslotService.class);
 
     private TimeslotDao timeslotDao;
     private LectureDao lectureDao;
@@ -31,6 +35,7 @@ public class TimeslotService {
     }
 
     public void create(Timeslot timeslot) {
+	logger.debug("Creating a new timeslot: {} ", timeslot);
 	if (hasNoIntersections(timeslot) && isLongEnough(timeslot)) {
 	    timeslotDao.create(timeslot);
 	}
@@ -58,12 +63,14 @@ public class TimeslotService {
     }
 
     public void update(Timeslot timeslot) {
+	logger.debug("Updating timeslot: {} ", timeslot);
 	if (hasNoIntersections(timeslot) && isLongEnough(timeslot)) {
 	    timeslotDao.update(timeslot);
 	}
     }
 
     public void delete(int id) {
+	logger.debug("Deleting timeslot by id: {} ", id);
 	if (timeslotDao.findById(id)
 		.filter(this::hasNoLecturesScheduled)
 		.isPresent()) {

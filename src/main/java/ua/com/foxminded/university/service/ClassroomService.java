@@ -3,6 +3,8 @@ package ua.com.foxminded.university.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
@@ -11,6 +13,8 @@ import ua.com.foxminded.university.model.Classroom;
 
 @Service
 public class ClassroomService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassroomService.class);
 
     private ClassroomDao classroomDao;
     private LectureDao lectureDao;
@@ -23,6 +27,7 @@ public class ClassroomService {
     }
 
     public void create(Classroom classroom) {
+	logger.debug("Creating a new classroom: {} ", classroom);
 	if (!isCapacityCorrect(classroom)) {
 	    return;
 	}
@@ -32,6 +37,7 @@ public class ClassroomService {
     }
 
     public void update(Classroom classroom) {
+	logger.debug("Updating classroom: {} ", classroom);
 	if (!isCapacityEnough(classroom)) {
 	    return;
 	}
@@ -55,6 +61,7 @@ public class ClassroomService {
     }
 
     public void delete(int id) {
+	logger.debug("Deleting classroom by id: {} ", id);
 	if (classroomDao.findById(id)
 		.filter(this::hasNoLectures)
 		.isPresent()) {

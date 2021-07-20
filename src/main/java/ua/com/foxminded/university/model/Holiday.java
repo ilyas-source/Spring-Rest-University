@@ -79,4 +79,9 @@ public class Holiday {
 	    return false;
 	return true;
     }
+
+    @Override
+    public String toString() {
+	return "Holiday [id=" + id + ", date=" + date + ", name=" + name + "]";
+    }
 }
