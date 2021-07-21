@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.TeacherBusyException;
+import ua.com.foxminded.university.exception.TeacherCannotTeachSubject;
+import ua.com.foxminded.university.exception.VacationInsufficientDaysException;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
@@ -42,26 +47,9 @@ public class TeacherService {
 
     public void create(Teacher teacher) {
 	logger.debug("Creating a new teacher: {} ", teacher);
-	var canCreate = isUnique(teacher) && hasEnoughVacationDays(teacher);
-	if (canCreate) {
-	    teacherDao.create(teacher);
-	}
-    }
-
-    private boolean hasEnoughVacationDays(Teacher teacher) {
-	int allowedDays = vacationDays.get(teacher.getDegree());
-	List<Vacation> vacations = teacher.getVacations();
-	Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
-	long maxDays = daysCountByYears.entrySet()
-		.stream()
-		.max(Comparator.comparing(Map.Entry::getValue))
-		.get()
-		.getValue();
-	return maxDays <= allowedDays;
-    }
-
-    public boolean isUnique(Teacher teacher) {
-	return teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()).isEmpty();
+	verifyIsUnique(teacher);
+	verifyhasEnoughVacationDays(teacher);
+	teacherDao.create(teacher);
     }
 
     public List<Teacher> findAll() {
@@ -74,32 +62,60 @@ public class TeacherService {
 
     public void update(Teacher teacher) {
 	logger.debug("Updating teacher: {} ", teacher);
-	var canUpdate = canTeachAllScheduledLectures(teacher)
-		&& hasEnoughVacationDays(teacher);
-	if (canUpdate) {
-	    teacherDao.update(teacher);
-	}
-    }
-
-    private boolean canTeachAllScheduledLectures(Teacher teacher) {
-	List<Subject> requiredSubjects = lectureDao.findByTeacher(teacher)
-		.stream()
-		.map(Lecture::getSubject)
-		.collect(Collectors.toList());
-
-	return teacher.getSubjects().containsAll(requiredSubjects);
-    }
-
-    private boolean hasNoLectures(Teacher teacher) {
-	return lectureDao.findByTeacher(teacher).isEmpty();
+	verifyCanTeachScheduledLectures(teacher);
+	verifyhasEnoughVacationDays(teacher);
+	teacherDao.update(teacher);
     }
 
     public void delete(int id) {
 	logger.debug("Deleting teacher by id: {} ", id);
-	if (teacherDao.findById(id)
-		.filter(this::hasNoLectures)
-		.isPresent()) {
-	    teacherDao.delete(id);
+	Optional<Teacher> teacher = teacherDao.findById(id);
+	verifyExists(teacher);
+	verifyHasNoLectures(teacher);
+	teacherDao.delete(id);
+    }
+
+    private void verifyhasEnoughVacationDays(Teacher teacher) {
+	int allowedDays = vacationDays.get(teacher.getDegree());
+	List<Vacation> vacations = teacher.getVacations();
+	Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
+	long maxDays = daysCountByYears.entrySet()
+		.stream()
+		.max(Comparator.comparing(Map.Entry::getValue))
+		.get()
+		.getValue();
+	if (maxDays > allowedDays) {
+	    throw new VacationInsufficientDaysException(
+		    String.format("Teacher has maximum %s vacation days per year, can't assign %s days", allowedDays, maxDays));
+	}
+    }
+
+    public void verifyIsUnique(Teacher teacher) {
+	if (teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()).isPresent()) {
+	    throw new EntityNotUniqueException(String.format("Teacher %s %s with email %s already exists, can't create duplicate",
+		    teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()));
+	}
+    }
+
+    private void verifyCanTeachScheduledLectures(Teacher teacher) {
+	List<Subject> requiredSubjects = lectureDao.findByTeacher(teacher)
+		.stream()
+		.map(Lecture::getSubject)
+		.collect(Collectors.toList());
+	if (!teacher.getSubjects().containsAll(requiredSubjects)) {
+	    throw new TeacherCannotTeachSubject("Updated teacher can't teach 1 or more of scheduled lectures");
+	}
+    }
+
+    private void verifyHasNoLectures(Optional<Teacher> teacher) {
+	if (!lectureDao.findByTeacher(teacher.get()).isEmpty()) {
+	    throw new TeacherBusyException("Teacher has scheduled lectures, can't delete");
+	}
+    }
+
+    private void verifyExists(Optional<Teacher> teacher) {
+	if (teacher.isEmpty()) {
+	    throw new EntityNotFoundException("Teacher not found, nothing to delete");
 	}
     }
 }

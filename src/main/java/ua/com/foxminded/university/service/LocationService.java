@@ -48,18 +48,18 @@ public class LocationService {
     public void delete(int id) {
 	logger.debug("Deleting location by id: {} ", id);
 	Optional<Location> location = locationDao.findById(id);
-	verifyLocationExists(location);
-	verifyLocationIsNotUsed(location);
+	verifyExists(location);
+	verifyIsNotUsed(location);
 	locationDao.delete(id);
     }
 
-    private void verifyLocationExists(Optional<Location> location) {
+    private void verifyExists(Optional<Location> location) {
 	if (location.isEmpty()) {
 	    throw new EntityNotFoundException("Location not found, nothing to delete");
 	}
     }
 
-    private void verifyLocationIsNotUsed(Optional<Location> location) {
+    private void verifyIsNotUsed(Optional<Location> location) {
 	Optional<Classroom> classroom = classroomDao.findByLocation(location.get());
 	if (classroom.isPresent()) {
 	    throw new LocationInUseException("Location is used for " + classroom.get().getName());

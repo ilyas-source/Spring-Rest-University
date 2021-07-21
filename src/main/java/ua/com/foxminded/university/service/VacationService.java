@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.VacationsIntersectionException;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
@@ -28,16 +29,38 @@ public class VacationService {
 
     public void create(Vacation vacation) {
 	logger.debug("Creating a new vacation: {} ", vacation);
-	if (hasNoIntersections(vacation)) {
-	    vacationDao.create(vacation);
-	}
+	verifyHasNoIntersections(vacation);
+	vacationDao.create(vacation);
     }
 
-    private boolean hasNoIntersections(Vacation vacation) {
+    public List<Vacation> findAll() {
+	return vacationDao.findAll();
+    }
+
+    public Optional<Vacation> findById(int id) {
+	return vacationDao.findById(id);
+    }
+
+    public void update(Vacation vacation) {
+	logger.debug("Updating vacation: {} ", vacation);
+	verifyHasNoIntersections(vacation);
+	vacationDao.update(vacation);
+    }
+
+    public void delete(int id) {
+	logger.debug("Deleting vacation by id: {} ", id);
+	verifyIdExists(id);
+	vacationDao.delete(id);
+    }
+
+    private void verifyHasNoIntersections(Vacation vacation) {
 	if (vacationDao.findByBothDates(vacation).isPresent()) {
-	    return true;
+	    return;
 	}
-	return vacationDao.countIntersectingVacations(vacation) == 0;
+	if (vacationDao.countIntersectingVacations(vacation) > 0) {
+	    throw new VacationsIntersectionException(
+		    "New vacation has intersections with existing vacations, can't create/update");
+	}
     }
 
     public Map<Integer, Long> countDaysByYears(List<Vacation> vacations) {
@@ -69,29 +92,8 @@ public class VacationService {
 	result.put(key, currentValue + increment);
     }
 
-    public List<Vacation> findAll() {
-	return vacationDao.findAll();
-    }
-
-    public Optional<Vacation> findById(int id) {
-	return vacationDao.findById(id);
-    }
-
-    public void update(Vacation vacation) {
-	logger.debug("Updating vacation: {} ", vacation);
-	if (hasNoIntersections(vacation)) {
-	    vacationDao.update(vacation);
-	}
-    }
-
-    public void delete(int id) {
-	logger.debug("Deleting vacation by id: {} ", id);
-	verifyIdExists(id);
-	vacationDao.delete(id);
-    }
-
     private void verifyIdExists(int id) {
-	if (!vacationDao.findById(id).isPresent()) {
+	if (vacationDao.findById(id).isEmpty()) {
 	    throw new EntityNotFoundException(String.format("Vacation with id#%s not found, nothing to delete", id));
 	}
     }
@@ -99,5 +101,4 @@ public class VacationService {
     public long getDaysDuration(Vacation vacation) {
 	return Duration.between(vacation.getStartDate().atStartOfDay(), vacation.getEndDate().atStartOfDay()).toDays() + 1;
     }
-
 }

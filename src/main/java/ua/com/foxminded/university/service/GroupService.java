@@ -50,12 +50,12 @@ public class GroupService {
     public void delete(int id) {
 	logger.debug("Deleting group by id: {} ", id);
 	Optional<Group> group = groupDao.findById(id);
-	verifyGroupExists(group);
+	verifyExists(group);
 	verifyHasNoStudents(group.get());
 	groupDao.delete(id);
     }
 
-    private void verifyGroupExists(Optional<Group> group) {
+    private void verifyExists(Optional<Group> group) {
 	if (group.isEmpty()) {
 	    throw new EntityNotFoundException("Group not found, nothing to delete");
 	}

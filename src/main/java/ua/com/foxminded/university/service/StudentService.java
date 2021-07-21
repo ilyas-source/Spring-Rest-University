@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupTooBigException;
 import ua.com.foxminded.university.model.Student;
 
 @PropertySource("classpath:university.properties")
@@ -30,18 +32,25 @@ public class StudentService {
 
     public void create(Student student) {
 	logger.debug("Creating a new student: {} ", student);
-	var canCreate = isUnique(student) && isNotOverpopulatingGroup(student);
-	if (canCreate) {
-	    studentDao.create(student);
+	verifyStudentIsUnique(student);
+	verifyStudentisNotOverpopulatingGroup(student);
+	studentDao.create(student);
+
+    }
+
+    public void verifyStudentIsUnique(Student student) {
+	if (studentDao.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate())
+		.isPresent()) {
+	    throw new EntityNotUniqueException(String.format("Student %s %s, born %s already exists, can't create duplicate",
+		    student.getFirstName(), student.getLastName(), student.getBirthDate()));
 	}
     }
 
-    public boolean isUnique(Student student) {
-	return studentDao.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate()).isEmpty();
-    }
-
-    public boolean isNotOverpopulatingGroup(Student student) {
-	return studentDao.countInGroup(student.getGroup()) <= maxStudentsInGroup - 1;
+    public void verifyStudentisNotOverpopulatingGroup(Student student) {
+	if (studentDao.countInGroup(student.getGroup()) > maxStudentsInGroup - 1) {
+	    throw new GroupTooBigException(
+		    String.format("Group limit of %s students reached, can't add more", maxStudentsInGroup));
+	}
     }
 
     public List<Student> findAll() {

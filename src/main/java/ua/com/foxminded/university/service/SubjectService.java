@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.SubjectAssignedToTeacherException;
+import ua.com.foxminded.university.exception.SubjectScheduledToLectureException;
 import ua.com.foxminded.university.model.Subject;
 
 @Service
@@ -26,13 +30,8 @@ public class SubjectService {
 
     public void create(Subject subject) {
 	logger.debug("Creating a new subject: {} ", subject);
-	if (nameIsNew(subject)) {
-	    subjectDao.create(subject);
-	}
-    }
-
-    private boolean nameIsNew(Subject subject) {
-	return subjectDao.findByName(subject.getName()).isEmpty();
+	verifyNameIsNew(subject);
+	subjectDao.create(subject);
     }
 
     public List<Subject> findAll() {
@@ -51,19 +50,35 @@ public class SubjectService {
     public void delete(int id) {
 	logger.debug("Deleting subject by id: {} ", id);
 	Optional<Subject> subject = subjectDao.findById(id);
-	var canDelete = subject.isPresent()
-		&& isNotAssigned(subject.get())
-		&& isNotScheduled(subject.get());
-	if (canDelete) {
-	    subjectDao.delete(id);
+	verifyExists(subject);
+	verifyIsNotAssigned(subject);
+	verifyIsNotScheduled(subject);
+	subjectDao.delete(id);
+    }
+
+    private void verifyNameIsNew(Subject subject) {
+	Optional<Subject> oldSubject = subjectDao.findByName(subject.getName());
+	if (oldSubject.isPresent()) {
+	    throw new EntityNotUniqueException(
+		    String.format("Subject %s already exists, can't create duplicate", oldSubject.get().getName()));
 	}
     }
 
-    private boolean isNotScheduled(Subject subject) {
-	return lectureDao.findBySubject(subject).isEmpty();
+    private void verifyExists(Optional<Subject> subject) {
+	if (subject.isEmpty()) {
+	    throw new EntityNotFoundException("Group not found, nothing to delete");
+	}
     }
 
-    private boolean isNotAssigned(Subject subject) {
-	return subjectDao.countAssignments(subject) == 0;
+    private void verifyIsNotScheduled(Optional<Subject> subject) {
+	if (!lectureDao.findBySubject(subject.get()).isEmpty()) {
+	    throw new SubjectScheduledToLectureException("Subject is sheduled for 1 or more lectures, can't delete");
+	}
+    }
+
+    private void verifyIsNotAssigned(Optional<Subject> subject) {
+	if (subjectDao.countAssignments(subject.get()) > 0) {
+	    throw new SubjectAssignedToTeacherException("Subject is assigned for 1 or more teachers, can't delete");
+	}
     }
 }
