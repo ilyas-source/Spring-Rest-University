@@ -85,7 +85,6 @@ public class ClassroomService {
 	}
 	verifyHasNoLectures(classroom.get());
 	classroomDao.delete(id);
-
     }
 
     private void verifyHasNoLectures(Classroom classroom) {

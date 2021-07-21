@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
 
 @Service
@@ -26,34 +29,37 @@ public class GroupService {
 
     public void create(Group group) {
 	logger.debug("Creating a new group: {} ", group);
-	if (isUniqueName(group)) {
-	    groupDao.create(group);
-	}
+	verifyNameIsUnique(group);
+	groupDao.create(group);
     }
 
     public void update(Group group) {
 	logger.debug("Updating group: {} ", group);
-	if (isUniqueName(group))
-	    groupDao.update(group);
+	verifyNameIsUnique(group);
+	groupDao.create(group);
     }
 
-    private boolean isUniqueName(Group group) {
+    private void verifyNameIsUnique(Group group) {
 	Optional<Group> groupByName = groupDao.findByName(group.getName());
-	return !(groupByName.isPresent()
-		&& (groupByName.get().getId() != group.getId()));
+	if ((groupByName.isPresent() && (groupByName.get().getId() != group.getId()))) {
+	    throw new EntityNotUniqueException(String.format("Group with name %s already exists", group.getName()));
+	}
     }
 
     public void delete(int id) {
 	logger.debug("Deleting group by id: {} ", id);
 	Optional<Group> group = groupDao.findById(id);
-	var canDelete = group.isPresent() && isEmpty(group.get());
-	if (canDelete) {
-	    groupDao.delete(id);
+	if (group.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Group with id #%s not found", id));
 	}
+	verifyHasNoStudents(group.get());
+	groupDao.delete(id);
     }
 
-    private boolean isEmpty(Group group) {
-	return studentDao.findByGroup(group).isEmpty();
+    private void verifyHasNoStudents(Group group) {
+	if (!studentDao.findByGroup(group).isEmpty()) {
+	    throw new GroupNotEmptyException("Group has assigned students, can't delete");
+	}
     }
 
     public List<Group> findAll() {
