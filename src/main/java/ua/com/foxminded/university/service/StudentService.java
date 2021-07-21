@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Student;
 
 @PropertySource("classpath:university.properties")
@@ -58,12 +59,13 @@ public class StudentService {
 
     public void delete(int id) {
 	logger.debug("Deleting student by id: {} ", id);
-	if (idExists(id)) {
-	    studentDao.delete(id);
-	}
+	verifyIdExists(id);
+	studentDao.delete(id);
     }
 
-    private boolean idExists(int id) {
-	return studentDao.findById(id).isPresent();
+    private void verifyIdExists(int id) {
+	if (!studentDao.findById(id).isPresent()) {
+	    throw new EntityNotFoundException(String.format("Student with id#%s not found, nothing to delete", id));
+	}
     }
 }

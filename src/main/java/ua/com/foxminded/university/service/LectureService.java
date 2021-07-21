@@ -13,6 +13,15 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.ClassroomBusyException;
+import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.GroupBusyException;
+import ua.com.foxminded.university.exception.LectureOnHolidayException;
+import ua.com.foxminded.university.exception.LectureOnWeekendException;
+import ua.com.foxminded.university.exception.TeacherBusyException;
+import ua.com.foxminded.university.exception.TeacherCannotTeachSubject;
+import ua.com.foxminded.university.exception.TeacherOnVacationException;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Vacation;
 
@@ -33,68 +42,8 @@ public class LectureService {
 
     public void create(Lecture lecture) {
 	logger.debug("Creating a new lecture: {} ", lecture);
-	var canCreate = isClassroomCapacityEnough(lecture)
-		&& isClassroomAvailable(lecture)
-		&& isNotHoliday(lecture)
-		&& isTeacherAvailable(lecture)
-		&& isTeacherWorking(lecture)
-		&& canTeacherTeach(lecture)
-		&& canAllGroupsAttend(lecture)
-		&& !isWeekEnd(lecture);
-	if (canCreate) {
-	    lectureDao.create(lecture);
-	}
-    }
-
-    private boolean isWeekEnd(Lecture lecture) {
-	var dayOfWeek = DayOfWeek.of(lecture.getDate().get(ChronoField.DAY_OF_WEEK));
-
-	return (dayOfWeek == DayOfWeek.SATURDAY) || (dayOfWeek == DayOfWeek.SUNDAY);
-    }
-
-    private boolean isClassroomAvailable(Lecture lecture) {
-	return lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
-		.isEmpty();
-
-    }
-
-    private boolean canAllGroupsAttend(Lecture lecture) {
-	List<Lecture> lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
-	return lecturesOnThisDateAndTime.stream()
-		.map(Lecture::getGroups)
-		.flatMap(List::stream)
-		.noneMatch(lecture.getGroups()::contains);
-    }
-
-    private boolean canTeacherTeach(Lecture lecture) {
-	var teacher = lecture.getTeacher();
-	var subject = lecture.getSubject();
-	return teacher.getSubjects().contains(subject);
-    }
-
-    private boolean isTeacherWorking(Lecture lecture) {
-	return lecture.getTeacher()
-		.getVacations()
-		.stream()
-		.noneMatch(v -> isDayWithinVacation(lecture.getDate(), v));
-    }
-
-    private boolean isDayWithinVacation(LocalDate date, Vacation vacation) {
-	return !date.isBefore(vacation.getStartDate()) && !date.isAfter(vacation.getEndDate());
-    }
-
-    private boolean isTeacherAvailable(Lecture lecture) {
-	return lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), lecture.getTeacher())
-		.isEmpty();
-    }
-
-    private boolean isNotHoliday(Lecture lecture) {
-	return holidayDao.findByDate(lecture.getDate()).isEmpty();
-    }
-
-    private boolean isClassroomCapacityEnough(Lecture lecture) {
-	int requiredCapacity = countStudentsInLecture(lecture);
-	return lecture.getClassroom().getCapacity() >= requiredCapacity;
+	verifyAllDataIsCorrect(lecture);
+	lectureDao.create(lecture);
     }
 
     public List<Lecture> findAll() {
@@ -107,16 +56,91 @@ public class LectureService {
 
     public void update(Lecture lecture) {
 	logger.debug("Updating lecture: {} ", lecture);
-	var canUpdate = isClassroomCapacityEnough(lecture)
-		&& isClassroomAvailable(lecture)
-		&& isNotHoliday(lecture)
-		&& isTeacherAvailable(lecture)
-		&& isTeacherWorking(lecture)
-		&& canTeacherTeach(lecture)
-		&& canAllGroupsAttend(lecture)
-		&& !isWeekEnd(lecture);
-	if (canUpdate) {
-	    lectureDao.update(lecture);
+	verifyClassroomCapacityIsEnough(lecture);
+	verifyAllDataIsCorrect(lecture);
+	lectureDao.update(lecture);
+    }
+
+    public void delete(int id) {
+	logger.debug("Deleting lecture by id: {} ", id);
+	verifyIdExists(id);
+	lectureDao.delete(id);
+    }
+
+    private void verifyAllDataIsCorrect(Lecture lecture) {
+	verifyClassroomIsAvailable(lecture);
+	verifyIsNotHoliday(lecture);
+	verifyTeacherIsNotBusy(lecture);
+	verifyTeacherIsWorking(lecture);
+	verifyTeacherCanTeachSubject(lecture);
+	verifyAllGroupsCanAttend(lecture);
+	verifyIsNotWeekEnd(lecture);
+    }
+
+    private void verifyIsNotWeekEnd(Lecture lecture) {
+	var dayOfWeek = DayOfWeek.of(lecture.getDate().get(ChronoField.DAY_OF_WEEK));
+	if ((dayOfWeek == DayOfWeek.SATURDAY) || (dayOfWeek == DayOfWeek.SUNDAY)) {
+	    throw new LectureOnWeekendException("Can't schedule lecture to a weekend");
+	}
+    }
+
+    private void verifyClassroomIsAvailable(Lecture lecture) {
+	if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+		.isEmpty()) {
+	    throw new ClassroomBusyException("Classroom is busy at this day and time");
+	}
+    }
+
+    private void verifyAllGroupsCanAttend(Lecture lecture) {
+	List<Lecture> lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
+	if (lecturesOnThisDateAndTime.stream()
+		.map(Lecture::getGroups)
+		.flatMap(List::stream)
+		.anyMatch(lecture.getGroups()::contains)) {
+	    throw new GroupBusyException("One or more groups will be attending another lecture");
+	}
+    }
+
+    private void verifyTeacherCanTeachSubject(Lecture lecture) {
+	var teacher = lecture.getTeacher();
+	var subject = lecture.getSubject();
+	if (!teacher.getSubjects().contains(subject)) {
+	    throw new TeacherCannotTeachSubject(String.format("Teacher %s %s can't teach %s", teacher.getFirstName(),
+		    teacher.getLastName(), subject.getName()));
+	}
+    }
+
+    private void verifyTeacherIsWorking(Lecture lecture) {
+	if (lecture.getTeacher()
+		.getVacations()
+		.stream()
+		.anyMatch(v -> isDayWithinVacation(lecture.getDate(), v))) {
+	    throw new TeacherOnVacationException("Teacher will be on a vacation, can't schedule lecture");
+	}
+    }
+
+    private boolean isDayWithinVacation(LocalDate date, Vacation vacation) {
+	return !date.isBefore(vacation.getStartDate()) && !date.isAfter(vacation.getEndDate());
+    }
+
+    private void verifyTeacherIsNotBusy(Lecture lecture) {
+	if (!lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), lecture.getTeacher())
+		.isEmpty()) {
+	    throw new TeacherBusyException("Teacher will be reading another lecture");
+	}
+    }
+
+    private void verifyIsNotHoliday(Lecture lecture) {
+	if (!holidayDao.findByDate(lecture.getDate()).isEmpty()) {
+	    throw new LectureOnHolidayException("Can't schedule lecture to a holiday");
+	}
+    }
+
+    private void verifyClassroomCapacityIsEnough(Lecture lecture) {
+	int requiredCapacity = countStudentsInLecture(lecture);
+	if (lecture.getClassroom().getCapacity() < requiredCapacity) {
+	    throw new ClassroomInvalidCapacityException(String.format("Classroom too small: required %s, but was %s",
+		    requiredCapacity, lecture.getClassroom().getCapacity()));
 	}
     }
 
@@ -127,14 +151,9 @@ public class LectureService {
 		.sum();
     }
 
-    public void delete(int id) {
-	logger.debug("Deleting lecture by id: {} ", id);
-	if (idExists(id)) {
-	    lectureDao.delete(id);
+    private void verifyIdExists(int id) {
+	if (!lectureDao.findById(id).isPresent()) {
+	    throw new EntityNotFoundException(String.format("Lecture with id#%s not found, nothing to delete", id));
 	}
-    }
-
-    private boolean idExists(int id) {
-	return lectureDao.findById(id).isPresent();
     }
 }

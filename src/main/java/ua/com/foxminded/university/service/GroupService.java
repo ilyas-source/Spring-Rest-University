@@ -33,10 +33,32 @@ public class GroupService {
 	groupDao.create(group);
     }
 
+    public List<Group> findAll() {
+	return groupDao.findAll();
+    }
+
+    public Optional<Group> findById(int id) {
+	return groupDao.findById(id);
+    }
+
     public void update(Group group) {
 	logger.debug("Updating group: {} ", group);
 	verifyNameIsUnique(group);
 	groupDao.create(group);
+    }
+
+    public void delete(int id) {
+	logger.debug("Deleting group by id: {} ", id);
+	Optional<Group> group = groupDao.findById(id);
+	verifyGroupExists(group);
+	verifyHasNoStudents(group.get());
+	groupDao.delete(id);
+    }
+
+    private void verifyGroupExists(Optional<Group> group) {
+	if (group.isEmpty()) {
+	    throw new EntityNotFoundException("Group not found, nothing to delete");
+	}
     }
 
     private void verifyNameIsUnique(Group group) {
@@ -46,27 +68,10 @@ public class GroupService {
 	}
     }
 
-    public void delete(int id) {
-	logger.debug("Deleting group by id: {} ", id);
-	Optional<Group> group = groupDao.findById(id);
-	if (group.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Group with id #%s not found", id));
-	}
-	verifyHasNoStudents(group.get());
-	groupDao.delete(id);
-    }
-
     private void verifyHasNoStudents(Group group) {
 	if (!studentDao.findByGroup(group).isEmpty()) {
 	    throw new GroupNotEmptyException("Group has assigned students, can't delete");
 	}
     }
 
-    public List<Group> findAll() {
-	return groupDao.findAll();
-    }
-
-    public Optional<Group> findById(int id) {
-	return groupDao.findById(id);
-    }
 }

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.LocationInUseException;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
 @Service
@@ -42,16 +45,24 @@ public class LocationService {
 	locationDao.update(location);
     }
 
-    private boolean hasNoClassrooms(Location location) {
-	return classroomDao.findByLocation(location).isEmpty();
-    }
-
     public void delete(int id) {
 	logger.debug("Deleting location by id: {} ", id);
-	if (locationDao.findById(id)
-		.filter(this::hasNoClassrooms)
-		.isPresent()) {
-	    locationDao.delete(id);
+	Optional<Location> location = locationDao.findById(id);
+	verifyLocationExists(location);
+	verifyLocationIsNotUsed(location);
+	locationDao.delete(id);
+    }
+
+    private void verifyLocationExists(Optional<Location> location) {
+	if (location.isEmpty()) {
+	    throw new EntityNotFoundException("Location not found, nothing to delete");
+	}
+    }
+
+    private void verifyLocationIsNotUsed(Optional<Location> location) {
+	Optional<Classroom> classroom = classroomDao.findByLocation(location.get());
+	if (classroom.isPresent()) {
+	    throw new LocationInUseException("Location is used for " + classroom.get().getName());
 	}
     }
 }

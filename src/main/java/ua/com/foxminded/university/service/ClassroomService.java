@@ -37,11 +37,33 @@ public class ClassroomService {
 	classroomDao.create(classroom);
     }
 
+    public List<Classroom> findAll() {
+	return classroomDao.findAll();
+    }
+
+    public Optional<Classroom> findById(int id) {
+	return classroomDao.findById(id);
+    }
+
     public void update(Classroom classroom) {
 	logger.debug("Updating classroom: {} ", classroom);
 	verifyCapacityIsEnough(classroom);
 	verifyNameIsUnique(classroom);
 	classroomDao.update(classroom);
+    }
+
+    public void delete(int id) {
+	logger.debug("Deleting classroom by id: {} ", id);
+	Optional<Classroom> classroom = classroomDao.findById(id);
+	verifyClassroomExists(classroom);
+	verifyHasNoLectures(classroom.get());
+	classroomDao.delete(id);
+    }
+
+    private void verifyClassroomExists(Optional<Classroom> classroom) {
+	if (classroom.isEmpty()) {
+	    throw new EntityNotFoundException("Classroom not found, nothing to delete");
+	}
     }
 
     private void verifyNameIsUnique(Classroom classroom) {
@@ -67,24 +89,6 @@ public class ClassroomService {
 	if (classroom.getCapacity() < 1) {
 	    throw new ClassroomInvalidCapacityException("Classroom capacity should not be less than 1");
 	}
-    }
-
-    public List<Classroom> findAll() {
-	return classroomDao.findAll();
-    }
-
-    public Optional<Classroom> findById(int id) {
-	return classroomDao.findById(id);
-    }
-
-    public void delete(int id) {
-	logger.debug("Deleting classroom by id: {} ", id);
-	Optional<Classroom> classroom = classroomDao.findById(id);
-	if (classroom.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Classroom with id #%s not found", id));
-	}
-	verifyHasNoLectures(classroom.get());
-	classroomDao.delete(id);
     }
 
     private void verifyHasNoLectures(Classroom classroom) {

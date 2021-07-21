@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Vacation;
 
 @Service
@@ -84,14 +85,15 @@ public class VacationService {
     }
 
     public void delete(int id) {
-	if (idExists(id)) {
-	    vacationDao.delete(id);
-	}
+	logger.debug("Deleting vacation by id: {} ", id);
+	verifyIdExists(id);
+	vacationDao.delete(id);
     }
 
-    private boolean idExists(int id) {
-	logger.debug("Deleting vacation by id: {} ", id);
-	return vacationDao.findById(id).isPresent();
+    private void verifyIdExists(int id) {
+	if (!vacationDao.findById(id).isPresent()) {
+	    throw new EntityNotFoundException(String.format("Vacation with id#%s not found, nothing to delete", id));
+	}
     }
 
     public long getDaysDuration(Vacation vacation) {
