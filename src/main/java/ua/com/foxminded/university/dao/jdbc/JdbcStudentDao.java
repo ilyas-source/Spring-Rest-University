@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,6 +24,8 @@ import ua.com.foxminded.university.model.Student;
 
 @Component
 public class JdbcStudentDao implements StudentDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcStudentDao.class);
 
     private static final String CREATE = "INSERT INTO students (first_name, last_name, gender, birth_date," +
 	    " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -47,6 +51,7 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     @Transactional
     public void create(Student student) {
+	logger.debug("Writing a new student to database: {} ", student);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcAddressDao.update(student.getAddress());
@@ -70,6 +75,7 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     @Transactional
     public void update(Student student) {
+	logger.debug("Updating student in database: {} ", student);
 	Address address = student.getAddress();
 	jdbcAddressDao.update(address);
 
@@ -126,6 +132,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting student by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,6 +20,8 @@ import ua.com.foxminded.university.model.Holiday;
 
 @Component
 public class JdbcHolidayDao implements HolidayDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcHolidayDao.class);
 
     private static final String CREATE = "INSERT INTO holidays (date, name) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM holidays WHERE id = ?";
@@ -36,6 +40,7 @@ public class JdbcHolidayDao implements HolidayDao {
 
     @Override
     public void create(Holiday holiday) {
+	logger.debug("Writing a new holiday to database: {} ", holiday);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -64,11 +69,13 @@ public class JdbcHolidayDao implements HolidayDao {
 
     @Override
     public void update(Holiday holiday) {
+	logger.debug("Updating holiday in database: {} ", holiday);
 	jdbcTemplate.update(UPDATE, holiday.getDate(), holiday.getName(), holiday.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting holiday by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

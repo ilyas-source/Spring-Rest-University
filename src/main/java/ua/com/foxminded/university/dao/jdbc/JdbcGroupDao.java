@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.model.Group;
 
 @Component
 public class JdbcGroupDao implements GroupDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcGroupDao.class);
 
     private static final String CREATE = "INSERT INTO groups (name) VALUES (?)";
     private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
@@ -37,6 +41,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void create(Group group) {
+	logger.debug("Writing a new group to database: {} ", group);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -69,11 +74,13 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public void update(Group group) {
+	logger.debug("Updating group in database: {} ", group);
 	jdbcTemplate.update(UPDATE, group.getName(), group.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting group by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

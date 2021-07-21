@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,6 +25,8 @@ import ua.com.foxminded.university.model.Vacation;
 
 @Component
 public class JdbcTeacherDao implements TeacherDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcTeacherDao.class);
 
     private static final String CREATE = "INSERT INTO teachers (first_name, last_name, gender, degree, "
 	    + "email, phone, address_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -53,6 +57,7 @@ public class JdbcTeacherDao implements TeacherDao {
     @Override
     @Transactional
     public void create(Teacher teacher) {
+	logger.debug("Writing a new teacher to database: {} ", teacher);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	addressDao.create(teacher.getAddress());
@@ -84,6 +89,7 @@ public class JdbcTeacherDao implements TeacherDao {
     @Override
     @Transactional
     public void update(Teacher teacher) {
+	logger.debug("Updating teacher in database: {} ", teacher);
 	addressDao.update(teacher.getAddress());
 
 	jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(),
@@ -156,6 +162,7 @@ public class JdbcTeacherDao implements TeacherDao {
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting teacher by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,6 +22,8 @@ import ua.com.foxminded.university.model.Location;
 
 @Component
 public class JdbcClassroomDao implements ClassroomDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcClassroomDao.class);
 
     private static final String CREATE = "INSERT INTO classrooms (location_id, name, capacity) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM classrooms WHERE id = ?";
@@ -42,6 +46,7 @@ public class JdbcClassroomDao implements ClassroomDao {
     @Override
     @Transactional
     public void create(Classroom classroom) {
+	logger.debug("Writing a new classroom to database: {} ", classroom);
 	LocationDao.create(classroom.getLocation());
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -73,6 +78,7 @@ public class JdbcClassroomDao implements ClassroomDao {
     @Override
     @Transactional
     public void update(Classroom classroom) {
+	logger.debug("Updating classroom in database: {} ", classroom);
 	LocationDao.update(classroom.getLocation());
 	jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
 		classroom.getId());
@@ -80,6 +86,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting classroom by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

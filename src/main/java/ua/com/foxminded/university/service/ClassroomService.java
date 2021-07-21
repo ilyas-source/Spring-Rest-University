@@ -11,7 +11,6 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomBusyException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
-import ua.com.foxminded.university.exception.ClassroomTooSmallException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
@@ -33,39 +32,40 @@ public class ClassroomService {
 
     public void create(Classroom classroom) {
 	logger.debug("Creating a new classroom: {} ", classroom);
-	verifyCapacityCorrect(classroom);
-	verifyIsUniqueName(classroom);
+	verifyCapacityIsCorrect(classroom);
+	verifyNameIsUnique(classroom);
 	classroomDao.create(classroom);
     }
 
     public void update(Classroom classroom) {
 	logger.debug("Updating classroom: {} ", classroom);
-	verifyCapacityEnough(classroom);
-	verifyIsUniqueName(classroom);
+	verifyCapacityIsEnough(classroom);
+	verifyNameIsUnique(classroom);
 	classroomDao.update(classroom);
     }
 
-    private void verifyIsUniqueName(Classroom classroom) {
+    private void verifyNameIsUnique(Classroom classroom) {
 	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
 	if ((classroomByName.isPresent() && (classroomByName.get().getId() != classroom.getId()))) {
 	    throw new EntityNotUniqueException(String.format("Classroom with name %s already exists", classroom.getName()));
 	}
     }
 
-    private void verifyCapacityEnough(Classroom classroom) {
+    private void verifyCapacityIsEnough(Classroom classroom) {
 	int requiredCapacity = lectureDao.findByClassroom(classroom)
 		.stream()
 		.map(lectureService::countStudentsInLecture)
 		.mapToInt(v -> v)
 		.max().orElse(0);
 	if (classroom.getCapacity() < requiredCapacity) {
-	    throw new ClassroomTooSmallException("Classroom too small for scheduled lectures");
+	    throw new ClassroomInvalidCapacityException(
+		    String.format("Classroom too small: required %s, but was %s", requiredCapacity, classroom.getCapacity()));
 	}
     }
 
-    private void verifyCapacityCorrect(Classroom classroom) {
+    private void verifyCapacityIsCorrect(Classroom classroom) {
 	if (classroom.getCapacity() < 1) {
-	    throw new ClassroomInvalidCapacityException("Classroom capacity invalid");
+	    throw new ClassroomInvalidCapacityException("Classroom capacity should not be less than 1");
 	}
     }
 
