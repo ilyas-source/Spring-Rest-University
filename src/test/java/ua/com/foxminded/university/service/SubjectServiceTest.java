@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.noLectures;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
 
 import java.util.Optional;
@@ -20,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.SubjectAssignedToTeacherException;
 import ua.com.foxminded.university.exception.SubjectScheduledToLectureException;
 import ua.com.foxminded.university.model.Subject;
@@ -106,11 +109,23 @@ class SubjectServiceTest {
     void givenFreeSubject_onDelete_shouldCallDaoDelete() {
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(0);
-
 	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(noLectures);
 
 	subjectService.delete(1);
 
 	verify(subjectDao).delete(1);
+    }
+
+    @Test
+    void givenSubjectWithOldNameAndNewId_onUpdate_shouldThrowException() {
+	String expected = "Subject Test Philosophy already exists, can't create duplicate";
+	Subject subject = new Subject(5, "Test Philosophy", "Test");
+	when(subjectDao.findByName("Test Philosophy")).thenReturn(Optional.of(expectedSubject2));
+
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> subjectService.update(subject));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(subjectDao, never()).update(subject);
     }
 }

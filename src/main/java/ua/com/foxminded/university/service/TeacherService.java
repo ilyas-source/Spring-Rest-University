@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
@@ -26,7 +25,6 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
-@PropertySource("classpath:university.properties")
 @Service
 public class TeacherService {
 
@@ -81,6 +79,9 @@ public class TeacherService {
 	int allowedDays = vacationDays.get(teacher.getDegree());
 	List<Vacation> vacations = teacher.getVacations();
 	Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
+	if (teacher.getVacations().isEmpty()) {
+	    return;
+	}
 	long maxDays = daysCountByYears.entrySet()
 		.stream()
 		.max(Comparator.comparing(Map.Entry::getValue))

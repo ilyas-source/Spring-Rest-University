@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.GroupBusyException;
 import ua.com.foxminded.university.exception.LectureOnHolidayException;
@@ -34,8 +34,7 @@ public class LectureService {
     private HolidayDao holidayDao;
     private StudentDao studentDao;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao,
-	    ClassroomService classroomService) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao) {
 	this.lectureDao = lectureDao;
 	this.holidayDao = holidayDao;
 	this.studentDao = studentDao;

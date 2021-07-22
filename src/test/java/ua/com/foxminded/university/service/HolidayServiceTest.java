@@ -69,4 +69,13 @@ class HolidayServiceTest {
 	assertEquals(expected, thrown.getMessage());
 	verify(holidayDao, never()).delete(1);
     }
+
+    @Test
+    void givenExistingGroupId_onDelete_shouldCallDaoDelete() {
+	when(holidayDao.findById(1)).thenReturn(Optional.of(expectedHoliday1));
+
+	holidayService.delete(1);
+
+	verify(holidayDao).delete(1);
+    }
 }

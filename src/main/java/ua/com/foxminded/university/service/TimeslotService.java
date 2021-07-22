@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
@@ -18,7 +17,6 @@ import ua.com.foxminded.university.exception.TimeslotTooShortException;
 import ua.com.foxminded.university.exception.TimeslotsIntersectionException;
 import ua.com.foxminded.university.model.Timeslot;
 
-@PropertySource("classpath:university.properties")
 @Service
 public class TimeslotService {
 

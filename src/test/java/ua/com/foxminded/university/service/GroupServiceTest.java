@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,6 +97,19 @@ class GroupServiceTest {
 	String expected = "Group with id=1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> groupService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(groupDao, never()).delete(1);
+    }
+
+    @Test
+    void givenNonEmptyGroup_onDelete_shouldThrowException() {
+	String expected = "Group has assigned students, can't delete";
+	when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
+	when(studentDao.findByGroup(expectedGroup1)).thenReturn(expectedStudents);
+
+	Throwable thrown = assertThrows(GroupNotEmptyException.class,
 		() -> groupService.delete(1));
 
 	assertEquals(expected, thrown.getMessage());
