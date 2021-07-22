@@ -26,6 +26,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.VacationInsufficientDaysException;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Teacher;
 
@@ -72,13 +73,16 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherWithTooLongVacations_onCreate_shouldThrowException() {
+	String expected = "Teacher has maximum 20 vacation days per year, can't assign 40 days";
 	Map<Integer, Long> daysByYearsMap = new HashMap<>();
 	daysByYearsMap.put(2000, 40L);
 	daysByYearsMap.put(2001, 20L);
 	when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
-	teacherService.create(expectedTeacher1);
+	Throwable thrown = assertThrows(VacationInsufficientDaysException.class,
+		() -> teacherService.create(expectedTeacher1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(teacherDao, never()).create(expectedTeacher1);
     }
 

@@ -20,6 +20,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.SubjectAssignedToTeacherException;
+import ua.com.foxminded.university.exception.SubjectScheduledToLectureException;
 import ua.com.foxminded.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,21 +67,27 @@ class SubjectServiceTest {
 
     @Test
     void givenAssignedSubjectId_onDelete_shouldThrowException() {
+	String expected = "Subject is assigned for 1 or more teachers, can't delete";
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3);
 
-	subjectService.delete(1);
+	Throwable thrown = assertThrows(SubjectAssignedToTeacherException.class,
+		() -> subjectService.delete(1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(subjectDao, never()).delete(1);
     }
 
     @Test
     void givenScheduledSubjectId_onDelete_shouldThrowException() {
+	String expected = "Subject is sheduled for 1 or more lectures, can't delete";
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
-	subjectService.delete(1);
+	Throwable thrown = assertThrows(SubjectScheduledToLectureException.class,
+		() -> subjectService.delete(1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(subjectDao, never()).delete(1);
     }
 

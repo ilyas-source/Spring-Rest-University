@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Group;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,11 +70,14 @@ class GroupServiceTest {
 
     @Test
     void givenGroupWithOldNameAndNewId_onUpdate_shouldThrowException() {
+	String expected = "Group with name ZI-08 already exists";
 	Group group = new Group(5, "ZI-08");
 	when(groupDao.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
 
-	groupService.update(group);
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> groupService.update(group));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(groupDao, never()).update(group);
     }
 

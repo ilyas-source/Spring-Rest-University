@@ -121,6 +121,8 @@ public class VacationDaoTest {
 
 	Vacation vacationGoingOverNewYear = new Vacation(LocalDate.of(2000, 12, 25), LocalDate.of(2001, 1, 10));
 
+	Vacation intersectingVacation = new Vacation(5, LocalDate.of(2000, 02, 01), LocalDate.of(2000, 02, 05));
+
 	Map<Integer, Long> daysByYearsMap = Map.ofEntries(entry(2000, 20L));
     }
 }

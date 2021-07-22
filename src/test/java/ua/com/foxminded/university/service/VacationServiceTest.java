@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacations;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationGoingOverNewYear;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.VacationsIntersectionException;
 import ua.com.foxminded.university.model.Vacation;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,11 +58,14 @@ class VacationServiceTest {
     }
 
     @Test
-    void givenIntersectingVacation_onCreate_shoultNotCallCreate() {
-	when(vacationDao.findAll()).thenReturn(expectedVacations);
+    void givenIntersectingVacation_onCreate_shoultThrowException() {
+	String expected = "New vacation has intersections with existing vacations, can't create/update";
+	when(vacationDao.countIntersectingVacations(expectedVacation1)).thenReturn(1);
 
-	vacationService.create(expectedVacation1);
+	Throwable thrown = assertThrows(VacationsIntersectionException.class,
+		() -> vacationService.create(expectedVacation1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(vacationDao, never()).create(expectedVacation1);
     }
 

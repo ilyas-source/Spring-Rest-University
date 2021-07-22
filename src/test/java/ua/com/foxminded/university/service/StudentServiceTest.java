@@ -21,6 +21,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,20 +66,26 @@ class StudentServiceTest {
 
     @Test
     void givenExcessiveStudent_onCreate_shouldThrowException() {
+	String expected = "Group limit of 30 students reached, can't add more";
 	when(studentDao.countInGroup(expectedStudent1.getGroup())).thenReturn(30);
 
-	studentService.create(expectedStudent1);
+	Throwable thrown = assertThrows(GroupOverflowException.class,
+		() -> studentService.create(expectedStudent1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(studentDao, never()).create(expectedStudent1);
     }
 
     @Test
     void givenNonUniqueStudent_onCreate_shouldThrowException() {
+	String expected = "Student Ivan Petrov, born 1980-11-01 already exists, can't create duplicate";
 	when(studentDao.findByNameAndBirthDate(expectedStudent1.getFirstName(), expectedStudent1.getLastName(),
 		expectedStudent1.getBirthDate())).thenReturn(Optional.of(expectedStudent2));
 
-	studentService.create(expectedStudent1);
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> studentService.create(expectedStudent1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(studentDao, never()).create(expectedStudent1);
     }
 

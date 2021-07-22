@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.LocationInUseException;
 import ua.com.foxminded.university.model.Location;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,11 +76,14 @@ class LocationServiceTest {
 
     @Test
     void givenUsedLocation_onDelete_shouldThrowException() {
+	String expected = "Location is used for Big physics auditory";
 	when(classroomDao.findByLocation(expectedLocation1)).thenReturn(Optional.of(expectedClassroom1));
 	when(locationDao.findById(expectedLocation1.getId())).thenReturn(Optional.of(expectedLocation1));
 
-	locationService.delete(expectedLocation1.getId());
+	Throwable thrown = assertThrows(LocationInUseException.class,
+		() -> locationService.delete(expectedLocation1.getId()));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(locationDao, never()).delete(expectedLocation1.getId());
     }
 

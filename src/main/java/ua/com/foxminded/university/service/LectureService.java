@@ -34,7 +34,8 @@ public class LectureService {
     private HolidayDao holidayDao;
     private StudentDao studentDao;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao,
+	    ClassroomService classroomService) {
 	this.lectureDao = lectureDao;
 	this.holidayDao = holidayDao;
 	this.studentDao = studentDao;
@@ -56,7 +57,6 @@ public class LectureService {
 
     public void update(Lecture lecture) {
 	logger.debug("Updating lecture: {} ", lecture);
-	verifyClassroomCapacityIsEnough(lecture);
 	verifyAllDataIsCorrect(lecture);
 	lectureDao.update(lecture);
     }
@@ -68,6 +68,7 @@ public class LectureService {
     }
 
     private void verifyAllDataIsCorrect(Lecture lecture) {
+	verifyClassroomCapacityIsEnough(lecture);
 	verifyClassroomIsAvailable(lecture);
 	verifyIsNotHoliday(lecture);
 	verifyTeacherIsNotBusy(lecture);

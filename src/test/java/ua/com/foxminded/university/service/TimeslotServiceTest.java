@@ -21,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.TimeslotTooShortException;
 import ua.com.foxminded.university.model.Timeslot;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,8 +85,12 @@ class TimeslotServiceTest {
 
     @Test
     void givenShortTimeslot_onCreate_shouldThrowException() {
-	timeslotService.create(timeslotToCreate);
+	String expected = "Minimum timeslot length 30 min, but was 15 min, can't create timeslot";
 
+	Throwable thrown = assertThrows(TimeslotTooShortException.class,
+		() -> timeslotService.create(timeslotToCreate));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(timeslotDao, never()).create(timeslotToCreate);
     }
 }
