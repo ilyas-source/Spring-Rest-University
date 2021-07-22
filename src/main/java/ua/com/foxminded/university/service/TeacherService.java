@@ -70,8 +70,10 @@ public class TeacherService {
     public void delete(int id) {
 	logger.debug("Deleting teacher by id: {} ", id);
 	Optional<Teacher> teacher = teacherDao.findById(id);
-	verifyExists(teacher);
-	verifyHasNoLectures(teacher);
+	if (teacher.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Teacher with id=%s not found, nothing to delete", id));
+	}
+	verifyHasNoLectures(teacher.get());
 	teacherDao.delete(id);
     }
 
@@ -107,15 +109,9 @@ public class TeacherService {
 	}
     }
 
-    private void verifyHasNoLectures(Optional<Teacher> teacher) {
-	if (!lectureDao.findByTeacher(teacher.get()).isEmpty()) {
+    private void verifyHasNoLectures(Teacher teacher) {
+	if (!lectureDao.findByTeacher(teacher).isEmpty()) {
 	    throw new TeacherBusyException("Teacher has scheduled lectures, can't delete");
-	}
-    }
-
-    private void verifyExists(Optional<Teacher> teacher) {
-	if (teacher.isEmpty()) {
-	    throw new EntityNotFoundException("Teacher not found, nothing to delete");
 	}
     }
 }

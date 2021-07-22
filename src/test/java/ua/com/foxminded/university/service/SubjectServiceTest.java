@@ -1,11 +1,13 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
 
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Subject;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,7 +64,7 @@ class SubjectServiceTest {
     }
 
     @Test
-    void givenAssignedSubjectId_onDelete_shouldNotCallDaoDelete() {
+    void givenAssignedSubjectId_onDelete_shouldThrowException() {
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3);
 
@@ -71,7 +74,7 @@ class SubjectServiceTest {
     }
 
     @Test
-    void givenScheduledSubjectId_onDelete_shouldNotCallDaoDelete() {
+    void givenScheduledSubjectId_onDelete_shouldThrowException() {
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
@@ -81,9 +84,13 @@ class SubjectServiceTest {
     }
 
     @Test
-    void givenIncorrectSubjectId_onDelete_shouldNotCallDaoDelete() {
-	subjectService.delete(1);
+    void givenIncorrectSubjectId_onDelete_shouldThrowException() {
+	String expected = "Subject with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> subjectService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(subjectDao, never()).delete(1);
     }
 }

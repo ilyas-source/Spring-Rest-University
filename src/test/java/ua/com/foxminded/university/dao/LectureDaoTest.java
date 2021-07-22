@@ -234,6 +234,10 @@ public class LectureDaoTest {
 		.id(2).timeslot(expectedTimeslot2).groups(expectedGroups2)
 		.teacher(expectedTeacher2).classroom(expectedClassroom2).build();
 
+	Lecture lectureWithTeacherOnVacation = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
+		.id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
+		.teacher(expectedTeacher1).classroom(expectedClassroom1).build();
+
 	List<Lecture> expectedLectures = new ArrayList<>(Arrays.asList(expectedLecture1, expectedLecture2));
     }
 }

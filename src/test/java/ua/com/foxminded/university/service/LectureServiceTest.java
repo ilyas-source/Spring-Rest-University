@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,10 +11,10 @@ import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLe
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToCreate;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureWithTeacherOnVacation;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Lecture;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,7 +59,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTooSmallClassroom_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithTooSmallClassroom_onCreate_shouldThrowException() {
 	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
 
 	lectureService.create(expectedLecture1);
@@ -66,7 +68,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureOnHoliday_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureOnHoliday_onCreate_shouldThrowException() {
 	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
 	lectureService.create(expectedLecture1);
@@ -75,14 +77,14 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureOnSunday_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureOnSunday_onCreate_shouldThrowException() {
 	lectureService.create(lectureToCreate);
 
 	verify(lectureDao, never()).create(lectureToCreate);
     }
 
     @Test
-    void givenLectureWithBusyTeacher_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithBusyTeacher_onCreate_shouldThrowException() {
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
@@ -92,18 +94,15 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTeacherOnVacation_onCreate_shouldNotCallDaoCreate() {
-	LocalDate dateBackup = expectedLecture1.getDate();
-	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
+    void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() {
 
-	lectureService.create(expectedLecture1);
+	lectureService.create(lectureWithTeacherOnVacation);
 
-	expectedLecture1.setDate(dateBackup);
-	verify(lectureDao, never()).create(expectedLecture1);
+	verify(lectureDao, never()).create(lectureWithTeacherOnVacation);
     }
 
     @Test
-    void givenLectureWithTeacherCantTeach_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithTeacherCantTeach_onCreate_shouldThrowException() {
 	expectedLecture1.setSubject(expectedSubject4);
 
 	lectureService.create(expectedLecture1);
@@ -113,7 +112,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithBusyGroup_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithBusyGroup_onCreate_shouldThrowException() {
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
 	lectureService.create(expectedLecture1);
@@ -122,7 +121,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithBusyClassroom_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithOccupiedClassroom_onCreate_shouldThrowException() {
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
@@ -139,7 +138,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTooSmallClassroom_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithTooSmallClassroom_onUpdate_shouldThrowException() {
 	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
 
 	lectureService.update(expectedLecture1);
@@ -148,7 +147,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureOnHoliday_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureOnHoliday_onUpdate_shouldThrowException() {
 	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
 	lectureService.update(expectedLecture1);
@@ -157,14 +156,14 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureOnSunday_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureOnSunday_onUpdate_shouldThrowException() {
 	lectureService.update(lectureToUpdate);
 
 	verify(lectureDao, never()).update(lectureToUpdate);
     }
 
     @Test
-    void givenLectureWithBusyTeacher_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithBusyTeacher_onUpdate_shouldThrowException() {
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
@@ -174,18 +173,15 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTeacherOnVacation_onUpdate_shouldNotCallDaoUpdate() {
-	LocalDate dateBackup = expectedLecture1.getDate();
-	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
+    void givenLectureWithTeacherOnVacation_onUpdate_shouldThrowException() {
 
-	lectureService.update(expectedLecture1);
+	lectureService.update(lectureWithTeacherOnVacation);
 
-	expectedLecture1.setDate(dateBackup);
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherCantTeach_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithTeacherCantTeach_onUpdate_shouldThrowException() {
 	expectedLecture1.setSubject(expectedSubject4);
 
 	lectureService.update(expectedLecture1);
@@ -195,7 +191,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithBusyGroup_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithBusyGroup_onUpdate_shouldThrowException() {
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
 	lectureService.update(expectedLecture1);
@@ -204,7 +200,7 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithBusyClassroom_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithOccupiedClassroom_onUpdate_shouldThrowException() {
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
@@ -230,9 +226,13 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenIncorrectLectureId_onDelete_shouldNotCallDaoDelete() {
-	lectureService.delete(1);
+    void givenIncorrectLectureId_onDelete_shouldThrowException() {
+	String expected = "Lecture with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> lectureService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).delete(1);
     }
 }

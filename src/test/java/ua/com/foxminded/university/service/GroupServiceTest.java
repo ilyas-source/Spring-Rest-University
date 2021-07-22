@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Group;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,7 +68,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithOldNameAndNewId_onUpdate_shouldNotCallDaoCreate() {
+    void givenGroupWithOldNameAndNewId_onUpdate_shouldThrowException() {
 	Group group = new Group(5, "ZI-08");
 	when(groupDao.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
 
@@ -85,9 +87,13 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenIncorrectGroupId_onDelete_shouldNotCallDaoDelete() {
-	groupService.delete(1);
+    void givenIncorrectGroupId_onDelete_shouldThrowException() {
+	String expected = "Group with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> groupService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(groupDao, never()).delete(1);
     }
 }

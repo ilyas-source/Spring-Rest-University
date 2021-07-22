@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
@@ -55,21 +55,15 @@ public class ClassroomService {
     public void delete(int id) {
 	logger.debug("Deleting classroom by id: {} ", id);
 	Optional<Classroom> classroom = classroomDao.findById(id);
-	verifyExists(classroom);
+	if (classroom.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Classroom with id=%s not found, nothing to delete", id));
+	}
 	verifyHasNoLectures(classroom.get());
 	classroomDao.delete(id);
     }
 
-    private void verifyExists(Optional<Classroom> classroom) {
-	if (classroom.isEmpty()) {
-	    throw new EntityNotFoundException("Classroom not found, nothing to delete");
-	}
-    }
-
     private void verifyNameIsUnique(Classroom classroom) {
 	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
-	logger.debug("classroomByName.get().getId() {}", classroomByName.get().getId());
-	logger.debug("classroom.getId() {}", classroom.getId());
 	if ((classroomByName.isPresent() && (classroomByName.get().getId() != classroom.getId()))) {
 	    throw new EntityNotUniqueException(String.format("Classroom with name %s already exists", classroom.getName()));
 	}

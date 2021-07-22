@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
@@ -23,8 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
@@ -94,9 +92,8 @@ class ClassroomServiceTest {
 	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(501);
 	when(lectureService.countStudentsInLecture(expectedLecture2)).thenReturn(200);
 
-	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class, () -> {
-	    classroomService.update(expectedClassroom1);
-	});
+	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class,
+		() -> classroomService.update(expectedClassroom1));
 
 	assertEquals(expected, thrown.getMessage());
 	verify(classroomDao, never()).update(expectedClassroom1);
@@ -108,9 +105,7 @@ class ClassroomServiceTest {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 
-	Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> {
-	    classroomService.delete(1);
-	});
+	Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> classroomService.delete(1));
 
 	assertEquals(expected, thrown.getMessage());
 	verify(classroomDao, never()).delete(1);
@@ -119,41 +114,32 @@ class ClassroomServiceTest {
     @Test
     void givenClassroomWithExistingName_onCreate_shouldThrowException() {
 	String expected = "Classroom with name Big physics auditory already exists";
-	when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
-	String nameBackup = expectedClassroom2.getName();
-	expectedClassroom2.setName(expectedClassroom1.getName());
+	when(classroomDao.findByName(duplicateNameClassroom.getName())).thenReturn(Optional.of(expectedClassroom1));
 
-	Throwable thrown = assertThrows(EntityNotUniqueException.class, () -> {
-	    classroomService.create(expectedClassroom2);
-	});
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> classroomService.create(duplicateNameClassroom));
 
-	expectedClassroom2.setName(nameBackup);
 	assertEquals(expected, thrown.getMessage());
-	verify(classroomDao, never()).create(expectedClassroom1);
+	verify(classroomDao, never()).create(duplicateNameClassroom);
     }
 
     @Test
     void givenClassroomWithInvalidCapacity_onCreate_shouldThrowException() {
 	String expected = "Classroom capacity should not be less than 1";
-	int capacityBackup = expectedClassroom1.getCapacity();
-	expectedClassroom1.setCapacity(-5);
 
-	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class, () -> {
-	    classroomService.create(expectedClassroom1);
-	});
+	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class,
+		() -> classroomService.create(invalidCapacityClassroom));
 
-	expectedClassroom1.setCapacity(capacityBackup);
 	assertEquals(expected, thrown.getMessage());
-	verify(classroomDao, never()).create(expectedClassroom1);
+	verify(classroomDao, never()).create(invalidCapacityClassroom);
     }
 
     @Test
     void givenIncorrectClassroomId_onDelete_shouldThrowException() {
-	String expected = "Classroom not found, nothing to delete";
+	String expected = "Classroom with id=1 not found, nothing to delete";
 
-	Throwable thrown = assertThrows(EntityNotFoundException.class, () -> {
-	    classroomService.delete(1);
-	});
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> classroomService.delete(1));
 
 	assertEquals(expected, thrown.getMessage());
 	verify(classroomDao, never()).delete(1);

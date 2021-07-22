@@ -63,8 +63,10 @@ public class TimeslotService {
     public void delete(int id) {
 	logger.debug("Deleting timeslot by id: {} ", id);
 	Optional<Timeslot> timeslot = timeslotDao.findById(id);
-	verifyExists(timeslot);
-	verifyHasNoLecturesScheduled(timeslot);
+	if (timeslot.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Timeslot with id=%s not found, nothing to delete", id));
+	}
+	verifyHasNoLecturesScheduled(timeslot.get());
 	timeslotDao.delete(id);
     }
 
@@ -88,14 +90,8 @@ public class TimeslotService {
 	}
     }
 
-    private void verifyExists(Optional<Timeslot> timeslot) {
-	if (timeslot.isEmpty()) {
-	    throw new EntityNotFoundException("Timeslot not found, nothing to delete");
-	}
-    }
-
-    private void verifyHasNoLecturesScheduled(Optional<Timeslot> timeslot) {
-	if (!lectureDao.findByTimeslot(timeslot.get()).isEmpty()) {
+    private void verifyHasNoLecturesScheduled(Timeslot timeslot) {
+	if (!lectureDao.findByTimeslot(timeslot).isEmpty()) {
 	    throw new TimeslotInUseException("Timeslot has sheduled lectures, can't delete");
 	}
     }

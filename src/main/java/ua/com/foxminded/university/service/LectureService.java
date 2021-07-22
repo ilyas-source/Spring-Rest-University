@@ -87,7 +87,7 @@ public class LectureService {
     private void verifyClassroomIsAvailable(Lecture lecture) {
 	if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
 		.isEmpty()) {
-	    throw new ClassroomOccupiedException("Classroom is busy at this day and time");
+	    throw new ClassroomOccupiedException("Classroom is occupied at this day and time");
 	}
     }
 
@@ -153,7 +153,7 @@ public class LectureService {
 
     private void verifyIdExists(int id) {
 	if (!lectureDao.findById(id).isPresent()) {
-	    throw new EntityNotFoundException(String.format("Lecture with id#%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Lecture with id=%s not found, nothing to delete", id));
 	}
     }
 }

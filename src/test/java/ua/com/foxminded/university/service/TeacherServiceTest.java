@@ -2,6 +2,7 @@ package ua.com.foxminded.university.service;
 
 import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,6 +25,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Teacher;
 
@@ -69,7 +71,7 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenTeacherWithTooLongVacations_onCreate_shouldNotCallDaoCreate() {
+    void givenTeacherWithTooLongVacations_onCreate_shouldThrowException() {
 	Map<Integer, Long> daysByYearsMap = new HashMap<>();
 	daysByYearsMap.put(2000, 40L);
 	daysByYearsMap.put(2001, 20L);
@@ -99,9 +101,13 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenIncorrectTeacherId_onDelete_shouldNotCallDaoDelete() {
-	teacherService.delete(1);
+    void givenIncorrectTeacherId_onDelete_shouldThrowException() {
+	String expected = "Teacher with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> teacherService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(teacherDao, never()).delete(1);
     }
 }

@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.HolidayDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Holiday;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,9 +60,13 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenIncorrectHolidayId_onDelete_shouldNotCallDaoDelete() {
-	holidayService.delete(1);
+    void givenIncorrectHolidayId_onDelete_shouldThrowException() {
+	String expected = "Holiday with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> holidayService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(holidayDao, never()).delete(1);
     }
 }

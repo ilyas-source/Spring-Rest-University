@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.TimeslotDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Timeslot;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,14 +72,18 @@ class TimeslotServiceTest {
     }
 
     @Test
-    void givenIncorrectTimeslotId_onDelete_shouldNotCallDaoDelete() {
-	timeslotService.delete(1);
+    void givenIncorrectTimeslotId_onDelete_shouldThrowException() {
+	String expected = "Timeslot with id=1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> timeslotService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(timeslotDao, never()).delete(1);
     }
 
     @Test
-    void givenShortTimeslot_onCreate_shouldNotCallCreate() {
+    void givenShortTimeslot_onCreate_shouldThrowException() {
 	timeslotService.create(timeslotToCreate);
 
 	verify(timeslotDao, never()).create(timeslotToCreate);

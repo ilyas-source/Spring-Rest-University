@@ -30,7 +30,7 @@ public class SubjectService {
 
     public void create(Subject subject) {
 	logger.debug("Creating a new subject: {} ", subject);
-	verifyNameIsNew(subject);
+	verifyNameIsUnique(subject);
 	subjectDao.create(subject);
     }
 
@@ -44,40 +44,37 @@ public class SubjectService {
 
     public void update(Subject subject) {
 	logger.debug("Updating subject: {} ", subject);
+	verifyNameIsUnique(subject);
 	subjectDao.update(subject);
     }
 
     public void delete(int id) {
 	logger.debug("Deleting subject by id: {} ", id);
 	Optional<Subject> subject = subjectDao.findById(id);
-	verifyExists(subject);
-	verifyIsNotAssigned(subject);
-	verifyIsNotScheduled(subject);
+	if (subject.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Subject with id=%s not found, nothing to delete", id));
+	}
+	verifyIsNotAssigned(subject.get());
+	verifyIsNotScheduled(subject.get());
 	subjectDao.delete(id);
     }
 
-    private void verifyNameIsNew(Subject subject) {
-	Optional<Subject> oldSubject = subjectDao.findByName(subject.getName());
-	if (oldSubject.isPresent()) {
+    private void verifyNameIsUnique(Subject subject) {
+	Optional<Subject> subjectByName = subjectDao.findByName(subject.getName());
+	if (subjectByName.isPresent() && (subjectByName.get().getId() != subject.getId())) {
 	    throw new EntityNotUniqueException(
-		    String.format("Subject %s already exists, can't create duplicate", oldSubject.get().getName()));
+		    String.format("Subject %s already exists, can't create duplicate", subjectByName.get().getName()));
 	}
     }
 
-    private void verifyExists(Optional<Subject> subject) {
-	if (subject.isEmpty()) {
-	    throw new EntityNotFoundException("Group not found, nothing to delete");
-	}
-    }
-
-    private void verifyIsNotScheduled(Optional<Subject> subject) {
-	if (!lectureDao.findBySubject(subject.get()).isEmpty()) {
+    private void verifyIsNotScheduled(Subject subject) {
+	if (!lectureDao.findBySubject(subject).isEmpty()) {
 	    throw new SubjectScheduledToLectureException("Subject is sheduled for 1 or more lectures, can't delete");
 	}
     }
 
-    private void verifyIsNotAssigned(Optional<Subject> subject) {
-	if (subjectDao.countAssignments(subject.get()) > 0) {
+    private void verifyIsNotAssigned(Subject subject) {
+	if (subjectDao.countAssignments(subject) > 0) {
 	    throw new SubjectAssignedToTeacherException("Subject is assigned for 1 or more teachers, can't delete");
 	}
     }

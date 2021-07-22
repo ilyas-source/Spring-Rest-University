@@ -44,21 +44,17 @@ public class GroupService {
     public void update(Group group) {
 	logger.debug("Updating group: {} ", group);
 	verifyNameIsUnique(group);
-	groupDao.create(group);
+	groupDao.update(group);
     }
 
     public void delete(int id) {
 	logger.debug("Deleting group by id: {} ", id);
 	Optional<Group> group = groupDao.findById(id);
-	verifyExists(group);
+	if (group.isEmpty()) {
+	    throw new EntityNotFoundException(String.format("Group with id=%s not found, nothing to delete", id));
+	}
 	verifyHasNoStudents(group.get());
 	groupDao.delete(id);
-    }
-
-    private void verifyExists(Optional<Group> group) {
-	if (group.isEmpty()) {
-	    throw new EntityNotFoundException("Group not found, nothing to delete");
-	}
     }
 
     private void verifyNameIsUnique(Group group) {
