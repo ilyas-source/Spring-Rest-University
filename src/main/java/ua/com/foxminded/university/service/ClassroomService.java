@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.exception.ClassroomBusyException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
@@ -95,7 +95,7 @@ public class ClassroomService {
 
     private void verifyHasNoLectures(Classroom classroom) {
 	if (!lectureDao.findByClassroom(classroom).isEmpty()) {
-	    throw new ClassroomBusyException("There are scheduled lectures, can't delete classroom");
+	    throw new ClassroomOccupiedException("There are scheduled lectures, can't delete classroom");
 	}
     }
 }

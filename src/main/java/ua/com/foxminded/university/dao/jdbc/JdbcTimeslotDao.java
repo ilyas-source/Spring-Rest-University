@@ -71,6 +71,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     @Override
     public Optional<Timeslot> findById(int id) {
+	logger.debug("Retrieving timeslot by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, timeslotMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -80,6 +81,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     @Override
     public List<Timeslot> findAll() {
+	logger.debug("Retrieving all timeslots");
 	return jdbcTemplate.query(FIND_ALL, timeslotMapper);
     }
 

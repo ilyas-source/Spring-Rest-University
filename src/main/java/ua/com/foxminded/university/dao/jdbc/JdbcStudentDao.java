@@ -87,6 +87,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findById(int id) {
+	logger.debug("Retrieving student by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, studentMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -117,6 +118,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> findAll() {
+	logger.debug("Retrieving all students");
 	return jdbcTemplate.query(FIND_ALL, studentMapper);
     }
 

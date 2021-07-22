@@ -6,16 +6,15 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
-import ua.com.foxminded.university.exception.GroupTooBigException;
+import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
-@PropertySource("classpath:university.properties")
+//@PropertySource("classpath:university.properties")
 @Service
 public class StudentService {
 
@@ -33,7 +32,7 @@ public class StudentService {
     public void create(Student student) {
 	logger.debug("Creating a new student: {} ", student);
 	verifyStudentIsUnique(student);
-	verifyStudentisNotOverpopulatingGroup(student);
+	verifyGroupIsNotOverflowed(student);
 	studentDao.create(student);
 
     }
@@ -46,9 +45,9 @@ public class StudentService {
 	}
     }
 
-    public void verifyStudentisNotOverpopulatingGroup(Student student) {
+    public void verifyGroupIsNotOverflowed(Student student) {
 	if (studentDao.countInGroup(student.getGroup()) > maxStudentsInGroup - 1) {
-	    throw new GroupTooBigException(
+	    throw new GroupOverflowException(
 		    String.format("Group limit of %s students reached, can't add more", maxStudentsInGroup));
 	}
     }
@@ -74,7 +73,7 @@ public class StudentService {
 
     private void verifyIdExists(int id) {
 	if (!studentDao.findById(id).isPresent()) {
-	    throw new EntityNotFoundException(String.format("Student with id#%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Student with id=%s not found, nothing to delete", id));
 	}
     }
 }

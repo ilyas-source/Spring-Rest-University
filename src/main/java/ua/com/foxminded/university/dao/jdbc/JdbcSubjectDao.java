@@ -57,6 +57,7 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public Optional<Subject> findById(int id) {
+	logger.debug("Retrieving subject by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, subjectMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -75,6 +76,7 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public List<Subject> findAll() {
+	logger.debug("Retrieving all subjects");
 	return jdbcTemplate.query(FIND_ALL, subjectMapper);
     }
 

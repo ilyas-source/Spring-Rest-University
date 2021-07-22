@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
-import ua.com.foxminded.university.exception.ClassroomBusyException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.GroupBusyException;
@@ -87,7 +87,7 @@ public class LectureService {
     private void verifyClassroomIsAvailable(Lecture lecture) {
 	if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
 		.isEmpty()) {
-	    throw new ClassroomBusyException("Classroom is busy at this day and time");
+	    throw new ClassroomOccupiedException("Classroom is busy at this day and time");
 	}
     }
 

@@ -60,6 +60,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public Optional<Group> findById(int id) {
+	logger.debug("Retrieving group by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, groupMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -69,6 +70,7 @@ public class JdbcGroupDao implements GroupDao {
 
     @Override
     public List<Group> findAll() {
+	logger.debug("Retrieving all groups");
 	return jdbcTemplate.query(FIND_ALL, groupMapper);
     }
 

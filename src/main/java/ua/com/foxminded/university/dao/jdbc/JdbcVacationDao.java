@@ -72,6 +72,7 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public Optional<Vacation> findById(int id) {
+	logger.debug("Retrieving vacation by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, vacationMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -81,6 +82,7 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public List<Vacation> findAll() {
+	logger.debug("Retrieving all vacations");
 	return jdbcTemplate.query(FIND_ALL, vacationMapper);
     }
 

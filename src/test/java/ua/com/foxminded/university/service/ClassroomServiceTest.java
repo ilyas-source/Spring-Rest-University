@@ -23,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.exception.ClassroomBusyException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
@@ -108,7 +108,7 @@ class ClassroomServiceTest {
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 
-	Throwable thrown = assertThrows(ClassroomBusyException.class, () -> {
+	Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> {
 	    classroomService.delete(1);
 	});
 

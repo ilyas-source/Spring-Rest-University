@@ -55,6 +55,7 @@ public class JdbcLocationDao implements LocationDao {
 
     @Override
     public Optional<Location> findById(int id) {
+	logger.debug("Retrieving location by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, locationMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -64,6 +65,7 @@ public class JdbcLocationDao implements LocationDao {
 
     @Override
     public List<Location> findAll() {
+	logger.debug("Retrieving all locations");
 	return jdbcTemplate.query(FIND_ALL, locationMapper);
     }
 

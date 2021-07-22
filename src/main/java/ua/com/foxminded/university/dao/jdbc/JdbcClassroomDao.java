@@ -63,6 +63,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     @Override
     public Optional<Classroom> findById(int id) {
+	logger.debug("Retrieving classroom by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, classroomMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -72,6 +73,7 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     @Override
     public List<Classroom> findAll() {
+	logger.debug("Retrieving all classrooms");
 	return jdbcTemplate.query(FIND_ALL, classroomMapper);
     }
 

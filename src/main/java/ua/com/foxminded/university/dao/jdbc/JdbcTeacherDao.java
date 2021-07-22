@@ -138,6 +138,7 @@ public class JdbcTeacherDao implements TeacherDao {
 
     @Override
     public Optional<Teacher> findById(int id) {
+	logger.debug("Retrieving teacher by id: {} ", id);
 	try {
 	    Optional<Teacher> found = Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, teacherMapper, id));
 	    return found;
@@ -157,6 +158,7 @@ public class JdbcTeacherDao implements TeacherDao {
 
     @Override
     public List<Teacher> findAll() {
+	logger.debug("Retrieving all teachers");
 	return jdbcTemplate.query(FIND_ALL, teacherMapper);
     }
 

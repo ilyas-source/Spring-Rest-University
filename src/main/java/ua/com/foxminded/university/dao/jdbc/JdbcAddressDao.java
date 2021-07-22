@@ -55,6 +55,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public Optional<Address> findById(int id) {
+	logger.debug("Retrieving address by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, addressMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -64,6 +65,7 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public List<Address> findAll() {
+	logger.debug("Retrieving all addresses");
 	return jdbcTemplate.query(FIND_ALL, addressMapper);
     }
 
