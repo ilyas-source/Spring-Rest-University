@@ -239,5 +239,6 @@ public class LectureDaoTest {
 		.teacher(expectedTeacher1).classroom(expectedClassroom1).build();
 
 	List<Lecture> expectedLectures = new ArrayList<>(Arrays.asList(expectedLecture1, expectedLecture2));
+	List<Lecture> noLectures = new ArrayList<>();
     }
 }

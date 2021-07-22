@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
 
@@ -100,5 +100,17 @@ class SubjectServiceTest {
 
 	assertEquals(expected, thrown.getMessage());
 	verify(subjectDao, never()).delete(1);
+    }
+
+    @Test
+    void givenFreeSubject_onDelete_shouldCallDaoDelete() {
+	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
+	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(0);
+
+	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(noLectures);
+
+	subjectService.delete(1);
+
+	verify(subjectDao).delete(1);
     }
 }

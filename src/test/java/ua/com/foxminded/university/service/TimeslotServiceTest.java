@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToCreate;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.TimeslotTooShortException;
@@ -38,6 +40,8 @@ class TimeslotServiceTest {
 
     @Mock
     private TimeslotDao timeslotDao;
+    @Mock
+    private LectureDao lectureDao;
     @InjectMocks
     private TimeslotService timeslotService;
 
@@ -92,5 +96,15 @@ class TimeslotServiceTest {
 
 	assertEquals(expected, thrown.getMessage());
 	verify(timeslotDao, never()).create(timeslotToCreate);
+    }
+
+    @Test
+    void givenFreeTimeslot_onDelete_shouldCallDaoDelete() {
+	when(timeslotDao.findById(1)).thenReturn(Optional.of(expectedTimeslot1));
+	when(lectureDao.findByTimeslot(expectedTimeslot1)).thenReturn(noLectures);
+
+	timeslotService.delete(1);
+
+	verify(timeslotDao).delete(1);
     }
 }
