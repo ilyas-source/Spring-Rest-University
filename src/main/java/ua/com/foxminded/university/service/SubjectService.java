@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
-import ua.com.foxminded.university.exception.SubjectAssignedToTeacherException;
-import ua.com.foxminded.university.exception.SubjectScheduledToLectureException;
 import ua.com.foxminded.university.model.Subject;
 
 @Service
@@ -69,14 +68,14 @@ public class SubjectService {
 
     private void verifyIsNotScheduled(Subject subject) {
 	if (!lectureDao.findBySubject(subject).isEmpty()) {
-	    throw new SubjectScheduledToLectureException(
+	    throw new EntityInUseException(
 		    String.format("Subject %s is sheduled for lecture(s), can't delete", subject.getName()));
 	}
     }
 
     private void verifyIsNotAssigned(Subject subject) {
 	if (subjectDao.countAssignments(subject) > 0) {
-	    throw new SubjectAssignedToTeacherException(
+	    throw new EntityInUseException(
 		    String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
 	}
     }

@@ -19,8 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
-import ua.com.foxminded.university.exception.LocationInUseException;
 import ua.com.foxminded.university.model.Location;
 
 @ExtendWith(MockitoExtension.class)
@@ -80,7 +80,7 @@ class LocationServiceTest {
 	when(classroomDao.findByLocation(expectedLocation1)).thenReturn(Optional.of(expectedClassroom1));
 	when(locationDao.findById(expectedLocation1.getId())).thenReturn(Optional.of(expectedLocation1));
 
-	Throwable thrown = assertThrows(LocationInUseException.class,
+	Throwable thrown = assertThrows(EntityInUseException.class,
 		() -> locationService.delete(expectedLocation1.getId()));
 
 	assertEquals(expected, thrown.getMessage());

@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacation1;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.expectedVacations;
+import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.vacationGoingOverNewYear;
 
 import java.util.ArrayList;
 import java.util.Arrays;

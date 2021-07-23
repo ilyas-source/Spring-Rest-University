@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 import java.util.Optional;
 

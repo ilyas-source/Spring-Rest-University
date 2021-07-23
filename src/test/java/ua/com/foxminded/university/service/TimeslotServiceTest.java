@@ -5,8 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.noLectures;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToCreate;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotWithBreaks;
 
 import java.util.Optional;
 

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
-import ua.com.foxminded.university.exception.LocationInUseException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
@@ -58,7 +58,7 @@ public class LocationService {
     private void verifyIsNotUsed(Location location) {
 	Optional<Classroom> classroom = classroomDao.findByLocation(location);
 	if (classroom.isPresent()) {
-	    throw new LocationInUseException("Location is used for " + classroom.get().getName());
+	    throw new EntityInUseException("Location is used for " + classroom.get().getName());
 	}
     }
 }
