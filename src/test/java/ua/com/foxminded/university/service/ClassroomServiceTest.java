@@ -101,7 +101,7 @@ class ClassroomServiceTest {
 
     @Test
     void givenOccupiedClassroom_onDelete_shouldThrowException() {
-	String expected = "There are scheduled lectures, can't delete classroom";
+	String expected = "There are scheduled lectures, can't delete classroom Big physics auditory";
 	when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 	when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 

@@ -124,7 +124,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherWithLectures_onDelete_shouldThrowException() {
-	String expected = "Teacher Adam Smith has scheduled lectures, can't delete";
+	String expected = "Teacher Adam Smith has scheduled lecture(s), can't delete";
 	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
 	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
 

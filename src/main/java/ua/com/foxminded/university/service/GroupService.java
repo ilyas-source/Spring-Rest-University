@@ -66,7 +66,7 @@ public class GroupService {
 
     private void verifyHasNoStudents(Group group) {
 	if (!studentDao.findByGroup(group).isEmpty()) {
-	    throw new GroupNotEmptyException("Group has assigned students, can't delete");
+	    throw new GroupNotEmptyException(String.format("Group %s has assigned students, can't delete", group.getName()));
 	}
     }
 

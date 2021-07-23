@@ -116,7 +116,7 @@ public class TeacherService {
 
     private void verifyHasNoLectures(Teacher teacher) {
 	if (!lectureDao.findByTeacher(teacher).isEmpty()) {
-	    throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lectures, can't delete",
+	    throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lecture(s), can't delete",
 		    teacher.getFirstName(), teacher.getLastName()));
 	}
     }

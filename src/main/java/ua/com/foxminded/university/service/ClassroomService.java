@@ -89,7 +89,8 @@ public class ClassroomService {
 
     private void verifyHasNoLectures(Classroom classroom) {
 	if (!lectureDao.findByClassroom(classroom).isEmpty()) {
-	    throw new ClassroomOccupiedException("There are scheduled lectures, can't delete classroom");
+	    throw new ClassroomOccupiedException(
+		    String.format("There are scheduled lectures, can't delete classroom %s", classroom.getName()));
 	}
     }
 }

@@ -105,7 +105,7 @@ class GroupServiceTest {
 
     @Test
     void givenNonEmptyGroup_onDelete_shouldThrowException() {
-	String expected = "Group has assigned students, can't delete";
+	String expected = "Group AB-11 has assigned students, can't delete";
 	when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
 	when(studentDao.findByGroup(expectedGroup1)).thenReturn(expectedStudents);
 
