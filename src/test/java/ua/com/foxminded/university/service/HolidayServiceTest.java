@@ -61,7 +61,7 @@ class HolidayServiceTest {
 
     @Test
     void givenIncorrectHolidayId_onDelete_shouldThrowException() {
-	String expected = "Holiday with id:1 not found, nothing to delete";
+	String expected = "Holiday id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> holidayService.delete(1));

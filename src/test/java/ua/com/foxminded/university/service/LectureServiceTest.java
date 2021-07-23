@@ -283,7 +283,7 @@ class LectureServiceTest {
 
     @Test
     void givenIncorrectLectureId_onDelete_shouldThrowException() {
-	String expected = "Lecture with id:1 not found, nothing to delete";
+	String expected = "Lecture id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> lectureService.delete(1));

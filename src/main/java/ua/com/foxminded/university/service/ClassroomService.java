@@ -56,17 +56,19 @@ public class ClassroomService {
 	logger.debug("Deleting classroom by id: {} ", id);
 	Optional<Classroom> classroom = classroomDao.findById(id);
 	if (classroom.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Classroom with id:%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Classroom id:%s not found, nothing to delete", id));
 	}
 	verifyHasNoLectures(classroom.get());
 	classroomDao.delete(id);
     }
 
     private void verifyNameIsUnique(Classroom classroom) {
-	Optional<Classroom> classroomByName = classroomDao.findByName(classroom.getName());
-	if ((classroomByName.isPresent() && (classroomByName.get().getId() != classroom.getId()))) {
-	    throw new EntityNotUniqueException(String.format("Classroom with name %s already exists", classroom.getName()));
-	}
+	classroomDao.findByName(classroom.getName())
+		.filter(c -> c.getId() != classroom.getId())
+		.ifPresent(c -> {
+		    throw new EntityNotUniqueException(
+			    String.format("Classroom %s already exists", classroom.getName()));
+		});
     }
 
     private void verifyCapacityIsEnough(Classroom classroom) {

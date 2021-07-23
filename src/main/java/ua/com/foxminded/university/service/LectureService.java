@@ -160,7 +160,7 @@ public class LectureService {
 
     private void verifyIdExists(int id) {
 	if (!lectureDao.findById(id).isPresent()) {
-	    throw new EntityNotFoundException(String.format("Lecture with id:%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Lecture id:%s not found, nothing to delete", id));
 	}
     }
 }

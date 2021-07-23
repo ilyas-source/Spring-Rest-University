@@ -51,7 +51,7 @@ public class SubjectService {
 	logger.debug("Deleting subject by id: {} ", id);
 	Optional<Subject> subject = subjectDao.findById(id);
 	if (subject.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Subject with id:%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Subject id:%s not found, nothing to delete", id));
 	}
 	verifyIsNotAssigned(subject.get());
 	verifyIsNotScheduled(subject.get());
@@ -59,11 +59,11 @@ public class SubjectService {
     }
 
     private void verifyNameIsUnique(Subject subject) {
-	Optional<Subject> subjectByName = subjectDao.findByName(subject.getName());
-	if (subjectByName.isPresent() && (subjectByName.get().getId() != subject.getId())) {
-	    throw new EntityNotUniqueException(
-		    String.format("Subject %s already exists, can't create duplicate", subjectByName.get().getName()));
-	}
+	subjectDao.findByName(subject.getName())
+		.filter(s -> s.getId() != subject.getId())
+		.ifPresent(s -> {
+		    throw new EntityNotUniqueException(String.format("Subject %s already exists", s.getName()));
+		});
     }
 
     private void verifyIsNotScheduled(Subject subject) {

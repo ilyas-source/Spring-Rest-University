@@ -116,7 +116,7 @@ class ClassroomServiceTest {
 
     @Test
     void givenClassroomWithExistingName_onCreate_shouldThrowException() {
-	String expected = "Classroom with name Big physics auditory already exists";
+	String expected = "Classroom Big physics auditory already exists";
 	when(classroomDao.findByName(duplicateNameClassroom.getName())).thenReturn(Optional.of(expectedClassroom1));
 
 	Throwable thrown = assertThrows(EntityNotUniqueException.class,
@@ -139,7 +139,7 @@ class ClassroomServiceTest {
 
     @Test
     void givenIncorrectClassroomId_onDelete_shouldThrowException() {
-	String expected = "Classroom with id:1 not found, nothing to delete";
+	String expected = "Classroom id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> classroomService.delete(1));

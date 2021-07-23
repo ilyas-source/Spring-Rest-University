@@ -72,7 +72,7 @@ class GroupServiceTest {
 
     @Test
     void givenGroupWithOldNameAndNewId_onUpdate_shouldThrowException() {
-	String expected = "Group with name ZI-08 already exists";
+	String expected = "Group ZI-08 already exists";
 	Group group = new Group(5, "ZI-08");
 	when(groupDao.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
 
@@ -94,7 +94,7 @@ class GroupServiceTest {
 
     @Test
     void givenIncorrectGroupId_onDelete_shouldThrowException() {
-	String expected = "Group with id:1 not found, nothing to delete";
+	String expected = "Group id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> groupService.delete(1));

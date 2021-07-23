@@ -95,7 +95,7 @@ class SubjectServiceTest {
 
     @Test
     void givenIncorrectSubjectId_onDelete_shouldThrowException() {
-	String expected = "Subject with id:1 not found, nothing to delete";
+	String expected = "Subject id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> subjectService.delete(1));
@@ -117,7 +117,7 @@ class SubjectServiceTest {
 
     @Test
     void givenSubjectWithOldNameAndNewId_onUpdate_shouldThrowException() {
-	String expected = "Subject Test Philosophy already exists, can't create duplicate";
+	String expected = "Subject Test Philosophy already exists";
 	Subject subject = new Subject(5, "Test Philosophy", "Test");
 	when(subjectDao.findByName("Test Philosophy")).thenReturn(Optional.of(expectedSubject2));
 

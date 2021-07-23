@@ -51,17 +51,18 @@ public class GroupService {
 	logger.debug("Deleting group by id: {} ", id);
 	Optional<Group> group = groupDao.findById(id);
 	if (group.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Group with id:%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Group id:%s not found, nothing to delete", id));
 	}
 	verifyHasNoStudents(group.get());
 	groupDao.delete(id);
     }
 
     private void verifyNameIsUnique(Group group) {
-	Optional<Group> groupByName = groupDao.findByName(group.getName());
-	if ((groupByName.isPresent() && (groupByName.get().getId() != group.getId()))) {
-	    throw new EntityNotUniqueException(String.format("Group with name %s already exists", group.getName()));
-	}
+	groupDao.findByName(group.getName())
+		.filter(s -> s.getId() != group.getId())
+		.ifPresent(s -> {
+		    throw new EntityNotUniqueException(String.format("Group %s already exists", s.getName()));
+		});
     }
 
     private void verifyHasNoStudents(Group group) {
@@ -69,5 +70,4 @@ public class GroupService {
 	    throw new GroupNotEmptyException(String.format("Group %s has assigned students, can't delete", group.getName()));
 	}
     }
-
 }
