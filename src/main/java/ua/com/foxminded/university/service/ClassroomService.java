@@ -56,7 +56,7 @@ public class ClassroomService {
 	logger.debug("Deleting classroom by id: {} ", id);
 	Optional<Classroom> classroom = classroomDao.findById(id);
 	if (classroom.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Classroom with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Classroom with id:%s not found, nothing to delete", id));
 	}
 	verifyHasNoLectures(classroom.get());
 	classroomDao.delete(id);

@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.StudentMapper;
-import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
@@ -76,7 +75,7 @@ public class JdbcStudentDao implements StudentDao {
     @Transactional
     public void update(Student student) {
 	logger.debug("Updating student in database: {} ", student);
-	Address address = student.getAddress();
+	var address = student.getAddress();
 	jdbcAddressDao.update(address);
 
 	jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(),
@@ -98,8 +97,7 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public Optional<Student> findByAddressId(int id) {
 	try {
-	    Optional<Student> found = Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
-	    return found;
+	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
 	} catch (EmptyResultDataAccessException e) {
 	    return Optional.empty();
 	}
@@ -108,9 +106,8 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
 	try {
-	    Optional<Student> found = Optional
+	    return Optional
 		    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, birthDate));
-	    return found;
 	} catch (EmptyResultDataAccessException e) {
 	    return Optional.empty();
 	}

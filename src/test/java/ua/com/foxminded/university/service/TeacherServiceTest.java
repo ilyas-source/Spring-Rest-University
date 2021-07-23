@@ -113,7 +113,7 @@ class TeacherServiceTest {
 
     @Test
     void givenIncorrectTeacherId_onDelete_shouldThrowException() {
-	String expected = "Teacher with id=1 not found, nothing to delete";
+	String expected = "Teacher with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> teacherService.delete(1));
@@ -124,7 +124,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherWithLectures_onDelete_shouldThrowException() {
-	String expected = "Teacher has scheduled lectures, can't delete";
+	String expected = "Teacher Adam Smith has scheduled lectures, can't delete";
 	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
 	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
 
@@ -159,7 +159,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherThatCannotTeachRequiredSubjects_onUpdate_shouldThrowException() {
-	String expected = "Updated teacher can't teach 1 or more of scheduled lectures";
+	String expected = "Updated teacher Test Teacher can't teach scheduled lecture(s)";
 	when(lectureDao.findByTeacher(teacherToCreate)).thenReturn(expectedLectures);
 
 	Throwable thrown = assertThrows(TeacherCannotTeachSubject.class,

@@ -107,7 +107,7 @@ class StudentServiceTest {
 
     @Test
     void givenIncorrectStudentId_onDelete_shouldThrowException() {
-	String expected = "Student with id=1 not found, nothing to delete";
+	String expected = "Student with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> studentService.delete(1));

@@ -94,7 +94,7 @@ public class VacationService {
 
     private void verifyIdExists(int id) {
 	if (vacationDao.findById(id).isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Vacation with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Vacation with id:%s not found, nothing to delete", id));
 	}
     }
 

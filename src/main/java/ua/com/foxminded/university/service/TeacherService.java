@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
@@ -25,6 +26,7 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
+@PropertySource("classpath:university.properties")
 @Service
 public class TeacherService {
 
@@ -69,7 +71,7 @@ public class TeacherService {
 	logger.debug("Deleting teacher by id: {} ", id);
 	Optional<Teacher> teacher = teacherDao.findById(id);
 	if (teacher.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Teacher with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Teacher with id:%s not found, nothing to delete", id));
 	}
 	verifyHasNoLectures(teacher.get());
 	teacherDao.delete(id);
@@ -106,13 +108,16 @@ public class TeacherService {
 		.map(Lecture::getSubject)
 		.collect(Collectors.toList());
 	if (!teacher.getSubjects().containsAll(requiredSubjects)) {
-	    throw new TeacherCannotTeachSubject("Updated teacher can't teach 1 or more of scheduled lectures");
+	    throw new TeacherCannotTeachSubject(
+		    String.format("Updated teacher %s %s can't teach scheduled lecture(s)", teacher.getFirstName(),
+			    teacher.getLastName()));
 	}
     }
 
     private void verifyHasNoLectures(Teacher teacher) {
 	if (!lectureDao.findByTeacher(teacher).isEmpty()) {
-	    throw new TeacherBusyException("Teacher has scheduled lectures, can't delete");
+	    throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lectures, can't delete",
+		    teacher.getFirstName(), teacher.getLastName()));
 	}
     }
 }

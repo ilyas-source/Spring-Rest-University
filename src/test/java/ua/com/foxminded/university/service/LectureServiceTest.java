@@ -102,7 +102,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithBusyTeacher_onCreate_shouldThrowException() {
-	String expected = "Teacher will be reading another lecture";
+	String expected = "Teacher Adam Smith will be reading another lecture";
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
@@ -115,7 +115,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() {
-	String expected = "Teacher will be on a vacation, can't schedule lecture";
+	String expected = "Teacher Adam Smith will be on a vacation, can't schedule lecture";
 	Throwable thrown = assertThrows(TeacherOnVacationException.class,
 		() -> lectureService.create(lectureWithTeacherOnVacation));
 
@@ -138,7 +138,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithBusyGroup_onCreate_shouldThrowException() {
-	String expected = "One or more groups will be attending another lecture";
+	String expected = "Group(s) will be attending another lecture";
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
 	Throwable thrown = assertThrows(GroupBusyException.class,
@@ -150,7 +150,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithOccupiedClassroom_onCreate_shouldThrowException() {
-	String expected = "Classroom is occupied at this day and time";
+	String expected = "Classroom Big physics auditory is occupied at this day and time";
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
@@ -205,7 +205,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithBusyTeacher_onUpdate_shouldThrowException() {
-	String expected = "Teacher will be reading another lecture";
+	String expected = "Teacher Adam Smith will be reading another lecture";
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
@@ -218,7 +218,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithTeacherOnVacation_onUpdate_shouldThrowException() {
-	String expected = "Teacher will be on a vacation, can't schedule lecture";
+	String expected = "Teacher Adam Smith will be on a vacation, can't schedule lecture";
 
 	Throwable thrown = assertThrows(TeacherOnVacationException.class,
 		() -> lectureService.update(lectureWithTeacherOnVacation));
@@ -242,7 +242,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithBusyGroup_onUpdate_shouldThrowException() {
-	String expected = "One or more groups will be attending another lecture";
+	String expected = "Group(s) will be attending another lecture";
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
 	Throwable thrown = assertThrows(GroupBusyException.class,
@@ -254,7 +254,7 @@ class LectureServiceTest {
 
     @Test
     void givenLectureWithOccupiedClassroom_onUpdate_shouldThrowException() {
-	String expected = "Classroom is occupied at this day and time";
+	String expected = "Classroom Big physics auditory is occupied at this day and time";
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
@@ -283,7 +283,7 @@ class LectureServiceTest {
 
     @Test
     void givenIncorrectLectureId_onDelete_shouldThrowException() {
-	String expected = "Lecture with id=1 not found, nothing to delete";
+	String expected = "Lecture with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> lectureService.delete(1));

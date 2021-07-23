@@ -78,7 +78,7 @@ class VacationServiceTest {
 
     @Test
     void givenIncorrectVacationId_onDelete_shouldThrowException() {
-	String expected = "Vacation with id=1 not found, nothing to delete";
+	String expected = "Vacation with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> vacationService.delete(1));

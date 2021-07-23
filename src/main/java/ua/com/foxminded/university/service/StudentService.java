@@ -72,7 +72,7 @@ public class StudentService {
 
     private void verifyIdExists(int id) {
 	if (!studentDao.findById(id).isPresent()) {
-	    throw new EntityNotFoundException(String.format("Student with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Student with id:%s not found, nothing to delete", id));
 	}
     }
 }

@@ -94,7 +94,7 @@ class GroupServiceTest {
 
     @Test
     void givenIncorrectGroupId_onDelete_shouldThrowException() {
-	String expected = "Group with id=1 not found, nothing to delete";
+	String expected = "Group with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> groupService.delete(1));

@@ -136,7 +136,7 @@ class ClassroomServiceTest {
 
     @Test
     void givenIncorrectClassroomId_onDelete_shouldThrowException() {
-	String expected = "Classroom with id=1 not found, nothing to delete";
+	String expected = "Classroom with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> classroomService.delete(1));

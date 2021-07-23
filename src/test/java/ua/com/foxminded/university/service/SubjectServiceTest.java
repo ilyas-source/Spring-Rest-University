@@ -70,7 +70,7 @@ class SubjectServiceTest {
 
     @Test
     void givenAssignedSubjectId_onDelete_shouldThrowException() {
-	String expected = "Subject is assigned for 1 or more teachers, can't delete";
+	String expected = "Subject Test Economics is assigned to teacher(s), can't delete";
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3);
 
@@ -83,7 +83,7 @@ class SubjectServiceTest {
 
     @Test
     void givenScheduledSubjectId_onDelete_shouldThrowException() {
-	String expected = "Subject is sheduled for 1 or more lectures, can't delete";
+	String expected = "Subject Test Economics is sheduled for lecture(s), can't delete";
 	when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
 	when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
@@ -96,7 +96,7 @@ class SubjectServiceTest {
 
     @Test
     void givenIncorrectSubjectId_onDelete_shouldThrowException() {
-	String expected = "Subject with id=1 not found, nothing to delete";
+	String expected = "Subject with id:1 not found, nothing to delete";
 
 	Throwable thrown = assertThrows(EntityNotFoundException.class,
 		() -> subjectService.delete(1));

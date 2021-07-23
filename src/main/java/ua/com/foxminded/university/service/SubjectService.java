@@ -52,7 +52,7 @@ public class SubjectService {
 	logger.debug("Deleting subject by id: {} ", id);
 	Optional<Subject> subject = subjectDao.findById(id);
 	if (subject.isEmpty()) {
-	    throw new EntityNotFoundException(String.format("Subject with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Subject with id:%s not found, nothing to delete", id));
 	}
 	verifyIsNotAssigned(subject.get());
 	verifyIsNotScheduled(subject.get());
@@ -69,13 +69,15 @@ public class SubjectService {
 
     private void verifyIsNotScheduled(Subject subject) {
 	if (!lectureDao.findBySubject(subject).isEmpty()) {
-	    throw new SubjectScheduledToLectureException("Subject is sheduled for 1 or more lectures, can't delete");
+	    throw new SubjectScheduledToLectureException(
+		    String.format("Subject %s is sheduled for lecture(s), can't delete", subject.getName()));
 	}
     }
 
     private void verifyIsNotAssigned(Subject subject) {
 	if (subjectDao.countAssignments(subject) > 0) {
-	    throw new SubjectAssignedToTeacherException("Subject is assigned for 1 or more teachers, can't delete");
+	    throw new SubjectAssignedToTeacherException(
+		    String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
 	}
     }
 }

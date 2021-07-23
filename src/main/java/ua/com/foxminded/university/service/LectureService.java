@@ -85,9 +85,11 @@ public class LectureService {
     }
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
-	if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+	var classroom = lecture.getClassroom();
+	if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), classroom)
 		.isEmpty()) {
-	    throw new ClassroomOccupiedException("Classroom is occupied at this day and time");
+	    throw new ClassroomOccupiedException(
+		    String.format("Classroom %s is occupied at this day and time", classroom.getName()));
 	}
     }
 
@@ -97,7 +99,7 @@ public class LectureService {
 		.map(Lecture::getGroups)
 		.flatMap(List::stream)
 		.anyMatch(lecture.getGroups()::contains)) {
-	    throw new GroupBusyException("One or more groups will be attending another lecture");
+	    throw new GroupBusyException("Group(s) will be attending another lecture");
 	}
     }
 
@@ -111,11 +113,13 @@ public class LectureService {
     }
 
     private void verifyTeacherIsWorking(Lecture lecture) {
-	if (lecture.getTeacher()
-		.getVacations()
+	var teacher = lecture.getTeacher();
+	if (teacher.getVacations()
 		.stream()
 		.anyMatch(v -> isDayWithinVacation(lecture.getDate(), v))) {
-	    throw new TeacherOnVacationException("Teacher will be on a vacation, can't schedule lecture");
+	    throw new TeacherOnVacationException(String.format("Teacher %s %s will be on a vacation, can't schedule lecture",
+		    teacher.getFirstName(),
+		    teacher.getLastName()));
 	}
     }
 
@@ -124,9 +128,12 @@ public class LectureService {
     }
 
     private void verifyTeacherIsNotBusy(Lecture lecture) {
-	if (!lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), lecture.getTeacher())
+	var teacher = lecture.getTeacher();
+	if (!lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
 		.isEmpty()) {
-	    throw new TeacherBusyException("Teacher will be reading another lecture");
+	    throw new TeacherBusyException(String.format("Teacher %s %s will be reading another lecture",
+		    teacher.getFirstName(),
+		    teacher.getLastName()));
 	}
     }
 
@@ -153,7 +160,7 @@ public class LectureService {
 
     private void verifyIdExists(int id) {
 	if (!lectureDao.findById(id).isPresent()) {
-	    throw new EntityNotFoundException(String.format("Lecture with id=%s not found, nothing to delete", id));
+	    throw new EntityNotFoundException(String.format("Lecture with id:%s not found, nothing to delete", id));
 	}
     }
 }
