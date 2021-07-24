@@ -140,9 +140,6 @@ public class ClassroomDaoTest {
 	Location location3 = new Location(3, "Chem building", 2, 12);
 	Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
 
-	Classroom duplicateNameClassroom = new Classroom(2, location1, "Big physics auditory", 500);
-	Classroom invalidCapacityClassroom = new Classroom(1, location1, "Big physics auditory", -5);
-
 	List<Classroom> expectedClassrooms = new ArrayList<>(
 		Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));
     }

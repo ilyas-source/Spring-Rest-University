@@ -5,13 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.duplicateNameClassroom;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.invalidCapacityClassroom;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.location1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.duplicateNameClassroom;
+import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.invalidCapacityClassroom;
 
 import java.util.Optional;
 
@@ -146,5 +147,10 @@ class ClassroomServiceTest {
 
 	assertEquals(expected, thrown.getMessage());
 	verify(classroomDao, never()).delete(1);
+    }
+
+    public interface TestData {
+	Classroom duplicateNameClassroom = new Classroom(2, location1, "Big physics auditory", 500);
+	Classroom invalidCapacityClassroom = new Classroom(1, location1, "Big physics auditory", -5);
     }
 }
