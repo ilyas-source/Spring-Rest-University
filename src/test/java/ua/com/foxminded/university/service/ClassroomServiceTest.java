@@ -149,7 +149,7 @@ class ClassroomServiceTest {
 	verify(classroomDao, never()).delete(1);
     }
 
-    public interface TestData {
+    interface TestData {
 	Classroom duplicateNameClassroom = new Classroom(2, location1, "Big physics auditory", 500);
 	Classroom invalidCapacityClassroom = new Classroom(1, location1, "Big physics auditory", -5);
     }

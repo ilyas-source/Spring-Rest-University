@@ -7,13 +7,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.noLectures;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.teacherToCreate;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.daysByYearsMap;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,7 +138,7 @@ class TeacherServiceTest {
     @Test
     void givenTeacherWithNoLecturesId_onDelete_shouldCallDaoDelete() {
 	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
-	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(noLectures);
+	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(new ArrayList<>());
 
 	teacherService.delete(1);
 
