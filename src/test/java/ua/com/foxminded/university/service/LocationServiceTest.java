@@ -1,11 +1,13 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
+import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
 
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Location;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,19 +75,26 @@ class LocationServiceTest {
     }
 
     @Test
-    void givenUsedLocation_onDelete_shouldNotCallDaoDelete() {
+    void givenUsedLocation_onDelete_shouldThrowException() {
+	String expected = "Location is used for Big physics auditory";
 	when(classroomDao.findByLocation(expectedLocation1)).thenReturn(Optional.of(expectedClassroom1));
 	when(locationDao.findById(expectedLocation1.getId())).thenReturn(Optional.of(expectedLocation1));
 
-	locationService.delete(expectedLocation1.getId());
+	Throwable thrown = assertThrows(EntityInUseException.class,
+		() -> locationService.delete(expectedLocation1.getId()));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(locationDao, never()).delete(expectedLocation1.getId());
     }
 
     @Test
-    void givenIncorrectLocationId_onDelete_shouldNotCallDaoDelete() {
-	locationService.delete(1);
+    void givenIncorrectLocationId_onDelete_shouldThrowException() {
+	String expected = "Location id:1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> locationService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(locationDao, never()).delete(1);
     }
 }

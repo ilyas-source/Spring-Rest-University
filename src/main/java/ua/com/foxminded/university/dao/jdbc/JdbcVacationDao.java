@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.model.Vacation;
 
 @Component
 public class JdbcVacationDao implements VacationDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcVacationDao.class);
 
     private static final String CREATE = "INSERT INTO vacations (start_date, end_date) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM vacations WHERE id = ?";
@@ -43,6 +47,7 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public void create(Vacation vacation) {
+	logger.debug("Writing a new vacation to database: {} ", vacation);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -67,6 +72,7 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public Optional<Vacation> findById(int id) {
+	logger.debug("Retrieving vacation by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, vacationMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -76,17 +82,20 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public List<Vacation> findAll() {
+	logger.debug("Retrieving all vacations");
 	return jdbcTemplate.query(FIND_ALL, vacationMapper);
     }
 
     @Override
     public void update(Vacation vacation) {
+	logger.debug("Updating vacation in database: {} ", vacation);
 	jdbcTemplate.update(UPDATE, vacation.getStartDate(), vacation.getEndDate(),
 		vacation.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting vacation by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

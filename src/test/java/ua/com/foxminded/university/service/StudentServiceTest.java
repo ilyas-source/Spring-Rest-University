@@ -1,10 +1,13 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent2;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 import java.util.Optional;
 
@@ -17,6 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,21 +65,27 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenExcessiveStudent_onCreate_shouldNotCallDaoCreate() {
+    void givenExcessiveStudent_onCreate_shouldThrowException() {
+	String expected = "Group limit of 30 students reached, can't add more";
 	when(studentDao.countInGroup(expectedStudent1.getGroup())).thenReturn(30);
 
-	studentService.create(expectedStudent1);
+	Throwable thrown = assertThrows(GroupOverflowException.class,
+		() -> studentService.create(expectedStudent1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(studentDao, never()).create(expectedStudent1);
     }
 
     @Test
-    void givenNonUniqueStudent_onCreate_shouldNotCallDaoCreate() {
+    void givenNonUniqueStudent_onCreate_shouldThrowException() {
+	String expected = "Student Ivan Petrov, born 1980-11-01 already exists, can't create duplicate";
 	when(studentDao.findByNameAndBirthDate(expectedStudent1.getFirstName(), expectedStudent1.getLastName(),
 		expectedStudent1.getBirthDate())).thenReturn(Optional.of(expectedStudent2));
 
-	studentService.create(expectedStudent1);
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> studentService.create(expectedStudent1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(studentDao, never()).create(expectedStudent1);
     }
 
@@ -94,9 +106,13 @@ class StudentServiceTest {
     }
 
     @Test
-    void givenIncorrectStudentId_onDelete_shouldNotCallDaoDelete() {
-	studentService.delete(1);
+    void givenIncorrectStudentId_onDelete_shouldThrowException() {
+	String expected = "Student with id:1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> studentService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(studentDao, never()).delete(1);
     }
 }

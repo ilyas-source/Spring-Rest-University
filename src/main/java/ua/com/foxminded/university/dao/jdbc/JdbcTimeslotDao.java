@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class JdbcTimeslotDao implements TimeslotDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcTimeslotDao.class);
 
     private static final String CREATE = "INSERT INTO timeslots (begin_time, end_time) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM timeslots WHERE id = ?";
@@ -42,6 +46,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     @Override
     public void create(Timeslot timeslot) {
+	logger.debug("Writing a new timeslot to database: {} ", timeslot);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -66,6 +71,7 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     @Override
     public Optional<Timeslot> findById(int id) {
+	logger.debug("Retrieving timeslot by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, timeslotMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -75,16 +81,19 @@ public class JdbcTimeslotDao implements TimeslotDao {
 
     @Override
     public List<Timeslot> findAll() {
+	logger.debug("Retrieving all timeslots");
 	return jdbcTemplate.query(FIND_ALL, timeslotMapper);
     }
 
     @Override
     public void update(Timeslot timeslot) {
+	logger.debug("Updating timeslot in database: {} ", timeslot);
 	jdbcTemplate.update(UPDATE, timeslot.getBeginTime(), timeslot.getEndTime(), timeslot.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting timeslot by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

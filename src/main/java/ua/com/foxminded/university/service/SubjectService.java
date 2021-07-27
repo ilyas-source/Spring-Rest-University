@@ -3,14 +3,21 @@ package ua.com.foxminded.university.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
 
 @Service
 public class SubjectService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SubjectService.class);
 
     private SubjectDao subjectDao;
     private LectureDao lectureDao;
@@ -21,13 +28,9 @@ public class SubjectService {
     }
 
     public void create(Subject subject) {
-	if (nameIsNew(subject)) {
-	    subjectDao.create(subject);
-	}
-    }
-
-    private boolean nameIsNew(Subject subject) {
-	return subjectDao.findByName(subject.getName()).isEmpty();
+	logger.debug("Creating a new subject: {} ", subject);
+	verifyNameIsUnique(subject);
+	subjectDao.create(subject);
     }
 
     public List<Subject> findAll() {
@@ -39,24 +42,39 @@ public class SubjectService {
     }
 
     public void update(Subject subject) {
+	logger.debug("Updating subject: {} ", subject);
+	verifyNameIsUnique(subject);
 	subjectDao.update(subject);
     }
 
     public void delete(int id) {
-	Optional<Subject> subject = subjectDao.findById(id);
-	var canDelete = subject.isPresent()
-		&& isNotAssigned(subject.get())
-		&& isNotScheduled(subject.get());
-	if (canDelete) {
-	    subjectDao.delete(id);
+	logger.debug("Deleting subject by id: {} ", id);
+	var subject = subjectDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(String.format("Subject id:%s not found, nothing to delete", id)));
+	verifyIsNotAssigned(subject);
+	verifyIsNotScheduled(subject);
+	subjectDao.delete(id);
+    }
+
+    private void verifyNameIsUnique(Subject subject) {
+	subjectDao.findByName(subject.getName())
+		.filter(s -> s.getId() != subject.getId())
+		.ifPresent(s -> {
+		    throw new EntityNotUniqueException(String.format("Subject %s already exists", s.getName()));
+		});
+    }
+
+    private void verifyIsNotScheduled(Subject subject) {
+	if (!lectureDao.findBySubject(subject).isEmpty()) {
+	    throw new EntityInUseException(
+		    String.format("Subject %s is sheduled for lecture(s), can't delete", subject.getName()));
 	}
     }
 
-    private boolean isNotScheduled(Subject subject) {
-	return lectureDao.findBySubject(subject).isEmpty();
-    }
-
-    private boolean isNotAssigned(Subject subject) {
-	return subjectDao.countAssignments(subject) == 0;
+    private void verifyIsNotAssigned(Subject subject) {
+	if (subjectDao.countAssignments(subject) > 0) {
+	    throw new EntityInUseException(
+		    String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
+	}
     }
 }

@@ -1,12 +1,14 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 import java.util.Optional;
 
@@ -18,6 +20,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,12 +71,15 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenGroupWithOldNameAndNewId_onUpdate_shouldNotCallDaoCreate() {
+    void givenGroupWithOldNameAndNewId_onUpdate_shouldThrowException() {
+	String expected = "Group ZI-08 already exists";
 	Group group = new Group(5, "ZI-08");
 	when(groupDao.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
 
-	groupService.update(group);
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> groupService.update(group));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(groupDao, never()).update(group);
     }
 
@@ -85,9 +93,26 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenIncorrectGroupId_onDelete_shouldNotCallDaoDelete() {
-	groupService.delete(1);
+    void givenIncorrectGroupId_onDelete_shouldThrowException() {
+	String expected = "Group id:1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> groupService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(groupDao, never()).delete(1);
+    }
+
+    @Test
+    void givenNonEmptyGroup_onDelete_shouldThrowException() {
+	String expected = "Group AB-11 has assigned students, can't delete";
+	when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
+	when(studentDao.findByGroup(expectedGroup1)).thenReturn(expectedStudents);
+
+	Throwable thrown = assertThrows(GroupNotEmptyException.class,
+		() -> groupService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(groupDao, never()).delete(1);
     }
 }

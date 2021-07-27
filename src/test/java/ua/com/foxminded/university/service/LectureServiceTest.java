@@ -1,10 +1,13 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedGroups1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
@@ -12,6 +15,9 @@ import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToC
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.lectureToUpdate;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -25,6 +31,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.GroupBusyException;
+import ua.com.foxminded.university.exception.LectureOnHolidayException;
+import ua.com.foxminded.university.exception.LectureOnWeekendException;
+import ua.com.foxminded.university.exception.TeacherBusyException;
+import ua.com.foxminded.university.exception.TeacherCannotTeachSubject;
+import ua.com.foxminded.university.exception.TeacherOnVacationException;
 import ua.com.foxminded.university.model.Lecture;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,77 +72,97 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTooSmallClassroom_onCreate_shouldNotCallDaoCreate() {
-	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
+    void givenLectureWithTooSmallClassroom_onCreate_shouldThrowException() {
+	String expected = "Classroom too small: required 501, but was 500";
+	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(501);
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class,
+		() -> lectureService.create(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureOnHoliday_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureOnHoliday_onCreate_shouldThrowException() {
+	String expected = "Can't schedule lecture to a holiday";
 	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(LectureOnHolidayException.class,
+		() -> lectureService.create(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureOnSunday_onCreate_shouldNotCallDaoCreate() {
-	lectureService.create(lectureToCreate);
+    void givenLectureOnSunday_onCreate_shouldThrowException() {
+	String expected = "Can't schedule lecture to a weekend";
+	Throwable thrown = assertThrows(LectureOnWeekendException.class,
+		() -> lectureService.create(lectureToCreate));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(lectureToCreate);
     }
 
     @Test
-    void givenLectureWithBusyTeacher_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithBusyTeacher_onCreate_shouldThrowException() {
+	String expected = "Teacher Adam Smith will be reading another lecture";
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(TeacherBusyException.class,
+		() -> lectureService.create(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherOnVacation_onCreate_shouldNotCallDaoCreate() {
-	LocalDate dateBackup = expectedLecture1.getDate();
-	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
+    void givenLectureWithTeacherOnVacation_onCreate_shouldThrowException() {
+	String expected = "Teacher Adam Smith will be on a vacation, can't schedule lecture";
+	Throwable thrown = assertThrows(TeacherOnVacationException.class,
+		() -> lectureService.create(lectureWithTeacherOnVacation));
 
-	lectureService.create(expectedLecture1);
-
-	expectedLecture1.setDate(dateBackup);
-	verify(lectureDao, never()).create(expectedLecture1);
+	assertEquals(expected, thrown.getMessage());
+	verify(lectureDao, never()).create(lectureWithTeacherOnVacation);
     }
 
     @Test
-    void givenLectureWithTeacherCantTeach_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithTeacherCantTeach_onCreate_shouldThrowException() {
+	String expected = "Teacher Adam Smith can't teach Test Radiology";
 	expectedLecture1.setSubject(expectedSubject4);
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(TeacherCannotTeachSubject.class,
+		() -> lectureService.create(expectedLecture1));
 
 	expectedLecture1.setSubject(expectedSubject1);
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyGroup_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithBusyGroup_onCreate_shouldThrowException() {
+	String expected = "Group(s) will be attending another lecture";
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(GroupBusyException.class,
+		() -> lectureService.create(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyClassroom_onCreate_shouldNotCallDaoCreate() {
+    void givenLectureWithOccupiedClassroom_onCreate_shouldThrowException() {
+	String expected = "Classroom Big physics auditory is occupied at this day and time";
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
-	lectureService.create(expectedLecture1);
+	Throwable thrown = assertThrows(ClassroomOccupiedException.class,
+		() -> lectureService.create(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).create(expectedLecture1);
     }
 
@@ -139,77 +174,99 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenLectureWithTooSmallClassroom_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithTooSmallClassroom_onUpdate_shouldThrowException() {
+	String expected = "Classroom too small: required 1000, but was 500";
 	when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(1000);
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(ClassroomInvalidCapacityException.class,
+		() -> lectureService.update(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureOnHoliday_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureOnHoliday_onUpdate_shouldThrowException() {
+	String expected = "Can't schedule lecture to a holiday";
 	when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(LectureOnHolidayException.class,
+		() -> lectureService.update(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureOnSunday_onUpdate_shouldNotCallDaoUpdate() {
-	lectureService.update(lectureToUpdate);
+    void givenLectureOnSunday_onUpdate_shouldThrowException() {
+	String expected = "Can't schedule lecture to a weekend";
 
+	Throwable thrown = assertThrows(LectureOnWeekendException.class,
+		() -> lectureService.update(lectureToUpdate));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(lectureToUpdate);
     }
 
     @Test
-    void givenLectureWithBusyTeacher_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithBusyTeacher_onUpdate_shouldThrowException() {
+	String expected = "Teacher Adam Smith will be reading another lecture";
 	when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(TeacherBusyException.class,
+		() -> lectureService.update(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherOnVacation_onUpdate_shouldNotCallDaoUpdate() {
-	LocalDate dateBackup = expectedLecture1.getDate();
-	expectedLecture1.setDate(expectedLecture1.getTeacher().getVacations().get(1).getStartDate());
+    void givenLectureWithTeacherOnVacation_onUpdate_shouldThrowException() {
+	String expected = "Teacher Adam Smith will be on a vacation, can't schedule lecture";
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(TeacherOnVacationException.class,
+		() -> lectureService.update(lectureWithTeacherOnVacation));
 
-	expectedLecture1.setDate(dateBackup);
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithTeacherCantTeach_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithTeacherCantTeach_onUpdate_shouldThrowException() {
+	String expected = "Teacher Adam Smith can't teach Test Radiology";
 	expectedLecture1.setSubject(expectedSubject4);
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(TeacherCannotTeachSubject.class,
+		() -> lectureService.update(expectedLecture1));
 
 	expectedLecture1.setSubject(expectedSubject1);
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyGroup_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithBusyGroup_onUpdate_shouldThrowException() {
+	String expected = "Group(s) will be attending another lecture";
 	when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(GroupBusyException.class,
+		() -> lectureService.update(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
     @Test
-    void givenLectureWithBusyClassroom_onUpdate_shouldNotCallDaoUpdate() {
+    void givenLectureWithOccupiedClassroom_onUpdate_shouldThrowException() {
+	String expected = "Classroom Big physics auditory is occupied at this day and time";
 	when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
 		expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
-	lectureService.update(expectedLecture1);
+	Throwable thrown = assertThrows(ClassroomOccupiedException.class,
+		() -> lectureService.update(expectedLecture1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).update(expectedLecture1);
     }
 
@@ -230,9 +287,19 @@ class LectureServiceTest {
     }
 
     @Test
-    void givenIncorrectLectureId_onDelete_shouldNotCallDaoDelete() {
-	lectureService.delete(1);
+    void givenIncorrectLectureId_onDelete_shouldThrowException() {
+	String expected = "Lecture id:1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> lectureService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(lectureDao, never()).delete(1);
+    }
+
+    interface TestData {
+	Lecture lectureWithTeacherOnVacation = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
+		.id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
+		.teacher(expectedTeacher1).classroom(expectedClassroom1).build();
     }
 }

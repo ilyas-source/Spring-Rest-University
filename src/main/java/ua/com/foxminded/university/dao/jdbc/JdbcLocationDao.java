@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.model.Location;
 
 @Component
 public class JdbcLocationDao implements LocationDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcLocationDao.class);
 
     private static final String CREATE = "INSERT INTO locations (building, floor, room_number) VALUES (?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM locations WHERE id = ?";
@@ -34,6 +38,7 @@ public class JdbcLocationDao implements LocationDao {
 
     @Override
     public void create(Location location) {
+	logger.debug("Writing a new location to database: {} ", location);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -50,6 +55,7 @@ public class JdbcLocationDao implements LocationDao {
 
     @Override
     public Optional<Location> findById(int id) {
+	logger.debug("Retrieving location by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, locationMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -59,16 +65,19 @@ public class JdbcLocationDao implements LocationDao {
 
     @Override
     public List<Location> findAll() {
+	logger.debug("Retrieving all locations");
 	return jdbcTemplate.query(FIND_ALL, locationMapper);
     }
 
     @Override
     public void update(Location location) {
+	logger.debug("Updating location in database: {} ", location);
 	jdbcTemplate.update(UPDATE, location.getBuilding(), location.getFloor(), location.getRoomNumber(), location.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting location by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

@@ -12,12 +12,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.service.LectureService;
 
 @Component
@@ -41,7 +37,7 @@ public class LecturesMenu {
     }
 
     public String getStringOfLectures(List<Lecture> lectures) {
-	StringBuilder result = new StringBuilder();
+	var result = new StringBuilder();
 	lectures.sort(Comparator.comparing(Lecture::getId));
 	for (Lecture lecture : lectures) {
 	    result.append(lecture.getId()).append(". " + getStringFromLecture(lecture));
@@ -50,10 +46,10 @@ public class LecturesMenu {
     }
 
     public String getStringFromLecture(Lecture lecture) {
-	StringBuilder result = new StringBuilder();
-	Subject subject = lecture.getSubject();
-	Teacher teacher = lecture.getTeacher();
-	Classroom classroom = lecture.getClassroom();
+	var result = new StringBuilder();
+	var subject = lecture.getSubject();
+	var teacher = lecture.getTeacher();
+	var classroom = lecture.getClassroom();
 
 	result.append(
 		"Lecture on (" + subject.getId() + ")" + subject.getName() + " will take place on " + lecture.getDate()
@@ -81,11 +77,11 @@ public class LecturesMenu {
 	System.out.print("Lecture date: ");
 	LocalDate date = getDateFromScanner();
 
-	Timeslot timeslot = timeslotsMenu.selectTimeslot();
+	var timeslot = timeslotsMenu.selectTimeslot();
 	List<Group> groups = groupsMenu.selectGroups();
-	Subject subject = subjectsMenu.selectSubject();
-	Teacher teacher = teachersMenu.selectTeacher();
-	Classroom classroom = classroomsMenu.selectClassroom();
+	var subject = subjectsMenu.selectSubject();
+	var teacher = teachersMenu.selectTeacher();
+	var classroom = classroomsMenu.selectClassroom();
 
 	return Lecture.builder().date(date).subject(subject).timeslot(timeslot)
 		.groups(groups).teacher(teacher).classroom(classroom)
@@ -99,7 +95,7 @@ public class LecturesMenu {
 	while (isNull(result)) {
 	    System.out.println("Select lecture: ");
 	    System.out.print(getStringOfLectures(lectures));
-	    int choice = getIntFromScanner();
+	    var choice = getIntFromScanner();
 	    Optional<Lecture> selectedLecture = lectureService.findById(choice);
 	    if (isNull(selectedLecture.isEmpty())) {
 		System.out.println("No such lecture.");
@@ -112,8 +108,8 @@ public class LecturesMenu {
     }
 
     public void updateLecture() {
-	Lecture oldLecture = selectLecture();
-	Lecture newLecture = createLecture();
+	var oldLecture = selectLecture();
+	var newLecture = createLecture();
 	newLecture.setId(oldLecture.getId());
 	lectureService.update(newLecture);
 	System.out.println("Overwrite successful.");

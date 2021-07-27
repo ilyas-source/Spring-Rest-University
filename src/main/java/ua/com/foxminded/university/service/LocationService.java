@@ -3,14 +3,21 @@ package ua.com.foxminded.university.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
+import ua.com.foxminded.university.exception.EntityInUseException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
 @Service
 public class LocationService {
+
+    private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     private LocationDao locationDao;
     private ClassroomDao classroomDao;
@@ -21,6 +28,7 @@ public class LocationService {
     }
 
     public void create(Location location) {
+	logger.debug("Creating a new location: {} ", location);
 	locationDao.create(location);
     }
 
@@ -33,18 +41,22 @@ public class LocationService {
     }
 
     public void update(Location location) {
+	logger.debug("Updating location: {} ", location);
 	locationDao.update(location);
     }
 
-    private boolean hasNoClassrooms(Location location) {
-	return classroomDao.findByLocation(location).isEmpty();
+    public void delete(int id) {
+	logger.debug("Deleting location by id: {} ", id);
+	var location = locationDao.findById(id)
+		.orElseThrow(() -> new EntityNotFoundException(String.format("Location id:%s not found, nothing to delete", id)));
+	verifyIsNotUsed(location);
+	locationDao.delete(id);
     }
 
-    public void delete(int id) {
-	if (locationDao.findById(id)
-		.filter(this::hasNoClassrooms)
-		.isPresent()) {
-	    locationDao.delete(id);
+    private void verifyIsNotUsed(Location location) {
+	Optional<Classroom> classroom = classroomDao.findByLocation(location);
+	if (classroom.isPresent()) {
+	    throw new EntityInUseException("Location is used for " + classroom.get().getName());
 	}
     }
 }

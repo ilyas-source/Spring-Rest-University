@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import ua.com.foxminded.university.model.Subject;
 
 @Component
 public class JdbcSubjectDao implements SubjectDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcSubjectDao.class);
 
     private static final String CREATE = "INSERT INTO subjects (name, description) VALUES (?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM subjects WHERE id = ?";
@@ -38,6 +42,7 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public void create(Subject subject) {
+	logger.debug("Writing a new subject to database: {} ", subject);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -52,6 +57,7 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public Optional<Subject> findById(int id) {
+	logger.debug("Retrieving subject by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, subjectMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -70,16 +76,19 @@ public class JdbcSubjectDao implements SubjectDao {
 
     @Override
     public List<Subject> findAll() {
+	logger.debug("Retrieving all subjects");
 	return jdbcTemplate.query(FIND_ALL, subjectMapper);
     }
 
     @Override
     public void update(Subject subject) {
+	logger.debug("Updating subject in database: {} ", subject);
 	jdbcTemplate.update(UPDATE, subject.getName(), subject.getDescription(), subject.getId());
     }
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting subject by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

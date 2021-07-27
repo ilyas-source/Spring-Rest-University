@@ -2,13 +2,18 @@ package ua.com.foxminded.university.service;
 
 import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeachers;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.teacherToCreate;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.daysByYearsMap;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +29,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.TeacherBusyException;
+import ua.com.foxminded.university.exception.TeacherCannotTeachSubject;
+import ua.com.foxminded.university.exception.VacationInsufficientDaysException;
 import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Teacher;
 
@@ -69,14 +79,17 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenTeacherWithTooLongVacations_onCreate_shouldNotCallDaoCreate() {
+    void givenTeacherWithTooLongVacations_onCreate_shouldThrowException() {
+	String expected = "Teacher has maximum 20 vacation days per year, can't assign 40 days";
 	Map<Integer, Long> daysByYearsMap = new HashMap<>();
 	daysByYearsMap.put(2000, 40L);
 	daysByYearsMap.put(2001, 20L);
 	when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
-	teacherService.create(expectedTeacher1);
+	Throwable thrown = assertThrows(VacationInsufficientDaysException.class,
+		() -> teacherService.create(expectedTeacher1));
 
+	assertEquals(expected, thrown.getMessage());
 	verify(teacherDao, never()).create(expectedTeacher1);
     }
 
@@ -99,9 +112,60 @@ class TeacherServiceTest {
     }
 
     @Test
-    void givenIncorrectTeacherId_onDelete_shouldNotCallDaoDelete() {
+    void givenIncorrectTeacherId_onDelete_shouldThrowException() {
+	String expected = "Teacher id:1 not found, nothing to delete";
+
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> teacherService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(teacherDao, never()).delete(1);
+    }
+
+    @Test
+    void givenTeacherWithLectures_onDelete_shouldThrowException() {
+	String expected = "Teacher Adam Smith has scheduled lecture(s), can't delete";
+	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
+	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+
+	Throwable thrown = assertThrows(TeacherBusyException.class,
+		() -> teacherService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(teacherDao, never()).delete(1);
+    }
+
+    @Test
+    void givenTeacherWithNoLecturesId_onDelete_shouldCallDaoDelete() {
+	when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+	when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(new ArrayList<>());
+
 	teacherService.delete(1);
 
-	verify(teacherDao, never()).delete(1);
+	verify(teacherDao).delete(1);
+    }
+
+    @Test
+    void givenTeacherWithExistingNameAndEmail_onCreate_shouldThrowException() {
+	String expected = "Teacher Adam Smith with email adam@smith.com already exists, can't create duplicate";
+	when(teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com")).thenReturn(Optional.of(expectedTeacher2));
+
+	Throwable thrown = assertThrows(EntityNotUniqueException.class,
+		() -> teacherService.create(expectedTeacher1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(teacherDao, never()).create(expectedTeacher1);
+    }
+
+    @Test
+    void givenTeacherThatCannotTeachRequiredSubjects_onUpdate_shouldThrowException() {
+	String expected = "Updated teacher Test Teacher can't teach scheduled lecture(s)";
+	when(lectureDao.findByTeacher(teacherToCreate)).thenReturn(expectedLectures);
+
+	Throwable thrown = assertThrows(TeacherCannotTeachSubject.class,
+		() -> teacherService.update(teacherToCreate));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(teacherDao, never()).update(teacherToCreate);
     }
 }

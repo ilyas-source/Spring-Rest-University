@@ -11,9 +11,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Degree;
-import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
@@ -38,7 +36,7 @@ public class TeachersMenu {
     }
 
     public String getStringOfTeachers(List<Teacher> teachers) {
-	StringBuilder result = new StringBuilder();
+	var result = new StringBuilder();
 	teachers.sort(Comparator.comparing(Teacher::getId));
 	for (Teacher teacher : teachers) {
 	    result.append(teacher.getId()).append(". " + getStringFromTeacher(teacher) + CR);
@@ -65,8 +63,8 @@ public class TeachersMenu {
 	System.out.print("Enter last name: ");
 	String lastName = scanner.nextLine();
 
-	Gender gender = genderMenu.getGender();
-	Degree degree = getDegree();
+	var gender = genderMenu.getGender();
+	var degree = getDegree();
 
 	System.out.print("Email:");
 	String email = scanner.nextLine();
@@ -74,7 +72,7 @@ public class TeachersMenu {
 	System.out.print("Phone:");
 	String phone = scanner.nextLine();
 
-	Address address = addressMenu.createAddress();
+	var address = addressMenu.createAddress();
 	List<Subject> subjects = subjectsMenu.selectSubjects();
 
 	Teacher result = Teacher.builder().firstName(firstName).lastName(lastName)
@@ -122,7 +120,7 @@ public class TeachersMenu {
 	while (isNull(result)) {
 	    System.out.println("Select teacher: ");
 	    System.out.print(getStringOfTeachers(teachers));
-	    int choice = getIntFromScanner();
+	    var choice = getIntFromScanner();
 	    Optional<Teacher> selectedTeacher = teacherService.findById(choice);
 	    if (selectedTeacher.isEmpty()) {
 		System.out.println("No such teacher.");
@@ -135,8 +133,8 @@ public class TeachersMenu {
     }
 
     public void updateTeacher() {
-	Teacher oldTeacher = selectTeacher();
-	Teacher newTeacher = createTeacher();
+	var oldTeacher = selectTeacher();
+	var newTeacher = createTeacher();
 	newTeacher.setId(oldTeacher.getId());
 	newTeacher.getAddress().setId(oldTeacher.getAddress().getId());
 	teacherService.update(newTeacher);

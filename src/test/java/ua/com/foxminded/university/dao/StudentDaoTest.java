@@ -183,5 +183,6 @@ public class StudentDaoTest {
 	List<Student> expectedStudents = new ArrayList<>(
 		Arrays.asList(expectedStudent1, expectedStudent2, expectedStudent3, expectedStudent4));
 
+	List<Student> noStudents = new ArrayList<>();
     }
 }

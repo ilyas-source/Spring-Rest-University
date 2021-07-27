@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,6 +28,8 @@ import ua.com.foxminded.university.model.Timeslot;
 
 @Component
 public class JdbcLectureDao implements LectureDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(JdbcLectureDao.class);
 
     private static final String CREATE = "INSERT INTO lectures (date, timeslot_id, subject_id, teacher_id, " +
 	    "classroom_id) VALUES (?, ?, ?, ?, ?)";
@@ -56,6 +60,7 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     @Transactional
     public void create(Lecture lecture) {
+	logger.debug("Writing a new lecture to database: {} ", lecture);
 	KeyHolder keyHolder = new GeneratedKeyHolder();
 
 	jdbcTemplate.update(connection -> {
@@ -77,6 +82,7 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     @Transactional
     public void update(Lecture lecture) {
+	logger.debug("Updating lecture in database: {} ", lecture);
 	jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(), lecture.getSubject().getId(),
 		lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
 
@@ -101,6 +107,7 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public Optional<Lecture> findById(int id) {
+	logger.debug("Retrieving lecture by id: {} ", id);
 	try {
 	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, lectureMapper, id));
 	} catch (EmptyResultDataAccessException e) {
@@ -110,6 +117,7 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findAll() {
+	logger.debug("Retrieving all lectures");
 	return jdbcTemplate.query(FIND_ALL, lectureMapper);
     }
 
@@ -161,6 +169,7 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public void delete(int id) {
+	logger.debug("Deleting lecture by id: {} ", id);
 	jdbcTemplate.update(DELETE_BY_ID, id);
     }
 

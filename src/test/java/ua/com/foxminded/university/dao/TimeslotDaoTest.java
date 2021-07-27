@@ -111,5 +111,7 @@ public class TimeslotDaoTest {
 	Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45));
 	List<Timeslot> expectedTimeslots = new ArrayList<>(
 		Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));
+
+	Timeslot timeslotWithBreaks = new Timeslot(LocalTime.of(8, 45), LocalTime.of(10, 00));
     }
 }

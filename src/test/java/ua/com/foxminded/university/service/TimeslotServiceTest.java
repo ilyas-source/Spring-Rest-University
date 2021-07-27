@@ -1,13 +1,17 @@
 package ua.com.foxminded.university.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotToCreate;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.timeslotWithBreaks;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +22,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.TimeslotInUseException;
+import ua.com.foxminded.university.exception.TimeslotTooShortException;
+import ua.com.foxminded.university.exception.TimeslotsIntersectionException;
 import ua.com.foxminded.university.model.Timeslot;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +44,8 @@ class TimeslotServiceTest {
 
     @Mock
     private TimeslotDao timeslotDao;
+    @Mock
+    private LectureDao lectureDao;
     @InjectMocks
     private TimeslotService timeslotService;
 
@@ -70,16 +81,60 @@ class TimeslotServiceTest {
     }
 
     @Test
-    void givenIncorrectTimeslotId_onDelete_shouldNotCallDaoDelete() {
-	timeslotService.delete(1);
+    void givenIncorrectTimeslotId_onDelete_shouldThrowException() {
+	String expected = "Timeslot id:1 not found, nothing to delete";
 
+	Throwable thrown = assertThrows(EntityNotFoundException.class,
+		() -> timeslotService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(timeslotDao, never()).delete(1);
     }
 
     @Test
-    void givenShortTimeslot_onCreate_shouldNotCallCreate() {
-	timeslotService.create(timeslotToCreate);
+    void givenShortTimeslot_onCreate_shouldThrowException() {
+	String expected = "Minimum timeslot length 30 min, but was 15 min, can't create timeslot";
 
+	Throwable thrown = assertThrows(TimeslotTooShortException.class,
+		() -> timeslotService.create(timeslotToCreate));
+
+	assertEquals(expected, thrown.getMessage());
 	verify(timeslotDao, never()).create(timeslotToCreate);
+    }
+
+    @Test
+    void givenFreeTimeslot_onDelete_shouldCallDaoDelete() {
+	when(timeslotDao.findById(1)).thenReturn(Optional.of(expectedTimeslot1));
+	when(lectureDao.findByTimeslot(expectedTimeslot1)).thenReturn(new ArrayList<>());
+
+	timeslotService.delete(1);
+
+	verify(timeslotDao).delete(1);
+    }
+
+    @Test
+    void givenTimeslotWithLectures_onDelete_shouldThrowException() {
+	String expected = "Timeslot has sheduled lectures, can't delete";
+
+	when(timeslotDao.findById(1)).thenReturn(Optional.of(expectedTimeslot1));
+	when(lectureDao.findByTimeslot(expectedTimeslot1)).thenReturn(expectedLectures);
+
+	Throwable thrown = assertThrows(TimeslotInUseException.class,
+		() -> timeslotService.delete(1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(timeslotDao, never()).delete(1);
+    }
+
+    @Test
+    void givenIntersectingTimeslot_onCreate_shouldThrowException() {
+	String expected = "New timeslot has intersections with existing timetable, can't create/update";
+	when(timeslotDao.countIntersectingTimeslots(timeslotWithBreaks)).thenReturn(1);
+
+	Throwable thrown = assertThrows(TimeslotsIntersectionException.class,
+		() -> timeslotService.create(expectedTimeslot1));
+
+	assertEquals(expected, thrown.getMessage());
+	verify(timeslotDao, never()).create(expectedTimeslot1);
     }
 }
