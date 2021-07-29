@@ -27,31 +27,15 @@ public class GroupController {
 
     @GetMapping
     public String findAll(Model model) {
+	logger.debug("Retrieving all groups to controller");
 	model.addAttribute("groups", groupService.findAll());
 	return "groups";
     }
 
     @GetMapping("/{id}")
     public String findById(@PathVariable int id, Model model) {
+	logger.debug("Retrieving group by id:{} to controller", id);
 	model.addAttribute("group", groupService.findById(id).get());
 	return "info/group";
     }
-
-    @PostMapping("/add")
-    public String addGroup(@ModelAttribute Group group) {
-	groupService.create(group);
-	return "redirect:/university/groups";
-    }
-
-    @PostMapping("/edit")
-    public String updateGroup(@ModelAttribute Group group) {
-	groupService.update(group);
-	return "redirect:/university/groups";
-    }
-
-//    @PostMapping("/delete")
-//    public String deleteGroup(@ModelAttribute Group group) {
-//        groupService.delete(group);
-//        return "redirect:/university/groups";
-//    }
 }
