@@ -31,9 +31,9 @@ public class GroupController {
 	return "groups";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public String findById(@PathVariable int id, Model model) {
-	model.addAttribute("group", groupService.findById(id));
+	model.addAttribute("group", groupService.findById(id).get());
 	return "info/group";
     }
 
