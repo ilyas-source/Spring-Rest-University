@@ -1,4 +1,4 @@
-package ua.com.foxminded.university;
+package ua.com.foxminded.university.config;
 
 import javax.sql.DataSource;
 

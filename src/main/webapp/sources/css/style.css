@@ -1,0 +1,21 @@
+.yellow {
+    color: #FFA201;
+}
+
+.my_hidden {
+    display: none;
+}
+
+select {
+    overflow-y: auto;
+}
+
+#add .checkbox_container {
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: 4px 6px;
+}
+
+.my_align_middle {
+    text-align: center;
+}

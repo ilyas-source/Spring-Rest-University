@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import ua.com.foxminded.university.config.ApplicationConfig;
+
 @Configuration
 @Import(ApplicationConfig.class)
 public class SpringTestConfig {

@@ -108,7 +108,6 @@ class VacationServiceTest {
 	expected.put(2001, 9L);
 
 	Map<Integer, Long> actual = vacationService.countDaysByYears(vacationsToCount);
-	System.out.println(actual);
 
 	assertEquals(expected, actual);
     }
