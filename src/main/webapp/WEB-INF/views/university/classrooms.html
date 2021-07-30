@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Groups</title>
+<title>Classrooms</title>
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
@@ -17,15 +17,21 @@
 				<thead class="thead-light">
 					<tr>
 						<th scope="col">ID</th>
-						<th scope="col">Name</th>						
+						<th scope="col">Name</th>
+						<th scope="col">Capacity</th>
+						<th scope="col">Location</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="group : ${groups}">
+					<tr th:each="classroom : ${classrooms}">
 						<th scope="row" class="align-left"><span
-							th:text="${group.id}"> </span></th>
-						<td class="align-left"><span th:text="${group.name}">
+							th:text="${classroom.id}"> </span></th>
+						<td class="align-left"><span th:text="${classroom.name}">
 						</span></td>
+						<td class="align-left"><span th:text="${classroom.capacity}">
+						</span></td>
+						<td class="align-left"><span
+							th:text="${classroom.location}"> </span></td>
 					</tr>
 				</tbody>
 			</table>

@@ -82,7 +82,7 @@ public class Vacation {
 
     @Override
     public String toString() {
-	return "Vacation [id=" + id + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+	return "start: " + startDate + ", end: " + endDate;
     }
 
     public boolean intersects(Vacation vacation) {

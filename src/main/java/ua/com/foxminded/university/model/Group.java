@@ -63,6 +63,6 @@ public class Group {
 
     @Override
     public String toString() {
-	return "Group [id=" + id + ", " + name + "]";
+	return name;
     }
 }

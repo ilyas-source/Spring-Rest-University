@@ -91,6 +91,6 @@ public class Location {
 
     @Override
     public String toString() {
-	return "Location [id=" + id + ", building=" + building + ", floor=" + floor + ", roomNumber=" + roomNumber + "]";
+	return building + ", floor " + floor + ", room " + roomNumber;
     }
 }
