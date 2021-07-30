@@ -18,7 +18,7 @@
 		<thymeleaf-version>3.0.12.RELEASE</thymeleaf-version>
 		<maven.compiler.source>1.10</maven.compiler.source>
 		<maven.compiler.target>1.10</maven.compiler.target>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,7 +74,6 @@
 			<version>4.0.1</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-war-plugin</artifactId>
@@ -134,7 +133,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<finalName>testweb</finalName>
 		<pluginManagement>
