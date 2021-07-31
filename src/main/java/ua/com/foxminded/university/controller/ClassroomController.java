@@ -26,13 +26,6 @@ public class ClassroomController {
     public String findAll(Model model) {
 	logger.debug("Retrieving all classrooms to controller");
 	model.addAttribute("classrooms", classroomService.findAll());
-	return "classrooms";
-    }
-
-    @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-	logger.debug("Retrieving classroom by id:{} to controller", id);
-	model.addAttribute("classroom", classroomService.findById(id).get());
-	return "info/classroom";
+	return "classroomsView";
     }
 }
