@@ -34,7 +34,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
@@ -46,7 +45,6 @@ import ua.com.foxminded.university.model.Vacation;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@WebAppConfiguration
 public class TeacherDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";

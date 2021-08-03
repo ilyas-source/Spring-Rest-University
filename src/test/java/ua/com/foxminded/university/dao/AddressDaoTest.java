@@ -18,7 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ua.com.foxminded.university.SpringTestConfig;
@@ -26,7 +25,6 @@ import ua.com.foxminded.university.model.Address;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-//@WebAppConfiguration
 public class AddressDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";

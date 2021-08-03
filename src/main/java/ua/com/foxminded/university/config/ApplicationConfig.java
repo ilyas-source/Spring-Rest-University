@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan("ua.com.foxminded.university")
+@ComponentScan("ua.com.foxminded.university.dao")
 @PropertySource("classpath:database.properties")
 public class ApplicationConfig {
 
