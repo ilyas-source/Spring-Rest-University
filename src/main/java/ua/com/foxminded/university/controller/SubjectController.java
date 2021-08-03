@@ -26,13 +26,6 @@ public class SubjectController {
     public String findAll(Model model) {
 	logger.debug("Retrieving all subjects to controller");
 	model.addAttribute("subjects", subjectService.findAll());
-	return "subjects";
-    }
-
-    @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-	logger.debug("Retrieving subject by id:{} to controller", id);
-	model.addAttribute("subject", subjectService.findById(id).get());
-	return "info/subject";
+	return "subjectsView";
     }
 }

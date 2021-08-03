@@ -26,13 +26,6 @@ public class GroupController {
     public String findAll(Model model) {
 	logger.debug("Retrieving all groups to controller");
 	model.addAttribute("groups", groupService.findAll());
-	return "groups";
-    }
-
-    @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-	logger.debug("Retrieving group by id:{} to controller", id);
-	model.addAttribute("group", groupService.findById(id).get());
-	return "info/group";
+	return "groupsView";
     }
 }

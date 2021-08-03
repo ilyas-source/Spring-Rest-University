@@ -26,13 +26,6 @@ public class HolidayController {
     public String findAll(Model model) {
 	logger.debug("Retrieving all holidays to controller");
 	model.addAttribute("holidays", holidayService.findAll());
-	return "holidays";
-    }
-
-    @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-	logger.debug("Retrieving holiday by id:{} to controller", id);
-	model.addAttribute("holiday", holidayService.findById(id).get());
-	return "info/holiday";
+	return "holidaysView";
     }
 }

@@ -37,7 +37,6 @@ class ClassroomControllerTest {
 	when(classroomService.findAll()).thenReturn(expectedClassrooms);
 
 	mockMvc.perform(get("/classrooms"))
-
 		.andExpect(view().name("classroomsView"))
 		.andExpect(model().attribute("classrooms", expectedClassrooms));
     }

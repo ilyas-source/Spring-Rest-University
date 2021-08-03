@@ -26,13 +26,6 @@ public class TeacherController {
     public String findAll(Model model) {
 	logger.debug("Retrieving all teachers to controller");
 	model.addAttribute("teachers", teacherService.findAll());
-	return "teachers";
-    }
-
-    @GetMapping("/{id}")
-    public String findById(@PathVariable int id, Model model) {
-	logger.debug("Retrieving teacher by id:{} to controller", id);
-	model.addAttribute("teacher", teacherService.findById(id).get());
-	return "info/teacher";
+	return "teachersView";
     }
 }
