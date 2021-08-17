@@ -1,56 +1,49 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Lectures</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-	crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Lectures</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<header th:insert="fragments/header.html :: header"></header>
-	<div class="container">
-		<div class="mt-5">
-			<table class="table table-striped">
-				<thead class="thead-light">
-					<tr>
-						<th scope="col">ID</th>
-						<th scope="col">Day</th>
-						<th scope="col">Begin time</th>
-						<th scope="col">End time</th>
-						<th scope="col">Classroom</th>
-						<th scope="col">Subject</th>
-						<th scope="col">Teacher</th>
-						<th scope="col">Groups</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="lecture : ${lectures}">
-						<th scope="row" class="align-left"><span
-							th:text="${lecture.id}"> </span></th>
-						<td class="align-left"><span th:text="${lecture.date}">
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container">
+    <div class="mt-5">
+        <table class="table table-striped">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Day</th>
+                <th scope="col">Begin time</th>
+                <th scope="col">End time</th>
+                <th scope="col">Classroom</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Teacher</th>
+                <th scope="col">Groups</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="lecture : ${lectures}">
+                <th scope="row" class="align-left"><span
+                        th:text="${lecture.id}"> </span></th>
+                <td class="align-left"><span th:text="${lecture.date}">
 						</span></td>
-						<td class="align-left"><span
-							th:text="${lecture.timeslot.beginTime}"></span></td>
-						<td class="align-left"><span
-							th:text="${lecture.timeslot.endTime}"></span></td>
-						<td class="align-left"><span
-							th:text="${lecture.classroom.name}"></span></td>
-						<td class="align-left"><span
-							th:text="${lecture.subject.name}"></span></td>
-						<td class="align-left"><span
-							th:text="${lecture.teacher.firstName}+' '+${lecture.teacher.lastName}"></span></td>
-						<td class="align-left"><span th:text="${lecture.groups}"></span></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-			crossorigin="anonymous"></script>
-	</div>
+                <td class="align-left"><span
+                        th:text="${lecture.timeslot.beginTime}"></span></td>
+                <td class="align-left"><span
+                        th:text="${lecture.timeslot.endTime}"></span></td>
+                <td class="align-left"><span
+                        th:text="${lecture.classroom.name}"></span></td>
+                <td class="align-left"><span
+                        th:text="${lecture.subject.name}"></span></td>
+                <td class="align-left"><span
+                        th:text="${lecture.teacher.firstName}+' '+${lecture.teacher.lastName}"></span></td>
+                <td class="align-left"><span th:text="${lecture.groups}"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+</div>
 </body>
 </html>

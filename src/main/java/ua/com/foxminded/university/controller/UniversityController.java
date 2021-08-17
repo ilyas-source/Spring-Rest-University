@@ -10,6 +10,6 @@ public class UniversityController {
 
     @GetMapping
     public String university() {
-	return "universityView";
+        return "universityView";
     }
 }

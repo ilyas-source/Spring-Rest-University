@@ -6,16 +6,16 @@ public class WebApplicationInitializer extends AbstractAnnotationConfigDispatche
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-	return null;
+        return null;
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-	return new Class[] { MVCConfig.class };
+        return new Class[]{MVCConfig.class};
     }
 
     @Override
     protected String[] getServletMappings() {
-	return new String[] { "/" };
+        return new String[]{"/"};
     }
 }

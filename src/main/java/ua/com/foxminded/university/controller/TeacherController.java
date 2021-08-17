@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
@@ -18,13 +17,13 @@ public class TeacherController {
     private final TeacherService teacherService;
 
     public TeacherController(TeacherService teacherService) {
-	this.teacherService = teacherService;
+        this.teacherService = teacherService;
     }
 
     @GetMapping
     public String findAll(Model model) {
-	logger.debug("Retrieving all teachers to controller");
-	model.addAttribute("teachers", teacherService.findAll());
-	return "teachersView";
+        logger.debug("Retrieving all teachers to controller");
+        model.addAttribute("teachers", teacherService.findAll());
+        return "teachersView";
     }
 }

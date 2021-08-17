@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import ua.com.foxminded.university.service.HolidayService;
 
 @Controller
@@ -18,13 +17,13 @@ public class HolidayController {
     private final HolidayService holidayService;
 
     public HolidayController(HolidayService holidayService) {
-	this.holidayService = holidayService;
+        this.holidayService = holidayService;
     }
 
     @GetMapping
     public String findAll(Model model) {
-	logger.debug("Retrieving all holidays to controller");
-	model.addAttribute("holidays", holidayService.findAll());
-	return "holidaysView";
+        logger.debug("Retrieving all holidays to controller");
+        model.addAttribute("holidays", holidayService.findAll());
+        return "holidaysView";
     }
 }

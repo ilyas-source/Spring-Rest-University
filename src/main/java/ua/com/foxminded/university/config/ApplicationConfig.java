@@ -1,7 +1,5 @@
 package ua.com.foxminded.university.config;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,6 +10,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
@@ -30,21 +30,21 @@ public class ApplicationConfig {
 
     @Bean
     DataSource dataSource() {
-	DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-	driverManagerDataSource.setUrl(url);
-	driverManagerDataSource.setUsername(user);
-	driverManagerDataSource.setPassword(password);
-	driverManagerDataSource.setDriverClassName(driver);
-	return driverManagerDataSource;
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+        driverManagerDataSource.setUrl(url);
+        driverManagerDataSource.setUsername(user);
+        driverManagerDataSource.setPassword(password);
+        driverManagerDataSource.setDriverClassName(driver);
+        return driverManagerDataSource;
     }
 
     @Bean
     public JdbcTemplate jdbcTemplate(final DataSource dataSource) {
-	return new JdbcTemplate(dataSource);
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean
     public PlatformTransactionManager transactionManager(final DataSource dataSource) {
-	return new DataSourceTransactionManager(dataSource);
+        return new DataSourceTransactionManager(dataSource);
     }
 }

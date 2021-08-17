@@ -1,8 +1,8 @@
 package ua.com.foxminded.university.dao;
 
-import java.util.Optional;
-
 import ua.com.foxminded.university.model.Teacher;
+
+import java.util.Optional;
 
 public interface TeacherDao extends GeneralDao<Teacher> {
 

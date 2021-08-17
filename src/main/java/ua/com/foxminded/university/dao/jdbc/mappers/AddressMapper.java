@@ -12,14 +12,14 @@ public class AddressMapper implements RowMapper<Address> {
 
     @Override
     public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
-	var address = new Address();
-	address.setId(rs.getInt("id"));
-	address.setCountry(rs.getString("country"));
-	address.setPostalCode(rs.getString("postalCode"));
-	address.setRegion(rs.getString("region"));
-	address.setCity(rs.getString("city"));
-	address.setStreetAddress(rs.getString("streetAddress"));
+        var address = new Address();
+        address.setId(rs.getInt("id"));
+        address.setCountry(rs.getString("country"));
+        address.setPostalCode(rs.getString("postalCode"));
+        address.setRegion(rs.getString("region"));
+        address.setCity(rs.getString("city"));
+        address.setStreetAddress(rs.getString("streetAddress"));
 
-	return address;
+        return address;
     }
 }

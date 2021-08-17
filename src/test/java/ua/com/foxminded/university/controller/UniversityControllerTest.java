@@ -1,8 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
 class UniversityControllerTest {
@@ -21,11 +21,11 @@ class UniversityControllerTest {
 
     @BeforeEach
     public void setMocks() {
-	mockMvc = MockMvcBuilders.standaloneSetup(universityController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(universityController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnHtmlPageWithAllUniversitys() throws Exception {
-	mockMvc.perform(get("/")).andExpect(view().name("universityView"));
+        mockMvc.perform(get("/")).andExpect(view().name("universityView"));
     }
 }
