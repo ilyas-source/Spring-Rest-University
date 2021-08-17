@@ -1,10 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,10 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.AddressMapper;
 import ua.com.foxminded.university.model.Address;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcAddressDao implements AddressDao {

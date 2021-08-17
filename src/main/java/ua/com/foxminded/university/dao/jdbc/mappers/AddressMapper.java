@@ -1,12 +1,11 @@
 package ua.com.foxminded.university.dao.jdbc.mappers;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.university.model.Address;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @Component
 public class AddressMapper implements RowMapper<Address> {

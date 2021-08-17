@@ -1,17 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToCreate;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToUpdate;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress2;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddresses;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,9 +7,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Address;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
