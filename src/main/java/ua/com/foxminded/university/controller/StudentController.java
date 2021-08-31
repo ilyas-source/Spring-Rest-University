@@ -22,7 +22,6 @@ import java.util.stream.IntStream;
 public class StudentController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
-
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
@@ -30,13 +29,6 @@ public class StudentController {
     }
 
     @GetMapping
-    public String findAll(Model model) {
-        logger.debug("Retrieving all students to controller");
-        model.addAttribute("students", studentService.findAll());
-        return "studentsView";
-    }
-
-    @GetMapping("/pages")
     public String findPages(Model model,
                           @RequestParam("page") Optional<Integer> page,
                           @RequestParam("size") Optional<Integer> size) {
