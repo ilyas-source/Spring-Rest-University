@@ -37,6 +37,6 @@ class StudentControllerTest {
 
         mockMvc.perform(get("/students"))
                 .andExpect(view().name("studentsView"))
-                .andExpect(model().attribute("students", expectedStudents));
+                .andExpect(model().attribute("student", expectedStudents));
     }
 }

@@ -34,19 +34,19 @@ public class JdbcClassroomDao implements ClassroomDao {
 
     private JdbcTemplate jdbcTemplate;
     private ClassroomMapper classroomMapper;
-    private LocationDao LocationDao;
+    private LocationDao locationDao;
 
     public JdbcClassroomDao(JdbcTemplate jdbcTemplate, ClassroomMapper classroomMapper, LocationDao locationDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.classroomMapper = classroomMapper;
-        this.LocationDao = locationDao;
+        this.locationDao = locationDao;
     }
 
     @Override
     @Transactional
     public void create(Classroom classroom) {
         logger.debug("Writing a new classroom to database: {} ", classroom);
-        LocationDao.create(classroom.getLocation());
+        locationDao.create(classroom.getLocation());
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -80,7 +80,7 @@ public class JdbcClassroomDao implements ClassroomDao {
     @Transactional
     public void update(Classroom classroom) {
         logger.debug("Updating classroom in database: {} ", classroom);
-        LocationDao.update(classroom.getLocation());
+        locationDao.update(classroom.getLocation());
         jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
                 classroom.getId());
     }

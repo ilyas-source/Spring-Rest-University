@@ -125,8 +125,8 @@ public class TeacherDaoTest {
 
     public interface TestData {
         List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
-        List<Vacation> vacationsToCreate = new ArrayList<Vacation>(Arrays.asList(vacationToCreate));
-        List<Vacation> vacationsToUpdate = new ArrayList<Vacation>(Arrays.asList(vacationToUpdate));
+        List<Vacation> vacationsToCreate = new ArrayList<>(Arrays.asList(vacationToCreate));
+        List<Vacation> vacationsToUpdate = new ArrayList<>(Arrays.asList(vacationToUpdate));
 
         Teacher teacherToCreate = Teacher.builder().firstName("Test").lastName("Teacher").id(3)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)

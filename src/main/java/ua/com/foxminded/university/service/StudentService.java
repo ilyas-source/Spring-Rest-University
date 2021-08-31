@@ -93,6 +93,6 @@ public class StudentService {
             list = students.subList(startItem, toIndex);
         }
 
-        return new PageImpl<Student>(list, PageRequest.of(currentPage, pageSize), students.size());
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), students.size());
     }
 }

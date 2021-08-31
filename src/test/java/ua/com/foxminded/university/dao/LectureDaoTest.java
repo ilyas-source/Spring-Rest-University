@@ -206,13 +206,13 @@ public class LectureDaoTest {
     }
 
     public interface TestData {
-        List<Group> testGroups = new ArrayList<Group>(Arrays.asList(expectedGroup1, expectedGroup2));
+        List<Group> testGroups = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
 
         Lecture lectureToCreate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(testGroups).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(3).build();
 
-        List<Group> expectedGroupsAfterUpdate = new ArrayList<Group>(Arrays.asList(expectedGroup2));
+        List<Group> expectedGroupsAfterUpdate = new ArrayList<>(Arrays.asList(expectedGroup2));
 
         Lecture lectureToUpdate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(expectedGroupsAfterUpdate).teacher(expectedTeacher1)
