@@ -20,9 +20,6 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-
-
-
 //    public String findAll(Model model,
 //                          @RequestParam("page") Optional<Integer> page,
 //                          @RequestParam("size") Optional<Integer> size) {
@@ -42,9 +39,10 @@ public class StudentController {
 //                    .collect(Collectors.toList());
 //            model.addAttribute("pageNumbers", pageNumbers);
 //        }
-
-    //   model.addAttribute("students", studentService.findAll());
-     //   return "studentsView";
+//
+//        model.addAttribute("students", studentService.findAll());
+//        return "studentsView";
+//    }
 
     @GetMapping
     public String findAll(Model model) {

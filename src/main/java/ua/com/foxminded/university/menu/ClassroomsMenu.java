@@ -2,15 +2,12 @@ package ua.com.foxminded.university.menu;
 
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Objects.isNull;
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.CR;
 
 @Component
 public class ClassroomsMenu {
@@ -37,54 +34,6 @@ public class ClassroomsMenu {
         return classroom.getId() + ". " + classroom.getName() + ": "
                 + locationsMenu.getStringFromLocation(classroom.getLocation())
                 + ". Capacity: " + classroom.getCapacity();
-    }
-
-    public void addClassroom() {
-        classroomService.create(createClassroom());
-    }
-
-    public Classroom createClassroom() {
-        System.out.println("Entering new classroom location.");
-        Location location = locationsMenu.createLocation();
-        System.out.print("Classroom name: ");
-        String name = scanner.nextLine();
-        System.out.print("Classroom capacity, students: ");
-        int capacity = getIntFromScanner();
-
-        return new Classroom(location, name, capacity);
-    }
-
-    public Classroom selectClassroom() {
-        List<Classroom> classrooms = classroomService.findAll();
-        Classroom result = null;
-
-        while (isNull(result)) {
-            System.out.println("Select classroom: ");
-            System.out.print(getStringOfClassrooms(classrooms));
-            int choice = getIntFromScanner();
-            Optional<Classroom> selectedClassroom = classroomService.findById(choice);
-            if (selectedClassroom.isEmpty()) {
-                System.out.println("No such subject.");
-            } else {
-                result = selectedClassroom.get();
-                System.out.println("Success.");
-            }
-        }
-        return result;
-    }
-
-    public void updateClassroom() {
-        Classroom oldClassroom = selectClassroom();
-        Classroom newClassroom = createClassroom();
-        newClassroom.setId(oldClassroom.getId());
-        newClassroom.getLocation().setId(oldClassroom.getLocation().getId());
-        classroomService.update(newClassroom);
-        System.out.println("Overwrite successful.");
-    }
-
-    public void deleteClassroom() {
-        classroomService.delete(selectClassroom().getId());
-        System.out.println("Classroom deleted successfully.");
     }
 
     public void printClassrooms() {

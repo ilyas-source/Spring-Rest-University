@@ -5,13 +5,10 @@ import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.service.LectureService;
 
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Objects.isNull;
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.CR;
 
 @Component
 public class LecturesMenu {
@@ -62,58 +59,9 @@ public class LecturesMenu {
         return result.toString();
     }
 
-    public void addLecture() {
-        lectureService.create(createLecture());
-    }
 
     public void printLectures() {
         System.out.println(getStringOfLectures(lectureService.findAll()));
     }
 
-    public Lecture createLecture() {
-        System.out.print("Lecture date: ");
-        LocalDate date = getDateFromScanner();
-
-        var timeslot = timeslotsMenu.selectTimeslot();
-        List<Group> groups = groupsMenu.selectGroups();
-        var subject = subjectsMenu.selectSubject();
-        var teacher = teachersMenu.selectTeacher();
-        var classroom = classroomsMenu.selectClassroom();
-
-        return Lecture.builder().date(date).subject(subject).timeslot(timeslot)
-                .groups(groups).teacher(teacher).classroom(classroom)
-                .build();
-    }
-
-    public Lecture selectLecture() {
-        List<Lecture> lectures = lectureService.findAll();
-        Lecture result = null;
-
-        while (isNull(result)) {
-            System.out.println("Select lecture: ");
-            System.out.print(getStringOfLectures(lectures));
-            var choice = getIntFromScanner();
-            Optional<Lecture> selectedLecture = lectureService.findById(choice);
-            if (isNull(selectedLecture.isEmpty())) {
-                System.out.println("No such lecture.");
-            } else {
-                result = selectedLecture.get();
-                System.out.println("Success.");
-            }
-        }
-        return result;
-    }
-
-    public void updateLecture() {
-        var oldLecture = selectLecture();
-        var newLecture = createLecture();
-        newLecture.setId(oldLecture.getId());
-        lectureService.update(newLecture);
-        System.out.println("Overwrite successful.");
-    }
-
-    public void deleteLecture() {
-        lectureService.delete(selectLecture().getId());
-        System.out.println("Lecture deleted successfully.");
-    }
 }

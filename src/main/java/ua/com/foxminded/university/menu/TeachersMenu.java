@@ -1,31 +1,24 @@
 package ua.com.foxminded.university.menu;
 
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.university.model.Degree;
-import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Objects.isNull;
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.CR;
 
 @Component
 public class TeachersMenu {
 
-    private GenderMenu genderMenu;
     private VacationsMenu vacationsMenu;
     private AddressesMenu addressMenu;
     private SubjectsMenu subjectsMenu;
     private TeacherService teacherService;
 
-    public TeachersMenu(GenderMenu genderMenu, VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
+    public TeachersMenu( VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
                         TeacherService teacherService) {
-        this.genderMenu = genderMenu;
         this.vacationsMenu = vacationsMenu;
         this.addressMenu = addressMenu;
         this.subjectsMenu = subjectsMenu;
@@ -49,97 +42,8 @@ public class TeachersMenu {
                 + "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
 
-    public void addTeacher() {
-        teacherService.create(createTeacher());
-    }
-
-    public Teacher createTeacher() {
-        System.out.print("Enter first name: ");
-        String firstName = scanner.nextLine();
-
-        System.out.print("Enter last name: ");
-        String lastName = scanner.nextLine();
-
-        var gender = genderMenu.getGender();
-        var degree = getDegree();
-
-        System.out.print("Email:");
-        String email = scanner.nextLine();
-
-        System.out.print("Phone:");
-        String phone = scanner.nextLine();
-
-        var address = addressMenu.createAddress();
-        List<Subject> subjects = subjectsMenu.selectSubjects();
-
-        Teacher result = Teacher.builder().firstName(firstName).lastName(lastName)
-                .gender(gender).degree(degree).subjects(subjects)
-                .email(email).phoneNumber(phone).address(address)
-                .build();
-
-        List<Vacation> vacations = vacationsMenu.createVacations();
-        result.setVacations(vacations);
-
-        return result;
-    }
-
-    private Degree getDegree() {
-        Degree degree = null;
-
-        while (isNull(degree)) {
-            System.out.print("Degree: (B)achelor/(M)aster/(D)octor: ");
-            String choice = scanner.nextLine().toLowerCase();
-            switch (choice) {
-                case "b":
-                    degree = Degree.BACHELOR;
-                    break;
-                case "m":
-                    degree = Degree.MASTER;
-                    break;
-                case "d":
-                    degree = Degree.DOCTOR;
-                    break;
-                default:
-                    System.out.println("Wrong input, try again.");
-            }
-        }
-        return degree;
-    }
 
     public void printTeachers() {
         System.out.println(getStringOfTeachers(teacherService.findAll()));
-    }
-
-    public Teacher selectTeacher() {
-        List<Teacher> teachers = teacherService.findAll();
-        Teacher result = null;
-
-        while (isNull(result)) {
-            System.out.println("Select teacher: ");
-            System.out.print(getStringOfTeachers(teachers));
-            var choice = getIntFromScanner();
-            Optional<Teacher> selectedTeacher = teacherService.findById(choice);
-            if (selectedTeacher.isEmpty()) {
-                System.out.println("No such teacher.");
-            } else {
-                result = selectedTeacher.get();
-                System.out.println("Success.");
-            }
-        }
-        return result;
-    }
-
-    public void updateTeacher() {
-        var oldTeacher = selectTeacher();
-        var newTeacher = createTeacher();
-        newTeacher.setId(oldTeacher.getId());
-        newTeacher.getAddress().setId(oldTeacher.getAddress().getId());
-        teacherService.update(newTeacher);
-        System.out.println("Overwrite successful.");
-    }
-
-    public void deleteTeacher() {
-        teacherService.delete(selectTeacher().getId());
-        System.out.println("Teacher deleted successfully.");
     }
 }

@@ -4,12 +4,10 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Menu.CR;
 
 @Component
 public class GroupsMenu {
@@ -33,73 +31,4 @@ public class GroupsMenu {
         System.out.println(getStringOfGroups(groupService.findAll()));
     }
 
-    public void addGroup() {
-        groupService.create(createGroup());
-    }
-
-    public Group createGroup() {
-        System.out.print("Enter group name: ");
-        String name = scanner.nextLine();
-        return new Group(name);
-    }
-
-    public Group selectGroup() {
-        List<Group> groups = groupService.findAll();
-        Group result = null;
-        var correctEntry = false;
-        while (!correctEntry) {
-            System.out.println("Select a group:");
-            System.out.print(getStringOfGroups(groups));
-            int choice = getIntFromScanner();
-            Optional<Group> selectedGroup = groupService.findById(choice);
-            if (selectedGroup.isEmpty()) {
-                System.out.println("No such group, try again.");
-            } else {
-                correctEntry = true;
-                result = selectedGroup.get();
-            }
-        }
-        return result;
-    }
-
-    public List<Group> selectGroups() {
-        List<Group> result = new ArrayList<>();
-        var finished = false;
-        var correctEntry = false;
-
-        while (!(finished && correctEntry)) {
-            if (!result.isEmpty()) {
-                System.out.println("Assigned groups:");
-                System.out.print(getStringOfGroups(result));
-            }
-            Group selected = selectGroup();
-            if (result.contains(selected)) {
-                System.out.println("Group already added to the lecture.");
-            } else {
-                correctEntry = true;
-                result.add(new Group(selected.getId(), selected.getName()));
-                System.out.println("Success.");
-            }
-
-            System.out.print("Add another group? (y/n): ");
-            String entry = scanner.nextLine().toLowerCase();
-            if (!entry.equals("y")) {
-                finished = true;
-            }
-        }
-        return result;
-    }
-
-    public void updateGroup() {
-        Group oldGroup = selectGroup();
-        Group newGroup = createGroup();
-        newGroup.setId(oldGroup.getId());
-        groupService.update(newGroup);
-        System.out.println("Overwrite successful.");
-    }
-
-    public void deleteGroup() {
-        groupService.delete(selectGroup().getId());
-        System.out.println("Group deleted successfully.");
-    }
 }

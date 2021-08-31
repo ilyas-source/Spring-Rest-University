@@ -11,16 +11,7 @@ import static ua.com.foxminded.university.Menu.*;
 @Component
 public class LocationsMenu {
 
-    public Location createLocation() {
-        System.out.print("Enter building name: ");
-        String building = scanner.nextLine();
-        System.out.print("Enter floor number: ");
-        int floor = getIntFromScanner();
-        System.out.print("Enter room number: ");
-        int roomNumber = getIntFromScanner();
 
-        return new Location(building, floor, roomNumber);
-    }
 
     public String getStringOfLocations(List<Location> locations) {
         StringBuilder result = new StringBuilder();

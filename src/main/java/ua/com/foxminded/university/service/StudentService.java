@@ -38,8 +38,8 @@ public class StudentService {
 //        int pageSize = pageable.getPageSize();
 //        int currentPage = pageable.getPageNumber();
 //        int startItem = currentPage * pageSize;
-//        List<Student>students=findAll();
-//        List<Student>list;
+//        List<Student> students = findAll();
+//        List<Student> list;
 //
 //        if (students.size() < startItem) {
 //            list = Collections.emptyList();
@@ -50,7 +50,6 @@ public class StudentService {
 //
 //        return new PageImpl<Student>(list, PageRequest.of(currentPage, pageSize), students.size());
 //    }
-    //        public Page<Student> findPaginated(Pageable pageable) { return null;}
 
 
     public void verifyStudentIsUnique(Student student) {
