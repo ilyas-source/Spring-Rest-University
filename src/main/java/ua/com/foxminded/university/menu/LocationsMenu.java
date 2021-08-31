@@ -6,7 +6,7 @@ import ua.com.foxminded.university.model.Location;
 import java.util.Comparator;
 import java.util.List;
 
-import static ua.com.foxminded.university.Menu.*;
+import static ua.com.foxminded.university.Main.*;
 
 @Component
 public class LocationsMenu {

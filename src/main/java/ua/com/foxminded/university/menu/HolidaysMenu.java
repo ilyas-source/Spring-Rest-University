@@ -7,7 +7,7 @@ import ua.com.foxminded.university.service.HolidayService;
 import java.util.Comparator;
 import java.util.List;
 
-import static ua.com.foxminded.university.Menu.CR;
+import static ua.com.foxminded.university.Main.CR;
 
 @Component
 public class HolidaysMenu {
