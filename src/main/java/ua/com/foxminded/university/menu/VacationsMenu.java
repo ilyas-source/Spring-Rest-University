@@ -26,8 +26,4 @@ public class VacationsMenu {
 
         return result.toString();
     }
-
-
-
-
 }

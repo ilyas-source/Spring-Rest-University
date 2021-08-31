@@ -31,8 +31,4 @@ public class HolidaysMenu {
     public String getStringFromHoliday(Holiday holiday) {
         return holiday.getDate() + ": " + holiday.getName();
     }
-
-    public void printHolidays() {
-        System.out.println(getStringOfHolidays(holidayService.findAll()));
-    }
 }

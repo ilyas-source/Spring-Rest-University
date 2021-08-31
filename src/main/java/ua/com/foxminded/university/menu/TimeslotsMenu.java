@@ -31,9 +31,5 @@ public class TimeslotsMenu {
     public String getStringFromTimeslot(Timeslot timeslot) {
         return timeslot.getId() + ". " + timeslot.getBeginTime() + "-" + timeslot.getEndTime();
     }
-
-    public void printTimeslots() {
-        System.out.println(getStringOfTimeslots(timeslotService.findAll()));
-    }
 }
 

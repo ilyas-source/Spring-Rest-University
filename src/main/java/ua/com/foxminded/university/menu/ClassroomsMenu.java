@@ -35,8 +35,4 @@ public class ClassroomsMenu {
                 + locationsMenu.getStringFromLocation(classroom.getLocation())
                 + ". Capacity: " + classroom.getCapacity();
     }
-
-    public void printClassrooms() {
-        System.out.println(getStringOfClassrooms(classroomService.findAll()));
-    }
 }

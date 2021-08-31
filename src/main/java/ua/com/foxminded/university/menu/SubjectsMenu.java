@@ -31,14 +31,4 @@ public class SubjectsMenu {
     public String getStringFromSubject(Subject subject) {
         return subject.getId() + ". " + subject.getName() + ": " + subject.getDescription();
     }
-
-    public void printSubjects() {
-        System.out.println(getStringOfSubjects(subjectService.findAll()));
-    }
-
-
-
-
-
-
 }

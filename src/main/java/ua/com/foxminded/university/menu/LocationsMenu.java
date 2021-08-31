@@ -11,8 +11,6 @@ import static ua.com.foxminded.university.Menu.*;
 @Component
 public class LocationsMenu {
 
-
-
     public String getStringOfLocations(List<Location> locations) {
         StringBuilder result = new StringBuilder();
         locations.sort(Comparator.comparing(Location::getId));

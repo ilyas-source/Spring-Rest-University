@@ -26,9 +26,4 @@ public class GroupsMenu {
         }
         return result.toString();
     }
-
-    public void printGroups() {
-        System.out.println(getStringOfGroups(groupService.findAll()));
-    }
-
 }

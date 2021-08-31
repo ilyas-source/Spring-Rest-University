@@ -1,10 +1,8 @@
 package ua.com.foxminded.university;
 
-import org.springframework.stereotype.Component;
-
 import java.time.format.DateTimeFormatter;
 
-@Component
+//@Component
 public class Menu {
 
     public static final DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_LOCAL_TIME;

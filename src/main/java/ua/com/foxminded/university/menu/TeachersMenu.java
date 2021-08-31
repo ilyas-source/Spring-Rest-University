@@ -41,9 +41,4 @@ public class TeachersMenu {
                 + "Subjects:" + CR + subjectsMenu.getStringOfSubjects(teacher.getSubjects())
                 + "Vacations:" + CR + vacationsMenu.getStringOfVacations(teacher.getVacations());
     }
-
-
-    public void printTeachers() {
-        System.out.println(getStringOfTeachers(teacherService.findAll()));
-    }
 }

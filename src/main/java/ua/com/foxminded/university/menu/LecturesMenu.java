@@ -58,10 +58,4 @@ public class LecturesMenu {
         result.append("Groups to attend:" + CR + groupsMenu.getStringOfGroups(groups));
         return result.toString();
     }
-
-
-    public void printLectures() {
-        System.out.println(getStringOfLectures(lectureService.findAll()));
-    }
-
 }
