@@ -2,6 +2,7 @@ package ua.com.foxminded.university.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -24,18 +25,25 @@ public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
     private final StudentService studentService;
 
+    @Value("${page.defaultnumber}")
+    private int defaultPageNumber;
+
+    @Value("${page.defaultsize}")
+    private int defaultPageSize;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @GetMapping
-    public String findPages(Model model,
-                          @RequestParam("page") Optional<Integer> page,
-                          @RequestParam("size") Optional<Integer> size) {
-        int currentPage = page.orElse(1);
-        int pageSize = size.orElse(5);
+    public String getStudents(Model model,
+                              @RequestParam("page") Optional<Integer> page,
+                              @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(defaultPageNumber);
+        int pageSize = size.orElse(defaultPageSize);
+        logger.debug("Getting students page: №{}, page size {} ", page, size);
 
-        Page<Student> studentPage = studentService.findPaginated(PageRequest.of(currentPage - 1, pageSize));
+        Page<Student> studentPage = studentService.findAll(PageRequest.of(currentPage - 1, pageSize));
 
         model.addAttribute("studentPage", studentPage);
 

@@ -79,7 +79,7 @@ public class StudentService {
         }
     }
 
-    public Page<Student> findPaginated(Pageable pageable) {
+    public Page<Student> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;

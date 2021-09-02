@@ -4,11 +4,6 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.service.ClassroomService;
 
-import java.util.Comparator;
-import java.util.List;
-
-import static ua.com.foxminded.university.Main.CR;
-
 @Component
 public class ClassroomsMenu {
 
@@ -18,16 +13,6 @@ public class ClassroomsMenu {
     public ClassroomsMenu(LocationsMenu locationsMenu, ClassroomService classroomService) {
         this.locationsMenu = locationsMenu;
         this.classroomService = classroomService;
-    }
-
-    public String getStringOfClassrooms(List<Classroom> classrooms) {
-        StringBuilder result = new StringBuilder();
-        classrooms.sort(Comparator.comparing(Classroom::getId));
-
-        for (Classroom c : classrooms) {
-            result.append(getStringFromClassroom(c) + CR);
-        }
-        return result.toString();
     }
 
     public String getStringFromClassroom(Classroom classroom) {
