@@ -14,7 +14,6 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,10 +53,6 @@ public class StudentService {
         }
     }
 
-    public List<Student> findAll() {
-        return studentDao.findAll();
-    }
-
     public Optional<Student> findById(int id) {
         return studentDao.findById(id);
     }
@@ -79,19 +74,21 @@ public class StudentService {
         }
     }
 
+    private List<Student> findPage(int startItem, int pageSize) {
+        logger.debug("Retrieving students page, starting with pos.{}, items count {}", startItem, pageSize);
+        return studentDao.findPage(startItem,pageSize);
+    }
+
     public Page<Student> findAll(Pageable pageable) {
+        logger.debug("Retrieving students pageable");
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Student> students = findAll();
+        int startItem = currentPage * pageSize+1;
+        List<Student> students = findPage(startItem,pageSize);
         List<Student> list;
 
-        if (students.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, students.size());
-            list = students.subList(startItem, toIndex);
-        }
+        int toIndex = Math.min(startItem + pageSize, students.size());
+        list = students.subList(0, toIndex);
 
         return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), students.size());
     }

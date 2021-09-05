@@ -35,6 +35,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
             " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
+    private static final String FIND_PAGE = "SELECT * FROM students WHERE id>=? ORDER BY id FETCH FIRST ? ROWS ONLY";
 
     private JdbcTemplate jdbcTemplate;
     private StudentMapper studentMapper;
@@ -110,6 +111,12 @@ public class JdbcStudentDao implements StudentDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Student> findPage(int startItem, int pageSize) {
+        logger.debug("Retrieving students page, starting with pos.{}, items count {}",startItem,pageSize);
+        return jdbcTemplate.query(FIND_PAGE, studentMapper, startItem, pageSize);
     }
 
     @Override

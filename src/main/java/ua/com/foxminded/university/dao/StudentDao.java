@@ -16,4 +16,6 @@ public interface StudentDao extends GeneralDao<Student> {
     List<Student> findByGroup(Group group);
 
     Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
+
+    List<Student> findPage(int startItem, int pageSize);
 }
