@@ -35,13 +35,6 @@ class StudentServiceTest {
     @InjectMocks
     private StudentService studentService;
 
-//    @Test
-//    void onFindAll_shouldReturnCorrectList() {
-//        when(studentDao.findAll()).thenReturn(expectedStudents);
-//
-//        assertEquals(expectedStudents, studentService.findAll());
-//    }
-
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectStudent() {
         when(studentDao.findById(1)).thenReturn(Optional.of(expectedStudent1));
