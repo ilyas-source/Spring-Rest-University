@@ -3,6 +3,7 @@ package ua.com.foxminded.university.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -14,6 +15,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 @ComponentScan("ua.com.foxminded.university")
 @EnableWebMvc
+@EnableSpringDataWebSupport
 public class MVCConfig implements WebMvcConfigurer {
 
     @Override

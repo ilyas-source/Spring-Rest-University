@@ -74,17 +74,12 @@ public class StudentService {
         }
     }
 
-    private List<Student> findPage(int startItem, int pageSize) {
-        logger.debug("Retrieving students page, starting with pos.{}, items count {}", startItem, pageSize);
-        return studentDao.findPage(startItem,pageSize);
-    }
-
     public Page<Student> findAll(Pageable pageable) {
-        logger.debug("Retrieving students pageable");
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize+1;
-        List<Student> students = findPage(startItem,pageSize);
+        logger.debug("Retrieving {} students starting with {}", pageSize, startItem);
+        List<Student> students = studentDao.findPage(startItem,pageSize);
         List<Student> list;
 
         int toIndex = Math.min(startItem + pageSize, students.size());
