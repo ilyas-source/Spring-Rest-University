@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface VacationDao extends GeneralDao<Vacation> {
 
+    List<Vacation> findAll();
+
     List<Vacation> findByTeacherId(int id);
 
     int countIntersectingVacations(Vacation vacation);

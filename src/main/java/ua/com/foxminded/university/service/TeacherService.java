@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
@@ -39,8 +40,8 @@ public class TeacherService {
         teacherDao.create(teacher);
     }
 
-    public List<Teacher> findAll() {
-        return teacherDao.findAll();
+    public List<Teacher> findAll(Pageable pageable) {
+        return teacherDao.findAll(pageable);
     }
 
     public Optional<Teacher> findById(int id) {

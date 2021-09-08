@@ -79,12 +79,8 @@ public class StudentService {
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize+1;
         logger.debug("Retrieving {} students starting with {}", pageSize, startItem);
-        List<Student> students = studentDao.findPage(startItem,pageSize);
-        List<Student> list;
+        List<Student> students = studentDao.findAll(pageable);
 
-        int toIndex = Math.min(startItem + pageSize, students.size());
-        list = students.subList(0, toIndex);
-
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), students.size());
+        return new PageImpl<>(students, PageRequest.of(currentPage, pageSize), students.size());
     }
 }

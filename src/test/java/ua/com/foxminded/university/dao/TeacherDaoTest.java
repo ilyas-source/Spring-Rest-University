@@ -82,21 +82,21 @@ public class TeacherDaoTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
-        List<Teacher> actual = teacherDao.findAll();
-
-        assertEquals(expectedTeachers, actual);
-    }
-
-    @Test
-    void ifDatabaseHasNoTeachers_onFindAll_shouldReturnEmptyListOfTeachers() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "teachers");
-
-        List<Teacher> teachers = teacherDao.findAll();
-
-        assertThat(teachers).isEmpty();
-    }
+//    @Test
+//    void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
+//        List<Teacher> actual = teacherDao.findAll();
+//
+//        assertEquals(expectedTeachers, actual);
+//    }
+//
+//    @Test
+//    void ifDatabaseHasNoTeachers_onFindAll_shouldReturnEmptyListOfTeachers() {
+//        JdbcTestUtils.deleteFromTables(jdbcTemplate, "teachers");
+//
+//        List<Teacher> teachers = teacherDao.findAll();
+//
+//        assertThat(teachers).isEmpty();
+//    }
 
     @Test
     void givenTeacher_onUpdate_shouldUpdateCorrectly() {

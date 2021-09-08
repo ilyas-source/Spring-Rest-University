@@ -3,6 +3,7 @@ package ua.com.foxminded.university.dao.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -155,7 +156,7 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    public List<Teacher> findAll() {
+    public List<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving all teachers");
         return jdbcTemplate.query(FIND_ALL, teacherMapper);
     }

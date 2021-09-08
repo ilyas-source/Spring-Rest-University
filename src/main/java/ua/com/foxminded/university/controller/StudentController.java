@@ -16,6 +16,7 @@ import ua.com.foxminded.university.service.StudentService;
 public class StudentController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
+
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
@@ -27,7 +28,6 @@ public class StudentController {
         logger.debug("Retrieving page {} of size {}", pageable.getPageNumber(), pageable.getPageSize());
         Page<Student> studentPage = studentService.findAll(pageable);
         model.addAttribute("studentPage", studentPage);
-        model.addAttribute("pageable", pageable);
 
         return "studentsView";
     }

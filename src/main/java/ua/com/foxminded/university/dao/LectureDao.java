@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface LectureDao extends GeneralDao<Lecture> {
 
+    List<Lecture> findAll();
+
     List<Lecture> findByClassroom(Classroom classroom);
 
     List<Lecture> findByTeacher(Teacher teacher);

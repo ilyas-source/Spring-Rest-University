@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface GeneralDao<T> {
@@ -9,7 +8,7 @@ public interface GeneralDao<T> {
 
     Optional<T> findById(int id);
 
-    List<T> findAll();
+ //   List<T> findAll();
 
     void update(T entity);
 

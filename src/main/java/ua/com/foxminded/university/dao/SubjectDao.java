@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface SubjectDao extends GeneralDao<Subject> {
 
+    List<Subject> findAll();
+
     List<Subject> getByTeacherId(int id);
 
     Optional<Subject> findByName(String name);
