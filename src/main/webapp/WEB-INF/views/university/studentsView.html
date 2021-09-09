@@ -39,11 +39,21 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item">
-                    <a class="page-link" th:href="@{/students/(size=${studentPage.pageable.pageSize}, page=${studentPage.pageable.pageNumber-1})}">Previous</a></li>
+                    <a class="page-link" th:href="@{/students/(size=${studentPage.pageable.pageSize},
+                                            page=${studentPage.pageable.pageNumber-1})}">Previous</a></li>
                 <li class="page-item">
-                    <a class="page-link" th:href="@{/students/(size=${studentPage.pageable.pageSize}, page=${studentPage.pageable.pageNumber+1})}">Next</a></li>
+                    <a class="page-link" th:href="@{/students/(size=${studentPage.pageable.pageSize},
+                                            page=${studentPage.pageable.pageNumber+1})}">Next</a></li>
             </ul>
         </nav>
+        <p>Show students per page:</p>
+        <form>
+            <select class="form-select" style="width:auto;" id="page" name="quantity" onchange="switchSubmitEnabled()">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+            </select>
+        </form>
     </div>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>

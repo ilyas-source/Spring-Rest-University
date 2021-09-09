@@ -35,7 +35,7 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM teachers WHERE address_id = ?";
     private static final String FIND_BY_NAME_AND_EMAIL = "SELECT * FROM teachers WHERE first_name = ? AND last_name = ? AND email = ?";
-    private static final String FIND_ALL = "SELECT * FROM teachers";
+    private static final String FIND_PAGE = "SELECT * FROM teachers WHERE id>=? ORDER BY id FETCH FIRST ? ROWS ONLY";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
     private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects where teacher_id = ? AND subject_id = ?";
@@ -157,8 +157,12 @@ public class JdbcTeacherDao implements TeacherDao {
 
     @Override
     public List<Teacher> findAll(Pageable pageable) {
-        logger.debug("Retrieving all teachers");
-        return jdbcTemplate.query(FIND_ALL, teacherMapper);
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize+1;
+
+        logger.debug("Retrieving teachers page, starting with pos.{}, items count {}",startItem,pageSize);
+        return jdbcTemplate.query(FIND_PAGE, teacherMapper, startItem, pageSize);
     }
 
     @Override
