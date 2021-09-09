@@ -47,12 +47,13 @@
             </ul>
         </nav>
         <p>Show students per page:</p>
-        <form>
-            <select class="form-select" style="width:auto;" id="page" name="quantity" onchange="switchSubmitEnabled()">
+        <form action="">
+            <select class="form-select" style="width:auto;" id="page" name="size">
                 <option value="5" selected>5</option>
                 <option value="10">10</option>
                 <option value="20">20</option>
             </select>
+            <input type="Submit" value="save" />
         </form>
     </div>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
