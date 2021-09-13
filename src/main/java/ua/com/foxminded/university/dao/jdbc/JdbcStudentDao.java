@@ -36,7 +36,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
             " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
-    private static final String FIND_PAGE = "SELECT * FROM students WHERE id>=? ORDER BY id FETCH FIRST ? ROWS ONLY";
+    private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students WHERE id>=? ORDER BY id FETCH FIRST ? ROWS ONLY";
     private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
 
     private JdbcTemplate jdbcTemplate;
@@ -119,10 +119,10 @@ public class JdbcStudentDao implements StudentDao {
     public List<Student> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize+1;
+        int startItem = currentPage * pageSize + 1;
 
-        logger.debug("Retrieving students page, starting with pos.{}, items count {}",startItem,pageSize);
-        return jdbcTemplate.query(FIND_PAGE, studentMapper, startItem, pageSize);
+        logger.debug("Retrieving students page, starting with pos.{}, items count {}", startItem, pageSize);
+        return jdbcTemplate.query(FIND_ALL_PAGEABLE, studentMapper, startItem, pageSize);
     }
 
     @Override
@@ -133,7 +133,6 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public int countInGroup(Group group) {
         return jdbcTemplate.queryForObject(COUNT_IN_GROUP, Integer.class, group.getId());
-        //return (int) findAll().stream().filter(s -> s.getGroup().equals(group)).count();
     }
 
     @Override
