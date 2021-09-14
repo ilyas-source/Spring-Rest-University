@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -18,5 +19,5 @@ public interface StudentDao extends GeneralDao<Student> {
 
     Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 
-    List<Student> findAll(Pageable pageable);
+    Page<Student> findAll(Pageable pageable);
 }

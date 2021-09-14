@@ -25,7 +25,7 @@ public class StudentController {
 
     @GetMapping
     public String getStudents(Model model, Pageable pageable) {
-        logger.debug("Retrieving page {} of size {}", pageable.getPageNumber(), pageable.getPageSize());
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Student> studentPage = studentService.findAll(pageable);
         model.addAttribute("studentPage", studentPage);
 

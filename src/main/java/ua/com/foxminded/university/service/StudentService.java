@@ -4,9 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -14,7 +13,6 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,10 +75,11 @@ public class StudentService {
     public Page<Student> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize+1;
-        logger.debug("Retrieving {} students starting with {}", pageSize, startItem);
-        List<Student> students = studentDao.findAll(pageable);
+        Sort sort = pageable.getSort();
+        long offset = pageable.getOffset();
+        logger.debug("Retrieving offset {}, size {}, sort {} ", offset, pageSize, sort);
+        Page<Student> students = studentDao.findAll(pageable);
 
-        return new PageImpl<>(students, PageRequest.of(currentPage, pageSize), students.size());
+        return students;
     }
 }

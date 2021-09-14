@@ -3,7 +3,7 @@ package ua.com.foxminded.university.dao.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -32,11 +32,10 @@ public class JdbcStudentDao implements StudentDao {
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
     private static final String FIND_BY_GROUP_ID = "SELECT * FROM students WHERE group_id = ?";
     private static final String FIND_BY_NAME_AND_BIRTH = "SELECT * FROM students WHERE first_name = ? AND last_name = ? AND birth_date = ?";
-    private static final String FIND_ALL = "SELECT * FROM students";
     private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
             " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
-    private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students WHERE id>=? ORDER BY id FETCH FIRST ? ROWS ONLY";
+    private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students ORDER BY id OFFSET ? FETCH FIRST ? ROWS ONLY";
     private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
 
     private JdbcTemplate jdbcTemplate;
@@ -116,13 +115,37 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public List<Student> findAll(Pageable pageable) {
+    public Page<Student> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize + 1;
+        int currentPage= pageable.getPageNumber();
+        long offset = pageable.getOffset();
 
-        logger.debug("Retrieving students page, starting with pos.{}, items count {}", startItem, pageSize);
-        return jdbcTemplate.query(FIND_ALL_PAGEABLE, studentMapper, startItem, pageSize);
+        var sort=pageable.getSort();
+        var sortOrder=sort.get().findFirst();
+        var sortProperty="id";
+        var sortDirection=Sort.Direction.ASC;
+
+        if (sortOrder.isPresent()) {
+            sortProperty=sortOrder.get().getProperty();
+            sortDirection=sortOrder.get().getDirection();
+        }
+
+        logger.debug("Retrieving offset {}, size {}, sort property {}", offset, pageSize, sortProperty);
+
+        StringBuilder query= new StringBuilder("SELECT * FROM students ORDER BY ");
+        query.append(sortProperty);
+        if (sortDirection.isDescending()) {
+            query.append(" DESC ");
+        }
+        query.append( " OFFSET ? FETCH FIRST ? ROWS ONLY");
+
+        logger.debug("Using following query: {}", query);
+
+        var students= jdbcTemplate.query(query.toString(), studentMapper, offset, pageSize);
+
+        logger.debug("Retrieved list: {}", students);
+
+        return new PageImpl<>(students, PageRequest.of(currentPage, pageSize,sort), students.size());
     }
 
     @Override
