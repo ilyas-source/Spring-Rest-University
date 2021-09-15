@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -73,11 +72,7 @@ public class StudentService {
     }
 
     public Page<Student> findAll(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        Sort sort = pageable.getSort();
-        long offset = pageable.getOffset();
-        logger.debug("Retrieving offset {}, size {}, sort {} ", offset, pageSize, sort);
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Student> students = studentDao.findAll(pageable);
 
         return students;

@@ -23,7 +23,7 @@ public class TeacherController {
         this.teacherService = teacherService;
     }
 
-   @GetMapping
+    @GetMapping
     public String getTeachers(Model model, Pageable pageable) {
         logger.debug("Retrieving page {} of size {}", pageable.getPageNumber(), pageable.getPageSize());
         Page<Teacher> teacherPage = teacherService.findAll(pageable);

@@ -117,35 +117,34 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public Page<Student> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
-        int currentPage= pageable.getPageNumber();
+        int currentPage = pageable.getPageNumber();
         long offset = pageable.getOffset();
 
-        var sort=pageable.getSort();
-        var sortOrder=sort.get().findFirst();
-        var sortProperty="id";
-        var sortDirection=Sort.Direction.ASC;
+        var sort = pageable.getSort();
+        var sortOrder = sort.get().findFirst();
+        var sortProperty = "id";
+        var sortDirection = Sort.Direction.ASC;
+
+        // pageable.getSort().get().findFirst().get().getProperty();
 
         if (sortOrder.isPresent()) {
-            sortProperty=sortOrder.get().getProperty();
-            sortDirection=sortOrder.get().getDirection();
+            sortProperty = sortOrder.get().getProperty();
+            sortDirection = sortOrder.get().getDirection();
         }
 
         logger.debug("Retrieving offset {}, size {}, sort property {}", offset, pageSize, sortProperty);
 
-        StringBuilder query= new StringBuilder("SELECT * FROM students ORDER BY ");
+        StringBuilder query = new StringBuilder("SELECT * FROM students ORDER BY ");
         query.append(sortProperty);
         if (sortDirection.isDescending()) {
             query.append(" DESC ");
         }
-        query.append( " OFFSET ? FETCH FIRST ? ROWS ONLY");
-
+        query.append(" OFFSET ? FETCH FIRST ? ROWS ONLY");
         logger.debug("Using following query: {}", query);
 
-        var students= jdbcTemplate.query(query.toString(), studentMapper, offset, pageSize);
+        var students = jdbcTemplate.query(query.toString(), studentMapper, offset, pageSize);
 
-        logger.debug("Retrieved list: {}", students);
-
-        return new PageImpl<>(students, PageRequest.of(currentPage, pageSize,sort), students.size());
+        return new PageImpl<>(students, PageRequest.of(currentPage, pageSize, sort), students.size());
     }
 
     @Override

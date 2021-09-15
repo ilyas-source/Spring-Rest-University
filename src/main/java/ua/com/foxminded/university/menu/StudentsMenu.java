@@ -16,7 +16,7 @@ public class StudentsMenu {
     private GroupsMenu groupsMenu;
     private StudentService studentService;
 
-    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu,  StudentService studentService) {
+    public StudentsMenu(AddressesMenu addressMenu, GroupsMenu groupsMenu, StudentService studentService) {
         this.addressMenu = addressMenu;
         this.groupsMenu = groupsMenu;
         this.studentService = studentService;

@@ -8,8 +8,6 @@ public interface GeneralDao<T> {
 
     Optional<T> findById(int id);
 
- //   List<T> findAll();
-
     void update(T entity);
 
     void delete(int id);

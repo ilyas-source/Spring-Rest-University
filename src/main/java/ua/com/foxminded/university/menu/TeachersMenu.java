@@ -17,7 +17,7 @@ public class TeachersMenu {
     private SubjectsMenu subjectsMenu;
     private TeacherService teacherService;
 
-    public TeachersMenu( VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
+    public TeachersMenu(VacationsMenu vacationsMenu, AddressesMenu addressMenu, SubjectsMenu subjectsMenu,
                         TeacherService teacherService) {
         this.vacationsMenu = vacationsMenu;
         this.addressMenu = addressMenu;
