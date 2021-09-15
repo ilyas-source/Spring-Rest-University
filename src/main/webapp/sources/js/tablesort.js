@@ -32,9 +32,9 @@ function updateNavButtons(page, size, sort) {
         prevButton.parentElement.classList.remove('disabled');
     };
 
-    firstButton.setAttribute('href', '/university/students/?page=0&size=' + size + '&sort=' + sort);
-    prevButton.setAttribute('href', '/university/students/?page=' + (page - 1) + '&size=' + size + '&sort=' + sort);
-    nextButton.setAttribute('href', '/university/students/?page=' + (page + 1) + '&size=' + size + '&sort=' + sort);
+    firstButton.setAttribute('href','?page=0&size=' + size + '&sort=' + sort);
+    prevButton.setAttribute('href','?page=' + (page - 1) + '&size=' + size + '&sort=' + sort);
+    nextButton.setAttribute('href','?page=' + (page + 1) + '&size=' + size + '&sort=' + sort);
 }
 
 document.querySelectorAll(".table-sortable th").forEach(headerCell => {
@@ -46,8 +46,7 @@ document.querySelectorAll(".table-sortable th").forEach(headerCell => {
         sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
         sorting = headerCell.getAttribute('id');
         updateNavButtons(pageNumber, pageSize, sorting);
-        let firstButton = document.getElementById('first-button');
-        firstButton.click();
+        document.getElementById('first-button').click();
     });
 });
 

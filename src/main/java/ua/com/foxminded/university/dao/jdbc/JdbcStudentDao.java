@@ -125,8 +125,6 @@ public class JdbcStudentDao implements StudentDao {
         var sortProperty = "id";
         var sortDirection = Sort.Direction.ASC;
 
-        // pageable.getSort().get().findFirst().get().getProperty();
-
         if (sortOrder.isPresent()) {
             sortProperty = sortOrder.get().getProperty();
             sortDirection = sortOrder.get().getDirection();

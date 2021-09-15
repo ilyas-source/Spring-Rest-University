@@ -44,13 +44,10 @@ public class TeacherService {
     }
 
     public Page<Teacher> findAll(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize + 1;
-        logger.debug("Retrieving {} teachers starting with {}", pageSize, startItem);
-        List<Teacher> teachers = teacherDao.findAll(pageable);
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        Page<Teacher> teachers = teacherDao.findAll(pageable);
 
-        return new PageImpl<>(teachers, PageRequest.of(currentPage, pageSize), teachers.size());
+        return teachers;
     }
 
     public Optional<Teacher> findById(int id) {

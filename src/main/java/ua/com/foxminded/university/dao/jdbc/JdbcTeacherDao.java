@@ -3,7 +3,7 @@ package ua.com.foxminded.university.dao.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -156,13 +156,34 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    public List<Teacher> findAll(Pageable pageable) {
+    public Page<Teacher> findAll(Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
-        int offset = currentPage * pageSize + 1;
+        long offset = pageable.getOffset();
 
-        logger.debug("Retrieving teachers page, starting with pos.{}, items count {}", offset, pageSize);
-        return jdbcTemplate.query(FIND_ALL_PAGEABLE, teacherMapper, offset, pageSize);
+        var sort = pageable.getSort();
+        var sortOrder = sort.get().findFirst();
+        var sortProperty = "id";
+        var sortDirection = Sort.Direction.ASC;
+
+        if (sortOrder.isPresent()) {
+            sortProperty = sortOrder.get().getProperty();
+            sortDirection = sortOrder.get().getDirection();
+        }
+
+        logger.debug("Retrieving offset {}, size {}, sort property {}", offset, pageSize, sortProperty);
+
+        StringBuilder query = new StringBuilder("SELECT * FROM teachers ORDER BY ");
+        query.append(sortProperty);
+        if (sortDirection.isDescending()) {
+            query.append(" DESC ");
+        }
+        query.append(" OFFSET ? FETCH FIRST ? ROWS ONLY");
+        logger.debug("Using following query: {}", query);
+
+        var teachers = jdbcTemplate.query(query.toString(), teacherMapper, offset, pageSize);
+
+        return new PageImpl<>(teachers, PageRequest.of(currentPage, pageSize, sort), teachers.size());
     }
 
     @Override

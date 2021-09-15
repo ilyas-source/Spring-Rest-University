@@ -62,12 +62,11 @@
         </form>
     </div>
     <script th:inline="javascript">
-        let pageSize=[[${studentPage.pageable.pageSize}]];
-        let pageNumber=[[${studentPage.pageable.pageNumber}]];
-        let hasPreviousPage=[[${studentPage.pageable.hasPrevious()}]];
-        let sorting=[[${studentPage.pageable.getSort().get().findFirst().get().getProperty()}]];
+        let pageSize = [[${studentPage.pageable.pageSize}]];
+        let pageNumber = [[${studentPage.pageable.pageNumber}]];
+        let hasPreviousPage = [[${studentPage.pageable.hasPrevious()}]];
+        let sorting = [[${studentPage.pageable.getSort().get().findFirst().get().getProperty()}]];
     </script>
-
     <script src="/university/sources/js/tablesort.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>
