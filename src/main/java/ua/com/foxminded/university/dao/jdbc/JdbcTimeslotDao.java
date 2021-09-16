@@ -1,10 +1,5 @@
 package ua.com.foxminded.university.dao.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.util.List;
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,10 +7,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TimeslotMapper;
 import ua.com.foxminded.university.model.Timeslot;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JdbcTimeslotDao implements TimeslotDao {
@@ -34,66 +33,66 @@ public class JdbcTimeslotDao implements TimeslotDao {
     private TimeslotMapper timeslotMapper;
 
     public JdbcTimeslotDao(JdbcTemplate jdbcTemplate, TimeslotMapper timeslotMapper) {
-	this.jdbcTemplate = jdbcTemplate;
-	this.timeslotMapper = timeslotMapper;
+        this.jdbcTemplate = jdbcTemplate;
+        this.timeslotMapper = timeslotMapper;
     }
 
     @Override
     public int countIntersectingTimeslots(Timeslot timeslot) {
-	return jdbcTemplate.queryForObject(COUNT_INTERSECTING_TIMESLOTS, Integer.class, timeslot.getBeginTime(),
-		timeslot.getEndTime());
+        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_TIMESLOTS, Integer.class, timeslot.getBeginTime(),
+                timeslot.getEndTime());
     }
 
     @Override
     public void create(Timeslot timeslot) {
-	logger.debug("Writing a new timeslot to database: {} ", timeslot);
-	KeyHolder keyHolder = new GeneratedKeyHolder();
+        logger.debug("Writing a new timeslot to database: {} ", timeslot);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-	jdbcTemplate.update(connection -> {
-	    PreparedStatement ps = connection
-		    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-	    ps.setObject(1, timeslot.getBeginTime());
-	    ps.setObject(2, timeslot.getEndTime());
-	    return ps;
-	}, keyHolder);
-	timeslot.setId((int) keyHolder.getKeys().get("id"));
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection
+                    .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+            ps.setObject(1, timeslot.getBeginTime());
+            ps.setObject(2, timeslot.getEndTime());
+            return ps;
+        }, keyHolder);
+        timeslot.setId((int) keyHolder.getKeys().get("id"));
     }
 
     @Override
     public Optional<Timeslot> findByBothTimes(Timeslot timeslot) {
-	try {
-	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_TIMES, timeslotMapper, timeslot.getBeginTime(),
-		    timeslot.getEndTime()));
-	} catch (EmptyResultDataAccessException e) {
-	    return Optional.empty();
-	}
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_TIMES, timeslotMapper, timeslot.getBeginTime(),
+                    timeslot.getEndTime()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Timeslot> findById(int id) {
-	logger.debug("Retrieving timeslot by id: {} ", id);
-	try {
-	    return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, timeslotMapper, id));
-	} catch (EmptyResultDataAccessException e) {
-	    return Optional.empty();
-	}
+        logger.debug("Retrieving timeslot by id: {} ", id);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ID, timeslotMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Timeslot> findAll() {
-	logger.debug("Retrieving all timeslots");
-	return jdbcTemplate.query(FIND_ALL, timeslotMapper);
+        logger.debug("Retrieving all timeslots");
+        return jdbcTemplate.query(FIND_ALL, timeslotMapper);
     }
 
     @Override
     public void update(Timeslot timeslot) {
-	logger.debug("Updating timeslot in database: {} ", timeslot);
-	jdbcTemplate.update(UPDATE, timeslot.getBeginTime(), timeslot.getEndTime(), timeslot.getId());
+        logger.debug("Updating timeslot in database: {} ", timeslot);
+        jdbcTemplate.update(UPDATE, timeslot.getBeginTime(), timeslot.getEndTime(), timeslot.getId());
     }
 
     @Override
     public void delete(int id) {
-	logger.debug("Deleting timeslot by id: {} ", id);
-	jdbcTemplate.update(DELETE_BY_ID, id);
+        logger.debug("Deleting timeslot by id: {} ", id);
+        jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }

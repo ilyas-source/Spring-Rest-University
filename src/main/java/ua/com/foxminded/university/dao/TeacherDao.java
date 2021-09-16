@@ -1,10 +1,14 @@
 package ua.com.foxminded.university.dao;
 
-import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ua.com.foxminded.university.model.Teacher;
 
+import java.util.Optional;
+
 public interface TeacherDao extends GeneralDao<Teacher> {
+
+    Page<Teacher> findAll(Pageable pageable);
 
     Optional<Teacher> findByAddressId(int id);
 

@@ -1,16 +1,14 @@
 package ua.com.foxminded.university.dao;
 
+import ua.com.foxminded.university.model.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import ua.com.foxminded.university.model.Classroom;
-import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Timeslot;
-
 public interface LectureDao extends GeneralDao<Lecture> {
+
+    List<Lecture> findAll();
 
     List<Lecture> findByClassroom(Classroom classroom);
 

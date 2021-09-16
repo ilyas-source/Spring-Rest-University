@@ -1,17 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToCreate;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.addressToUpdate;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress2;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddresses;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,9 +7,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
-
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.Address;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -36,93 +32,93 @@ public class AddressDaoTest {
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
-	int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
+        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+                "addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
 
-	addressDao.create(addressToCreate);
+        addressDao.create(addressToCreate);
 
-	int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
+        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+                "addresses", "id=7 AND " + TEST_WHERE_CLAUSE);
 
-	assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }
 
     @Test
     void givenCorrectAddressId_onFindById_shouldReturnOptionalWithCorrectAddress() {
-	Optional<Address> expected = Optional.of(expectedAddress2);
+        Optional<Address> expected = Optional.of(expectedAddress2);
 
-	Optional<Address> actual = addressDao.findById(2);
+        Optional<Address> actual = addressDao.findById(2);
 
-	assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     void givenIncorrectAddressId_onFindById_shouldReturnEmptyOptional() {
-	Optional<Address> expected = Optional.empty();
+        Optional<Address> expected = Optional.empty();
 
-	Optional<Address> actual = addressDao.findById(10);
+        Optional<Address> actual = addressDao.findById(10);
 
-	assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
-	List<Address> actual = addressDao.findAll();
+        List<Address> actual = addressDao.findAll();
 
-	assertEquals(expectedAddresses, actual);
+        assertEquals(expectedAddresses, actual);
     }
 
     @Test
     void ifDatabaseHasNoAddresses_onFindAll_shouldReturnEmptyListOfAddresses() {
-	JdbcTestUtils.deleteFromTables(jdbcTemplate, "addresses");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "addresses");
 
-	List<Address> addresses = addressDao.findAll();
+        List<Address> addresses = addressDao.findAll();
 
-	assertThat(addresses).isEmpty();
+        assertThat(addresses).isEmpty();
     }
 
     @Test
     void givenAddress_onUpdate_shouldUpdateCorrectly() {
-	addressDao.update(addressToUpdate);
+        addressDao.update(addressToUpdate);
 
-	int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-		"addresses", "id = 2 AND " + TEST_WHERE_CLAUSE);
+        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
+                "addresses", "id = 2 AND " + TEST_WHERE_CLAUSE);
 
-	assertThat(rowsAfterUpdate).isEqualTo(1);
+        assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
     @Test
     void givenCorrectAddressId_onDelete_shouldDeleteCorrectly() {
-	int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
 
-	addressDao.delete(2);
+        addressDao.delete(2);
 
-	int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
 
-	assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
     public interface TestData {
-	Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")
-		.city("test").streetAddress("test").build();
+        Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")
+                .city("test").streetAddress("test").build();
 
-	Address addressToCreate = Address.builder().country("test").id(7).postalCode("test").region("test").city("test")
-		.streetAddress("test").build();
+        Address addressToCreate = Address.builder().country("test").id(7).postalCode("test").region("test").city("test")
+                .streetAddress("test").build();
 
-	Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
-		.city("Edinburgh").streetAddress("Panmure House").build();
-	Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region("Central region")
-		.city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
-	Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
-		.city("Perm").streetAddress("Lenina 5").build();
-	Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")
-		.city("LA").streetAddress("Grove St. 15").build();
-	Address expectedAddress5 = Address.builder().country("France").id(5).postalCode("21012").region("Central")
-		.city("Paris").streetAddress("Rue 15").build();
-	Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
-		.city("Beijin").streetAddress("Main St. 125").build();
+        Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
+                .city("Edinburgh").streetAddress("Panmure House").build();
+        Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region("Central region")
+                .city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
+        Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
+                .city("Perm").streetAddress("Lenina 5").build();
+        Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")
+                .city("LA").streetAddress("Grove St. 15").build();
+        Address expectedAddress5 = Address.builder().country("France").id(5).postalCode("21012").region("Central")
+                .city("Paris").streetAddress("Rue 15").build();
+        Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
+                .city("Beijin").streetAddress("Main St. 125").build();
 
-	List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
-		expectedAddress4, expectedAddress5, expectedAddress6));
+        List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
+                expectedAddress4, expectedAddress5, expectedAddress6));
     }
 }
