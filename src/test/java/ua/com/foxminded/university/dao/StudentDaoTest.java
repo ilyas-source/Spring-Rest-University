@@ -94,22 +94,6 @@ public class StudentDaoTest {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    void ifDatabaseHasStudents_onFindAll_shouldReturnCorrectListOfStudents() {
-//        List<Student> actual = studentDao.findAll();
-//
-//        assertEquals(expectedStudents, actual);
-//    }
-//
-//    @Test
-//    void ifDatabaseHasNoStudents_onFindAll_shouldReturnEmptyListOfStudents() {
-//        JdbcTestUtils.deleteFromTables(jdbcTemplate, "students");
-//
-//        List<Student> students = studentDao.findAll();
-//
-//        assertThat(students).isEmpty();
-//    }
-
     @Test
     void givenStudent_onUpdate_shouldUpdateCorrectly() {
         int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
