@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
+import ua.com.foxminded.university.service.LocationService;
 
 @Controller
 @RequestMapping("/classrooms")
@@ -19,9 +20,11 @@ public class ClassroomController {
     private static final Logger logger = LoggerFactory.getLogger(ClassroomController.class);
 
     private final ClassroomService classroomService;
+    private final LocationService locationService;
 
-    public ClassroomController(ClassroomService classroomService) {
+    public ClassroomController(ClassroomService classroomService, LocationService locationService) {
         this.classroomService = classroomService;
+        this.locationService = locationService;
     }
 
     @GetMapping
@@ -31,17 +34,26 @@ public class ClassroomController {
         return "classroomsView";
     }
 
-    @PostMapping
-    public String create(@RequestParam("name") String name, @RequestParam("capacity") String capacity, Model model) {
-        logger.debug("Received from form: name {}, capacity {}",name,capacity);
+    @GetMapping("/creationform")
+    public String creationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("locations", locationService.findAll());
+        return "/create/classroom";
+    }
 
-        Location location=new Location("Test building", 10, 100);
-        Classroom classroom=new Classroom(location, name, Integer.valueOf(capacity));
+    @PostMapping("/create")
+    public String create(@RequestParam("name") String name,
+                         @RequestParam("capacity") String capacity,
+                         @RequestParam("locationid") String locationid, Model model) {
+        logger.debug("Received from form: name {}, capacity {}, location id={}", name, capacity, locationid);
+
+        Location location = locationService.findById(Integer.parseInt(locationid)).get();
+        Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
 
         classroomService.create(classroom);
 
         model.addAttribute("classrooms", classroomService.findAll());
 
-        return "ClassroomsView";
+        return "classroomsView";
     }
 }

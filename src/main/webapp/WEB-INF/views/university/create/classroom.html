@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Classrooms</title>
+    <link href="/university/sources/css/tablesort.css" rel="stylesheet">
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container">
+    <div class="mt-5">
+        <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Return to all
+            classrooms</a>
+        <h2 class="text-primary">Create new classroom</h2>
+        <form class="form-group" method="POST" action="/university/classrooms/create">
+            <label for="name" class="mb-2">Enter classroom name: </label>
+            <input name="name" type="text" id="name"/><br/>
+            <label for="capacity" class="mb-2">Capacity, students: </label>
+            <input name="capacity" type="text" id="capacity"/><br/>
+            <label for="locationid" class="mb-2">Select classroom location: </label>
+            <div class="input-group col-4" style="width:auto;">
+            <select class="form-select" name="locationid" id="locationid">
+                <option th:each="location: ${locations}" th:value="${location.id}" th:text="${location}"></option>
+            </select>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#AddLocation">
+                Or create new...
+            </button>
+            </div>
+            <br/>
+            <input type="submit" class="btn btn-primary mt-2" value="Create"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>
