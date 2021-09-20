@@ -11,7 +11,8 @@
 <h2 class="text-primary text-center">Classrooms</h2>
 <div class="container">
     <div class="mt-5">
-        <a href="/university/classrooms/creationform" class="btn btn-outline-primary mb-2" role="button">Create new classroom</a>
+        <a href="/university/classrooms/creationform" class="btn btn-outline-primary mb-2" role="button">Create new
+            classroom</a>
         <table class="table table-striped table-bordered table-sortable">
             <thead class="thead-light">
             <tr>
@@ -32,15 +33,34 @@
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/rooms/{id}/edit(id=${classroom.id})}">Update
                             room</a>
-                        <form style="margin-left: .75rem;" th:method="GET"
-                              th:action="@{/classrooms/delete/{id}(id=${classroom.id})}">
-                            <input class="btn btn-outline-primary" type="submit" value="Delete"/>
-                        </form>
+                        <button type="button"
+                                data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                class="btn btn-outline-primary">Delete
+                        </button>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
+    </div>
+    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Delete this classroom?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="/university/sources/js/tablesort.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
