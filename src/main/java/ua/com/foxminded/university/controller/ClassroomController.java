@@ -72,11 +72,13 @@ public class ClassroomController {
         return "/details/classroom";
     }
 
-    @GetMapping("/classrooms/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteClassroom(@PathVariable int id, Model model) {
         classroomService.delete(id);
 
-        return "redirect:/classrooms?sort=id";
+        model.addAttribute("classrooms", classroomService.findAll());
+
+        return "classroomsView";
     }
 
     @GetMapping("/{id}")

@@ -68,7 +68,9 @@
                     <span>Delete this classroom?</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" th:onclick="'@{~/university/classrooms/delete/} + ${classroom.getId()}'">Delete</button>
+                    <a th:href="@{/classrooms/delete/{id}(id=${classroom.id})}">
+                        <button type="button" class="btn btn-danger">Delete</button>
+                    </a>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
