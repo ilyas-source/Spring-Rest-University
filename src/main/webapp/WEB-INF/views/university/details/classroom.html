@@ -9,9 +9,10 @@
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container">
     <div class="mt-5">
-        <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
+        <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
         <h2 class="text-primary">Classroom details</h2>
         <form class="form-group" method="POST" action="/university/classrooms/update">
+            <input class="invisible" name="id" type="text" id="id" th:value="${classroom.id}"/><br/>
             <label for="name" class="mb-2">Classroom name: </label>
             <input name="name" type="text" id="name" th:value="${classroom.name}"/><br/>
             <label for="capacity" class="mb-2">Capacity, students: </label>

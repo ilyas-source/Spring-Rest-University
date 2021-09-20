@@ -42,7 +42,7 @@ public class ClassroomController {
     public String create(@RequestParam("name") String name,
                          @RequestParam("capacity") String capacity,
                          @RequestParam("locationid") String locationid, Model model) {
-        logger.debug("Received from form: name {}, capacity {}, location id={}", name, capacity, locationid);
+        logger.debug("Received to create: name {}, capacity {}, location id={}", name, capacity, locationid);
 
         Location location = locationService.findById(Integer.parseInt(locationid)).get();
         Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
@@ -54,11 +54,29 @@ public class ClassroomController {
         return "classroomsView";
     }
 
+    @PostMapping("/update")
+    public String update(@RequestParam("name") String name,
+                         @RequestParam("capacity") String capacity,
+                         @RequestParam("locationid") String locationid,
+                         @RequestParam("id") String id, Model model) {
+        logger.debug("Received update data: name {}, capacity {}, location id={}", name, capacity, locationid);
+
+        Location location = locationService.findById(Integer.parseInt(locationid)).get();
+
+        Classroom classroom = new Classroom(Integer.valueOf(id),location,name,Integer.valueOf(capacity));
+
+        classroomService.update(classroom);
+
+        model.addAttribute(classroom);
+
+        return "/details/classroom";
+    }
+
     @GetMapping("/classrooms/delete/{id}")
     public String deleteClassroom(@PathVariable int id, Model model) {
         classroomService.delete(id);
 
-        return "redirect:/classrooms";
+        return "redirect:/classrooms?sort=id";
     }
 
     @GetMapping("/{id}")
