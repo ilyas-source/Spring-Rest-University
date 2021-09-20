@@ -32,8 +32,8 @@
                     <div style="display:  flex;">
                         <a class="btn btn-outline-primary" th:href="@{/rooms/{id}/edit(id=${classroom.id})}">Update
                             room</a>
-                        <form style="margin-left: .75rem;" th:method="DELETE"
-                              th:action="@{/classrooms/{id}(id=${classroom.id})}">
+                        <form style="margin-left: .75rem;" th:method="GET"
+                              th:action="@{/classrooms/delete/{id}(id=${classroom.id})}">
                             <input class="btn btn-outline-primary" type="submit" value="Delete"/>
                         </form>
                     </div>
@@ -41,28 +41,6 @@
             </tr>
             </tbody>
         </table>
-        <div class="modal" id="AddRoom">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">New classroom</h4>
-                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-group" method="POST" action="/classrooms">
-                            <label for="name" class="mb-2">Enter classroom name: </label>
-                            <input name="name" type="text" id="name"/><br/>
-                            <label for="capacity" class="mb-2">Capacity, students: </label>
-                            <input name="capacity" type="text" id="capacity"/><br/>
-                            <input type="submit" class="btn btn-primary" value="Create"/>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <script src="/university/sources/js/tablesort.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>

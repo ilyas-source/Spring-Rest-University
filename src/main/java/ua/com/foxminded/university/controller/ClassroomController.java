@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
@@ -55,5 +52,12 @@ public class ClassroomController {
         model.addAttribute("classrooms", classroomService.findAll());
 
         return "classroomsView";
+    }
+
+    @GetMapping("/classrooms/delete/{id}")
+    public String deleteClassroom(@PathVariable int id, Model model) {
+        classroomService.delete(id);
+
+        return "redirect:/classrooms";
     }
 }
