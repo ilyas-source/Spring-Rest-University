@@ -20,7 +20,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">Capacity</th>
                 <th scope="col">Location</th>
-                <th scope="col">Actions</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -30,13 +30,8 @@
                 <td class="align-left"><span th:text="${classroom.capacity}"></span></td>
                 <td class="align-left"><span th:text="${classroom.location}"> </span></td>
                 <td>
-                    <div style="display:  flex;">
-                        <a class="btn btn-outline-primary" th:href="@{/rooms/{id}/edit(id=${classroom.id})}">Update
-                            room</a>
-                        <button type="button"
-                                data-bs-toggle="modal" data-bs-target="#modalDelete"
-                                class="btn btn-outline-primary">Delete
-                        </button>
+                    <div style="display:flex;">
+                        <a class="btn btn-outline-primary" th:href="@{/classrooms/{id}(id=${classroom.id})}">Edit/delete...</a>
                     </div>
                 </td>
             </tr>
@@ -56,7 +51,7 @@
                     <span>Delete this classroom?</span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-danger" th:onclick="'@{~/university/classrooms/delete/} + ${classroom.getId()}'">Delete</button>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>

@@ -32,6 +32,6 @@ public class LocationController {
 
         locationService.create(location);
 
-        return "redirect:/classrooms/creationform";
+        return "redirect:/classrooms";
     }
 }

@@ -60,4 +60,12 @@ public class ClassroomController {
 
         return "redirect:/classrooms";
     }
+
+    @GetMapping("/{id}")
+    public String classroomDetails(@PathVariable int id, Model model) {
+        model.addAttribute("classroom", classroomService.findById(id).get());
+        model.addAttribute("locations", locationService.findAll());
+
+        return "/details/classroom";
+    }
 }
