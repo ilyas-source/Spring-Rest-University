@@ -9,7 +9,8 @@
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container">
     <div class="mt-5">
-        <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
+        <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+            classrooms...</a>
         <h2 class="text-primary">Classroom details</h2>
         <form class="form-group" method="POST" action="/university/classrooms/update">
             <input class="invisible" name="id" type="text" id="id" th:value="${classroom.id}"/><br/>
@@ -23,14 +24,14 @@
                 <option th:each="location: ${locations}" th:value="${location.id}" th:text="${location}"></option>
             </select>
             <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
-                    data-bs-target="#AddLocation">
-                Other location...
-            </button>
+                    data-bs-target="#AddLocation">Other location...</button>
             <br/>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
+            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
+                    data-bs-target="#ModalDelete">Delete</button>
         </form>
     </div>
-    <div class="modal" id="AddLocation">
+    <div class="modal fade" id="AddLocation">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,6 +51,25 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Delete this classroom?</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" th:onclick="'@{~/university/classrooms/delete/} + ${classroom.getId()}'">Delete</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
