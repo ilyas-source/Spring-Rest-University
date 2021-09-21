@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
@@ -31,8 +32,8 @@ public class ClassroomController {
         return "classroomsView";
     }
 
-    @GetMapping("/creationform")
-    public String creationForm(Model model) {
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("locations", locationService.findAll());
         return "/create/classroom";
@@ -46,12 +47,9 @@ public class ClassroomController {
 
         Location location = locationService.findById(Integer.parseInt(locationid)).get();
         Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
-
         classroomService.create(classroom);
 
-        model.addAttribute("classrooms", classroomService.findAll());
-
-        return "classroomsView";
+        return "redirect:/classrooms";
     }
 
     @PostMapping("/update")
@@ -61,9 +59,10 @@ public class ClassroomController {
                          @RequestParam("id") String id, Model model) {
         logger.debug("Received update data: name {}, capacity {}, location id={}", name, capacity, locationid);
 
-        Location location = locationService.findById(Integer.parseInt(locationid)).get();
+        Location location = locationService.findById(Integer.parseInt(locationid)).orElseThrow(
+                () -> new EntityNotFoundException("Can't find location by id " + id));
 
-        Classroom classroom = new Classroom(Integer.valueOf(id),location,name,Integer.valueOf(capacity));
+        Classroom classroom = new Classroom(Integer.valueOf(id), location, name, Integer.valueOf(capacity));
 
         classroomService.update(classroom);
 
@@ -72,8 +71,8 @@ public class ClassroomController {
         return "/details/classroom";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteClassroom(@PathVariable int id, Model model) {
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id, Model model) {
         classroomService.delete(id);
 
         model.addAttribute("classrooms", classroomService.findAll());
@@ -82,8 +81,11 @@ public class ClassroomController {
     }
 
     @GetMapping("/{id}")
-    public String classroomDetails(@PathVariable int id, Model model) {
-        model.addAttribute("classroom", classroomService.findById(id).get());
+    public String showDetails(@PathVariable int id, Model model) {
+        Classroom classroom = classroomService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find classroom by id " + id));
+
+        model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
 
         return "/details/classroom";
