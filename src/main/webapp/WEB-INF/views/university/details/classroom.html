@@ -12,15 +12,19 @@
         <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             classrooms...</a>
         <h2 class="text-primary">Classroom details</h2>
-        <form class="form-group" method="POST" action="/university/classrooms/update">
-            <input class="invisible" name="id" type="text" id="id" th:value="${classroom.id}"/><br/>
+
+
+        <form class="form-group" method="POST" th:action="@{/classrooms/update/{id}(id=${classroom.id})}"
+              th:object="${classroom}">
+            <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
             <label for="name" class="mb-2">Classroom name: </label>
-            <input name="name" type="text" id="name" th:value="${classroom.name}"/><br/>
+            <input type="text" id="name" th:field="*{name}"/><br/>
             <label for="capacity" class="mb-2">Capacity, students: </label>
-            <input name="capacity" type="text" id="capacity" th:value="${classroom.capacity}"/><br/>
-            <label for="locationid" class="mb-2">Select location: </label>
-            <select class="form-select" name="locationid" id="locationid" style="display:inline;width: auto">
-                <option selected th:value="${classroom.location.id}" th:text="${classroom.location}"></option>
+            <input type="text" id="capacity" th:field="*{capacity}"/><br/>
+            <label for="location" class="mb-2">Select location: </label>
+            <select class="form-select" id="location" th:field="*{location}" style="display:inline;width: auto">
+                <option selected th:field="*{location}" th:value="${classroom.location}"
+                        th:text="${classroom.location}"></option>
                 <option th:each="location: ${locations}" th:value="${location.id}" th:text="${location}"></option>
             </select>
             <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
@@ -28,6 +32,8 @@
             </button>
             <br/>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
+
+
             <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
                     data-bs-target="#ModalDelete">Delete
             </button>

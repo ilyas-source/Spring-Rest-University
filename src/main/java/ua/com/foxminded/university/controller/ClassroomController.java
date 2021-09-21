@@ -53,22 +53,18 @@ public class ClassroomController {
     }
 
     @PostMapping("/update")
-    public String update(@RequestParam("name") String name,
-                         @RequestParam("capacity") String capacity,
-                         @RequestParam("locationid") String locationid,
-                         @RequestParam("id") String id, Model model) {
-        logger.debug("Received update data: name {}, capacity {}, location id={}", name, capacity, locationid);
+    public String update(@ModelAttribute("classroom") Classroom classroom) {
+        logger.debug("Received update data: name {}, capacity {}, location id={}", classroom.getName(),
+                     classroom.getCapacity(), classroom.getLocation());
 
-        Location location = locationService.findById(Integer.parseInt(locationid)).orElseThrow(
-                () -> new EntityNotFoundException("Can't find location by id " + id));
+        // Location location = locationService.findById(Integer.parseInt(locationid)).orElseThrow(
+        //       () -> new EntityNotFoundException("Can't find location by id " + id));
 
-        Classroom classroom = new Classroom(Integer.valueOf(id), location, name, Integer.valueOf(capacity));
+        //  Classroom classroom = new Classroom(Integer.valueOf(id), location, name, Integer.valueOf(capacity));
 
         classroomService.update(classroom);
 
-        model.addAttribute(classroom);
-
-        return "/details/classroom";
+        return "redirect:/classrooms";
     }
 
     @PostMapping("/delete/{id}")
