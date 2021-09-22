@@ -29,6 +29,7 @@ public class ClassroomController {
     public String findAll(Model model) {
         logger.debug("Retrieving all classrooms to controller");
         model.addAttribute("classrooms", classroomService.findAll());
+
         return "classroomsView";
     }
 
@@ -36,6 +37,7 @@ public class ClassroomController {
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("locations", locationService.findAll());
+
         return "/create/classroom";
     }
 
@@ -44,37 +46,33 @@ public class ClassroomController {
                          @RequestParam("capacity") String capacity,
                          @RequestParam("locationid") String locationid) {
         logger.debug("Received to create: name {}, capacity {}, location id={}", name, capacity, locationid);
-
         Location location = locationService.findById(Integer.parseInt(locationid)).get();
         Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
         classroomService.create(classroom);
 
         return "redirect:/classrooms";
     }
+
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-
-        logger.debug("Received update data: name {}, capacity {}, location {}", classroom.getName(),
-                     classroom.getCapacity(), classroom.getLocation());
-
+        logger.debug("Received update data: name {}, capacity {}, location {}",
+                     classroom.getName(), classroom.getCapacity(), classroom.getLocation());
         classroomService.update(classroom);
 
         return "redirect:/classrooms";
     }
 
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable int id, Model model) {
+    public String delete(@PathVariable int id) {
         classroomService.delete(id);
-        model.addAttribute("classrooms", classroomService.findAll());
 
-        return "classroomsView";
+        return "redirect:/classrooms";
     }
 
     @GetMapping("/{id}")
     public String showDetails(@PathVariable int id, Model model) {
         Classroom classroom = classroomService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find classroom by id " + id));
-
         model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
         model.addAttribute("location", new Location());

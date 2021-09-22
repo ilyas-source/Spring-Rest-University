@@ -24,9 +24,6 @@ public class LocationController {
     @PostMapping("/create")
     public String create(@ModelAttribute("location") Location location) {
         logger.debug("Received location to create: {}", location);
-
-     //   Location location = new Location(building, Integer.valueOf(floor), Integer.valueOf(number));
-
         locationService.create(location);
 
         return "redirect:/classrooms";

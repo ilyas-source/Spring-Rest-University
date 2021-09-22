@@ -25,6 +25,7 @@ public class GroupController {
     public String findAll(Model model) {
         logger.debug("Retrieving all groups to controller");
         model.addAttribute("groups", groupService.findAll());
+
         return "groupsView";
     }
 
@@ -32,7 +33,6 @@ public class GroupController {
     public String showDetails(@PathVariable int id, Model model) {
         Group group = groupService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find group by id " + id));
-
         model.addAttribute("group", group);
 
         return "/details/group";
@@ -41,8 +41,23 @@ public class GroupController {
     @PostMapping("/update")
     public String update(@ModelAttribute("group") Group group) {
         logger.debug("Received update data: name {}", group.getName());
-
         groupService.update(group);
+
+        return "redirect:/groups";
+    }
+
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("group", new Group());
+
+        return "/create/group";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("group") Group group) {
+        logger.debug("Received to create: {}", group);
+        groupService.create(group);
 
         return "redirect:/groups";
     }
