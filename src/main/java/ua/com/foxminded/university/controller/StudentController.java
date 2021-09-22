@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
 @Controller
@@ -20,9 +21,11 @@ public class StudentController {
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     private final StudentService studentService;
+    private final GroupService groupService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, GroupService groupService) {
         this.studentService = studentService;
+        this.groupService = groupService;
     }
 
     @GetMapping
@@ -39,6 +42,7 @@ public class StudentController {
         Student student = studentService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find student by id " + id));
         model.addAttribute("student", student);
+        model.addAttribute("groups", groupService.findAll());
 
         return "/details/student";
     }

@@ -12,45 +12,49 @@
         <a href="/university/students?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             students...</a>
         <h2 class="text-primary">Student details</h2>
-
-
         <form class="form-student" method="POST" th:action="@{/students/update}" th:object="${student}">
-            <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
-            <label for="name" class="mb-2">Student name: </label>
-            <input type="text" id="name" th:field="*{name}"/><br/>
-            <br/>
+            <label class="mb-2" th:field="*{id}" th:text="'Student id number: ' + *{id}"/><br/>
+
+            <label for="firstName" class="mb-2">First name: </label>
+            <input type="text" id="firstName" th:field="*{firstName}"/><br/>
+            <label for="lastName" class="mb-2">Last name: </label>
+            <input type="text" id="lastName" th:field="*{lastName}"/><br/>
+
+            <label for="group" class="mb-2">Group: </label>
+            <select class="form-select" id="group" th:field="*{group}" style="display:inline;width: auto">
+                <option selected th:field="*{group}" th:value="${student.group}"
+                        th:text="${student.group}"></option>
+                <option th:if="${student.group!=group}"
+                        th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
+            </select><br/>
+
+            <label for="gender" class="mb-2">Gender: </label>
+            <select class="form-select" id="gender" th:field="*{gender}" style="display:inline;width: auto">
+                <option selected th:field="*{gender}" th:value="${student.gender}"
+                        th:text="${student.gender}"></option>
+                <option th:if="${student.gender!=gender}"
+                        th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
+                        th:value="${gender}" th:text="${gender}"></option>
+            </select><br/>
+
+            <label for="email" class="mb-2">Email: </label>
+            <input type="text" id="email" th:field="*{email}"/><br/>
+
+            <label for="phone" class="mb-2">Phone: </label>
+            <input type="text" id="phone" th:field="*{phoneNumber}"/><br/>
+
+            <label for="birth" class="mb-2">Date of birth: </label>
+            <input type="text" id="birth" th:field="*{birthDate}"/><br/>
+
+            <label for="address" class="mb-2">Address: </label>
+            <input type="text" id="address" th:field="*{address}"/><br/>
+
             <p th:text="${student}"></p>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
-
-
             <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
                     data-bs-target="#ModalDelete">Delete
             </button>
         </form>
-    </div>
-    <div class="modal fade" id="AddLocation">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New location</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-student" method="POST" action="/university/locations/create">
-                        <label for="building" class="mb-2">Building: </label>
-                        <input name="building" type="text" id="building"/><br/>
-                        <label for="floor" class="mb-2">Floor: </label>
-                        <input name="floor" type="text" id="floor"/><br/>
-                        <label for="number" class="mb-2">Room number: </label>
-                        <input name="number" type="text" id="number"/><br/>
-                        <input type="submit" class="btn btn-primary" value="Create"/>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
