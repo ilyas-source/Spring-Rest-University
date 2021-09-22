@@ -10,6 +10,8 @@
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container">
     <div class="mt-5">
+        <a href="/university/lectures/new" class="btn btn-outline-primary mb-2" role="button">Create new
+            lecture</a>
         <table class="table table-striped table-bordered table-sortable">
             <thead class="thead-light">
             <tr>
@@ -21,6 +23,7 @@
                 <th scope="col">Subject</th>
                 <th scope="col">Teacher</th>
                 <th scope="col">Groups</th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -29,17 +32,17 @@
                         th:text="${lecture.id}"> </span></th>
                 <td class="align-left"><span th:text="${lecture.date}">
 						</span></td>
-                <td class="align-left"><span
-                        th:text="${lecture.timeslot.beginTime}"></span></td>
-                <td class="align-left"><span
-                        th:text="${lecture.timeslot.endTime}"></span></td>
-                <td class="align-left"><span
-                        th:text="${lecture.classroom.name}"></span></td>
-                <td class="align-left"><span
-                        th:text="${lecture.subject.name}"></span></td>
-                <td class="align-left"><span
-                        th:text="${lecture.teacher.firstName}+' '+${lecture.teacher.lastName}"></span></td>
+                <td class="align-left"><span th:text="${lecture.timeslot.beginTime}"></span></td>
+                <td class="align-left"><span th:text="${lecture.timeslot.endTime}"></span></td>
+                <td class="align-left"><span th:text="${lecture.classroom.name}"></span></td>
+                <td class="align-left"><span th:text="${lecture.subject.name}"></span></td>
+                <td class="align-left"><span th:text="${lecture.teacher.firstName}+' '+${lecture.teacher.lastName}"></span></td>
                 <td class="align-left"><span th:text="${lecture.groups}"></span></td>
+                <td>
+                    <div style="display:flex;">
+                        <a class="btn btn-outline-primary" th:href="@{/lectures/{id}(id=${lecture.id})}">Edit/delete...</a>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
 
 @Controller
@@ -25,5 +26,38 @@ public class HolidayController {
         logger.debug("Retrieving all holidays to controller");
         model.addAttribute("holidays", holidayService.findAll());
         return "holidaysView";
+    }
+
+    @GetMapping("/{id}")
+    public String showDetails(@PathVariable int id, Model model) {
+        Holiday holiday = holidayService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find holiday by id " + id));
+        model.addAttribute("holiday", holiday);
+
+        return "/details/holiday";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("holiday") Holiday holiday) {
+        logger.debug("Received update data: name {}", holiday.getName());
+        holidayService.update(holiday);
+
+        return "redirect:/holidays";
+    }
+
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("holiday", new Holiday());
+
+        return "/create/holiday";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("holiday") Holiday holiday) {
+        logger.debug("Received to create: {}", holiday);
+        holidayService.create(holiday);
+
+        return "redirect:/holidays";
     }
 }

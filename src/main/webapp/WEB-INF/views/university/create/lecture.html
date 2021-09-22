@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lectures</title>
+  <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container">
+  <div class="mt-5">
+    <a href="/university/lectures" class="btn btn-outline-primary mb-2" role="button">Back to lectures...</a>
+    <h2 class="text-primary">Create new lecture</h2>
+    <form class="form-lecture" method="POST" action="/university/lectures/create" th:object="${lecture}">
+      <label for="name" class="mb-2">Lecture name: </label>
+      <input type="text" id="name" th:field="*{name}"/><br/>
+      <input type="submit" class="btn btn-primary mt-2" value="Create"/>
+    </form>
+  </div>
+  <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>

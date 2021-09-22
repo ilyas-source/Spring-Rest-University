@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.service.LectureService;
 
 @Controller
@@ -25,5 +28,14 @@ public class LectureController {
         logger.debug("Retrieving all lectures to controller");
         model.addAttribute("lectures", lectureService.findAll());
         return "lecturesView";
+    }
+
+    @GetMapping("/{id}")
+    public String showDetails(@PathVariable int id, Model model) {
+        Lecture lecture = lectureService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find lecture by id " + id));
+        model.addAttribute("lecture", lecture);
+
+        return "/details/lecture";
     }
 }

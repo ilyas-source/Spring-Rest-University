@@ -91,5 +91,4 @@ class GroupControllerTest {
 
         verify(groupService).create(expectedGroup1);
     }
-
 }

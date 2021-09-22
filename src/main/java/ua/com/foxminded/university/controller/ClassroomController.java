@@ -33,6 +33,17 @@ public class ClassroomController {
         return "classroomsView";
     }
 
+    @GetMapping("/{id}")
+    public String showDetails(@PathVariable int id, Model model) {
+        Classroom classroom = classroomService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find classroom by id " + id));
+        model.addAttribute("classroom", classroom);
+        model.addAttribute("locations", locationService.findAll());
+        model.addAttribute("location", new Location());
+
+        return "/details/classroom";
+    }
+
     @GetMapping("/new")
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
@@ -69,14 +80,5 @@ public class ClassroomController {
         return "redirect:/classrooms";
     }
 
-    @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
-        Classroom classroom = classroomService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find classroom by id " + id));
-        model.addAttribute("classroom", classroom);
-        model.addAttribute("locations", locationService.findAll());
-        model.addAttribute("location", new Location());
 
-        return "/details/classroom";
-    }
 }

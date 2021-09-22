@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subjects</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container">
+    <div class="mt-5">
+        <a href="/university/subjects?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+            subjects...</a>
+        <h2 class="text-primary">Subject details</h2>
+
+
+        <form class="form-subject" method="POST" th:action="@{/subjects/update}" th:object="${subject}">
+            <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
+            <label for="name" class="mb-2">Subject name: </label>
+            <input type="text" id="name" th:field="*{name}"/><br/>
+            <br/>
+            <p th:text="${subject}"></p>
+            <input type="submit" class="btn btn-primary mt-2" value="Update"/>
+
+
+            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
+                    data-bs-target="#ModalDelete">Delete
+            </button>
+        </form>
+    </div>
+    <div class="modal fade" id="AddLocation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New location</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-subject" method="POST" action="/university/locations/create">
+                        <label for="building" class="mb-2">Building: </label>
+                        <input name="building" type="text" id="building"/><br/>
+                        <label for="floor" class="mb-2">Floor: </label>
+                        <input name="floor" type="text" id="floor"/><br/>
+                        <label for="number" class="mb-2">Room number: </label>
+                        <input name="number" type="text" id="number"/><br/>
+                        <input type="submit" class="btn btn-primary" value="Create"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ModalDelete" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Delete this subject?</span>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin-left: .75rem;" th:method="POST"
+                          th:action="@{/subjects/delete/{id}(id=${subject.id})}">
+                        <input class="btn btn-danger" type="submit" value="Delete"/>
+                    </form>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>

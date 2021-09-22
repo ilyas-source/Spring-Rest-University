@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
 
 @Controller
@@ -25,5 +28,14 @@ public class SubjectController {
         logger.debug("Retrieving all subjects to controller");
         model.addAttribute("subjects", subjectService.findAll());
         return "subjectsView";
+    }
+
+    @GetMapping("/{id}")
+    public String showDetails(@PathVariable int id, Model model) {
+        Subject subject = subjectService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find subject by id " + id));
+        model.addAttribute("subject", subject);
+
+        return "/details/subject";
     }
 }
