@@ -46,8 +46,11 @@
             <label for="birth" class="mb-2">Date of birth: </label>
             <input type="text" id="birth" th:field="*{birthDate}"/><br/>
 
-            <label for="address" class="mb-2">Address: </label>
-            <input type="text" id="address" th:field="*{address}"/><br/>
+            <label class="mb-2" th:field="*{address}" th:text="'Address: ' + *{address}">Address: </label>
+            <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
+                    data-bs-target="#EditAddress">Change...
+            </button><br/>
+
 
             <p th:text="${student}"></p>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
@@ -74,6 +77,37 @@
                         <input class="btn btn-danger" type="submit" value="Delete"/>
                     </form>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditAddress">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit address</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-group" method="POST" action="/university/addresses/update"
+                          th:object="${student.address}">
+                        <label for="country" class="mb-2">Country: </label>
+                        <input type="text" id="country" th:field="*{country}"/><br/>
+
+                        <label for="postalcode" class="mb-2">Postal code: </label>
+                        <input type="text" id="postalcode" th:field="*{postalCode}"/><br/>
+
+                        <label for="region" class="mb-2">Region: </label>
+                        <input type="text" id="region" th:field="*{region}"/><br/>
+
+                        <label for="city" class="mb-2">City: </label>
+                        <input type="text" id="city" th:field="*{city}"/><br/>
+
+                        <label for="street" class="mb-2">Street address: </label>
+                        <input type="text" id="street" th:field="*{streetAddress}"/><br/>
+
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                    </form>
                 </div>
             </div>
         </div>
