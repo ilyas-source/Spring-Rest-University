@@ -65,7 +65,6 @@ public class ClassroomController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id, Model model) {
         classroomService.delete(id);
-
         model.addAttribute("classrooms", classroomService.findAll());
 
         return "classroomsView";
@@ -78,6 +77,7 @@ public class ClassroomController {
 
         model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
+        model.addAttribute("location", new Location());
 
         return "/details/classroom";
     }
