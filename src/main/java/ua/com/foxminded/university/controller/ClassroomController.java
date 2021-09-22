@@ -42,7 +42,7 @@ public class ClassroomController {
     @PostMapping("/create")
     public String create(@RequestParam("name") String name,
                          @RequestParam("capacity") String capacity,
-                         @RequestParam("locationid") String locationid, Model model) {
+                         @RequestParam("locationid") String locationid) {
         logger.debug("Received to create: name {}, capacity {}, location id={}", name, capacity, locationid);
 
         Location location = locationService.findById(Integer.parseInt(locationid)).get();
@@ -51,16 +51,11 @@ public class ClassroomController {
 
         return "redirect:/classrooms";
     }
-
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-        logger.debug("Received update data: name {}, capacity {}, location id={}", classroom.getName(),
+
+        logger.debug("Received update data: name {}, capacity {}, location {}", classroom.getName(),
                      classroom.getCapacity(), classroom.getLocation());
-
-        // Location location = locationService.findById(Integer.parseInt(locationid)).orElseThrow(
-        //       () -> new EntityNotFoundException("Can't find location by id " + id));
-
-        //  Classroom classroom = new Classroom(Integer.valueOf(id), location, name, Integer.valueOf(capacity));
 
         classroomService.update(classroom);
 

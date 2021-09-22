@@ -2,36 +2,27 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Classrooms</title>
+    <title>Groups</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container">
     <div class="mt-5">
-        <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
-            classrooms...</a>
-        <h2 class="text-primary">Classroom details</h2>
+        <a href="/university/groups?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+            groups...</a>
+        <h2 class="text-primary">Group details</h2>
 
 
-        <form class="form-group" th:method="POST" th:action="@{/classrooms/update}" th:object="${classroom}">
+        <form class="form-group" method="POST" th:action="@{/groups/update}" th:object="${group}">
             <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
-            <label for="name" class="mb-2">Classroom name: </label>
+            <label for="name" class="mb-2">Group name: </label>
             <input type="text" id="name" th:field="*{name}"/><br/>
-            <label for="capacity" class="mb-2">Capacity, students: </label>
-            <input type="text" id="capacity" th:field="*{capacity}"/><br/>
-            <label for="location" class="mb-2">Select location: </label>
-            <select class="form-select" id="location" th:field="*{location}" style="display:inline;width: auto">
-                <option selected th:field="*{location}" th:value="${classroom.location}"
-                        th:text="${classroom.location}"></option>
-                <option th:each="location: ${locations}" th:value="${location}" th:text="${location}"></option>
-            </select>
-            <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
-                    data-bs-target="#AddLocation">Other location...
-            </button>
             <br/>
-            <p th:text="${classroom}"></p>
+            <p th:text="${group}"></p>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
+
+
             <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
                     data-bs-target="#ModalDelete">Delete
             </button>
@@ -71,11 +62,11 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <span>Delete this classroom?</span>
+                    <span>Delete this group?</span>
                 </div>
                 <div class="modal-footer">
                     <form style="margin-left: .75rem;" th:method="POST"
-                          th:action="@{/classrooms/delete/{id}(id=${classroom.id})}">
+                          th:action="@{/groups/delete/{id}(id=${group.id})}">
                         <input class="btn btn-danger" type="submit" value="Delete"/>
                     </form>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
