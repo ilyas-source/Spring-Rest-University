@@ -12,52 +12,49 @@
         <a href="/university/students?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             students...</a>
         <h2 class="text-primary">Student details</h2>
-        <form class="form-student" method="POST" th:action="@{/students/update}" th:object="${student}">
-            <label class="mb-2" th:field="*{id}" th:text="'Student id number: ' + *{id}"/><br/>
 
-            <label for="firstName" class="mb-2">First name: </label>
-            <input type="text" id="firstName" th:field="*{firstName}"/><br/>
-            <label for="lastName" class="mb-2">Last name: </label>
-            <input type="text" id="lastName" th:field="*{lastName}"/><br/>
-
-            <label for="group" class="mb-2">Group: </label>
-            <select class="form-select" id="group" th:field="*{group}" style="display:inline;width: auto">
-                <option selected th:field="*{group}" th:value="${student.group}"
-                        th:text="${student.group}"></option>
-                <option th:if="${student.group!=group}"
-                        th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
-            </select><br/>
-
-            <label for="gender" class="mb-2">Gender: </label>
-            <select class="form-select" id="gender" th:field="*{gender}" style="display:inline;width: auto">
-                <option selected th:field="*{gender}" th:value="${student.gender}"
-                        th:text="${student.gender}"></option>
-                <option th:if="${student.gender!=gender}"
-                        th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
-                        th:value="${gender}" th:text="${gender}"></option>
-            </select><br/>
-
-            <label for="email" class="mb-2">Email: </label>
-            <input type="text" id="email" th:field="*{email}"/><br/>
-
-            <label for="phone" class="mb-2">Phone: </label>
-            <input type="text" id="phone" th:field="*{phoneNumber}"/><br/>
-
-            <label for="birth" class="mb-2">Date of birth: </label>
-            <input type="text" id="birth" th:field="*{birthDate}"/><br/>
-
-            <label class="mb-2" th:field="*{address}" th:text="'Address: ' + *{address}">Address: </label>
-            <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
-                    data-bs-target="#EditAddress">Change...
-            </button><br/>
-
-
-            <p th:text="${student}"></p>
-            <input type="submit" class="btn btn-primary mt-2" value="Update"/>
-            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
-                    data-bs-target="#ModalDelete">Delete
-            </button>
+        <form class="row g-3" method="POST" th:action="@{/students/update}" th:object="${student}">
+            <div class="col-md-6">
+                <label for="firstname" class="form-label">First name</label>
+                <input type="text" class="form-control" id="firstname" th:field="*{firstName}">
+            </div>
+            <div class="col-md-6">
+                <label for="lastname" class="form-label">Last name</label>
+                <input type="text" class="form-control" id="lastname" th:field="*{lastName}">
+            </div>
+            <div class="col-md-6">
+                <label for="mail" class="form-label">Mail</label>
+                <input type="email" class="form-control" id="mail" placeholder="mail@example.com" th:field="*{email}">
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Phone number</label>
+                <input type="text" class="form-control" id="phone" placeholder="+1 800 11111" th:field="*{phoneNumber}">
+            </div>
+            <div class="col-12">
+                <label for="street" class="form-label">Address</label>
+                <input type="text" class="form-control" id="street" placeholder="1234 Main St" th:field="*{address.streetAddress}">
+            </div>
+            <div class="col-md-3">
+                <label for="country" class="form-label">Country</label>
+                <input type="text" class="form-control" id="country" placeholder="United Kingdom" th:field="*{address.country}">
+            </div>
+            <div class="col-md-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" placeholder="Edinburgh" th:field="*{address.city}">
+            </div>
+            <div class="col-md-4">
+                <label for="region" class="form-label">Region/State</label>
+                <input type="text" class="form-control" id="region" placeholder="Central" th:field="*{address.region}">
+            </div>
+            <div class="col-md-2">
+                <label for="postalcode" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="postalcode" placeholder="90210" th:field="*{address.postalCode}">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
         </form>
+
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -77,37 +74,6 @@
                         <input class="btn btn-danger" type="submit" value="Delete"/>
                     </form>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="EditAddress">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit address</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <form class="form-group" method="POST" action="/university/addresses/update"
-                          th:object="${student.address}">
-                        <label for="country" class="mb-2">Country: </label>
-                        <input type="text" id="country" th:field="*{country}"/><br/>
-
-                        <label for="postalcode" class="mb-2">Postal code: </label>
-                        <input type="text" id="postalcode" th:field="*{postalCode}"/><br/>
-
-                        <label for="region" class="mb-2">Region: </label>
-                        <input type="text" id="region" th:field="*{region}"/><br/>
-
-                        <label for="city" class="mb-2">City: </label>
-                        <input type="text" id="city" th:field="*{city}"/><br/>
-
-                        <label for="street" class="mb-2">Street address: </label>
-                        <input type="text" id="street" th:field="*{streetAddress}"/><br/>
-
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
-                    </form>
                 </div>
             </div>
         </div>
