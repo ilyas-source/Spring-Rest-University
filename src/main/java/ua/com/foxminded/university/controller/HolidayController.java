@@ -62,5 +62,4 @@ public class HolidayController {
         holidayService.delete(id);
         return "redirect:/holidays";
     }
-
 }

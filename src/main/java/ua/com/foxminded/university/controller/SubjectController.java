@@ -39,7 +39,13 @@ public class SubjectController {
         return "/details/subject";
     }
 
-    //TODO new create update
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("subject", new Subject());
+        return "/create/subject";
+    }
+    //TODO create update
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

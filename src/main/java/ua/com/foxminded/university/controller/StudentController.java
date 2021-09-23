@@ -47,7 +47,14 @@ public class StudentController {
         return "/details/student";
     }
 
-    //TODO new create update
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("student", new Student());
+        model.addAttribute("groups", groupService.findAll());
+        return "/create/student";
+    }
+    //TODO create update
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

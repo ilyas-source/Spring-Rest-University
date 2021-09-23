@@ -39,7 +39,14 @@ public class LectureController {
         return "/details/lecture";
     }
 
-    //TODO new create update
+    @GetMapping("/new")
+    public String showCreationForm(Model model) {
+        logger.debug("Opening creation form");
+        model.addAttribute("lecture", new Lecture());
+        return "/create/lecture";
+    }
+
+    //TODO create update
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

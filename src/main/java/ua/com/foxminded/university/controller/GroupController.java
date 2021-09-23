@@ -62,6 +62,4 @@ public class GroupController {
         groupService.delete(id);
         return "redirect:/groups";
     }
-
-
 }
