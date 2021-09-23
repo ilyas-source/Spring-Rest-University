@@ -28,7 +28,7 @@
           <option th:if="${student.gender!=gender}"
                   th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
                   th:value="${gender}" th:text="${gender}"></option>
-        </select><br/>
+        </select>
       </div>
       <div class="col-md-2">
         <label for="birthday" class="form-label">Birthday (dd.mm.yyyy)</label>
@@ -41,7 +41,7 @@
                   th:text="${student.group}"></option>
           <option th:if="${student.group!=group}"
                   th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
-        </select><br/>
+        </select>
       </div>
       <div class="col-md-5">
         <label for="mail" class="form-label">Mail</label>

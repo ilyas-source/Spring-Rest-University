@@ -45,6 +45,7 @@ public class ClassroomController {
     @GetMapping("/new")
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
+        model.addAttribute("classroom", new Classroom());
         model.addAttribute("locations", locationService.findAll());
         return "/create/classroom";
     }

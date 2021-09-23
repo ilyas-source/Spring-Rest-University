@@ -11,20 +11,34 @@
     <div class="mt-5">
         <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
         <h2 class="text-primary">Create new classroom</h2>
-        <form class="form-group" method="POST" action="/university/classrooms/create">
-            <label for="name" class="mb-2">Classroom name: </label>
-            <input name="name" type="text" id="name"/><br/>
-            <label for="capacity" class="mb-2">Capacity, students: </label>
-            <input name="capacity" type="text" id="capacity"/><br/>
-            <label for="locationid" class="mb-2">Select location: </label>
-            <select class="form-select" name="locationid" id="locationid" style="display:inline;width: auto">
-                <option th:each="location: ${locations}" th:value="${location.id}" th:text="${location}"></option>
-            </select>
-            <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal" data-bs-target="#AddLocation">
-                Other location...
-            </button>
-            <br/>
-            <input type="submit" class="btn btn-primary mt-2" value="Create"/>
+        <form class="row g-3" method="POST" th:action="@{/classrooms/create}" th:object="${classroom}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="name" class="form-label">Classroom name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Chemistry lab" th:field="*{name}">
+                </div>
+                <div class="col-md-2">
+                    <label for="capacity" class="form-label">Capacity, students</label>
+                    <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="locationid" class="form-label">Select location:</label>
+                <div class="input-group">
+                    <select class="form-select" name="locationid" id="locationid">
+                        <option th:each="location: ${locations}" th:value="${location.id}"
+                                th:text="${location}"></option>
+                    </select>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#AddLocation">Other...
+                    </button>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <input type="submit" class="btn btn-primary mt-2" value="Create"/>
+                </div>
+            </div>
         </form>
     </div>
     <div class="modal" id="AddLocation">
