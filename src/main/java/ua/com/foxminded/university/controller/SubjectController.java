@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Subject;
@@ -35,7 +36,14 @@ public class SubjectController {
         Subject subject = subjectService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find subject by id " + id));
         model.addAttribute("subject", subject);
-
         return "/details/subject";
+    }
+
+    //TODO new create update
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        subjectService.delete(id);
+        return "redirect:/subjects";
     }
 }

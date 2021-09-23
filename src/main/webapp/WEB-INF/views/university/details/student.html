@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Students</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/university/sources/css/all.css" rel="stylesheet">
-    <link href="/university/sources/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -34,28 +32,10 @@
                             th:value="${gender}" th:text="${gender}"></option>
                 </select><br/>
             </div>
-
-
             <div class="col-md-2">
-                <label for="datetimepicker4" class="form-label">Day of birth</label>
-                <div class="form-group">
-                    <div class="input-group date" id="datetimepicker4" data-target-input="nearest" th:field="*{birthDate}">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4"/>
-                        <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
+                <label for="birthday" class="form-label">Birthday (dd.mm.yyyy)</label>
+                <input type="text" class="form-control" id="birthday" th:field="*{birthDate}">
             </div>
-            <script type="text/javascript">
-                $(function () {
-                    $('#datetimepicker4').datetimepicker({
-                        format: 'L'
-                    });
-                });
-            </script>
-
-
             <div class="col-md-2">
                 <label for="group" class="form-label">Group</label>
                 <select class="form-select" id="group" th:field="*{group}">
@@ -96,9 +76,15 @@
                 <input type="text" class="form-control" id="postalcode" placeholder="90210"
                        th:field="*{address.postalCode}">
             </div>
-            <div class="col-12">
+            <div class="col-3">
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
+            <div class="col-3">
+            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
+                    data-bs-target="#ModalDelete">Delete student
+            </button>
+            </div>
+
         </form>
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
@@ -125,8 +111,6 @@
     </div>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
     <script src="/university/sources/js/jquery.min.js"></script>
-    <script src="/university/sources/js/moment.min.js"></script>
-    <script src="/university/sources/js/tempusdominus-bootstrap-4.min.js"></script>
 </div>
 </body>
 </html>

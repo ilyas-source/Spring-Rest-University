@@ -29,7 +29,6 @@ public class ClassroomController {
     public String findAll(Model model) {
         logger.debug("Retrieving all classrooms to controller");
         model.addAttribute("classrooms", classroomService.findAll());
-
         return "classroomsView";
     }
 
@@ -40,7 +39,6 @@ public class ClassroomController {
         model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
         model.addAttribute("location", new Location());
-
         return "/details/classroom";
     }
 
@@ -48,7 +46,6 @@ public class ClassroomController {
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("locations", locationService.findAll());
-
         return "/create/classroom";
     }
 
@@ -60,7 +57,6 @@ public class ClassroomController {
         Location location = locationService.findById(Integer.parseInt(locationid)).get();
         Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
         classroomService.create(classroom);
-
         return "redirect:/classrooms";
     }
 
@@ -69,14 +65,12 @@ public class ClassroomController {
         logger.debug("Received update data: name {}, capacity {}, location {}",
                      classroom.getName(), classroom.getCapacity(), classroom.getLocation());
         classroomService.update(classroom);
-
         return "redirect:/classrooms";
     }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {
         classroomService.delete(id);
-
         return "redirect:/classrooms";
     }
 }

@@ -25,7 +25,6 @@ public class LocationController {
     public String create(@ModelAttribute("location") Location location) {
         logger.debug("Received location to create: {}", location);
         locationService.create(location);
-
         return "redirect:/classrooms";
     }
 }

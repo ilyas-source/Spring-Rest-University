@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Lecture;
@@ -35,7 +36,14 @@ public class LectureController {
         Lecture lecture = lectureService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find lecture by id " + id));
         model.addAttribute("lecture", lecture);
-
         return "/details/lecture";
+    }
+
+    //TODO new create update
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        lectureService.delete(id);
+        return "redirect:/lectures";
     }
 }

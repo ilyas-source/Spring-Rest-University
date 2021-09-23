@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Teacher;
@@ -30,7 +31,6 @@ public class TeacherController {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Teacher> teacherPage = teacherService.findAll(pageable);
         model.addAttribute("teacherPage", teacherPage);
-
         return "teachersView";
     }
 
@@ -39,7 +39,14 @@ public class TeacherController {
         Teacher teacher = teacherService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + id));
         model.addAttribute("teacher", teacher);
-
         return "/details/teacher";
+    }
+
+    //TODO new create update
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        teacherService.delete(id);
+        return "redirect:/teachers";
     }
 }

@@ -33,23 +33,13 @@ public class HolidayController {
         Holiday holiday = holidayService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find holiday by id " + id));
         model.addAttribute("holiday", holiday);
-
         return "/details/holiday";
-    }
-
-    @PostMapping("/update")
-    public String update(@ModelAttribute("holiday") Holiday holiday) {
-        logger.debug("Received update data: name {}", holiday.getName());
-        holidayService.update(holiday);
-
-        return "redirect:/holidays";
     }
 
     @GetMapping("/new")
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("holiday", new Holiday());
-
         return "/create/holiday";
     }
 
@@ -57,7 +47,20 @@ public class HolidayController {
     public String create(@ModelAttribute("holiday") Holiday holiday) {
         logger.debug("Received to create: {}", holiday);
         holidayService.create(holiday);
-
         return "redirect:/holidays";
     }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("holiday") Holiday holiday) {
+        logger.debug("Received update data: name {}", holiday.getName());
+        holidayService.update(holiday);
+        return "redirect:/holidays";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        holidayService.delete(id);
+        return "redirect:/holidays";
+    }
+
 }

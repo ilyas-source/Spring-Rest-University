@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Student;
@@ -43,8 +44,15 @@ public class StudentController {
                 () -> new EntityNotFoundException("Can't find student by id " + id));
         model.addAttribute("student", student);
         model.addAttribute("groups", groupService.findAll());
-
         return "/details/student";
+    }
+
+    //TODO new create update
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        studentService.delete(id);
+        return "redirect:/students";
     }
 }
 
