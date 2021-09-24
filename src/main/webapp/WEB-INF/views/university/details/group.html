@@ -13,11 +13,9 @@
             groups...</a>
         <h2 class="text-primary">Group details</h2>
         <form class="form-group" method="POST" th:action="@{/groups/update}" th:object="${group}">
-            <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
+            <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
             <label for="name" class="mb-2">Group name: </label>
             <input type="text" id="name" th:field="*{name}"/><br/>
-            <br/>
-            <p th:text="${group}"></p>
             <input type="submit" class="btn btn-primary mt-2" value="Update"/>
             <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
                     data-bs-target="#ModalDelete">Delete

@@ -12,9 +12,8 @@
         <a href="/university/teachers?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             teachers...</a>
         <h2 class="text-primary">Teacher details</h2>
-
-
         <form class="row g-3" method="POST" th:action="@{/teachers/update}" th:object="${teacher}">
+            <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
             <div class="col-md-4">
                 <label for="firstname" class="form-label">First name</label>
                 <input type="text" class="form-control" id="firstname" th:field="*{firstName}">

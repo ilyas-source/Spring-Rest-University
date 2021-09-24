@@ -12,10 +12,8 @@
         <a href="/university/subjects?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             subjects...</a>
         <h2 class="text-primary">Subject details</h2>
-
-
         <form class="row g-3" method="POST" th:action="@{/subjects/update}" th:object="${subject}">
-            <input type="text" class="invisible" th:field="*{id}">
+            <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
             <div class="row g-3">
                 <div class="col-md-2">
                     <label for="name" class="form-label">Subject name</label>
@@ -26,7 +24,6 @@
                     <input type="text" class="form-control" id="description" placeholder="30" th:field="*{description}">
                 </div>
             </div>
-
             <div class="row g-3">
                 <div class="col-3">
                     <button type="submit" class="btn btn-primary">Update</button>
