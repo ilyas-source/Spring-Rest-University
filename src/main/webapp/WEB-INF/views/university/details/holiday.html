@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Holidays</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -12,16 +18,28 @@
         <a href="/university/holidays?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             holidays...</a>
         <h2 class="text-primary">Holiday details</h2>
-        <form class="form-holiday" method="POST" th:action="@{/holidays/update}" th:object="${holiday}">
+        <form class="row g-3" method="POST" th:action="@{/holidays/update}" th:object="${holiday}">
             <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
-            <label for="name" class="mb-2">Holiday name: </label>
-            <input type="text" id="name" th:field="*{name}"/><br/>
-            <br/>
-            <p th:text="${holiday}"></p>
-            <input type="submit" class="btn btn-primary mt-2" value="Update"/>
-            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
-                    data-bs-target="#ModalDelete">Delete
-            </button>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="name" class="form-label">Holiday name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Halloween day" th:field="*{name}">
+                </div>
+                <div class="col-md-2">
+                    <label for="datepicker" class="form-label">Celebration day</label>
+                    <input type="text" class="form-control" id="datepicker" th:field="*{date}">
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#ModalDelete">Delete holiday
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
@@ -47,6 +65,7 @@
         </div>
     </div>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
 </div>
 </body>
 </html>
