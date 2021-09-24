@@ -46,25 +46,28 @@ public class ClassroomController {
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("classroom", new Classroom());
+        model.addAttribute("location", new Location());
         model.addAttribute("locations", locationService.findAll());
         return "/create/classroom";
     }
 
     @PostMapping("/create")
-    public String create(@RequestParam("name") String name,
-                         @RequestParam("capacity") String capacity,
-                         @RequestParam("locationid") String locationid) {
-        logger.debug("Received to create: name {}, capacity {}, location id={}", name, capacity, locationid);
-        Location location = locationService.findById(Integer.parseInt(locationid)).get();
-        Classroom classroom = new Classroom(location, name, Integer.valueOf(capacity));
+    public String create(@ModelAttribute("classroom") Classroom classroom) {
+        int locationId = classroom.getLocation().getId();
+        logger.debug("Received classroom name {} and capacity {} to create", classroom.getName(),
+                     classroom.getCapacity());
+        logger.debug("Received location id to insert: {}", locationId);
+        logger.debug("Received location: {}", classroom.getLocation());
+        Location location = locationService.findById(locationId).orElseThrow(
+                () -> new EntityNotFoundException("Location not found by id=" + locationId));
+        classroom.setLocation(location);
         classroomService.create(classroom);
         return "redirect:/classrooms";
     }
 
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-        logger.debug("Received update data: name {}, capacity {}, location {}",
-                     classroom.getName(), classroom.getCapacity(), classroom.getLocation());
+        logger.debug("Received update data: {}", classroom);
         classroomService.update(classroom);
         return "redirect:/classrooms";
     }
@@ -74,4 +77,6 @@ public class ClassroomController {
         classroomService.delete(id);
         return "redirect:/classrooms";
     }
+
+
 }

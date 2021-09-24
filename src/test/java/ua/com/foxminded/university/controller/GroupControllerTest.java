@@ -91,4 +91,11 @@ class GroupControllerTest {
 
         verify(groupService).create(expectedGroup1);
     }
+
+    @Test
+    void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
+        mockMvc.perform(post("/groups/delete/1")).andExpect(status().is3xxRedirection());
+
+        verify(groupService).delete(1);
+    }
 }

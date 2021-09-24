@@ -22,7 +22,8 @@
             <select class="form-select" id="location" th:field="*{location}" style="display:inline;width: auto">
                 <option selected th:field="*{location}" th:value="${classroom.location}"
                         th:text="${classroom.location}"></option>
-                <option th:each="location: ${locations}" th:value="${location}" th:text="${location}"></option>
+                <option th:if="${classroom.location!=location}"
+                        th:each="location: ${locations}" th:value="${location}" th:text="${location}"></option>
             </select>
             <button type="button" class="btn btn-outline-primary mb-1" data-bs-toggle="modal"
                     data-bs-target="#AddLocation">Other location...
