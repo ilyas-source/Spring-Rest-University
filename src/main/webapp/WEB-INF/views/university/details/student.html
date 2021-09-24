@@ -2,8 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Students</title>
+    <title>Student</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -33,8 +34,8 @@
                 </select><br/>
             </div>
             <div class="col-md-2">
-                <label for="birthday" class="form-label">Birthday (dd.mm.yyyy)</label>
-                <input type="text" class="form-control" id="birthday" th:field="*{birthDate}">
+                <label for="datepicker" class="form-label">Day of birth</label>
+                <input type="text" class="form-control" id="datepicker" th:field="*{birthDate}">
             </div>
             <div class="col-md-2">
                 <label for="group" class="form-label">Group</label>
@@ -108,8 +109,10 @@
             </div>
         </div>
     </div>
-    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
     <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
 </div>
 </body>
 </html>

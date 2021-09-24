@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Holidays</title>
+    <title>Holiday</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/university/sources/css/jquery-ui.css">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -25,7 +25,6 @@
                     <input type="text" class="form-control" id="datepicker" th:field="*{date}">
                 </div>
             </div>
-
             <div id="SubmitDeleteButtons" class="row g-3">
                 <div class="col-3">
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -36,7 +35,6 @@
                     </button>
                 </div>
             </div>
-
         </form>
     </div>
     <div id="ModalDelete" class="modal fade" role="dialog">
