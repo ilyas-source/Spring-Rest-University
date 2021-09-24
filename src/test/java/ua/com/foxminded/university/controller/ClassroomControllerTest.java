@@ -117,10 +117,10 @@ class ClassroomControllerTest {
     @Test
     void givenClassroomWithNonExistingLocation_onCreate_shouldThrowException() throws Exception {
         when(locationService.findById(1)).thenReturn(Optional.empty());
-        String expected="Location not found by id=1";
+        String expected = "Location not found by id=1";
         Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
                                         () -> mockMvc.perform(post("/classrooms/create")
-                                                .flashAttr("classroom", expectedClassroom1))
+                                                                      .flashAttr("classroom", expectedClassroom1))
                                                 .andExpect(status().is3xxRedirection()));
         Throwable cause = thrown.getCause();
 

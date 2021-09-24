@@ -13,6 +13,7 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.StudentService;
@@ -21,15 +22,20 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -51,8 +57,8 @@ class StudentControllerTest {
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnViewWithPageOfStudents() throws Exception {
-        var pageable= PageRequest.of(2,5);
-        Page<Student> studentPage =new PageImpl<>(expectedStudents, pageable, expectedStudents.size());
+        var pageable = PageRequest.of(2, 5);
+        Page<Student> studentPage = new PageImpl<>(expectedStudents, pageable, expectedStudents.size());
 
         when(studentService.findAll(pageable)).thenReturn(studentPage);
 
@@ -63,6 +69,57 @@ class StudentControllerTest {
         mockMvc.perform(get("/students").params(requestParams))
                 .andExpect(view().name("studentsView"))
                 .andExpect(model().attribute("studentPage", studentPage));
+    }
+
+    @Test
+    void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithStudent() throws Exception {
+        when(studentService.findById(1)).thenReturn(java.util.Optional.of(expectedStudent1));
+
+        mockMvc.perform(get("/students/1"))
+                .andExpect(view().name("/details/student"))
+                .andExpect(model().attribute("student", expectedStudent1));
+    }
+
+    @Test
+    void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
+        String expected = "Can't find student by id 1";
+        when(studentService.findById(1)).thenReturn(Optional.empty());
+        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
+                                        () -> mockMvc.perform(get("/students/1")));
+        Throwable cause = thrown.getCause();
+
+        assertEquals(cause.getClass(), EntityNotFoundException.class);
+        assertEquals(expected, cause.getMessage());
+    }
+
+    @Test
+    void givenStudent_onUpdate_shouldCallServiceUpdate() throws Exception {
+        mockMvc.perform(post("/students/update").flashAttr("student", expectedStudent1))
+                .andExpect(status().is3xxRedirection());
+
+        verify(studentService).update(expectedStudent1);
+    }
+
+    @Test
+    void onShowCreationForm_shouldShowFormWithEmptyStudent() throws Exception {
+        mockMvc.perform(get("/students/new"))
+                .andExpect(view().name("/create/student"))
+                .andExpect(model().attribute("student", new Student()));
+    }
+
+    @Test
+    void givenStudent_onCreate_shouldCallServiceCreate() throws Exception {
+        mockMvc.perform(post("/students/create").flashAttr("student", expectedStudent1))
+                .andExpect(status().is3xxRedirection());
+
+        verify(studentService).create(expectedStudent1);
+    }
+
+    @Test
+    void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
+        mockMvc.perform(post("/students/delete/1")).andExpect(status().is3xxRedirection());
+
+        verify(studentService).delete(1);
     }
 
     interface TestData {

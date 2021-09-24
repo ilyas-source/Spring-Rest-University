@@ -91,4 +91,11 @@ class HolidayControllerTest {
 
         verify(holidayService).create(expectedHoliday1);
     }
+
+    @Test
+    void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
+        mockMvc.perform(post("/holidays/delete/1")).andExpect(status().is3xxRedirection());
+
+        verify(holidayService).delete(1);
+    }
 }
