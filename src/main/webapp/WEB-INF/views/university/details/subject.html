@@ -14,18 +14,29 @@
         <h2 class="text-primary">Subject details</h2>
 
 
-        <form class="form-subject" method="POST" th:action="@{/subjects/update}" th:object="${subject}">
-            <input class="invisible" name="id" type="text" id="id" th:field="*{id}"/><br/>
-            <label for="name" class="mb-2">Subject name: </label>
-            <input type="text" id="name" th:field="*{name}"/><br/>
-            <br/>
-            <p th:text="${subject}"></p>
-            <input type="submit" class="btn btn-primary mt-2" value="Update"/>
+        <form class="row g-3" method="POST" th:action="@{/subjects/update}" th:object="${subject}">
+            <input type="text" class="invisible" th:field="*{id}">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label for="name" class="form-label">Subject name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Chemistry lab" th:field="*{name}">
+                </div>
+                <div class="col-md-4">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="description" placeholder="30" th:field="*{description}">
+                </div>
+            </div>
 
-
-            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
-                    data-bs-target="#ModalDelete">Delete
-            </button>
+            <div class="row g-3">
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+                <div class="col-3">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#ModalDelete">Delete subject
+                    </button>
+                </div>
+            </div>
         </form>
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
