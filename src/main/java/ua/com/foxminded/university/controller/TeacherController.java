@@ -6,10 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.service.TeacherService;
@@ -28,7 +25,8 @@ public class TeacherController {
 
     @GetMapping
     public String getTeachers(Model model, Pageable pageable) {
-        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
+                     pageable.getSort());
         Page<Teacher> teacherPage = teacherService.findAll(pageable);
         model.addAttribute("teacherPage", teacherPage);
         return "teachersView";
@@ -48,7 +46,20 @@ public class TeacherController {
         model.addAttribute("teacher", new Teacher());
         return "/create/teacher";
     }
-    //TODO create update
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("teacher") Teacher teacher) {
+        logger.debug("Received to create: {}", teacher);
+        teacherService.create(teacher);
+        return "redirect:/teachers";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("teacher") Teacher teacher) {
+        logger.debug("Received update data: {}", teacher);
+        teacherService.update(teacher);
+        return "redirect:/teachers";
+    }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

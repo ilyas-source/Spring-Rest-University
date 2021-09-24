@@ -6,10 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
@@ -31,7 +28,8 @@ public class StudentController {
 
     @GetMapping
     public String getStudents(Model model, Pageable pageable) {
-        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
+                     pageable.getSort());
         Page<Student> studentPage = studentService.findAll(pageable);
         model.addAttribute("studentPage", studentPage);
 
@@ -54,7 +52,20 @@ public class StudentController {
         model.addAttribute("groups", groupService.findAll());
         return "/create/student";
     }
-    //TODO create update
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("student") Student student) {
+        logger.debug("Received to create: {}", student);
+        studentService.create(student);
+        return "redirect:/students";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("student") Student student) {
+        logger.debug("Received update data: {}", student);
+        studentService.update(student);
+        return "redirect:/students";
+    }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

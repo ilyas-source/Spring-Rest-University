@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.service.LectureService;
@@ -46,7 +43,19 @@ public class LectureController {
         return "/create/lecture";
     }
 
-    //TODO create update
+    @PostMapping("/create")
+    public String create(@ModelAttribute("lecture") Lecture lecture) {
+        logger.debug("Received to create: {}", lecture);
+        lectureService.create(lecture);
+        return "redirect:/lectures";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("lecture") Lecture lecture) {
+        logger.debug("Received update data: {}", lecture);
+        lectureService.update(lecture);
+        return "redirect:/lectures";
+    }
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {

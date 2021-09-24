@@ -77,6 +77,4 @@ public class ClassroomController {
         classroomService.delete(id);
         return "redirect:/classrooms";
     }
-
-
 }
