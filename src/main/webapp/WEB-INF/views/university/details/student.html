@@ -13,6 +13,7 @@
             students...</a>
         <h2 class="text-primary">Student details</h2>
         <form class="row g-3" method="POST" th:action="@{/students/update}" th:object="${student}">
+            <input type="text" class="invisible" th:field="*{id}">
             <div class="col-md-4">
                 <label for="firstname" class="form-label">First name</label>
                 <input type="text" class="form-control" id="firstname" th:field="*{firstName}">
@@ -79,11 +80,10 @@
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-3">
-            <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                     data-bs-target="#ModalDelete">Delete student
             </button>
             </div>
-
         </form>
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">

@@ -67,7 +67,12 @@ public class ClassroomController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-        logger.debug("Received update data: {}", classroom);
+        int locationId = classroom.getLocation().getId();
+        logger.debug("Received update data {}", classroom);
+        logger.debug("Received updated location id: {}", classroom.getLocation().getId());
+        Location location = locationService.findById(locationId).orElseThrow(
+                () -> new EntityNotFoundException("Location not found by id=" + locationId));
+        classroom.setLocation(location);
         classroomService.update(classroom);
         return "redirect:/classrooms";
     }
