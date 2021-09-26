@@ -30,7 +30,7 @@
                     <option th:if="${teacher.gender!=gender}"
                             th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
                             th:value="${gender}" th:text="${gender}"></option>
-                </select><br/>
+                </select>
             </div>
             <div class="col-md-2">
                 <label for="degree" class="form-label">Degree</label>
@@ -40,18 +40,25 @@
                     <option th:if="${teacher.degree!=degree}"
                             th:each="degree : ${T(ua.com.foxminded.university.model.Degree).values()}"
                             th:value="${degree}" th:text="${degree}"></option>
-                </select><br/>
+                </select>
             </div>
-            <div class="col-md-2">
-                <label for="group" class="form-label">Group</label>
-                <select class="form-select" id="group">
-                </select><br/>
+            <div class="col-md-4">
+                <label for="subjects" class="form-label">Assigned subjects (click to open)</label>
+                <div class="input-group">
+                    <select class="form-select" id="subjects" th:field="*{subjects}">
+                        <option th:each="subject: ${teacher.getSubjects()}" th:value="${subject.id}"
+                                th:text="${subject.name}"></option>
+                    </select>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#EditSubjects">Change...
+                    </button>
+                </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="mail" class="form-label">Mail</label>
                 <input type="email" class="form-control" id="mail" placeholder="mail@example.com" th:field="*{email}">
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="phone" class="form-label">Phone number</label>
                 <input type="text" class="form-control" id="phone" placeholder="+1 800 11111" th:field="*{phoneNumber}">
             </div>
@@ -108,6 +115,27 @@
                         <input class="btn btn-danger" type="submit" value="Delete"/>
                     </form>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditSubjects" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Assign subjects</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select" th:field="*{subjects}" multiple size="5">
+                        <option th:each="subject: ${subjects}" th:value="${subject.id}"
+                                th:text="${subject.name}"></option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
 @Controller
@@ -18,9 +19,11 @@ public class TeacherController {
     private static final Logger logger = LoggerFactory.getLogger(TeacherController.class);
 
     private final TeacherService teacherService;
+    private final SubjectService subjectService;
 
-    public TeacherController(TeacherService teacherService) {
+    public TeacherController(TeacherService teacherService, SubjectService subjectService) {
         this.teacherService = teacherService;
+        this.subjectService = subjectService;
     }
 
     @GetMapping
@@ -37,6 +40,7 @@ public class TeacherController {
         Teacher teacher = teacherService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + id));
         model.addAttribute("teacher", teacher);
+        model.addAttribute("subjects", subjectService.findAll());
         return "/details/teacher";
     }
 
