@@ -15,6 +15,7 @@
         <h2 class="text-primary">Student details</h2>
         <form class="row g-3" method="POST" th:action="@{/students/update}" th:object="${student}">
             <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
+            <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{address.id}">
             <div class="col-md-4">
                 <label for="firstname" class="form-label">First name</label>
                 <input type="text" class="form-control" id="firstname" th:field="*{firstName}">
@@ -39,11 +40,12 @@
             </div>
             <div class="col-md-2">
                 <label for="group" class="form-label">Group</label>
-                <select class="form-select" id="group" th:field="*{group}">
-                    <option selected th:field="*{group}" th:value="${student.group}"
-                            th:text="${student.group}"></option>
+
+                <select class="form-select" id="group" th:field="*{group.id}">
+                    <option selected th:field="*{group.id}" th:value="${student.group.id}"
+                            th:text="${student.group.name}"></option>
                     <option th:if="${student.group!=group}"
-                            th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
+                            th:each="group: ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
                 </select><br/>
             </div>
             <div class="col-md-5">
@@ -81,9 +83,9 @@
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-3">
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#ModalDelete">Delete student
-            </button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#ModalDelete">Delete student
+                </button>
             </div>
         </form>
     </div>

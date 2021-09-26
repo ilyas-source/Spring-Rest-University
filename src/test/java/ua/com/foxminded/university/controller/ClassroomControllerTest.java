@@ -52,11 +52,13 @@ class ClassroomControllerTest {
         mockMvc.perform(get("/classrooms"))
                 .andExpect(view().name("classroomsView"))
                 .andExpect(model().attribute("classrooms", expectedClassrooms));
+
+        verify(classroomService).findAll();
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithClassroom() throws Exception {
-        when(classroomService.findById(1)).thenReturn(java.util.Optional.of(expectedClassroom1));
+        when(classroomService.findById(1)).thenReturn(Optional.of(expectedClassroom1));
         when(locationService.findAll()).thenReturn(expectedLocations);
 
         mockMvc.perform(get("/classrooms/1"))
@@ -80,8 +82,11 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(post("/classrooms/update").flashAttr("classroom", expectedClassroom1))
-                .andExpect(status().is3xxRedirection());
+        when(locationService.findById(1)).thenReturn(Optional.of(expectedLocation1));
+
+        mockMvc.perform(post("/classrooms/update")
+                                .flashAttr("classroom", expectedClassroom1))
+                                .andExpect(status().is3xxRedirection());
 
         verify(classroomService).update(expectedClassroom1);
     }

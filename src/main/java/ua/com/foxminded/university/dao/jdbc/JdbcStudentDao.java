@@ -62,7 +62,7 @@ public class JdbcStudentDao implements StudentDao {
         logger.debug("Writing a new student to database: {} ", student);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcAddressDao.update(student.getAddress());
+        jdbcAddressDao.create(student.getAddress());
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection

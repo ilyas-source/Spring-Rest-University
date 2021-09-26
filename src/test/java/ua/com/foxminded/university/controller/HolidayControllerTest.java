@@ -46,11 +46,13 @@ class HolidayControllerTest {
         mockMvc.perform(get("/holidays"))
                 .andExpect(view().name("holidaysView"))
                 .andExpect(model().attribute("holidays", expectedHolidays));
+
+        verify(holidayService).findAll();
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithHoliday() throws Exception {
-        when(holidayService.findById(1)).thenReturn(java.util.Optional.of(expectedHoliday1));
+        when(holidayService.findById(1)).thenReturn(Optional.of(expectedHoliday1));
 
         mockMvc.perform(get("/holidays/1"))
                 .andExpect(view().name("/details/holiday"))

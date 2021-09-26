@@ -62,7 +62,12 @@ public class StudentController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("student") Student student) {
-        logger.debug("Received update data: {}", student);
+        var log = new StringBuilder();
+        log.append("Received updated student").append(student.getFirstName()).append(student.getLastName());
+        log.append(", address id ").append(student.getAddress().getId()).append(", ").append(student.getAddress());
+        log.append(", group id ").append(student.getGroup().getId()).append(", ").append(student.getGroup());
+        logger.debug(log.toString());
+
         studentService.update(student);
         return "redirect:/students";
     }

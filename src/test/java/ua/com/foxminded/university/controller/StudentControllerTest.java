@@ -16,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
 
 import java.time.LocalDate;
@@ -34,8 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -44,6 +44,8 @@ class StudentControllerTest {
 
     @Mock
     private StudentService studentService;
+    @Mock
+    private GroupService groupService;
     @InjectMocks
     private StudentController studentController;
 
@@ -69,15 +71,22 @@ class StudentControllerTest {
         mockMvc.perform(get("/students").params(requestParams))
                 .andExpect(view().name("studentsView"))
                 .andExpect(model().attribute("studentPage", studentPage));
+
+        verify(studentService).findAll(pageable);
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithStudent() throws Exception {
-        when(studentService.findById(1)).thenReturn(java.util.Optional.of(expectedStudent1));
+        when(studentService.findById(1)).thenReturn(Optional.of(expectedStudent1));
+        when(groupService.findAll()).thenReturn(expectedGroups);
 
         mockMvc.perform(get("/students/1"))
                 .andExpect(view().name("/details/student"))
-                .andExpect(model().attribute("student", expectedStudent1));
+                .andExpect(model().attribute("student", expectedStudent1))
+                .andExpect(model().attribute("groups", expectedGroups));
+
+        verify(studentService).findById(1);
+        verify(groupService).findAll();
     }
 
     @Test

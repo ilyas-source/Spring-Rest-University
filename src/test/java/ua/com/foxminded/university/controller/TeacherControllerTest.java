@@ -68,11 +68,13 @@ class TeacherControllerTest {
         mockMvc.perform(get("/teachers").params(requestParams))
                 .andExpect(view().name("teachersView"))
                 .andExpect(model().attribute("teacherPage", teacherPage));
+
+        verify(teacherService).findAll(pageable);
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithTeacher() throws Exception {
-        when(teacherService.findById(1)).thenReturn(java.util.Optional.of(expectedTeacher1));
+        when(teacherService.findById(1)).thenReturn(Optional.of(expectedTeacher1));
 
         mockMvc.perform(get("/teachers/1"))
                 .andExpect(view().name("/details/teacher"))

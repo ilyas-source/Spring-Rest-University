@@ -46,11 +46,13 @@ class SubjectControllerTest {
         mockMvc.perform(get("/subjects"))
                 .andExpect(view().name("subjectsView"))
                 .andExpect(model().attribute("subjects", expectedSubjects));
+
+        verify(subjectService).findAll();
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithSubject() throws Exception {
-        when(subjectService.findById(1)).thenReturn(java.util.Optional.of(expectedSubject1));
+        when(subjectService.findById(1)).thenReturn(Optional.of(expectedSubject1));
 
         mockMvc.perform(get("/subjects/1"))
                 .andExpect(view().name("/details/subject"))

@@ -38,10 +38,7 @@
             <div class="col-md-2">
                 <label for="group" class="form-label">Group</label>
                 <select class="form-select" id="group" th:field="*{group}">
-                    <option selected th:field="*{group}" th:value="${student.group}"
-                            th:text="${student.group}"></option>
-                    <option th:if="${student.group!=group}"
-                            th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
+                    <option th:each="group: ${groups}" th:value="${group}" th:text="${group}"></option>
                 </select>
             </div>
             <div class="col-md-5">

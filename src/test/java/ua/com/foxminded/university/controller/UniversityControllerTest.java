@@ -25,7 +25,7 @@ class UniversityControllerTest {
     }
 
     @Test
-    void givenCorrectGetRequest_onFindAll_shouldReturnHtmlPageWithAllUniversitys() throws Exception {
+    void givenCorrectGetRequest_onFindAll_shouldReturnHtmlPageWithUniversity() throws Exception {
         mockMvc.perform(get("/")).andExpect(view().name("universityView"));
     }
 }

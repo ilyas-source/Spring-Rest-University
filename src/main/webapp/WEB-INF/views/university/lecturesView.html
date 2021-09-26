@@ -29,10 +29,8 @@
             </thead>
             <tbody>
             <tr th:each="lecture : ${lectures}">
-                <th scope="row" class="align-left"><span
-                        th:text="${lecture.id}"> </span></th>
-                <td class="align-left"><span th:text="${lecture.date}">
-						</span></td>
+                <td class="align-left"><span th:text="${lecture.id}"> </span></th>
+                <td class="align-left"><span th:text="${lecture.date}"></span></td>
                 <td class="align-left"><span th:text="${lecture.timeslot.beginTime}"></span></td>
                 <td class="align-left"><span th:text="${lecture.timeslot.endTime}"></span></td>
                 <td class="align-left"><span th:text="${lecture.classroom.name}"></span></td>

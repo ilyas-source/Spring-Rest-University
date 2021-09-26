@@ -46,11 +46,13 @@ class GroupControllerTest {
         mockMvc.perform(get("/groups"))
                 .andExpect(view().name("groupsView"))
                 .andExpect(model().attribute("groups", expectedGroups));
+
+        verify(groupService).findAll();
     }
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithGroup() throws Exception {
-        when(groupService.findById(1)).thenReturn(java.util.Optional.of(expectedGroup1));
+        when(groupService.findById(1)).thenReturn(Optional.of(expectedGroup1));
 
         mockMvc.perform(get("/groups/1"))
                 .andExpect(view().name("/details/group"))
