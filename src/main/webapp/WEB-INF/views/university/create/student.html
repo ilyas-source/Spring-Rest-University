@@ -24,10 +24,7 @@
             <div class="col-md-2">
                 <label for="gender" class="form-label">Gender</label>
                 <select class="form-select" id="gender" th:field="*{gender}">
-                    <option selected th:field="*{gender}" th:value="${student.gender}"
-                            th:text="${student.gender}"></option>
-                    <option th:if="${student.gender!=gender}"
-                            th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
+                    <option th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
                             th:value="${gender}" th:text="${gender}"></option>
                 </select>
             </div>

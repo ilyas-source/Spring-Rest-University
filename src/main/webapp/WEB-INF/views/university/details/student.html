@@ -27,10 +27,7 @@
             <div class="col-md-2">
                 <label for="gender" class="form-label">Gender</label>
                 <select class="form-select" id="gender" th:field="*{gender}">
-                    <option selected th:field="*{gender}" th:value="${student.gender}"
-                            th:text="${student.gender}"></option>
-                    <option th:if="${student.gender!=gender}"
-                            th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
+                    <option th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
                             th:value="${gender}" th:text="${gender}"></option>
                 </select><br/>
             </div>
@@ -42,11 +39,9 @@
                 <label for="group" class="form-label">Group</label>
 
                 <select class="form-select" id="group" th:field="*{group.id}">
-                    <option selected th:field="*{group.id}" th:value="${student.group.id}"
-                            th:text="${student.group.name}"></option>
-                    <option th:if="${student.group!=group}"
-                            th:each="group: ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
+                    <option th:each="group: ${groups}" th:value="${group.id}" th:text="${group.name}"></option>
                 </select><br/>
+
             </div>
             <div class="col-md-5">
                 <label for="mail" class="form-label">Mail</label>
