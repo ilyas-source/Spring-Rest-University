@@ -7,6 +7,7 @@
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
+
 <div class="container">
     <div class="mt-5">
         <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
@@ -28,7 +29,7 @@
                 </div>
             </div>
 
-
+            <!--location controls group-->
             <div class="col-md-6">
                 <label for="locationid" class="form-label">Select location:</label>
                 <div class="input-group">
@@ -47,7 +48,7 @@
                 </div>
             </div>
 
-            <!--Submit and delete buttons-->
+            <!--Main submit and delete buttons-->
             <div class="row g-3">
                 <div class="col-3">
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -60,7 +61,6 @@
             </div>
 
         </form>
-
     </div>
 
     <div class="modal" id="AddLocation">
@@ -122,6 +122,7 @@
         </div>
     </div>
 
+
     <div class="modal fade" id="ModalDeleteLocation" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -133,6 +134,7 @@
                 </div>
                 <div class="modal-body">
                     <span>Delete this location?</span>
+                    <p th:text="${location.id}"></p>
                 </div>
                 <div class="modal-footer">
                     <form th:method="POST"
@@ -145,6 +147,7 @@
         </div>
     </div>
 
+    <script src="/university/sources/js/jquery.min.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>
