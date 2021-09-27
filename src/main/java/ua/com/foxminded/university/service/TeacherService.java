@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.LectureDao;
@@ -44,7 +42,8 @@ public class TeacherService {
     }
 
     public Page<Teacher> findAll(Pageable pageable) {
-        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
+                     pageable.getSort());
         Page<Teacher> teachers = teacherDao.findAll(pageable);
 
         return teachers;
@@ -64,7 +63,8 @@ public class TeacherService {
     public void delete(int id) {
         logger.debug("Deleting teacher by id: {} ", id);
         var teacher = teacherDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Teacher id:%s not found, nothing to delete", id)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Teacher id:%s not found, nothing to delete", id)));
         verifyHasNoLectures(teacher);
         teacherDao.delete(id);
     }
@@ -83,14 +83,17 @@ public class TeacherService {
                 .getValue();
         if (maxDays > allowedDays) {
             throw new VacationInsufficientDaysException(
-                    String.format("Teacher has maximum %s vacation days per year, can't assign %s days", allowedDays, maxDays));
+                    String.format("Teacher has maximum %s vacation days per year, can't assign %s days", allowedDays,
+                                  maxDays));
         }
     }
 
     public void verifyIsUnique(Teacher teacher) {
-        if (teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()).isPresent()) {
-            throw new EntityNotUniqueException(String.format("Teacher %s %s with email %s already exists, can't create duplicate",
-                    teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()));
+        if (teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
+                                          teacher.getEmail()).isPresent()) {
+            throw new EntityNotUniqueException(
+                    String.format("Teacher %s %s with email %s already exists, can't create duplicate",
+                                  teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()));
         }
     }
 
@@ -102,14 +105,14 @@ public class TeacherService {
         if (!teacher.getSubjects().containsAll(requiredSubjects)) {
             throw new TeacherCannotTeachSubject(
                     String.format("Updated teacher %s %s can't teach scheduled lecture(s)", teacher.getFirstName(),
-                            teacher.getLastName()));
+                                  teacher.getLastName()));
         }
     }
 
     private void verifyHasNoLectures(Teacher teacher) {
         if (!lectureDao.findByTeacher(teacher).isEmpty()) {
             throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lecture(s), can't delete",
-                    teacher.getFirstName(), teacher.getLastName()));
+                                                         teacher.getFirstName(), teacher.getLastName()));
         }
     }
 }

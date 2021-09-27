@@ -40,7 +40,7 @@ public class TeacherController {
         Teacher teacher = teacherService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + id));
         model.addAttribute("teacher", teacher);
-        model.addAttribute("subjects", subjectService.findAll());
+        model.addAttribute("allSubjects", subjectService.findAll());
         return "/details/teacher";
     }
 

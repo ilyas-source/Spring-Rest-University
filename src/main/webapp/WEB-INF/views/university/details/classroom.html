@@ -12,8 +12,11 @@
         <a href="/university/classrooms?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
             classrooms...</a>
         <h2 class="text-primary">Classroom details</h2>
+
         <form class="row g-3" method="POST" th:action="@{/classrooms/update}" th:object="${classroom}">
             <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
+
+            <!-- Name and capacity-->
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="name" class="form-label">Classroom name</label>
@@ -24,6 +27,8 @@
                     <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
                 </div>
             </div>
+
+
             <div class="col-md-6">
                 <label for="locationid" class="form-label">Select location:</label>
                 <div class="input-group">
@@ -34,8 +39,15 @@
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
                             data-bs-target="#AddLocation">Other...
                     </button>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                                data-bs-target="#ModalDeleteLocation">Delete location
+                        </button>
+                    </div>
                 </div>
             </div>
+
+            <!--Submit and delete buttons-->
             <div class="row g-3">
                 <div class="col-3">
                     <button type="submit" class="btn btn-primary">Update</button>
@@ -46,9 +58,11 @@
                     </button>
                 </div>
             </div>
+
         </form>
 
     </div>
+
     <div class="modal" id="AddLocation">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -84,6 +98,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="ModalDelete" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -106,6 +121,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="ModalDeleteLocation" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Delete this location?</span>
+                </div>
+                <div class="modal-footer">
+                    <form th:method="POST"
+                          th:action="@{/locations/delete/{id}(id=${location.id})}">
+                        <input class="btn btn-danger" type="submit" value="Delete"/>
+                    </form>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>
 </body>

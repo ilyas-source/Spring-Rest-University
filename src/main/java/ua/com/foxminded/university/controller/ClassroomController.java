@@ -69,7 +69,7 @@ public class ClassroomController {
     public String update(@ModelAttribute("classroom") Classroom classroom) {
         int locationId = classroom.getLocation().getId();
         logger.debug("Received update data {}", classroom);
-        logger.debug("Received updated location id: {}", classroom.getLocation().getId());
+        logger.debug("Received updated location id: {}", locationId);
         Location location = locationService.findById(locationId).orElseThrow(
                 () -> new EntityNotFoundException("Location not found by id=" + locationId));
         classroom.setLocation(location);
