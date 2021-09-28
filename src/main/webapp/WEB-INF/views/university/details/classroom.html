@@ -33,8 +33,9 @@
             <div class="col-md-6">
                 <label for="locationid" class="form-label">Select location:</label>
                 <div class="input-group">
-                    <select class="form-select" name="locationid" id="locationid" th:field="*{location.id}">
-                        <option th:each="location: ${locations}" th:value="${location.id}"
+                    <select class="form-select" name="location.id" id="locationid" th:field="*{location.id}" required>
+                        <option th:each="location: ${locations}"
+                                th:value="${location.id}"
                                 th:text="${location}"></option>
                     </select>
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
