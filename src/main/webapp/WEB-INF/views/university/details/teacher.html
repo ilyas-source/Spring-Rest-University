@@ -39,35 +39,6 @@
                 </select>
             </div>
 
-            <!--Subjects multiple selector -->
-            <div class="col-md-6">
-                <label for="subjects" class="form-label">Subjects (multiple select with Ctrl)</label>
-                <select class="form-select" id="subjects" size="5" name="subjects" multiple required>
-                    <option th:each="subject: ${allSubjects}"
-                            th:value="${subject.id}"
-                            th:text="${subject}"
-                            th:selected="${teacher.subjects.contains(subject)}">
-                    </option>
-                </select>
-            </div>
-
-
-            <!-- Vacations controls group, including selector -->
-            <div class="col-md-6">
-                <label for="vacations" class="form-label">Vacations</label>
-                <div class="input-group">
-                    <select class="form-select" id="vacations" th:field="*{vacations}" size="5">
-                        <option th:each="vacation: ${teacher.vacations}"
-                                th:value="${vacation.id}"
-                                th:text="${vacation}"></option>
-                    </select>
-                    <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                            data-bs-target="#EditVacations">Edit vacations...
-                    </button>
-                </div>
-            </div>
-
-
             <!-- mail, phone -->
             <div class="col-md-6">
                 <label for="mail" class="form-label">Mail</label>
@@ -115,23 +86,39 @@
         </form>
         <br/>
 
-        <!-- Separate form for vacations -->
-        <form class="row g-3" method="POST" th:action="@{/teachers/update}" th:object="${teacher.vacations}">
+        <row class="row g-3">
+            <!--Subjects multiple selector -->
+            <div class="col-md-6">
+                <label for="subjects" class="form-label">Subjects (multiple select with Ctrl)</label>
+                <select class="form-select" id="subjects" size="5" name="subjects" multiple required>
+                    <option th:each="subject: ${allSubjects}"
+                            th:value="${subject.id}"
+                            th:text="${subject}"
+                            th:selected="${teacher.subjects.contains(subject)}">
+                    </option>
+                </select>
+            </div>
 
-            <div class="col-md-6"> <!-- Vacations controls group, including selector -->
-                <label for="vacations1" class="form-label">Vacations</label>
-                <div class="input-group">
-                    <select class="form-select" id="vacations1" size="5">
-                        <option th:each="vacation: ${teacher.vacations}"
-                                th:value="${vacation.id}"
-                                th:text="${vacation}"></option>
-                    </select>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary">Update</button>
+            <!-- Vacations controls group, including selector -->
+            <form method="POST" th:action="@{/teachers/update}" th:object="${teacher}">
+
+                <div class="col-md-6">
+                    <label for="vacations" class="form-label">Vacations</label>
+                    <div class="input-group">
+                        <select class="form-select" id="vacations" th:field="*{teacher.vacations}" size="5">
+                            <option th:each="vacation: ${teacher.vacations}"
+                                    th:value="${vacation.id}"
+                                    th:text="${vacation}"></option>
+                        </select>
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                                data-bs-target="#EditVacations">Edit vacations...
+                        </button>
                     </div>
                 </div>
-            </div>
-        </form>
+
+            </form>
+        </row>
+
 
     </div>
     <div class="modal fade" id="ModalDelete" role="dialog">
