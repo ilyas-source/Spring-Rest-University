@@ -37,13 +37,13 @@ public class TeacherService {
     public void create(Teacher teacher) {
         logger.debug("Creating a new teacher: {} ", teacher);
         verifyIsUnique(teacher);
-        verifyhasEnoughVacationDays(teacher);
+        verifyHasEnoughVacationDays(teacher);
         teacherDao.create(teacher);
     }
 
     public Page<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
-                     pageable.getSort());
+                pageable.getSort());
         Page<Teacher> teachers = teacherDao.findAll(pageable);
 
         return teachers;
@@ -56,8 +56,33 @@ public class TeacherService {
     public void update(Teacher teacher) {
         logger.debug("Updating teacher: {} ", teacher);
         verifyCanTeachScheduledLectures(teacher);
-        verifyhasEnoughVacationDays(teacher);
+        verifyHasEnoughVacationDays(teacher);
+        verifyHasNoIntersectingVacations(teacher);
         teacherDao.update(teacher);
+    }
+
+    private void verifyHasNoIntersectingVacations(Teacher teacher) {
+        var vacations = teacher.getVacations();
+        logger.debug("Received {} vacations to find intersections", vacations.size());
+        if (vacations.size() < 2) {
+            return;
+        }
+        for (int i = 0; i < vacations.size(); i++) {
+            for (int j = i + 1; j < vacations.size(); j++) {
+                logger.debug("Comparing {} and {}:", vacations.get(i), vacations.get(j));
+                if (vacationsIntersect(vacations.get(i), vacations.get(j))) {
+                    throw new VacationsIntersectionException(
+                            "Teacher has intersecting vacations, can't create/update");
+                }
+            }
+        }
+    }
+
+    boolean vacationsIntersect(Vacation v1, Vacation v2) {
+        if (v1.getStartDate().isBefore(v2.getEndDate()) && (v1.getEndDate().isAfter(v2.getStartDate()))) {
+            return true;
+        }
+        return false;
     }
 
     public void delete(int id) {
@@ -69,7 +94,7 @@ public class TeacherService {
         teacherDao.delete(id);
     }
 
-    private void verifyhasEnoughVacationDays(Teacher teacher) {
+    private void verifyHasEnoughVacationDays(Teacher teacher) {
         int allowedDays = vacationDays.get(teacher.getDegree());
         List<Vacation> vacations = teacher.getVacations();
         Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
@@ -84,16 +109,16 @@ public class TeacherService {
         if (maxDays > allowedDays) {
             throw new VacationInsufficientDaysException(
                     String.format("Teacher has maximum %s vacation days per year, can't assign %s days", allowedDays,
-                                  maxDays));
+                            maxDays));
         }
     }
 
     public void verifyIsUnique(Teacher teacher) {
         if (teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
-                                          teacher.getEmail()).isPresent()) {
+                teacher.getEmail()).isPresent()) {
             throw new EntityNotUniqueException(
                     String.format("Teacher %s %s with email %s already exists, can't create duplicate",
-                                  teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()));
+                            teacher.getFirstName(), teacher.getLastName(), teacher.getEmail()));
         }
     }
 
@@ -105,14 +130,14 @@ public class TeacherService {
         if (!teacher.getSubjects().containsAll(requiredSubjects)) {
             throw new TeacherCannotTeachSubject(
                     String.format("Updated teacher %s %s can't teach scheduled lecture(s)", teacher.getFirstName(),
-                                  teacher.getLastName()));
+                            teacher.getLastName()));
         }
     }
 
     private void verifyHasNoLectures(Teacher teacher) {
         if (!lectureDao.findByTeacher(teacher).isEmpty()) {
             throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lecture(s), can't delete",
-                                                         teacher.getFirstName(), teacher.getLastName()));
+                    teacher.getFirstName(), teacher.getLastName()));
         }
     }
 }

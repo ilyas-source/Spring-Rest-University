@@ -66,9 +66,13 @@
                 <td class="align-left"><span th:text="${vacation.startDate}"></span></td>
                 <td class="align-left"><span th:text="${vacation.endDate}"></span></td>
                 <td>
-                    <div style="display:flex;">
-                        <a class="btn btn-outline-primary" th:href="@{/vacations/{id}(id=${vacation.id})}">Edit/delete...</a>
-                    </div>
+                 <!--   <div style="display:flex;">
+                        <a class="btn btn-outline-danger" th:href="@{/vacations/delete/{id}(id=${vacation.id})}">Delete</a>
+                    </div>-->
+                    <form th:method="POST"
+                          th:action="@{/vacations/delete/{id}(id=${vacation.id})}">
+                        <input class="btn btn-outline-danger" type="submit" value="Delete"/>
+                    </form>
                 </td>
             </tr>
             </tbody>

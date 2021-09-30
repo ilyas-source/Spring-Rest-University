@@ -40,11 +40,11 @@ public class JdbcVacationDao implements VacationDao {
         this.vacationMapper = vacationMapper;
     }
 
-    @Override
-    public int countIntersectingVacations(Vacation vacation) {
-        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, valueOf(vacation.getStartDate()),
-                valueOf(vacation.getEndDate()));
-    }
+//    @Override
+//    public int countIntersectingVacations(Vacation vacation) {
+//        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, valueOf(vacation.getStartDate()),
+//                valueOf(vacation.getEndDate()));
+//    }
 
     @Override
     public void create(Vacation vacation) {
@@ -61,18 +61,17 @@ public class JdbcVacationDao implements VacationDao {
         vacation.setId((int) keyHolder.getKeys().get("id"));
     }
 
-    @Override
-    public Optional<Vacation> findByBothDates(Vacation vacation) {
-        try {
-            //  return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
-            //      vacation.getEndDate()));
-            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper,
-                    valueOf(vacation.getStartDate()),
-                    valueOf(vacation.getEndDate())));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
+//    @Override
+//    public Optional<Vacation> findByBothDates(Vacation vacation) {
+//
+//        try {
+//            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper,
+//                    valueOf(vacation.getStartDate()),
+//                    valueOf(vacation.getEndDate())));
+//        } catch (EmptyResultDataAccessException e) {
+//            return Optional.empty();
+//        }
+//    }
 
     @Override
     public Optional<Vacation> findById(int id) {

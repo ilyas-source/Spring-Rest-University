@@ -3,10 +3,10 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.VacationIncorrectException;
-import ua.com.foxminded.university.exception.VacationsIntersectionException;
 import ua.com.foxminded.university.model.Vacation;
 
 import java.time.Duration;
@@ -22,15 +22,17 @@ public class VacationService {
     private static final Logger logger = LoggerFactory.getLogger(VacationService.class);
 
     private VacationDao vacationDao;
+    private TeacherDao teacherDao;
 
-    public VacationService(VacationDao vacationDao) {
+    public VacationService(VacationDao vacationDao, TeacherDao teacherDao) {
         this.vacationDao = vacationDao;
+        this.teacherDao = teacherDao;
     }
 
     public void create(Vacation vacation) {
         logger.debug("Creating a new vacation: {} ", vacation);
         verifyDurationIsPositive(vacation);
-        verifyHasNoIntersections(vacation);
+        //    verifyHasNoIntersections(vacation);
         vacationDao.create(vacation);
     }
 
@@ -44,7 +46,7 @@ public class VacationService {
 
     public void update(Vacation vacation) {
         logger.debug("Updating vacation: {} ", vacation);
-        verifyHasNoIntersections(vacation);
+  //      verifyHasNoIntersections(vacation);
         vacationDao.update(vacation);
     }
 
@@ -54,18 +56,20 @@ public class VacationService {
         vacationDao.delete(id);
     }
 
-    private void verifyHasNoIntersections(Vacation vacation) {
-        if (vacationDao.findByBothDates(vacation).isPresent()) {
-            return;
-        }
-        if (vacationDao.countIntersectingVacations(vacation) > 0) {
-            throw new VacationsIntersectionException(
-                    "New vacation has intersections with existing vacations, can't create/update");
-        }
-    }
+//    private void verifyHasNoIntersections(Vacation vacation) {
+//        if (vacationDao.findByBothDates(vacation).isPresent()) {
+//            logger.debug("Found exact same vacation");
+//            return;
+//        }
+//        if (vacationDao.countIntersectingVacations(vacation) > 0) {
+//            logger.debug("Intersection days with existing: {}", vacationDao.countIntersectingVacations(vacation));
+//            throw new VacationsIntersectionException(
+//                    "New vacation has intersections with existing vacations, can't create/update");
+//        }
+//    }
 
     private void verifyDurationIsPositive(Vacation vacation) {
-        if(vacation.getEndDate().isBefore(vacation.getStartDate())) {
+        if (vacation.getEndDate().isBefore(vacation.getStartDate())) {
             throw new VacationIncorrectException("End date is before start date, can't create vacation");
         }
     }
