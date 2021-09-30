@@ -59,7 +59,7 @@ public class ClassroomController {
         logger.debug("Received location id to insert: {}", locationId);
         logger.debug("Received location: {}", classroom.getLocation());
         Location location = locationService.findById(locationId).orElseThrow(
-                () -> new EntityNotFoundException("Location not found by id=" + locationId));
+                () -> new EntityNotFoundException("Location not found by id:" + locationId));
         classroom.setLocation(location);
         classroomService.create(classroom);
         return "redirect:/classrooms";
@@ -71,7 +71,7 @@ public class ClassroomController {
         logger.debug("Received update data {}", classroom);
         logger.debug("Received updated location id: {}", locationId);
         Location location = locationService.findById(locationId).orElseThrow(
-                () -> new EntityNotFoundException("Location not found by id=" + locationId));
+                () -> new EntityNotFoundException("Location not found by id:" + locationId));
         classroom.setLocation(location);
         classroomService.update(classroom);
         return "redirect:/classrooms";

@@ -78,7 +78,7 @@ public class TeacherController {
     public String addVacation(@RequestParam("start") String start,
                               @RequestParam("end") String end,
                               @RequestParam("id") String teacherId, Model model) {
-        logger.debug("Received vacation start {}, end{} for teacher id={}", start, end, teacherId);
+        logger.debug("Received vacation start {}, end{} for teacher id:{}", start, end, teacherId);
         int id=Integer.valueOf(teacherId);
         LocalDate startDate=LocalDate.parse(start,dateTimeFormatter);
         LocalDate endDate=LocalDate.parse(end,dateTimeFormatter);
@@ -113,7 +113,7 @@ public class TeacherController {
 
     @GetMapping("/editvacations/{id}")
     public String editVacations(@PathVariable int id, Model model) {
-        logger.debug("Begin editing vacations for teacher id={}", id);
+        logger.debug("Begin editing vacations for teacher id:{}", id);
         Teacher teacher = teacherService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + id));
 
@@ -121,6 +121,4 @@ public class TeacherController {
 
         return "teachervacationsView";
     }
-
-
 }

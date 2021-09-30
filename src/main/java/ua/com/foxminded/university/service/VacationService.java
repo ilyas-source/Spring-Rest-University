@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.VacationIncorrectException;
 import ua.com.foxminded.university.exception.VacationsIntersectionException;
 import ua.com.foxminded.university.model.Vacation;
 
@@ -28,6 +29,7 @@ public class VacationService {
 
     public void create(Vacation vacation) {
         logger.debug("Creating a new vacation: {} ", vacation);
+        verifyDurationIsPositive(vacation);
         verifyHasNoIntersections(vacation);
         vacationDao.create(vacation);
     }
@@ -59,6 +61,12 @@ public class VacationService {
         if (vacationDao.countIntersectingVacations(vacation) > 0) {
             throw new VacationsIntersectionException(
                     "New vacation has intersections with existing vacations, can't create/update");
+        }
+    }
+
+    private void verifyDurationIsPositive(Vacation vacation) {
+        if(vacation.getEndDate().isBefore(vacation.getStartDate())) {
+            throw new VacationIncorrectException("End date is before start date, can't create vacation");
         }
     }
 
