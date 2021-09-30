@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -70,7 +73,7 @@ public class JdbcStudentDao implements StudentDao {
             ps.setString(1, student.getFirstName());
             ps.setString(2, student.getLastName());
             ps.setString(3, student.getGender().toString());
-            ps.setObject(4, student.getBirthDate());
+            ps.setDate(4,java.sql.Date.valueOf(student.getBirthDate()));
             ps.setString(5, student.getEmail());
             ps.setString(6, student.getPhoneNumber());
             ps.setInt(7, student.getAddress().getId());
@@ -114,9 +117,10 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
+        var date =java.sql.Date.valueOf(birthDate);
         try {
             return Optional
-                    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, birthDate));
+                    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, date));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

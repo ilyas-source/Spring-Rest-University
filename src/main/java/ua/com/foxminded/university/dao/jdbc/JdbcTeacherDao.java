@@ -22,6 +22,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Date.valueOf;
 import static java.util.function.Predicate.not;
 
 @Component
@@ -138,11 +139,15 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     private void removeVacation(Vacation vacation, Teacher teacher) {
-        jdbcTemplate.update(REMOVE_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());
+        jdbcTemplate.update(REMOVE_VACATION, teacher.getId(),
+                valueOf(vacation.getStartDate()),
+                valueOf(vacation.getEndDate()));
     }
 
     private void assignVacation(Vacation vacation, Teacher teacher) {
-        jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(), vacation.getStartDate(), vacation.getEndDate());
+        jdbcTemplate.update(ASSIGN_VACATION, teacher.getId(),
+                valueOf(vacation.getStartDate()),
+                valueOf(vacation.getEndDate()));
     }
 
     @Override

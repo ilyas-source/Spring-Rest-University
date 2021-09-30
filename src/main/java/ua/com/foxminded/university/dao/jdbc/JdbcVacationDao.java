@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Date.valueOf;
+
 @Component
 public class JdbcVacationDao implements VacationDao {
 
@@ -40,8 +42,8 @@ public class JdbcVacationDao implements VacationDao {
 
     @Override
     public int countIntersectingVacations(Vacation vacation) {
-        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, vacation.getStartDate(),
-                vacation.getEndDate());
+        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, valueOf(vacation.getStartDate()),
+                valueOf(vacation.getEndDate()));
     }
 
     @Override
@@ -52,8 +54,8 @@ public class JdbcVacationDao implements VacationDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, vacation.getStartDate());
-            ps.setObject(2, vacation.getEndDate());
+            ps.setDate(1, valueOf(vacation.getStartDate()));
+            ps.setDate(2, valueOf(vacation.getEndDate()));
             return ps;
         }, keyHolder);
         vacation.setId((int) keyHolder.getKeys().get("id"));
@@ -62,8 +64,11 @@ public class JdbcVacationDao implements VacationDao {
     @Override
     public Optional<Vacation> findByBothDates(Vacation vacation) {
         try {
-            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
-                    vacation.getEndDate()));
+            //  return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
+            //      vacation.getEndDate()));
+            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper,
+                    valueOf(vacation.getStartDate()),
+                    valueOf(vacation.getEndDate())));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

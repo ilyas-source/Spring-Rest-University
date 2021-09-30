@@ -9,7 +9,6 @@ import ua.com.foxminded.university.model.Student;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Component
 public class StudentMapper implements RowMapper<Student> {
@@ -27,7 +26,7 @@ public class StudentMapper implements RowMapper<Student> {
         var student = new Student();
         student.setId(rs.getInt("id"));
         jdbcAddressDao.findById(rs.getInt("address_id")).ifPresent(student::setAddress);
-        student.setBirthDate(rs.getObject("birth_date", LocalDate.class));
+        student.setBirthDate(rs.getDate("birth_date").toLocalDate());
         student.setEmail(rs.getString("email"));
         student.setFirstName(rs.getString("first_name"));
         student.setPhoneNumber(rs.getString("phone"));
