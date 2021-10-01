@@ -77,7 +77,7 @@ class SubjectServiceTest {
 
     @Test
     void givenScheduledSubjectId_onDelete_shouldThrowException() {
-        String expected = "Subject Test Economics is sheduled for lecture(s), can't delete";
+        String expected = "Subject Test Economics is scheduled for lecture(s), can't delete";
         when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
         when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
