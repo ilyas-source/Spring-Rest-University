@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Date.valueOf;
 import static java.util.function.Predicate.not;
 
 @Component
@@ -60,7 +61,7 @@ public class JdbcLectureDao implements LectureDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-            ps.setObject(1, lecture.getDate());
+            ps.setDate(1, valueOf(lecture.getDate()));
             ps.setObject(2, lecture.getTimeslot().getId());
             ps.setInt(3, lecture.getSubject().getId());
             ps.setInt(4, lecture.getTeacher().getId());
@@ -139,8 +140,8 @@ public class JdbcLectureDao implements LectureDao {
     public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
         try {
             return Optional.of(
-                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper, date, timeslot.getId(),
-                            classroom.getId()));
+                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper,
+                            valueOf(date), timeslot.getId(), classroom.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -148,14 +149,14 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot) {
-        return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, date, timeslot.getId());
+        return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, valueOf(date), timeslot.getId());
     }
 
     public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
         try {
             return Optional.of(
-                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date, timeslot.getId(),
-                            teacher.getId()));
+                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, valueOf(date),
+                            timeslot.getId(), teacher.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

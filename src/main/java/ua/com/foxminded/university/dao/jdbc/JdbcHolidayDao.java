@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static java.sql.Date.valueOf;
+
 @Component
 public class JdbcHolidayDao implements HolidayDao {
 
@@ -82,6 +84,6 @@ public class JdbcHolidayDao implements HolidayDao {
 
     @Override
     public List<Holiday> findByDate(LocalDate date) {
-        return jdbcTemplate.query(FIND_BY_DATE, holidayMapper, date);
+        return jdbcTemplate.query(FIND_BY_DATE, holidayMapper,valueOf(date));
     }
 }

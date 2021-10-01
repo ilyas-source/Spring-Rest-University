@@ -12,6 +12,8 @@
         <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
         <h2 class="text-primary">Create new classroom</h2>
         <form class="row g-3" method="POST" th:action="@{/classrooms/create}" th:object="${classroom}">
+
+            <!--Name and capacity-->
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="name" class="form-label">Classroom name</label>
@@ -22,6 +24,8 @@
                     <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
                 </div>
             </div>
+
+            <!--Location-->
             <div class="col-md-6">
                 <label for="locationid" class="form-label">Select location:</label>
                 <div class="input-group">
@@ -34,6 +38,7 @@
                     </button>
                 </div>
             </div>
+
             <div class="row g-3">
                 <div class="col-md-5">
                     <input type="submit" class="btn btn-primary" value="Create"/>
