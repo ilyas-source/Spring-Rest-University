@@ -66,7 +66,7 @@ public class SubjectService {
     private void verifyIsNotScheduled(Subject subject) {
         if (!lectureDao.findBySubject(subject).isEmpty()) {
             throw new EntityInUseException(
-                    String.format("Subject %s is sheduled for lecture(s), can't delete", subject.getName()));
+                    String.format("Subject %s is scheduled for lecture(s), can't delete", subject.getName()));
         }
     }
 

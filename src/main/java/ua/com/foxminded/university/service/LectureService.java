@@ -90,11 +90,7 @@ public class LectureService {
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
         var lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
-        logger.debug("Found following lectures at this day and time: {}", lecturesOnThisDateAndTime);
-
         lecturesOnThisDateAndTime.removeIf(l-> (l.getId()==lecture.getId()));
-
-        logger.debug("After removing current lecture: {}", lecturesOnThisDateAndTime);
         if (lecturesOnThisDateAndTime.stream()
                 .map(Lecture::getGroups)
                 .flatMap(List::stream)

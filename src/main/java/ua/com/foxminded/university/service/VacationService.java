@@ -32,7 +32,6 @@ public class VacationService {
     public void create(Vacation vacation) {
         logger.debug("Creating a new vacation: {} ", vacation);
         verifyDurationIsPositive(vacation);
-        //    verifyHasNoIntersections(vacation);
         vacationDao.create(vacation);
     }
 
@@ -46,7 +45,6 @@ public class VacationService {
 
     public void update(Vacation vacation) {
         logger.debug("Updating vacation: {} ", vacation);
-  //      verifyHasNoIntersections(vacation);
         vacationDao.update(vacation);
     }
 
@@ -55,18 +53,6 @@ public class VacationService {
         verifyIdExists(id);
         vacationDao.delete(id);
     }
-
-//    private void verifyHasNoIntersections(Vacation vacation) {
-//        if (vacationDao.findByBothDates(vacation).isPresent()) {
-//            logger.debug("Found exact same vacation");
-//            return;
-//        }
-//        if (vacationDao.countIntersectingVacations(vacation) > 0) {
-//            logger.debug("Intersection days with existing: {}", vacationDao.countIntersectingVacations(vacation));
-//            throw new VacationsIntersectionException(
-//                    "New vacation has intersections with existing vacations, can't create/update");
-//        }
-//    }
 
     private void verifyDurationIsPositive(Vacation vacation) {
         if (vacation.getEndDate().isBefore(vacation.getStartDate())) {

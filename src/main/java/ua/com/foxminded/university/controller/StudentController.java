@@ -29,7 +29,7 @@ public class StudentController {
     @GetMapping
     public String getStudents(Model model, Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
-                     pageable.getSort());
+                pageable.getSort());
         Page<Student> studentPage = studentService.findAll(pageable);
         model.addAttribute("studentPage", studentPage);
 
@@ -62,12 +62,7 @@ public class StudentController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("student") Student student) {
-        var log = new StringBuilder();
-        log.append("Received updated student").append(student.getFirstName()).append(student.getLastName());
-        log.append(", address id ").append(student.getAddress().getId()).append(", ").append(student.getAddress());
-        log.append(", group id ").append(student.getGroup().getId()).append(", ").append(student.getGroup());
-        logger.debug(log.toString());
-
+        logger.debug("Received to update: {}", student);
         studentService.update(student);
         return "redirect:/students";
     }

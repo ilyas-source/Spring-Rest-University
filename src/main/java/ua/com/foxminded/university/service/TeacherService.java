@@ -63,13 +63,11 @@ public class TeacherService {
 
     private void verifyHasNoIntersectingVacations(Teacher teacher) {
         var vacations = teacher.getVacations();
-        logger.debug("Received {} vacations to find intersections", vacations.size());
         if (vacations.size() < 2) {
             return;
         }
         for (int i = 0; i < vacations.size(); i++) {
             for (int j = i + 1; j < vacations.size(); j++) {
-                logger.debug("Comparing {} and {}:", vacations.get(i), vacations.get(j));
                 if (vacationsIntersect(vacations.get(i), vacations.get(j))) {
                     throw new VacationsIntersectionException(
                             "Teacher has intersecting vacations, can't create/update");

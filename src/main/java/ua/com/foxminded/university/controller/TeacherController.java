@@ -67,13 +67,6 @@ public class TeacherController {
         return "/create/vacation";
     }
 
-    @PostMapping("/create")
-    public String create(@ModelAttribute("teacher") Teacher teacher) {
-        logger.debug("Received to create: {}", teacher);
-        teacherService.create(teacher);
-        return "redirect:/teachers";
-    }
-
     @PostMapping("/addVacation")
     public String addVacation(@RequestParam("start") String start,
                               @RequestParam("end") String end,
@@ -105,6 +98,13 @@ public class TeacherController {
         return "redirect:/teachers";
     }
 
+    @PostMapping("/create")
+    public String create(@ModelAttribute("teacher") Teacher teacher) {
+        logger.debug("Received to create: {}", teacher);
+        teacherService.create(teacher);
+        return "redirect:/teachers";
+    }
+
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id) {
         teacherService.delete(id);
@@ -116,7 +116,6 @@ public class TeacherController {
         logger.debug("Begin editing vacations for teacher id:{}", id);
         Teacher teacher = teacherService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + id));
-
         model.addAttribute(teacher);
 
         return "teachervacationsView";

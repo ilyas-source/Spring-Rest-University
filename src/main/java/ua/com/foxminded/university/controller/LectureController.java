@@ -96,25 +96,19 @@ public class LectureController {
         Classroom classroom = classroomService.findById(lecture.getClassroom().getId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find classroom by id " + lecture.getClassroom().getId()));
 
-        List<Group> groups=lecture.getGroups();
-        logger.debug("Received {} groups to fill names", groups.size());
-        logger.debug("Incomplete groups list is: {}", groups);
-        logger.debug("0th is: id={}, name={}", groups.get(0).getId(),groups.get(0).getName());
-
-        for(int i=0;i<groups.size();i++) {
-            int id=valueOf(groups.get(i).getName());
-            logger.debug("Retrieving {}th group", i);
-            Group group = groupService.findById(id).orElseThrow(
-                    () -> new EntityNotFoundException("Can't find group by id " + id));
-            logger.debug("Retrieved {}, setting name {}", group,group.getName());
-            groups.get(i).setId(id);
-            groups.get(i).setName(group.getName());
-            logger.debug("Current groups list: {}", groups);
-        }
         lecture.setTeacher(teacher);
         lecture.setTimeslot(timeslot);
         lecture.setSubject(subject);
         lecture.setClassroom(classroom);
+
+        List<Group> groups = lecture.getGroups();
+        for (int i = 0; i < groups.size(); i++) {
+            int id = valueOf(groups.get(i).getName());
+            Group group = groupService.findById(id).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find group by id " + id));
+            groups.get(i).setId(id);
+            groups.get(i).setName(group.getName());
+        }
         logger.debug("Full lecture: {}", lecture);
     }
 
