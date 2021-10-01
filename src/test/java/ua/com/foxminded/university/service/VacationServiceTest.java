@@ -48,18 +48,6 @@ class VacationServiceTest {
         verify(vacationDao).create(expectedVacation1);
     }
 
-//    @Test
-//    void givenIntersectingVacation_onCreate_shoultThrowException() {
-//        String expected = "New vacation has intersections with existing vacations, can't create/update";
-//        when(vacationDao.countIntersectingVacations(expectedVacation1)).thenReturn(1);
-//
-//        Throwable thrown = assertThrows(VacationsIntersectionException.class,
-//                () -> vacationService.create(expectedVacation1));
-//
-//        assertEquals(expected, thrown.getMessage());
-//        verify(vacationDao, never()).create(expectedVacation1);
-//    }
-
     @Test
     void givenVacation_onUpdate_shouldCallUpdate() {
         vacationService.update(expectedVacation1);

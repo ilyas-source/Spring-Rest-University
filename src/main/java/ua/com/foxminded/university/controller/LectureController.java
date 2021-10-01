@@ -2,12 +2,13 @@ package ua.com.foxminded.university.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.service.LectureService;
+import ua.com.foxminded.university.service.*;
 
 @Controller
 @RequestMapping("/lectures")
@@ -16,9 +17,21 @@ public class LectureController {
     private static final Logger logger = LoggerFactory.getLogger(LectureController.class);
 
     private final LectureService lectureService;
+    private final GroupService groupService;
+    private final TimeslotService timeslotService;
+    private final TeacherService teacherService;
+    private final ClassroomService classroomService;
+    private final SubjectService subjectService;
 
-    public LectureController(LectureService lectureService) {
+    public LectureController(LectureService lectureService, GroupService groupService,
+                             TimeslotService timeslotService, TeacherService teacherService,
+                             ClassroomService classroomService, SubjectService subjectService) {
         this.lectureService = lectureService;
+        this.groupService = groupService;
+        this.timeslotService = timeslotService;
+        this.teacherService = teacherService;
+        this.classroomService = classroomService;
+        this.subjectService = subjectService;
     }
 
     @GetMapping
@@ -33,6 +46,11 @@ public class LectureController {
         Lecture lecture = lectureService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find lecture by id " + id));
         model.addAttribute("lecture", lecture);
+        model.addAttribute("allGroups", groupService.findAll());
+        model.addAttribute("allTimeslots", timeslotService.findAll());
+        model.addAttribute("allSubjects", subjectService.findAll());
+        model.addAttribute("allClassrooms", classroomService.findAll());
+        model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0,1000)));
         return "/details/lecture";
     }
 

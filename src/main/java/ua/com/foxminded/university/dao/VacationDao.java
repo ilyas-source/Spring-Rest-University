@@ -9,8 +9,4 @@ public interface VacationDao extends GeneralDao<Vacation> {
     List<Vacation> findAll();
 
     List<Vacation> findByTeacherId(int id);
-
- //   int countIntersectingVacations(Vacation vacation);
-
-   // Optional<Vacation> findByBothDates(Vacation vacation);
 }

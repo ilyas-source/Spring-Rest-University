@@ -82,6 +82,12 @@ public class TeacherService {
         if (v1.getStartDate().isBefore(v2.getEndDate()) && (v1.getEndDate().isAfter(v2.getStartDate()))) {
             return true;
         }
+        if (v1.getStartDate().isEqual(v2.getEndDate())) {
+            return true;
+        }
+        if(v1.getEndDate().isEqual(v2.getStartDate())) {
+            return true;
+        }
         return false;
     }
 
