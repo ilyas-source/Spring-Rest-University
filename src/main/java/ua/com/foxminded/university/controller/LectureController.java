@@ -12,6 +12,8 @@ import ua.com.foxminded.university.service.*;
 
 import java.util.List;
 
+import static java.lang.Integer.valueOf;
+
 @Controller
 @RequestMapping("/lectures")
 public class LectureController {
@@ -71,6 +73,20 @@ public class LectureController {
     @PostMapping("/create")
     public String create(@ModelAttribute("lecture") Lecture lecture) {
         logger.debug("Received to create: {}", lecture);
+        refreshFieldsFromDatabase(lecture);
+        lectureService.create(lecture);
+        return "redirect:/lectures";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("lecture") Lecture lecture) {
+        logger.debug("Received update data: {}", lecture);
+        refreshFieldsFromDatabase(lecture);
+        lectureService.update(lecture);
+        return "redirect:/lectures";
+    }
+
+    private void refreshFieldsFromDatabase(@ModelAttribute("lecture") Lecture lecture) {
         Teacher teacher = teacherService.findById(lecture.getTeacher().getId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find teacher by id " + lecture.getTeacher().getId()));
         Timeslot timeslot = timeslotService.findById(lecture.getTimeslot().getId()).orElseThrow(
@@ -79,16 +95,19 @@ public class LectureController {
                 () -> new EntityNotFoundException("Can't find subject by id " + lecture.getSubject().getId()));
         Classroom classroom = classroomService.findById(lecture.getClassroom().getId()).orElseThrow(
                 () -> new EntityNotFoundException("Can't find classroom by id " + lecture.getClassroom().getId()));
+
         List<Group> groups=lecture.getGroups();
+        logger.debug("Received {} groups to fill names", groups.size());
         logger.debug("Incomplete groups list is: {}", groups);
-        logger.debug("0th is: {}", groups.get(0));
+        logger.debug("0th is: id={}, name={}", groups.get(0).getId(),groups.get(0).getName());
+
         for(int i=0;i<groups.size();i++) {
-            logger.debug("Received {} groups to fill names", groups.size());
-            int id=groups.get(i).getId();
-            logger.debug("Retrieving {}th group", id);
+            int id=valueOf(groups.get(i).getName());
+            logger.debug("Retrieving {}th group", i);
             Group group = groupService.findById(id).orElseThrow(
                     () -> new EntityNotFoundException("Can't find group by id " + id));
             logger.debug("Retrieved {}, setting name {}", group,group.getName());
+            groups.get(i).setId(id);
             groups.get(i).setName(group.getName());
             logger.debug("Current groups list: {}", groups);
         }
@@ -97,15 +116,6 @@ public class LectureController {
         lecture.setSubject(subject);
         lecture.setClassroom(classroom);
         logger.debug("Full lecture: {}", lecture);
-        lectureService.create(lecture);
-        return "redirect:/lectures";
-    }
-
-    @PostMapping("/update")
-    public String update(@ModelAttribute("lecture") Lecture lecture) {
-        logger.debug("Received update data: {}", lecture);
-        lectureService.update(lecture);
-        return "redirect:/lectures";
     }
 
     @PostMapping("/delete/{id}")

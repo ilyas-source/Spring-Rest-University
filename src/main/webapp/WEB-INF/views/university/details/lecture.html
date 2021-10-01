@@ -27,7 +27,7 @@
             <!--Timeslot select-->
             <div class="col-md-4">
                 <label for="timeslot" class="form-label">Time slot</label>
-                <select class="form-select" id="timeslot" th:field="*{timeslot}">
+                <select class="form-select" id="timeslot" th:field="*{timeslot.id}">
                     <option th:each="timeslot: ${allTimeslots}"
                             th:value="${timeslot.id}"
                             th:text="${timeslot.beginTime}+'-'+${timeslot.endTime}"></option>
@@ -37,7 +37,7 @@
             <!--Subject select-->
             <div class="col-md-4">
                 <label for="subject" class="form-label">Subject</label>
-                <select class="form-select" id="subject" th:field="*{subject}">
+                <select class="form-select" id="subject" th:field="*{subject.id}">
                     <option th:each="subject: ${allSubjects}"
                             th:value="${subject.id}"
                             th:text="${subject}"></option>
@@ -59,7 +59,7 @@
             <!--Teacher select-->
             <div class="col-md-4">
                 <label for="teacher" class="form-label">Teacher</label>
-                <select class="form-select" id="teacher" th:field="*{teacher}">
+                <select class="form-select" id="teacher" th:field="*{teacher.id}">
                     <option th:each="teacher: ${allTeachers}"
                             th:value="${teacher.id}"
                             th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
@@ -69,7 +69,7 @@
             <!--Classroom select-->
             <div class="col-md-4">
                 <label for="classroom" class="form-label">Classroom</label>
-                <select class="form-select" id="classroom" th:field="*{classroom}">
+                <select class="form-select" id="classroom" th:field="*{classroom.id}">
                     <option th:each="classroom: ${allClassrooms}"
                             th:value="${classroom.id}"
                             th:text="${classroom.name}"></option>

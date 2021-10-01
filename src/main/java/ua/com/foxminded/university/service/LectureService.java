@@ -77,8 +77,12 @@ public class LectureService {
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
         var classroom = lecture.getClassroom();
-        if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), classroom)
-                .isEmpty()) {
+        var optionalLecture = lectureDao.findByDateTimeClassroom(lecture.getDate(),
+                lecture.getTimeslot(), classroom);
+        if (optionalLecture.isPresent()) {
+            if (optionalLecture.get().getId() == lecture.getId()) {
+                return;
+            }
             throw new ClassroomOccupiedException(
                     String.format("Classroom %s is occupied at this day and time", classroom.getName()));
         }
@@ -120,8 +124,12 @@ public class LectureService {
 
     private void verifyTeacherIsNotBusy(Lecture lecture) {
         var teacher = lecture.getTeacher();
-        if (!lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
-                .isEmpty()) {
+        var optionalLecture = lectureDao.findByDateTimeTeacher(lecture.getDate(),
+                lecture.getTimeslot(), teacher);
+        if (optionalLecture.isPresent()) {
+            if (optionalLecture.get().getId() == lecture.getId()) {
+                return;
+            }
             throw new TeacherBusyException(String.format("Teacher %s %s will be reading another lecture",
                     teacher.getFirstName(),
                     teacher.getLastName()));

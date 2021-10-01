@@ -78,8 +78,9 @@ public class JdbcLectureDao implements LectureDao {
     @Transactional
     public void update(Lecture lecture) {
         logger.debug("Updating lecture in database: {} ", lecture);
-        jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(), lecture.getSubject().getId(),
-                lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
+        jdbcTemplate.update(UPDATE, valueOf(lecture.getDate()), lecture.getTimeslot().getId(),
+                lecture.getSubject().getId(), lecture.getTeacher().getId(),
+                lecture.getClassroom().getId(), lecture.getId());
 
         List<Group> newGroups = lecture.getGroups();
         List<Group> oldGroups = findById(lecture.getId()).get().getGroups();
