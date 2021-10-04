@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
@@ -38,8 +37,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public String getStudent(@PathVariable int id, Model model) {
-        Student student = studentService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find student by id " + id));
+        Student student = studentService.getById(id);
         model.addAttribute("student", student);
         model.addAttribute("groups", groupService.findAll());
         return "/details/student";

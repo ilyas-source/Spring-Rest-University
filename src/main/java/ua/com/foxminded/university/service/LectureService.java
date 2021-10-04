@@ -45,6 +45,11 @@ public class LectureService {
         return lectureDao.findById(id);
     }
 
+    public Lecture getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find lecture by id " + id));
+    }
+
     public void update(Lecture lecture) {
         logger.debug("Updating lecture: {} ", lecture);
         verifyAllDataIsCorrect(lecture);

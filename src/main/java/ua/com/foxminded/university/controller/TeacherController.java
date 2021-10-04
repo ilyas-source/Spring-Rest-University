@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.SubjectService;
@@ -46,8 +45,7 @@ public class TeacherController {
 
     @GetMapping("/{id}")
     public String getTeacher(@PathVariable int id, Model model) {
-        Teacher teacher = teacherService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find teacher by id " + id));
+        Teacher teacher = teacherService.getById(id);
         model.addAttribute("teacher", teacher);
         model.addAttribute("allSubjects", subjectService.findAll());
         return "/details/teacher";
@@ -79,8 +77,7 @@ public class TeacherController {
         var vacation= new Vacation(startDate,endDate);
         logger.debug("Created vacation: {}", vacation);
 
-        Teacher teacher = teacherService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find teacher by id " + id));
+        Teacher teacher = teacherService.getById(id);
 
         vacationService.create(vacation);
 
@@ -114,8 +111,7 @@ public class TeacherController {
     @GetMapping("/editvacations/{id}")
     public String editVacations(@PathVariable int id, Model model) {
         logger.debug("Begin editing vacations for teacher id:{}", id);
-        Teacher teacher = teacherService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find teacher by id " + id));
+        Teacher teacher = teacherService.getById(id);
         model.addAttribute(teacher);
 
         return "teachervacationsView";

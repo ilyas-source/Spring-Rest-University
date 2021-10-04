@@ -53,6 +53,11 @@ public class TeacherService {
         return teacherDao.findById(id);
     }
 
+    public Teacher getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find teacher by id " + id));
+    }
+
     public void update(Teacher teacher) {
         logger.debug("Updating teacher: {} ", teacher);
         verifyCanTeachScheduledLectures(teacher);

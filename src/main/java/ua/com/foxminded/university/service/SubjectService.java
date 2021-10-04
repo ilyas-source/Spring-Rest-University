@@ -40,6 +40,11 @@ public class SubjectService {
         return subjectDao.findById(id);
     }
 
+    public Subject getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find subject by id " + id));
+    }
+
     public void update(Subject subject) {
         logger.debug("Updating subject: {} ", subject);
         verifyNameIsUnique(subject);

@@ -39,6 +39,11 @@ public class LocationService {
         return locationDao.findById(id);
     }
 
+    public Location getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find location by id " + id));
+    }
+
     public void update(Location location) {
         logger.debug("Updating location: {} ", location);
         locationDao.update(location);

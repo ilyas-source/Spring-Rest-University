@@ -44,6 +44,11 @@ public class ClassroomService {
         return classroomDao.findById(id);
     }
 
+    public Classroom getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find classroom by id " + id));
+    }
+
     public void update(Classroom classroom) {
         logger.debug("Updating classroom: {} ", classroom);
         verifyCapacityIsEnough(classroom);

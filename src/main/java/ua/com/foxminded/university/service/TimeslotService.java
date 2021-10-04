@@ -50,6 +50,11 @@ public class TimeslotService {
         return timeslotDao.findById(id);
     }
 
+    public Timeslot getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find timeslot by id " + id));
+    }
+
     public void update(Timeslot timeslot) {
         logger.debug("Updating timeslot: {} ", timeslot);
         verifyHasNoIntersections(timeslot);

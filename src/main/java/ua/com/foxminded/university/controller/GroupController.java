@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
 
@@ -30,8 +29,7 @@ public class GroupController {
 
     @GetMapping("/{id}")
     public String getGroup(@PathVariable int id, Model model) {
-        Group group = groupService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find group by id " + id));
+        Group group = groupService.getById(id);
         model.addAttribute("group", group);
         return "/details/group";
     }

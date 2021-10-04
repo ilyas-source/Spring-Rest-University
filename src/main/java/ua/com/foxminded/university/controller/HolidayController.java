@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
 
@@ -30,8 +29,7 @@ public class HolidayController {
 
     @GetMapping("/{id}")
     public String getHoliday(@PathVariable int id, Model model) {
-        Holiday holiday = holidayService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find holiday by id " + id));
+        Holiday holiday = holidayService.getById(id);
         model.addAttribute("holiday", holiday);
         return "/details/holiday";
     }

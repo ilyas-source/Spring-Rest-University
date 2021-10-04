@@ -54,6 +54,11 @@ public class StudentService {
         return studentDao.findById(id);
     }
 
+    public Student getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find student by id " + id));
+    }
+
     public void update(Student student) {
         logger.debug("Updating student: {} ", student);
         studentDao.update(student);

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
@@ -34,8 +33,7 @@ public class ClassroomController {
 
     @GetMapping("/{id}")
     public String getClassroom(@PathVariable int id, Model model) {
-        Classroom classroom = classroomService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find classroom by id " + id));
+        Classroom classroom = classroomService.getById(id);
         model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
         model.addAttribute("location", new Location());
@@ -58,8 +56,7 @@ public class ClassroomController {
                      classroom.getCapacity());
         logger.debug("Received location id to insert: {}", locationId);
         logger.debug("Received location: {}", classroom.getLocation());
-        Location location = locationService.findById(locationId).orElseThrow(
-                () -> new EntityNotFoundException("Location not found by id:" + locationId));
+        Location location = locationService.getById(locationId);
         classroom.setLocation(location);
         classroomService.create(classroom);
         return "redirect:/classrooms";
@@ -70,8 +67,7 @@ public class ClassroomController {
         int locationId = classroom.getLocation().getId();
         logger.debug("Received update data {}", classroom);
         logger.debug("Received updated location id: {}", locationId);
-        Location location = locationService.findById(locationId).orElseThrow(
-                () -> new EntityNotFoundException("Location not found by id:" + locationId));
+        Location location = locationService.getById(locationId);
         classroom.setLocation(location);
         classroomService.update(classroom);
         return "redirect:/classrooms";

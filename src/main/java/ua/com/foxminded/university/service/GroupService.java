@@ -40,6 +40,11 @@ public class GroupService {
         return groupDao.findById(id);
     }
 
+    public Group getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find group by id " + id));
+    }
+
     public void update(Group group) {
         logger.debug("Updating group: {} ", group);
         verifyNameIsUnique(group);

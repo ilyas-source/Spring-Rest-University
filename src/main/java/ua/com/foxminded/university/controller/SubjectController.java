@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
 
@@ -30,8 +29,7 @@ public class SubjectController {
 
     @GetMapping("/{id}")
     public String getSubject(@PathVariable int id, Model model) {
-        Subject subject = subjectService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find subject by id " + id));
+        Subject subject = subjectService.getById(id);
         model.addAttribute("subject", subject);
         return "/details/subject";
     }

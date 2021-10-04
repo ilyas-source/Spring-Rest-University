@@ -43,6 +43,11 @@ public class VacationService {
         return vacationDao.findById(id);
     }
 
+    public Vacation getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find vacation by id " + id));
+    }
+
     public void update(Vacation vacation) {
         logger.debug("Updating vacation: {} ", vacation);
         vacationDao.update(vacation);

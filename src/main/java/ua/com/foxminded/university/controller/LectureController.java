@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.*;
 
@@ -47,8 +46,7 @@ public class LectureController {
 
     @GetMapping("/{id}")
     public String getLecture(@PathVariable int id, Model model) {
-        Lecture lecture = lectureService.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find lecture by id " + id));
+        Lecture lecture = lectureService.getById(id);
         model.addAttribute("lecture", lecture);
         model.addAttribute("allGroups", groupService.findAll());
         model.addAttribute("allTimeslots", timeslotService.findAll());
@@ -87,14 +85,10 @@ public class LectureController {
     }
 
     private void refreshFieldsFromDatabase(@ModelAttribute("lecture") Lecture lecture) {
-        Teacher teacher = teacherService.findById(lecture.getTeacher().getId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find teacher by id " + lecture.getTeacher().getId()));
-        Timeslot timeslot = timeslotService.findById(lecture.getTimeslot().getId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find timeslot by id " + lecture.getTimeslot().getId()));
-        Subject subject = subjectService.findById(lecture.getSubject().getId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find subject by id " + lecture.getSubject().getId()));
-        Classroom classroom = classroomService.findById(lecture.getClassroom().getId()).orElseThrow(
-                () -> new EntityNotFoundException("Can't find classroom by id " + lecture.getClassroom().getId()));
+        Teacher teacher = teacherService.getById(lecture.getTeacher().getId());
+        Timeslot timeslot = timeslotService.getById(lecture.getTimeslot().getId());
+        Subject subject = subjectService.getById(lecture.getSubject().getId());
+        Classroom classroom = classroomService.getById(lecture.getClassroom().getId());
 
         lecture.setTeacher(teacher);
         lecture.setTimeslot(timeslot);
@@ -104,8 +98,7 @@ public class LectureController {
         List<Group> groups = lecture.getGroups();
         for (int i = 0; i < groups.size(); i++) {
             int id = valueOf(groups.get(i).getName());
-            Group group = groupService.findById(id).orElseThrow(
-                    () -> new EntityNotFoundException("Can't find group by id " + id));
+            Group group = groupService.getById(id);
             groups.get(i).setId(id);
             groups.get(i).setName(group.getName());
         }
