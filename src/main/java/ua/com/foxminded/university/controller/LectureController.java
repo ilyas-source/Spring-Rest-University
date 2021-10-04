@@ -46,7 +46,7 @@ public class LectureController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
+    public String getLecture(@PathVariable int id, Model model) {
         Lecture lecture = lectureService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find lecture by id " + id));
         model.addAttribute("lecture", lecture);

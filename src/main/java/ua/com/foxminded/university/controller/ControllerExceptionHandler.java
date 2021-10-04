@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.controller.exceptions;
+package ua.com.foxminded.university.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

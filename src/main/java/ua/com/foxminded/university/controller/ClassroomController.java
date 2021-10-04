@@ -33,7 +33,7 @@ public class ClassroomController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
+    public String getClassroom(@PathVariable int id, Model model) {
         Classroom classroom = classroomService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find classroom by id " + id));
         model.addAttribute("classroom", classroom);

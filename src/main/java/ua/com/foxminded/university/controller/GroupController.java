@@ -29,7 +29,7 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
+    public String getGroup(@PathVariable int id, Model model) {
         Group group = groupService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find group by id " + id));
         model.addAttribute("group", group);

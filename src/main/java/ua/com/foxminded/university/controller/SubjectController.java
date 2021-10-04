@@ -29,7 +29,7 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
+    public String getSubject(@PathVariable int id, Model model) {
         Subject subject = subjectService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find subject by id " + id));
         model.addAttribute("subject", subject);

@@ -29,7 +29,7 @@ public class HolidayController {
     }
 
     @GetMapping("/{id}")
-    public String showDetails(@PathVariable int id, Model model) {
+    public String getHoliday(@PathVariable int id, Model model) {
         Holiday holiday = holidayService.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find holiday by id " + id));
         model.addAttribute("holiday", holiday);
