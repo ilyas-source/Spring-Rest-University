@@ -4,11 +4,75 @@
     <meta charset="UTF-8">
     <title>University main</title>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <h1 class="text-primary text-center">Get schedule</h1>
+    <form th:action="@{/lessons/schedule}">
+
+        <div class="select-entity">
+            <p>Schedule for:</p>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input entity" name="entity" value="Student"
+                           onclick="getElementById('id').setAttribute('list', 'students')" required>Student
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input entity" name="entity" value="Teacher"
+                           onclick="getElementById('id').setAttribute('list', 'teachers')" required>Teacher
+                </label>
+            </div>
+        </div>
+
+        <div class="select-duration">
+            <p>Schedule timespan:</p>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="duration" value="Month" required>Month
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="duration" value="Day" required>Day
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Id: </label>
+
+            <select id="id" list="students" class="form-control" required name="id" onclick="selectStudentOrTeachers()">
+                <option class="students"
+                        th:each="student: ${students}"
+                        th:text="${student.firstName} + ' ' + ${student.lastName}"
+                        th:value="${student.id}">
+                </option>
+                <option class="teachers"
+                        th:each="teacher: ${teachers}"
+                        th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"
+                        th:value="${teacher.id}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="datePicker">Date: </label>
+            <input type="text" class="form-control" id="datepicker" placeholder="Enter date" name="date" required>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+</div>
+
+
 <div class="container">
+    <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
 </div>
 </body>
 </html>

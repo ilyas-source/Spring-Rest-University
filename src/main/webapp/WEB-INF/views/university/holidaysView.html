@@ -9,33 +9,32 @@
 <body>
 <header th:insert="fragments/header.html :: header"></header>
 <h2 class="text-primary text-center">University holidays</h2>
-<div class="container">
-    <div class="mt-5">
-        <a href="/university/holidays/new" class="btn btn-outline-primary mb-2" role="button">Create new
-            holiday</a>
-        <table class="table table-striped table-bordered table-sortable">
-            <thead class="thead-light">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Date</th>
-                <th scope="col">Name</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="holiday : ${holidays}">
-                <td class="align-left"><span th:text="${holiday.id}"> </span></th>
-                <td class="align-left"><span th:text="${holiday.date}">	</span></td>
-                <td class="align-left"><span th:text="${holiday.name}">	</span></td>
-                <td>
-                    <div style="display:flex;">
-                        <a class="btn btn-outline-primary" th:href="@{/holidays/{id}(id=${holiday.id})}">Edit/delete...</a>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="container mt-5">
+    <a href="/university/holidays/new" class="btn btn-outline-primary mb-2" role="button">Create new
+        holiday</a>
+    <table class="table table-striped table-bordered table-sortable">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Date</th>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="holiday : ${holidays}">
+            <td class="align-left"><span th:text="${holiday.id}"> </span>
+            </th>
+            <td class="align-left"><span th:text="${holiday.date}">	</span></td>
+            <td class="align-left"><span th:text="${holiday.name}">	</span></td>
+            <td>
+                <div style="display:flex;">
+                    <a class="btn btn-outline-primary" th:href="@{/holidays/{id}(id=${holiday.id})}">Edit/delete...</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
     <script src="/university/sources/js/tablesort.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>

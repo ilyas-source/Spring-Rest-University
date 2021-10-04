@@ -8,35 +8,33 @@
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
-<div class="container">
-    <div class="mt-5">
-        <a href="/university/holidays?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
-            holidays...</a>
-        <h2 class="text-primary">Holiday details</h2>
-        <form class="row g-3" method="POST" th:action="@{/holidays/update}" th:object="${holiday}">
-            <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label for="name" class="form-label">Holiday name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Halloween day" th:field="*{name}">
-                </div>
-                <div class="col-md-2">
-                    <label for="datepicker" class="form-label">Celebration day</label>
-                    <input type="text" class="form-control" id="datepicker" th:field="*{date}">
-                </div>
+<div class="container mt-5">
+    <a href="/university/holidays?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+        holidays...</a>
+    <h2 class="text-primary">Holiday details</h2>
+    <form class="row g-3" method="POST" th:action="@{/holidays/update}" th:object="${holiday}">
+        <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="name" class="form-label">Holiday name</label>
+                <input type="text" class="form-control" id="name" placeholder="Halloween day" th:field="*{name}">
             </div>
-            <div id="SubmitDeleteButtons" class="row g-3">
-                <div class="col-3">
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-                <div class="col-3">
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#ModalDelete">Delete holiday
-                    </button>
-                </div>
+            <div class="col-md-2">
+                <label for="datepicker" class="form-label">Celebration day</label>
+                <input type="text" class="form-control" id="datepicker" th:field="*{date}">
             </div>
-        </form>
-    </div>
+        </div>
+        <div id="SubmitDeleteButtons" class="row g-3">
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#ModalDelete">Delete holiday
+                </button>
+            </div>
+        </div>
+    </form>
     <div id="ModalDelete" class="modal fade" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
