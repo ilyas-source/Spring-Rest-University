@@ -55,6 +55,7 @@ public class TeacherController {
     public String showCreationForm(Model model) {
         logger.debug("Opening creation form");
         model.addAttribute("teacher", new Teacher());
+        model.addAttribute("allSubjects", subjectService.findAll());
         return "/create/teacher";
     }
 

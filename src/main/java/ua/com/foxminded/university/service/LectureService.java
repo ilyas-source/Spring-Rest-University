@@ -8,6 +8,8 @@ import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 import java.time.DayOfWeek;
@@ -167,5 +169,21 @@ public class LectureService {
         if (!lectureDao.findById(id).isPresent()) {
             throw new EntityNotFoundException(String.format("Lecture id:%s not found, nothing to delete", id));
         }
+    }
+
+    public List<Lecture> findByTeacherAndDay(Teacher teacher, LocalDate date) {
+        return lectureDao.findByTeacherAndDay(teacher, date);
+    }
+
+    public List<Lecture> findByTeacherAndMonth(Teacher teacher, LocalDate date) {
+        return lectureDao.findByTeacherAndMonth(teacher, date);
+    }
+
+    public List<Lecture> findByStudentAndDay(Student teacher, LocalDate date) {
+        return lectureDao.findByStudentAndDay(teacher, date);
+    }
+
+    public List<Lecture> findByStudentAndMonth(Student teacher, LocalDate date) {
+        return lectureDao.findByStudentAndMonth(teacher, date);
     }
 }

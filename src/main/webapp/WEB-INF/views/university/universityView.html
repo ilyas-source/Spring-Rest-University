@@ -8,43 +8,44 @@
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
+
 <div class="container mt-5">
     <h1 class="text-primary text-center">Get schedule</h1>
-    <form class="row g-3" th:action="@{/lessons/schedule}">
 
+    <form class="row g-3" th:action="@{/lectures/schedule}">
+
+        <!-- Radio to select teachers or students -->
         <div class="select-entity col-md-2">
-            <label for="class" class="form-label">Generate schedule for</label>
-            <div class="form-check">
-                <label class="form-check-label" id="class">
-                    <input type="radio" class="form-check-input entity" name="entity" value="Student"
-                           onclick="getElementById('id').setAttribute('list', 'students')" required>Student
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input entity" name="entity" value="Teacher"
-                           onclick="getElementById('id').setAttribute('list', 'teachers')" required>Teacher
-                </label>
-            </div>
+            <label for="entity" class="form-label">Generate schedule for</label><br/>
+            <label class="form-check-label" id="entity">
+                <input type="radio" name="entity" value="student"
+                       onclick="getElementById('person').setAttribute('list', 'students');selectStudentOrTeachers()"
+                       required>Student
+            </label>
+            <br/>
+            <label class="form-check-label">
+                <input type="radio" name="entity" value="teacher"
+                       onclick="getElementById('person').setAttribute('list', 'teachers');selectStudentOrTeachers()"
+                       required>Teacher
+            </label>
         </div>
 
+        <!-- Radio to select timespan -->
         <div class="select-duration col-md-2">
-            <label for="timespan" class="form-label">Schedule timespan</label>
-            <div class="form-check">
-                <label class="form-check-label" id="timespan">
-                    <input type="radio" class="form-check-input" name="duration" value="Month" required>Month
-                </label>
-            </div>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="duration" value="Day" required>Day
-                </label>
-            </div>
+            <label for="timespan" class="form-label">Schedule timespan</label><br/>
+            <label class="form-check-label" id="timespan">
+                <input type="radio" name="duration" value="month" required>Month
+            </label>
+            <br/>
+            <label class="form-check-label">
+                <input type="radio" name="duration" value="day" required>Day
+            </label>
+
         </div>
 
         <div class="form-group col-md-3">
             <label for="person" class="form-label">Choose person</label>
-            <select id="person" list="students" class="form-control" required name="id"
+            <select size="10" id="person" list="students" class="form-control" required name="id"
                     onclick="selectStudentOrTeachers()">
                 <option class="students"
                         th:each="student: ${students}"
@@ -60,9 +61,8 @@
         </div>
 
         <div class="form-group col-md-4">
-            <label for="datepicker" class="form-label">Choose date</label>
+            <label for="datepicker" class="form-label">Choose date (or entire month)</label>
             <div class="input-group">
-
                 <input type="text" class="form-control" id="datepicker" placeholder="Enter date" name="date" required>
                 <input class="btn btn-primary" type="submit" value="Submit">
             </div>
@@ -73,10 +73,13 @@
 
 
 <div class="container">
+    <script src="/university/sources/js/homepageselector.js"></script>
     <script src="/university/sources/js/jquery.min.js"></script>
     <script src="/university/sources/js/jquery-ui.js"></script>
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
     <script src="/university/sources/js/datepicker.js"></script>
+
+
 </div>
 </body>
 </html>

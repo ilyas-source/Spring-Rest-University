@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.valueOf;
@@ -17,6 +20,7 @@ import static java.lang.Integer.valueOf;
 @RequestMapping("/lectures")
 public class LectureController {
 
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private static final Logger logger = LoggerFactory.getLogger(LectureController.class);
 
     private final LectureService lectureService;
@@ -25,22 +29,59 @@ public class LectureController {
     private final TeacherService teacherService;
     private final ClassroomService classroomService;
     private final SubjectService subjectService;
+    private StudentService studentService;
 
     public LectureController(LectureService lectureService, GroupService groupService,
                              TimeslotService timeslotService, TeacherService teacherService,
-                             ClassroomService classroomService, SubjectService subjectService) {
+                             ClassroomService classroomService, SubjectService subjectService,
+                             StudentService studentService) {
         this.lectureService = lectureService;
         this.groupService = groupService;
         this.timeslotService = timeslotService;
         this.teacherService = teacherService;
         this.classroomService = classroomService;
         this.subjectService = subjectService;
+        this.studentService = studentService;
     }
 
     @GetMapping
     public String findAll(Model model) {
         logger.debug("Retrieving all lectures to controller");
         model.addAttribute("lectures", lectureService.findAll());
+        return "lecturesView";
+    }
+
+    @GetMapping("/schedule")
+    public String findSchedule(@RequestParam("entity") String entity,
+                               @RequestParam("duration") String duration,
+                               @RequestParam("id") String personId,
+                               @RequestParam("date") String date,
+                               Model model) {
+        logger.debug("Received schedule parameters to retrieve: {} with id:{}, for {}, date:{}",
+                                entity, personId, duration, date);
+        LocalDate scheduleDate = LocalDate.parse(date, dateTimeFormatter);
+        int id = Integer.valueOf(personId);
+        List<Lecture> schedule = new ArrayList<>();
+        if (entity.equals("teacher")) {
+            if (duration.equals("day")) {
+                logger.debug("Retrieving schedule for teacher and day");
+                schedule = lectureService.findByTeacherAndDay(teacherService.getById(id), scheduleDate);
+            } else {
+                logger.debug("Retrieving schedule for teacher and month");
+                schedule = lectureService.findByTeacherAndMonth(teacherService.getById(id), scheduleDate);
+            }
+        }
+        if (entity.equals("student")) {
+            if (duration.equals("day")) {
+                logger.debug("Retrieving schedule for student and day");
+                schedule = lectureService.findByStudentAndDay(studentService.getById(id), scheduleDate);
+            } else {
+                logger.debug("Retrieving schedule for student and month");
+                schedule = lectureService.findByStudentAndMonth(studentService.getById(id), scheduleDate);
+            }
+        }
+
+        model.addAttribute("lectures", schedule);
         return "lecturesView";
     }
 
