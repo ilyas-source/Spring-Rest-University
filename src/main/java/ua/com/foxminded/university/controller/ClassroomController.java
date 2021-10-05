@@ -59,11 +59,8 @@ public class ClassroomController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-        int locationId = classroom.getLocation().getId();
-        logger.debug("Received update data {}", classroom);
-        logger.debug("Received updated location id: {}", locationId);
-        Location location = locationService.getById(locationId);
-        classroom.setLocation(location);
+        logger.debug("Received classroom to update: {}", classroom);
+        locationService.update(classroom.getLocation());
         classroomService.update(classroom);
         return "redirect:/classrooms";
     }
