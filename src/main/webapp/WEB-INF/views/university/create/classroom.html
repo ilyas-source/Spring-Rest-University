@@ -7,53 +7,65 @@
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
-<div class="container">
-    <div class="mt-5">
-        <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
-        <h2 class="text-primary">Create new classroom</h2>
-        <form class="row g-3" method="POST" th:action="@{/classrooms/create}" th:object="${classroom}">
+<div class="container mt-5">
+    <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
+    <h2 class="text-primary">Create new classroom</h2>
+    <form class="row g-3" method="POST" th:action="@{/classrooms/create}" th:object="${classroom}">
 
-            <!--Name and capacity-->
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label for="name" class="form-label">Classroom name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Chemistry lab" th:field="*{name}">
-                </div>
-                <div class="col-md-2">
-                    <label for="capacity" class="form-label">Capacity, students</label>
-                    <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
-                </div>
+        <!--Name and capacity-->
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="name" class="form-label">Classroom name</label>
+                <input type="text" class="form-control" id="name" placeholder="Chemistry lab" th:field="*{name}">
             </div>
+            <div class="col-md-2">
+                <label for="capacity" class="form-label">Capacity, students</label>
+                <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
+            </div>
+        </div>
 
-            <!--Location-->
-            <div class="col-md-6">
-                <label for="locationid" class="form-label">Select location:</label>
-                <div class="input-group">
-                    <select class="form-select" name="locationid" id="locationid" th:field="*{location.id}">
-                        <option th:each="location: ${locations}" th:value="${location.id}"
-                                th:text="${location}"></option>
-                    </select>
-                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                            data-bs-target="#AddLocation">Other...
-                    </button>
-                </div>
-            </div>
+        <!--Location-->
+        <!--   <div class="col-md-6">-->
 
-            <div class="row g-3">
-                <div class="col-md-5">
-                    <input type="submit" class="btn btn-primary" value="Create"/>
-                </div>
+        <!--Location in-page-->
+        <div class="col-md-3">
+            <label for="building" class="form-label">Building name</label>
+            <input type="text" class="form-control" id="building" placeholder="Chemistry building"
+                   th:field="*{location.building}">
+        </div>
+        <div class="col-md-3">
+            <label for="floor" class="form-label">Floor</label>
+            <input type="text" class="form-control" id="floor" placeholder="5"
+                   th:field="*{location.floor}">
+        </div>
+        <div class="col-md-3">
+            <label for="number" class="form-label">Room number</label>
+            <input type="text" class="form-control" id="number" placeholder="10"
+                   th:field="*{location.roomNumber}">
+        </div>
+        <div class="col-md-5">
+            <input type="submit" class="btn btn-primary" value="Create"/>
+        </div>
+    </form>
+    <!--  <label for="locationid" class="form-label">Select location:</label>
+      <div class="input-group">
+          <select class="form-select" name="locationid" id="locationid" th:field="*{location.id}">
+              <option th:each="location: ${locations}" th:value="${location.id}"
+                      th:text="${location}"></option>
+          </select>
+          <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                  data-bs-target="#AddLocation">Other...
+          </button>
+      </div> -->
+</div>
+<div class="modal" id="AddLocation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New location</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
-        </form>
-    </div>
-    <div class="modal" id="AddLocation">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New location</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-body">  <!--
                     <form class="row g-3" method="POST" action="/university/locations/create" th:object="${location}">
                         <div class="row">
                             <label for="building" class="form-label">Building name</label>
@@ -73,15 +85,15 @@
                         <div class="col-md-5">
                             <input type="submit" class="btn btn-primary" value="Create"/>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                </div>
+                    </form> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
-    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
 </div>
+<script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

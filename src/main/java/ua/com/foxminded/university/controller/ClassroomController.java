@@ -51,13 +51,8 @@ public class ClassroomController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("classroom") Classroom classroom) {
-        int locationId = classroom.getLocation().getId();
-        logger.debug("Received classroom name {} and capacity {} to create", classroom.getName(),
-                     classroom.getCapacity());
-        logger.debug("Received location id to insert: {}", locationId);
-        logger.debug("Received location: {}", classroom.getLocation());
-        Location location = locationService.getById(locationId);
-        classroom.setLocation(location);
+        logger.debug("Received classroom to create: {}", classroom);
+        locationService.create(classroom.getLocation());
         classroomService.create(classroom);
         return "redirect:/classrooms";
     }

@@ -1,88 +1,87 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Lecture</title>
-  <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
-  <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Lecture</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
-<div class="container">
-  <div class="mt-5">
+<div class="container mt-5">
     <a href="/university/lectures?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
-      lectures...</a>
+        lectures...</a>
     <h2 class="text-primary">New lecture</h2>
 
     <form class="row g-3" method="POST" th:action="@{/lectures/create}" th:object="${lecture}">
 
-      <!--datepicker-->
-      <div class="col-md-4">
-        <label for="datepicker" class="form-label">Date</label>
-        <input type="text" class="form-control" id="datepicker" th:field="*{date}">
-      </div>
+        <!--datepicker-->
+        <div class="col-md-4">
+            <label for="datepicker" class="form-label">Date</label>
+            <input type="text" class="form-control" id="datepicker" th:field="*{date}">
+        </div>
 
-      <!--Timeslot select-->
-      <div class="col-md-4">
-        <label for="timeslot" class="form-label">Time slot</label>
-        <select class="form-select" id="timeslot" th:field="*{timeslot.id}">
-          <option th:each="timeslot: ${allTimeslots}"
-                  th:value="${timeslot.id}"
-                  th:text="${timeslot.beginTime}+'-'+${timeslot.endTime}"></option>
-        </select>
-      </div>
+        <!--Timeslot select-->
+        <div class="col-md-4">
+            <label for="timeslot" class="form-label">Time slot</label>
+            <select class="form-select" id="timeslot" th:field="*{timeslot.id}">
+                <option th:each="timeslot: ${allTimeslots}"
+                        th:value="${timeslot.id}"
+                        th:text="${timeslot.beginTime}+'-'+${timeslot.endTime}"></option>
+            </select>
+        </div>
 
-      <!--Subject select-->
-      <div class="col-md-4">
-        <label for="subject" class="form-label">Subject</label>
-        <select class="form-select" id="subject" th:field="*{subject.id}">
-          <option th:each="subject: ${allSubjects}"
-                  th:value="${subject.id}"
-                  th:text="${subject}"></option>
-        </select>
-      </div>
+        <!--Subject select-->
+        <div class="col-md-4">
+            <label for="subject" class="form-label">Subject</label>
+            <select class="form-select" id="subject" th:field="*{subject.id}">
+                <option th:each="subject: ${allSubjects}"
+                        th:value="${subject.id}"
+                        th:text="${subject}"></option>
+            </select>
+        </div>
 
-      <!--Group multiselect-->
-      <div class="col-md-4">
-        <label for="groups" class="form-label">Groups (multiple select with Ctrl)</label>
-        <select class="form-control" id="groups" name="groups" size="5" multiple required>
-          <option th:each="group: ${allGroups}"
-                  th:value="${group.id}"
-                  th:text="${group.name}">
-          </option>
-        </select>
-      </div>
+        <!--Group multiselect-->
+        <div class="col-md-4">
+            <label for="groups" class="form-label">Groups (multiple select with Ctrl)</label>
+            <select class="form-control" id="groups" name="groups" size="5" multiple required>
+                <option th:each="group: ${allGroups}"
+                        th:value="${group.id}"
+                        th:text="${group.name}">
+                </option>
+            </select>
+        </div>
 
-      <!--Teacher select-->
-      <div class="col-md-4">
-        <label for="teacher" class="form-label">Teacher</label>
-        <select class="form-select" id="teacher" th:field="*{teacher.id}">
-          <option th:each="teacher: ${allTeachers}"
-                  th:value="${teacher.id}"
-                  th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
-        </select>
-      </div>
+        <!--Teacher select-->
+        <div class="col-md-4">
+            <label for="teacher" class="form-label">Teacher</label>
+            <select class="form-select" id="teacher" th:field="*{teacher.id}">
+                <option th:each="teacher: ${allTeachers}"
+                        th:value="${teacher.id}"
+                        th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
+            </select>
+        </div>
 
-      <!--Classroom select-->
-      <div class="col-md-4">
-        <label for="classroom" class="form-label">Classroom</label>
-        <select class="form-select" id="classroom" th:field="*{classroom.id}">
-          <option th:each="classroom: ${allClassrooms}"
-                  th:value="${classroom.id}"
-                  th:text="${classroom.name}"></option>
-        </select>
-      </div>
+        <!--Classroom select-->
+        <div class="col-md-4">
+            <label for="classroom" class="form-label">Classroom</label>
+            <select class="form-select" id="classroom" th:field="*{classroom.id}">
+                <option th:each="classroom: ${allClassrooms}"
+                        th:value="${classroom.id}"
+                        th:text="${classroom.name}"></option>
+            </select>
+        </div>
 
-      <div class="col-3">
-        <input type="submit" class="btn btn-primary mt-2" value="Create lecture"/>
-      </div>
+        <div class="col-3">
+            <input type="submit" class="btn btn-primary mt-2" value="Create lecture"/>
+        </div>
     </form>
-  </div>
 
-  <script src="/university/sources/js/jquery.min.js"></script>
-  <script src="/university/sources/js/jquery-ui.js"></script>
-  <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
-  <script src="/university/sources/js/datepicker.js"></script>
+
+    <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
 </div>
 </body>
 </html>
