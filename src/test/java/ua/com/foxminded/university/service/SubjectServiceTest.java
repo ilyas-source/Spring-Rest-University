@@ -90,11 +90,9 @@ class SubjectServiceTest {
 
     @Test
     void givenIncorrectSubjectId_onDelete_shouldThrowException() {
-        String expected = "Subject id:1 not found, nothing to delete";
-
+        String expected = "Can't find subject by id 1";
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> subjectService.delete(1));
-
         assertEquals(expected, thrown.getMessage());
         verify(subjectDao, never()).delete(1);
     }

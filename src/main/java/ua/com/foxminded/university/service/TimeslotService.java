@@ -64,9 +64,7 @@ public class TimeslotService {
 
     public void delete(int id) {
         logger.debug("Deleting timeslot by id: {} ", id);
-        var timeslot = timeslotDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Timeslot id:%s not found, nothing to delete", id)));
-        verifyHasNoLecturesScheduled(timeslot);
+        verifyHasNoLecturesScheduled(getById(id));
         timeslotDao.delete(id);
     }
 

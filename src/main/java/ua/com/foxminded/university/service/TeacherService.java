@@ -96,10 +96,7 @@ public class TeacherService {
 
     public void delete(int id) {
         logger.debug("Deleting teacher by id: {} ", id);
-        var teacher = teacherDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Teacher id:%s not found, nothing to delete", id)));
-        verifyHasNoLectures(teacher);
+        verifyHasNoLectures(getById(id));
         teacherDao.delete(id);
     }
 

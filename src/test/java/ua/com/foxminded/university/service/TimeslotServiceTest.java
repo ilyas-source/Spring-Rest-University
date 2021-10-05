@@ -76,7 +76,7 @@ class TimeslotServiceTest {
 
     @Test
     void givenIncorrectTimeslotId_onDelete_shouldThrowException() {
-        String expected = "Timeslot id:1 not found, nothing to delete";
+        String expected = "Can't find timeslot by id 1";
 
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> timeslotService.delete(1));

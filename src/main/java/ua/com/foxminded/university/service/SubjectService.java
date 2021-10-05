@@ -53,8 +53,7 @@ public class SubjectService {
 
     public void delete(int id) {
         logger.debug("Deleting subject by id: {} ", id);
-        var subject = subjectDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Subject id:%s not found, nothing to delete", id)));
+        var subject = getById(id);
         verifyIsNotAssigned(subject);
         verifyIsNotScheduled(subject);
         subjectDao.delete(id);

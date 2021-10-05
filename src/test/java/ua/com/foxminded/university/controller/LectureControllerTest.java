@@ -6,11 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.service.LectureService;
+import ua.com.foxminded.university.service.*;
 
 import java.util.Optional;
 
@@ -21,8 +22,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLecture1;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
+import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubjects;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslots;
 
 @ExtendWith(MockitoExtension.class)
 class LectureControllerTest {
@@ -31,6 +34,16 @@ class LectureControllerTest {
 
     @Mock
     private LectureService lectureService;
+    @Mock
+    private GroupService groupService;
+    @Mock
+    private TimeslotService timeslotService;
+    @Mock
+    private SubjectService subjectService;
+    @Mock
+    private ClassroomService classroomService;
+    @Mock
+    private TeacherService teacherService;
     @InjectMocks
     private LectureController lectureController;
 
@@ -53,6 +66,11 @@ class LectureControllerTest {
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithLecture() throws Exception {
         when(lectureService.findById(1)).thenReturn(Optional.of(expectedLecture1));
+        when(groupService.findAll()).thenReturn(expectedGroups1);
+        when(timeslotService.findAll()).thenReturn(expectedTimeslots);
+        when(subjectService.findAll()).thenReturn(expectedSubjects);
+        when(classroomService.findAll()).thenReturn(expectedClassrooms);
+        when(teacherService.findAll(PageRequest.of(0,1000))).thenReturn(null);
 
         mockMvc.perform(get("/lectures/1"))
                 .andExpect(view().name("/details/lecture"))

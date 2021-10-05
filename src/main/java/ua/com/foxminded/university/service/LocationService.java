@@ -51,9 +51,7 @@ public class LocationService {
 
     public void delete(int id) {
         logger.debug("Deleting location by id: {} ", id);
-        var location = locationDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Location id:%s not found, nothing to delete", id)));
-        verifyIsNotUsed(location);
+        verifyIsNotUsed((getById(id)));
         locationDao.delete(id);
     }
 

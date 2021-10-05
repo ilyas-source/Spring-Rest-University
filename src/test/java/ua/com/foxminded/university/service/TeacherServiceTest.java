@@ -92,7 +92,7 @@ class TeacherServiceTest {
 
     @Test
     void givenIncorrectTeacherId_onDelete_shouldThrowException() {
-        String expected = "Teacher id:1 not found, nothing to delete";
+        String expected = "Can't find teacher by id 1";
 
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> teacherService.delete(1));
