@@ -43,14 +43,14 @@ public class GroupController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("group") Group group) {
-        logger.debug("Received to create: {}", group);
+        logger.debug("Create group={}", group);
         groupService.create(group);
         return "redirect:/groups";
     }
 
     @PostMapping("/update")
     public String update(@ModelAttribute("group") Group group) {
-        logger.debug("Received update data: name {}", group.getName());
+        logger.debug("Update group={}", group);
         groupService.update(group);
         return "redirect:/groups";
     }

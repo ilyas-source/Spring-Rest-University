@@ -61,25 +61,6 @@ public class TeacherController {
         return "/create/vacation";
     }
 
-//    @PostMapping("/addVacation")
-//    public String addVacation(@RequestParam("start") String start,
-//                              @RequestParam("end") String end,
-//                              @RequestParam("id") String teacherId, Model model) {
-//        logger.debug("Received vacation start {}, end{} for teacher id:{}", start, end, teacherId);
-//        int id=Integer.valueOf(teacherId);
-//        LocalDate startDate=LocalDate.parse(start,dateTimeFormatter);
-//        LocalDate endDate=LocalDate.parse(end,dateTimeFormatter);
-//
-//        var vacation= new Vacation(startDate,endDate);
-//        logger.debug("Created vacation: {}", vacation);
-//        Teacher teacher = teacherService.getById(id);
-//        vacationService.create(vacation);
-//        teacher.getVacations().add(vacation);
-//        teacherService.update(teacher);
-//
-//        return "redirect:/teachers/editvacations/"+teacherId;
-//    }
-
     @PostMapping("/update")
     public String update(@ModelAttribute("teacher") Teacher teacher) {
         logger.debug("Received update data: {}", teacher);
@@ -89,7 +70,7 @@ public class TeacherController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("teacher") Teacher teacher) {
-        logger.debug("Received to create: {}", teacher);
+        logger.debug("Create teacher={}", teacher);
         teacherService.create(teacher);
         return "redirect:/teachers";
     }

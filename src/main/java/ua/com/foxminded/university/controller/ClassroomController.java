@@ -51,7 +51,7 @@ public class ClassroomController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("classroom") Classroom classroom) {
-        logger.debug("Received classroom to create: {}", classroom);
+        logger.debug("Create classroom={}", classroom);
         locationService.create(classroom.getLocation());
         classroomService.create(classroom);
         return "redirect:/classrooms";
@@ -59,7 +59,7 @@ public class ClassroomController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("classroom") Classroom classroom) {
-        logger.debug("Received classroom to update: {}", classroom);
+        logger.debug("Update classroom={}", classroom);
         locationService.update(classroom.getLocation());
         classroomService.update(classroom);
         return "redirect:/classrooms";

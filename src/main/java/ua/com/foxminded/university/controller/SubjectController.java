@@ -43,14 +43,14 @@ public class SubjectController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("subject") Subject subject) {
-        logger.debug("Received to create: {}", subject);
+        logger.debug("Create subject={}", subject);
         subjectService.create(subject);
         return "redirect:/subjects";
     }
 
     @PostMapping("/update")
     public String update(@ModelAttribute("subject") Subject subject) {
-        logger.debug("Received update data: name {}", subject.getName());
+        logger.debug("Update subject={}", subject);
         subjectService.update(subject);
         return "redirect:/subjects";
     }

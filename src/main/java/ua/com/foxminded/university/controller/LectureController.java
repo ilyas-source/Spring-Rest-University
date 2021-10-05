@@ -111,7 +111,7 @@ public class LectureController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("lecture") Lecture lecture) {
-        logger.debug("Received to create: {}", lecture);
+        logger.debug("Create lecture={}", lecture);
         refreshFieldsFromDatabase(lecture);
         lectureService.create(lecture);
         return "redirect:/lectures";
@@ -119,7 +119,7 @@ public class LectureController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute("lecture") Lecture lecture) {
-        logger.debug("Received update data: {}", lecture);
+        logger.debug("Update lecture={}", lecture);
         refreshFieldsFromDatabase(lecture);
         lectureService.update(lecture);
         return "redirect:/lectures";

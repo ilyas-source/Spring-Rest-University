@@ -70,12 +70,10 @@ class ClassroomControllerTest {
 
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
-        String expected = "Can't find classroom by id 1";
         when(classroomService.getById(1)).thenThrow(new EntityNotFoundException("Can't find classroom by id 1"));
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
+        assertThrows(org.springframework.web.util.NestedServletException.class,
                                         () -> mockMvc.perform(get("/classrooms/1"))
                                                 .andExpect(view().name("exceptions/error")));
-        assertEquals(expected, thrown.getCause().getMessage());
     }
 
     @Test

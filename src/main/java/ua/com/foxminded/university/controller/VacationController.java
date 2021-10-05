@@ -39,12 +39,7 @@ public class VacationController {
     @PostMapping("/create/{id}")
     public String addVacation(@ModelAttribute("classroom") Vacation vacation,
                               @PathVariable int id) {
-        logger.debug("Received vacation to create: {}", vacation);
-        logger.debug("Received teacher id to add vacation: {}", id);
-        //int id = Integer.valueOf(teacherId);
-        //LocalDate startDate=LocalDate.parse(vacation.getStartDate(),dateTimeFormatter);
-        //LocalDate endDate=LocalDate.parse(end,dateTimeFormatter);
-
+        logger.debug("Create vacation={}", vacation);
         Teacher teacher = teacherService.getById(id);
         vacationService.create(vacation);
         teacher.getVacations().add(vacation);

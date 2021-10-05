@@ -43,7 +43,7 @@ public class HolidayController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("holiday") Holiday holiday) {
-        logger.debug("Received to create: {}", holiday);
+        logger.debug("Create holiday={}", holiday);
         holidayService.create(holiday);
         return "redirect:/holidays";
     }

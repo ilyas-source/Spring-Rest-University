@@ -53,14 +53,14 @@ public class StudentController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute("student") Student student) {
-        logger.debug("Received to create: {}", student);
+        logger.debug("Create student={}", student);
         studentService.create(student);
         return "redirect:/students";
     }
 
     @PostMapping("/update")
     public String update(@ModelAttribute("student") Student student) {
-        logger.debug("Received to update: {}", student);
+        logger.debug("Update student={}", student);
         studentService.update(student);
         return "redirect:/students";
     }
