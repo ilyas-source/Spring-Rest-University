@@ -13,14 +13,9 @@ import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.VacationService;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 @Controller
 @RequestMapping("/teachers")
 public class TeacherController {
-
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private static final Logger logger = LoggerFactory.getLogger(TeacherController.class);
 
@@ -66,28 +61,24 @@ public class TeacherController {
         return "/create/vacation";
     }
 
-    @PostMapping("/addVacation")
-    public String addVacation(@RequestParam("start") String start,
-                              @RequestParam("end") String end,
-                              @RequestParam("id") String teacherId, Model model) {
-        logger.debug("Received vacation start {}, end{} for teacher id:{}", start, end, teacherId);
-        int id=Integer.valueOf(teacherId);
-        LocalDate startDate=LocalDate.parse(start,dateTimeFormatter);
-        LocalDate endDate=LocalDate.parse(end,dateTimeFormatter);
-
-        var vacation= new Vacation(startDate,endDate);
-        logger.debug("Created vacation: {}", vacation);
-
-        Teacher teacher = teacherService.getById(id);
-
-        vacationService.create(vacation);
-
-        teacher.getVacations().add(vacation);
-
-        teacherService.update(teacher);
-
-        return "redirect:/teachers/editvacations/"+teacherId;
-    }
+//    @PostMapping("/addVacation")
+//    public String addVacation(@RequestParam("start") String start,
+//                              @RequestParam("end") String end,
+//                              @RequestParam("id") String teacherId, Model model) {
+//        logger.debug("Received vacation start {}, end{} for teacher id:{}", start, end, teacherId);
+//        int id=Integer.valueOf(teacherId);
+//        LocalDate startDate=LocalDate.parse(start,dateTimeFormatter);
+//        LocalDate endDate=LocalDate.parse(end,dateTimeFormatter);
+//
+//        var vacation= new Vacation(startDate,endDate);
+//        logger.debug("Created vacation: {}", vacation);
+//        Teacher teacher = teacherService.getById(id);
+//        vacationService.create(vacation);
+//        teacher.getVacations().add(vacation);
+//        teacherService.update(teacher);
+//
+//        return "redirect:/teachers/editvacations/"+teacherId;
+//    }
 
     @PostMapping("/update")
     public String update(@ModelAttribute("teacher") Teacher teacher) {
@@ -113,7 +104,9 @@ public class TeacherController {
     public String editVacations(@PathVariable int id, Model model) {
         logger.debug("Begin editing vacations for teacher id:{}", id);
         Teacher teacher = teacherService.getById(id);
+        Vacation vacation=new Vacation();
         model.addAttribute(teacher);
+        model.addAttribute(vacation);
 
         return "teachervacationsView";
     }
