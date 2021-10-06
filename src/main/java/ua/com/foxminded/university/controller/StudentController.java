@@ -32,7 +32,7 @@ public class StudentController {
         Page<Student> studentPage = studentService.findAll(pageable);
         model.addAttribute("studentPage", studentPage);
 
-        return "studentsView";
+        return "student/all";
     }
 
     @GetMapping("/{id}")
@@ -40,15 +40,14 @@ public class StudentController {
         Student student = studentService.getById(id);
         model.addAttribute("student", student);
         model.addAttribute("groups", groupService.findAll());
-        return "/details/student";
+        return "student/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Model model, Student student) {
         logger.debug("Opening creation form");
-        model.addAttribute("student", new Student());
         model.addAttribute("groups", groupService.findAll());
-        return "/create/student";
+        return "student/create";
     }
 
     @PostMapping("/create")

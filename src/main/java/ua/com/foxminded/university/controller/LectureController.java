@@ -14,8 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Integer.valueOf;
-
 @Controller
 @RequestMapping("/lectures")
 public class LectureController {
@@ -29,7 +27,7 @@ public class LectureController {
     private final TeacherService teacherService;
     private final ClassroomService classroomService;
     private final SubjectService subjectService;
-    private StudentService studentService;
+    private final StudentService studentService;
 
     public LectureController(LectureService lectureService, GroupService groupService,
                              TimeslotService timeslotService, TeacherService teacherService,
@@ -48,7 +46,7 @@ public class LectureController {
     public String findAll(Model model) {
         logger.debug("Retrieving all lectures to controller");
         model.addAttribute("lectures", lectureService.findAll());
-        return "lecturesView";
+        return "lecture/all";
     }
 
     @GetMapping("/schedule")
@@ -60,7 +58,7 @@ public class LectureController {
         logger.debug("Received schedule parameters to retrieve: {} with id:{}, for {}, date:{}",
                                 entity, personId, duration, date);
         LocalDate scheduleDate = LocalDate.parse(date, dateTimeFormatter);
-        int id = Integer.valueOf(personId);
+        int id = Integer.parseInt(personId);
         List<Lecture> schedule = new ArrayList<>();
         if (entity.equals("teacher")) {
             if (duration.equals("day")) {
@@ -80,9 +78,8 @@ public class LectureController {
                 schedule = lectureService.findByStudentAndMonth(studentService.getById(id), scheduleDate);
             }
         }
-
         model.addAttribute("lectures", schedule);
-        return "lecturesView";
+        return "lecture/all";
     }
 
     @GetMapping("/{id}")
@@ -94,19 +91,18 @@ public class LectureController {
         model.addAttribute("allSubjects", subjectService.findAll());
         model.addAttribute("allClassrooms", classroomService.findAll());
         model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0, 1000)));
-        return "/details/lecture";
+        return "lecture/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Model model, Lecture lecture) {
         logger.debug("Opening creation form");
-        model.addAttribute("lecture", new Lecture());
         model.addAttribute("allGroups", groupService.findAll());
         model.addAttribute("allTimeslots", timeslotService.findAll());
         model.addAttribute("allSubjects", subjectService.findAll());
         model.addAttribute("allClassrooms", classroomService.findAll());
         model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0, 1000)));
-        return "/create/lecture";
+        return "lecture/create";
     }
 
     @PostMapping("/create")
@@ -137,11 +133,11 @@ public class LectureController {
         lecture.setClassroom(classroom);
 
         List<Group> groups = lecture.getGroups();
-        for (int i = 0; i < groups.size(); i++) {
-            int id = valueOf(groups.get(i).getName());
+        for (Group value : groups) {
+            int id = Integer.parseInt(value.getName());
             Group group = groupService.getById(id);
-            groups.get(i).setId(id);
-            groups.get(i).setName(group.getName());
+            value.setId(id);
+            value.setName(group.getName());
         }
         logger.debug("Full lecture: {}", lecture);
     }

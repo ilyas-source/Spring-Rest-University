@@ -24,21 +24,20 @@ public class GroupController {
     public String findAll(Model model) {
         logger.debug("Retrieving all groups to controller");
         model.addAttribute("groups", groupService.findAll());
-        return "groupsView";
+        return "group/all";
     }
 
     @GetMapping("/{id}")
     public String getGroup(@PathVariable int id, Model model) {
         Group group = groupService.getById(id);
         model.addAttribute("group", group);
-        return "/details/group";
+        return "group/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Group group) {
         logger.debug("Opening creation form");
-        model.addAttribute("group", new Group());
-        return "/create/group";
+        return "group/create";
     }
 
     @PostMapping("/create")

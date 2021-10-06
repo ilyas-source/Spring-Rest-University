@@ -28,7 +28,7 @@ public class ClassroomController {
     public String findAll(Model model) {
         logger.debug("Retrieving all classrooms to controller");
         model.addAttribute("classrooms", classroomService.findAll());
-        return "classroomsView";
+        return "classroom/all";
     }
 
     @GetMapping("/{id}")
@@ -36,17 +36,14 @@ public class ClassroomController {
         Classroom classroom = classroomService.getById(id);
         model.addAttribute("classroom", classroom);
         model.addAttribute("locations", locationService.findAll());
-        model.addAttribute("location", new Location());
-        return "/details/classroom";
+        return "classroom/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
-        logger.debug("Opening creation form");
-        model.addAttribute("classroom", new Classroom());
-        model.addAttribute("location", new Location());
+    public String showCreationForm(Model model, Classroom classroom, Location location) {
+            logger.debug("Opening creation form");
         model.addAttribute("locations", locationService.findAll());
-        return "/create/classroom";
+        return "classroom/create";
     }
 
     @PostMapping("/create")

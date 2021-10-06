@@ -11,15 +11,13 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ModelAndView handleGenericException(Exception e) {
-        return prepareModel(e, EXCEPTION_VIEW);
+        return prepareModel(e);
     }
 
-    private ModelAndView prepareModel(Exception e, String view) {
-        ModelAndView modelView = new ModelAndView(view);
+    private ModelAndView prepareModel(Exception e) {
+        ModelAndView modelView = new ModelAndView(EXCEPTION_VIEW);
         modelView.addObject("title", e.getClass().getSimpleName());
         modelView.addObject("message", e.getMessage());
         return modelView;
     }
-
-
 }

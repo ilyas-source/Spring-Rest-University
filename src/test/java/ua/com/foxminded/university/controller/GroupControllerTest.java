@@ -12,17 +12,18 @@ import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroups;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -52,7 +53,7 @@ class GroupControllerTest {
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithGroup() throws Exception {
-        when(groupService.findById(1)).thenReturn(Optional.of(expectedGroup1));
+        when(groupService.getById(1)).thenReturn(expectedGroup1);
 
         mockMvc.perform(get("/groups/1"))
                 .andExpect(view().name("/details/group"))
@@ -62,13 +63,12 @@ class GroupControllerTest {
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         String expected = "Can't find group by id 1";
-        when(groupService.findById(1)).thenReturn(Optional.empty());
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(get("/groups/1")));
-        Throwable cause = thrown.getCause();
-
-        assertEquals(cause.getClass(), EntityNotFoundException.class);
-        assertEquals(expected, cause.getMessage());
+        when(groupService.getById(1)).thenThrow(new EntityNotFoundException("Can't find group by id 1"));
+        assertThrows(org.springframework.web.util.NestedServletException.class, () ->
+                mockMvc.perform(get("/groups/1"))
+                        .andExpect(view().name("/exceptions/err5or"))
+                        .andExpect(model().attribute("tit2le", null))
+                        .andExpect(model().attribute("mes3sage", null)));
     }
 
     @Test
@@ -99,5 +99,13 @@ class GroupControllerTest {
         mockMvc.perform(post("/groups/delete/1")).andExpect(status().is3xxRedirection());
 
         verify(groupService).delete(1);
+    }
+
+    interface TestData {
+        Group expectedGroup1 = new Group(1, "AB-11");
+        Group expectedGroup2 = new Group(2, "ZI-08");
+
+        List<Group> expectedGroups = new ArrayList<>(
+                Arrays.asList(expectedGroup1, expectedGroup2));
     }
 }

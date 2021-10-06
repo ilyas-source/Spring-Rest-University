@@ -12,13 +12,9 @@ import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.TeacherService;
 import ua.com.foxminded.university.service.VacationService;
 
-import java.time.format.DateTimeFormatter;
-
 @Controller
 @RequestMapping("/vacations")
 public class VacationController {
-
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private static final Logger logger = LoggerFactory.getLogger(VacationController.class);
 
@@ -44,7 +40,6 @@ public class VacationController {
         vacationService.create(vacation);
         teacher.getVacations().add(vacation);
         teacherService.update(teacher);
-
-        return "redirect:/teachers/editvacations/" + teacher.getId();
+        return "redirect:/teachers/vacations/" + teacher.getId();
     }
 }

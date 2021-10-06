@@ -24,21 +24,20 @@ public class SubjectController {
     public String findAll(Model model) {
         logger.debug("Retrieving all subjects to controller");
         model.addAttribute("subjects", subjectService.findAll());
-        return "subjectsView";
+        return "subject/all";
     }
 
     @GetMapping("/{id}")
     public String getSubject(@PathVariable int id, Model model) {
         Subject subject = subjectService.getById(id);
         model.addAttribute("subject", subject);
-        return "/details/subject";
+        return "subject/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Subject subject) {
         logger.debug("Opening creation form");
-        model.addAttribute("subject", new Subject());
-        return "/create/subject";
+        return "subject/create";
     }
 
     @PostMapping("/create")

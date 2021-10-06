@@ -68,7 +68,7 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenExistingGroupId_onDelete_shouldCallDaoDelete() {
+    void givenExistingId_onDelete_shouldCallDaoDelete() {
         when(holidayDao.findById(1)).thenReturn(Optional.of(expectedHoliday1));
 
         holidayService.delete(1);

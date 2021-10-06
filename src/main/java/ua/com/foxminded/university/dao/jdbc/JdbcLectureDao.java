@@ -206,5 +206,4 @@ public class JdbcLectureDao implements LectureDao {
             jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
         }
     }
-
 }

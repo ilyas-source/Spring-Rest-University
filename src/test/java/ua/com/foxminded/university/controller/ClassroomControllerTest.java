@@ -14,6 +14,9 @@ import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
 import ua.com.foxminded.university.service.LocationService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,10 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassrooms;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
+import static ua.com.foxminded.university.controller.ClassroomControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomControllerTest {
@@ -78,7 +78,7 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-        when(locationService.findById(1)).thenReturn(Optional.of(expectedLocation1));
+        when(locationService.findById(1)).thenReturn(Optional.of(location1));
 
         mockMvc.perform(post("/classrooms/update")
                                 .flashAttr("classroom", expectedClassroom1))
@@ -100,7 +100,7 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onCreate_shouldCallServiceCreate() throws Exception {
-        when(locationService.findById(1)).thenReturn(Optional.of(expectedLocation1));
+        when(locationService.findById(1)).thenReturn(Optional.of(location1));
         mockMvc.perform(post("/classrooms/create")
                                 .flashAttr("classroom", expectedClassroom1))
                 .andExpect(status().is3xxRedirection());
@@ -127,5 +127,22 @@ class ClassroomControllerTest {
 
         assertEquals(cause.getClass(), EntityNotFoundException.class);
         assertEquals(expected, cause.getMessage());
+    }
+
+    interface TestData {
+        Location location1 = new Location(1, "Phys building", 2, 22);
+        Classroom expectedClassroom1 = new Classroom(1, location1, "Big physics auditory", 500);
+
+        Location location2 = new Location(2, "Chem building", 1, 12);
+        Classroom expectedClassroom2 = new Classroom(2, location2, "Small chemistry auditory", 30);
+
+        Location location3 = new Location(3, "Chem building", 2, 12);
+        Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
+
+        List<Location> expectedLocations=new ArrayList<>(
+                Arrays.asList(location1, location2, location3));
+
+        List<Classroom> expectedClassrooms = new ArrayList<>(
+                Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));
     }
 }

@@ -11,7 +11,6 @@ import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
-import ua.com.foxminded.university.service.VacationService;
 
 @Controller
 @RequestMapping("/teachers")
@@ -21,12 +20,11 @@ public class TeacherController {
 
     private final TeacherService teacherService;
     private final SubjectService subjectService;
-    private final VacationService vacationService;
 
-    public TeacherController(TeacherService teacherService, SubjectService subjectService, VacationService vacationService) {
+
+    public TeacherController(TeacherService teacherService, SubjectService subjectService) {
         this.teacherService = teacherService;
         this.subjectService = subjectService;
-        this.vacationService = vacationService;
     }
 
     @GetMapping
@@ -35,7 +33,7 @@ public class TeacherController {
                 pageable.getSort());
         Page<Teacher> teacherPage = teacherService.findAll(pageable);
         model.addAttribute("teacherPage", teacherPage);
-        return "teachersView";
+        return "teacher/all";
     }
 
     @GetMapping("/{id}")
@@ -43,22 +41,20 @@ public class TeacherController {
         Teacher teacher = teacherService.getById(id);
         model.addAttribute("teacher", teacher);
         model.addAttribute("allSubjects", subjectService.findAll());
-        return "/details/teacher";
+        return "teacher/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Model model, Teacher teacher) {
         logger.debug("Opening creation form");
-        model.addAttribute("teacher", new Teacher());
         model.addAttribute("allSubjects", subjectService.findAll());
-        return "/create/teacher";
+        return "teacher/create";
     }
 
     @GetMapping("/newvacation")
-    public String showNewVacationForm(Model model) {
+    public String showNewVacationForm(Teacher teacher) {
         logger.debug("Opening new vacation form");
-        model.addAttribute("teacher", new Teacher());
-        return "/create/vacation";
+        return "/teacher/vacations";
     }
 
     @PostMapping("/update")
@@ -81,14 +77,11 @@ public class TeacherController {
         return "redirect:/teachers";
     }
 
-    @GetMapping("/editvacations/{id}")
-    public String editVacations(@PathVariable int id, Model model) {
+    @GetMapping("/vacations/{id}")
+    public String editVacations(@PathVariable int id, Model model, Vacation vacation) {
         logger.debug("Begin editing vacations for teacher id:{}", id);
         Teacher teacher = teacherService.getById(id);
-        Vacation vacation=new Vacation();
         model.addAttribute(teacher);
-        model.addAttribute(vacation);
-
-        return "teachervacationsView";
+        return "teacher/vacations";
     }
 }

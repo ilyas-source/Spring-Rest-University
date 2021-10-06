@@ -24,21 +24,20 @@ public class HolidayController {
     public String findAll(Model model) {
         logger.debug("Retrieving all holidays to controller");
         model.addAttribute("holidays", holidayService.findAll());
-        return "holidaysView";
+        return "holiday/all";
     }
 
     @GetMapping("/{id}")
     public String getHoliday(@PathVariable int id, Model model) {
         Holiday holiday = holidayService.getById(id);
         model.addAttribute("holiday", holiday);
-        return "/details/holiday";
+        return "holiday/details";
     }
 
     @GetMapping("/new")
-    public String showCreationForm(Model model) {
+    public String showCreationForm(Holiday holiday) {
         logger.debug("Opening creation form");
-        model.addAttribute("holiday", new Holiday());
-        return "/create/holiday";
+        return "holiday/create";
     }
 
     @PostMapping("/create")
