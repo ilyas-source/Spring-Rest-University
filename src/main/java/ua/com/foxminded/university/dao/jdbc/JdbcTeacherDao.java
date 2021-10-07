@@ -40,6 +40,7 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
     private static final String FIND_ALL_PAGEABLE = "SELECT * FROM teachers ORDER BY %s %s OFFSET ? FETCH FIRST ? ROWS ONLY";
+    private static final String FIND_ALL = "SELECT * FROM teachers";
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM teachers";
 
     private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects where teacher_id = ? AND subject_id = ?";
@@ -169,7 +170,6 @@ public class JdbcTeacherDao implements TeacherDao {
         }
     }
 
-    @Override
     public Page<Teacher> findAll(Pageable pageable) {
         var sortProperty = defaultSortAttribute;
         var sortDirection = Sort.Direction.fromString(defaultSortDirection);
@@ -190,6 +190,12 @@ public class JdbcTeacherDao implements TeacherDao {
         var totalTeachers = jdbcTemplate.queryForObject(COUNT_TOTAL, Integer.class);
 
         return new PageImpl<>(teachers, pageable, totalTeachers);
+    }
+
+    @Override
+    public List<Teacher> findAll() {
+        logger.debug("Retrieving all teachers");
+        return jdbcTemplate.query(FIND_ALL, teacherMapper);
     }
 
     @Override

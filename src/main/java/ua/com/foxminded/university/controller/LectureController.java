@@ -2,7 +2,6 @@ package ua.com.foxminded.university.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -76,8 +75,8 @@ public class LectureController {
         model.addAttribute("allTimeslots", timeslotService.findAll());
         model.addAttribute("allSubjects", subjectService.findAll());
         model.addAttribute("allClassrooms", classroomService.findAll());
-        model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0, 1000)));
-        //  model.addAttribute("allTeachers", teacherService.findAll(Pageable.unpaged()));
+        model.addAttribute("allTeachers", teacherService.findAll());
+
         return "lecture/details";
     }
 
@@ -88,7 +87,7 @@ public class LectureController {
         model.addAttribute("allTimeslots", timeslotService.findAll());
         model.addAttribute("allSubjects", subjectService.findAll());
         model.addAttribute("allClassrooms", classroomService.findAll());
-        model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0, 1000)));
+        model.addAttribute("allTeachers", teacherService.findAll());
         return "lecture/create";
     }
 

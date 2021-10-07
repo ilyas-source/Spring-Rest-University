@@ -12,6 +12,7 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -81,5 +82,9 @@ public class StudentService {
         Page<Student> students = studentDao.findAll(pageable);
 
         return students;
+    }
+
+    public List<Student> findAll() {
+        return studentDao.findAll();
     }
 }

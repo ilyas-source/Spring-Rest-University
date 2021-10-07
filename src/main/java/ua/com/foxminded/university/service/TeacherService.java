@@ -49,6 +49,10 @@ public class TeacherService {
         return teachers;
     }
 
+    public List<Teacher> findAll() {
+        return teacherDao.findAll();
+    }
+
     public Optional<Teacher> findById(int id) {
         return teacherDao.findById(id);
     }
@@ -146,4 +150,6 @@ public class TeacherService {
                     teacher.getFirstName(), teacher.getLastName()));
         }
     }
+
+
 }

@@ -40,6 +40,7 @@ public class JdbcStudentDao implements StudentDao {
             " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
     private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students ORDER BY %s %s OFFSET ? FETCH FIRST ? ROWS ONLY";
+    private static final String FIND_ALL = "SELECT * FROM students";
     private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM students";
 
@@ -126,7 +127,6 @@ public class JdbcStudentDao implements StudentDao {
         }
     }
 
-    @Override
     public Page<Student> findAll(Pageable pageable) {
         var sortProperty = defaultSortAttribute;
         var sortDirection = Sort.Direction.fromString(defaultSortDirection);
@@ -147,6 +147,12 @@ public class JdbcStudentDao implements StudentDao {
         var totalStudents = jdbcTemplate.queryForObject(COUNT_TOTAL, Integer.class);
 
         return new PageImpl<>(students, pageable, totalStudents);
+    }
+
+    @Override
+    public List<Student> findAll() {
+        logger.debug("Retrieving all students");
+        return jdbcTemplate.query(FIND_ALL, studentMapper);
     }
 
     @Override

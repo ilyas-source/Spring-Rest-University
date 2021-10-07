@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -70,7 +69,7 @@ class LectureControllerTest {
         when(timeslotService.findAll()).thenReturn(expectedTimeslots);
         when(subjectService.findAll()).thenReturn(expectedSubjects);
         when(classroomService.findAll()).thenReturn(expectedClassrooms);
-        when(teacherService.findAll(PageRequest.of(0,1000))).thenReturn(null);
+        when(teacherService.findAll()).thenReturn(null);
 
         mockMvc.perform(get("/lectures/1"))
                 .andExpect(view().name("/details/lecture"))
