@@ -51,31 +51,19 @@ public class LectureController {
 
     @GetMapping("/schedule")
     public String findSchedule(@RequestParam("entity") String entity,
-                               @RequestParam("duration") String duration,
                                @RequestParam("id") int id,
-                               @RequestParam("date") LocalDate date,
+                               @RequestParam("startDate") LocalDate startDate,
+                               @RequestParam("endDate") LocalDate endDate,
                                Model model) {
-        logger.debug("Received schedule parameters to retrieve: {} with id:{}, for {}, date:{}",
-                                entity, id, duration, date);
+        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
+                entity, id, startDate, endDate);
         List<Lecture> schedule = new ArrayList<>();
         if (entity.equals("teacher")) {
-            if (duration.equals("day")) {
-                logger.debug("Retrieving schedule for teacher and day");
-                schedule = lectureService.findByTeacherAndDay(teacherService.getById(id), date);
-            } else {
-                logger.debug("Retrieving schedule for teacher and month");
-                schedule = lectureService.findByTeacherAndMonth(teacherService.getById(id), date);
-            }
+            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
+        } else {
+            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
         }
-        if (entity.equals("student")) {
-            if (duration.equals("day")) {
-                logger.debug("Retrieving schedule for student and day");
-                schedule = lectureService.findByStudentAndDay(studentService.getById(id), date);
-            } else {
-                logger.debug("Retrieving schedule for student and month");
-                schedule = lectureService.findByStudentAndMonth(studentService.getById(id), date);
-            }
-        }
+
         model.addAttribute("lectures", schedule);
         return "lecture/all";
     }
@@ -89,7 +77,7 @@ public class LectureController {
         model.addAttribute("allSubjects", subjectService.findAll());
         model.addAttribute("allClassrooms", classroomService.findAll());
         model.addAttribute("allTeachers", teacherService.findAll(PageRequest.of(0, 1000)));
-      //  model.addAttribute("allTeachers", teacherService.findAll(Pageable.unpaged()));
+        //  model.addAttribute("allTeachers", teacherService.findAll(Pageable.unpaged()));
         return "lecture/details";
     }
 

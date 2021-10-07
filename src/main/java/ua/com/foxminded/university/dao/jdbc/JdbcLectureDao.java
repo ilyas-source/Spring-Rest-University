@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.sql.Date.valueOf;
 import static java.util.function.Predicate.not;
@@ -44,12 +43,9 @@ public class JdbcLectureDao implements LectureDao {
 
     private static final String REMOVE_GROUP = "DELETE FROM lectures_groups where lecture_id = ? AND group_id = ?";
     private static final String ASSIGN_GROUP = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
-    private static final String FIND_BY_TEACHER_DAY = "SELECT * FROM lectures WHERE teacher_id = ? AND date = ?";
-    private static final String FIND_BY_TEACHER_MONTH = "SELECT * FROM lectures WHERE teacher_id = ? " +
-            "AND EXTRACT(MONTH from date)=? AND EXTRACT (YEAR from date)=?";
-    private static final String FIND_BY_DAY = "SELECT * FROM lectures WHERE date = ?";
-    private static final String FIND_BY_MONTH = "SELECT * FROM lectures WHERE EXTRACT(MONTH from date)=? " +
-            "AND EXTRACT (YEAR from date)=?";
+    private static final String FIND_BY_TEACHER_AND_PERIOD = "SELECT * FROM lectures WHERE teacher_id = ? AND date >= ? AND date<= ?";
+    private static final String FIND_BY_STUDENT_AND_PERIOD = "select * from lectures join lectures_groups lg" +
+            " on lectures.id = lg.lecture_id where group_id='?' AND date >= ? AND date<= ?";
 
 
     private JdbcTemplate jdbcTemplate;
@@ -146,27 +142,15 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
-    public List<Lecture> findByTeacherAndDay(Teacher teacher, LocalDate date) {
-        return jdbcTemplate.query(FIND_BY_TEACHER_DAY, lectureMapper, teacher.getId(), valueOf(date));
+    public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
+        return jdbcTemplate.query(FIND_BY_TEACHER_AND_PERIOD, lectureMapper, teacher.getId(), valueOf(start), valueOf(end));
     }
 
     @Override
-    public List<Lecture> findByTeacherAndMonth(Teacher teacher, LocalDate date) {
-        return jdbcTemplate.query(FIND_BY_TEACHER_MONTH, lectureMapper, teacher.getId(), date.getMonthValue(), date.getYear());
+    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
+        return jdbcTemplate.query(FIND_BY_STUDENT_AND_PERIOD, lectureMapper, student.getGroup().getId(), start, end);
     }
 
-    @Override
-    public List<Lecture> findByStudentAndDay(Student student, LocalDate date) {
-        var lecturesOfDay = jdbcTemplate.query(FIND_BY_DAY, lectureMapper, valueOf(date));
-        return lecturesOfDay.stream().filter(g -> g.getGroups().contains(student.getGroup())).collect(Collectors.toList());
-
-    }
-
-    @Override
-    public List<Lecture> findByStudentAndMonth(Student student, LocalDate date) {
-        var lecturesOfMonth = jdbcTemplate.query(FIND_BY_MONTH, lectureMapper, date.getMonthValue(), date.getYear());
-        return lecturesOfMonth.stream().filter(g -> g.getGroups().contains(student.getGroup())).collect(Collectors.toList());
-    }
 
     @Override
     public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {

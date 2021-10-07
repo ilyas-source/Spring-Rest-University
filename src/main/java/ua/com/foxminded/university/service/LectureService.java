@@ -97,7 +97,7 @@ public class LectureService {
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
         var lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
-        lecturesOnThisDateAndTime.removeIf(l-> (l.getId()==lecture.getId()));
+        lecturesOnThisDateAndTime.removeIf(l -> (l.getId() == lecture.getId()));
         if (lecturesOnThisDateAndTime.stream()
                 .map(Lecture::getGroups)
                 .flatMap(List::stream)
@@ -171,19 +171,13 @@ public class LectureService {
         }
     }
 
-    public List<Lecture> findByTeacherAndDay(Teacher teacher, LocalDate date) {
-        return lectureDao.findByTeacherAndDay(teacher, date);
+    public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
+        logger.debug("Retrieving lectures for teacher {} {} and period {}-{}", teacher.getFirstName(), teacher.getLastName(), start, end);
+        return lectureDao.findByTeacherAndPeriod(teacher, start, end);
     }
 
-    public List<Lecture> findByTeacherAndMonth(Teacher teacher, LocalDate date) {
-        return lectureDao.findByTeacherAndMonth(teacher, date);
-    }
-
-    public List<Lecture> findByStudentAndDay(Student teacher, LocalDate date) {
-        return lectureDao.findByStudentAndDay(teacher, date);
-    }
-
-    public List<Lecture> findByStudentAndMonth(Student teacher, LocalDate date) {
-        return lectureDao.findByStudentAndMonth(teacher, date);
+    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
+        logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
+        return lectureDao.findByStudentAndPeriod(student, start, end);
     }
 }
