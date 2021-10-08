@@ -16,8 +16,6 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-import static java.sql.Date.valueOf;
-
 @Component
 public class JdbcVacationDao implements VacationDao {
 
@@ -48,8 +46,8 @@ public class JdbcVacationDao implements VacationDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-            ps.setDate(1, valueOf(vacation.getStartDate()));
-            ps.setDate(2, valueOf(vacation.getEndDate()));
+            ps.setObject(1, vacation.getStartDate());
+            ps.setObject(2, vacation.getEndDate());
             return ps;
         }, keyHolder);
         vacation.setId((int) keyHolder.getKeys().get("id"));

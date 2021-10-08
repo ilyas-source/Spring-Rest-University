@@ -8,7 +8,7 @@
     <packaging>war</packaging>
     <properties>
         <spring.version>5.3.10</spring.version>
-        <postgresql.version>42.2.24.jre7</postgresql.version>
+        <postgresql.version>42.2.0</postgresql.version>
         <com.h2database.version>1.4.200</com.h2database.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <junit.jupiter.version>5.8.1</junit.jupiter.version>
@@ -42,11 +42,6 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
@@ -56,6 +51,14 @@
             <artifactId>spring-data-commons</artifactId>
             <version>2.5.4</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.24</version>
+        </dependency>
+
         <dependency>
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf-spring5</artifactId>

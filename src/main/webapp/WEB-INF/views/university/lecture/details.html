@@ -45,11 +45,11 @@
 
             <!--Group multiselect-->
             <div class="col-md-4">
-                <label for="groups" class="form-label">Groups (multiple select with Ctrl)</label>
-                <select class="form-control" id="groups" name="groups" size="5" multiple required>
+                <label for="group" class="form-label">Groups (multiple select with Ctrl)</label>
+                <select class="form-control" id="group" name="group" size="5" multiple required>
                     <option th:each="group: ${allGroups}"
                             th:value="${group.id}"
-                            th:text="${group.name}"
+                            th:text="${group}"
                             th:selected="${lecture.groups.contains(group)}">
                     </option>
                 </select>

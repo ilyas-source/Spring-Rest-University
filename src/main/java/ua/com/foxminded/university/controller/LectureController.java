@@ -120,6 +120,7 @@ public class LectureController {
 
         List<Group> groups = lecture.getGroups();
         for (Group group : groups) {
+            logger.debug("Received group {}, with id {}, name {}", group, group.getId(), group.getName());
             int id = Integer.parseInt(group.getName());
             group.setId(id);
             group.setName(groupService.getById(id).getName());

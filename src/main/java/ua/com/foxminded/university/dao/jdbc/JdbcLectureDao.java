@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static java.sql.Date.valueOf;
 import static java.util.function.Predicate.not;
 
 @Component
@@ -65,7 +64,7 @@ public class JdbcLectureDao implements LectureDao {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
                     .prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
-            ps.setDate(1, valueOf(lecture.getDate()));
+            ps.setObject(1, lecture.getDate());
             ps.setObject(2, lecture.getTimeslot().getId());
             ps.setInt(3, lecture.getSubject().getId());
             ps.setInt(4, lecture.getTeacher().getId());
@@ -82,7 +81,7 @@ public class JdbcLectureDao implements LectureDao {
     @Transactional
     public void update(Lecture lecture) {
         logger.debug("Updating lecture in database: {} ", lecture);
-        jdbcTemplate.update(UPDATE, valueOf(lecture.getDate()), lecture.getTimeslot().getId(),
+        jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(),
                 lecture.getSubject().getId(), lecture.getTeacher().getId(),
                 lecture.getClassroom().getId(), lecture.getId());
 
@@ -143,14 +142,15 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
-        return jdbcTemplate.query(FIND_BY_TEACHER_AND_PERIOD, lectureMapper, teacher.getId(), valueOf(start), valueOf(end));
+        return jdbcTemplate.query(FIND_BY_TEACHER_AND_PERIOD, lectureMapper, teacher.getId(), start, end);
     }
 
     @Override
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         logger.debug("Start LocalDate: {}", start);
-        logger.debug("Start Date: {}", valueOf(start));
+        logger.debug("Start Date: {}", start);
         return jdbcTemplate.query(FIND_BY_STUDENT_AND_PERIOD, lectureMapper, student.getGroup().getId(), start, end);
+
     }
 
 
@@ -159,7 +159,7 @@ public class JdbcLectureDao implements LectureDao {
         try {
             return Optional.of(
                     jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper,
-                            valueOf(date), timeslot.getId(), classroom.getId()));
+                            date, timeslot.getId(), classroom.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -167,13 +167,13 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByDateTime(LocalDate date, Timeslot timeslot) {
-        return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, valueOf(date), timeslot.getId());
+        return jdbcTemplate.query(FIND_BY_DATE_TIME, lectureMapper, date, timeslot.getId());
     }
 
     public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
         try {
             return Optional.of(
-                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, valueOf(date),
+                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date,
                             timeslot.getId(), teacher.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

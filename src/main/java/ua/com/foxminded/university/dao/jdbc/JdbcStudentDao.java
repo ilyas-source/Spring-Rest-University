@@ -74,7 +74,7 @@ public class JdbcStudentDao implements StudentDao {
             ps.setString(1, student.getFirstName());
             ps.setString(2, student.getLastName());
             ps.setString(3, student.getGender().toString());
-            ps.setDate(4,java.sql.Date.valueOf(student.getBirthDate()));
+            ps.setObject(4, student.getBirthDate());
             ps.setString(5, student.getEmail());
             ps.setString(6, student.getPhoneNumber());
             ps.setInt(7, student.getAddress().getId());
@@ -118,10 +118,9 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
-        var date =java.sql.Date.valueOf(birthDate);
         try {
             return Optional
-                    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, date));
+                    .of(jdbcTemplate.queryForObject(FIND_BY_NAME_AND_BIRTH, studentMapper, firstName, lastName, birthDate));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
