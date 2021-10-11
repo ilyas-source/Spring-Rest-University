@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>University main</title>
@@ -12,10 +12,9 @@
 <div class="container mt-5">
     <h1 class="text-primary text-center">Get schedule</h1>
 
-    <form class="row g-3" th:action="@{/lectures/schedule}">
-
+    <form th:action="@{/lectures/search}">
         <!-- Radio to select teachers or students -->
-        <div class="select-entity col-md-2">
+        <div class="select-entity row g-3">
             <label for="entity" class="form-label">Generate schedule for</label><br/>
             <label class="form-check-label" id="entity">
                 <input type="radio" name="entity" value="student"
@@ -29,11 +28,20 @@
                        required>Teacher
             </label>
         </div>
-
+        <br/>
         <!-- Person search -->
         <div class="form-group col-md-4">
-            <label for="person" class="form-label">Choose person</label>
-            <select size="5" id="person" list="students" class="form-control" required name="id"
+            <!--<label for="person" class="form-label">Find person</label>-->
+            <div class="input-group col-md-2">
+                <input type="text" class="form-control" placeholder="Smith">
+                <button type="submit" class="btn btn-outline-primary" role="button">Find person</button>
+            </div>
+        </div>
+    </form>
+    <br/>
+    <form class="row g-3" th:action="@{lectures/schedule}">
+        <div class="input-group col-md-2">
+            <select size="5" id="person" list="students" class="form-control"  name="id"
                     onclick="selectStudentOrTeachers()">
                 <option class="students"
                         th:each="student: ${students}"
@@ -46,11 +54,8 @@
                         th:value="${teacher.id}">
                 </option>
             </select>
-        </div>
-
-        <div class="input-group col -md-2">
             <input type="text" class="form-control" id="datepicker" name="startDate" placeholder="Schedule start">
-            <input type="text" class="form-control" id="datepicker2" name="endDate"  placeholder="Schedule end">
+            <input type="text" class="form-control" id="datepicker2" name="endDate" placeholder="Schedule end">
             <input type="submit" class="btn btn-primary" value="Submit"/>
         </div>
     </form>

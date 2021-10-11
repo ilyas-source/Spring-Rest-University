@@ -21,8 +21,8 @@ public class UniversityController {
 
     @GetMapping
     public String university(Model model) {
-        model.addAttribute("teachers", teacherService.findAll());
-        model.addAttribute("students", studentService.findAll());
+        //   model.addAttribute("teachers", teacherService.findAll());
+      //  model.addAttribute("students", studentService.findAll());
         return "universityView";
     }
 }
