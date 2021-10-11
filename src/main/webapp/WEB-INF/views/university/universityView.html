@@ -19,40 +19,44 @@
             <label for="entity" class="form-label">Generate schedule for:</label><br/>
             <label class="form-check-label" id="entity">
                 <input type="radio" name="entity" value="student"
-                       onclick="getElementById('person').setAttribute('list', 'students');selectStudentOrTeachers()"
                        required>Student
             </label>
             <br/>
             <label class="form-check-label">
                 <input type="radio" name="entity" value="teacher"
-                       onclick="getElementById('person').setAttribute('list', 'teachers');selectStudentOrTeachers()"
                        required>Teacher
             </label>
         </div>
         <br/>
         <!-- Person search -->
         <div class="col-md-4">
-            <!--<label for="person" class="form-label">Find person</label>-->
             <div class="input-group col-md-2">
                 <input type="text" class="form-control" name="substring" placeholder="Smith">
                 <button type="submit" class="btn btn-outline-primary" role="button">Find person</button>
             </div>
+            <p>Case insensitive, enter any part of first name and/or last name</p>
         </div>
     </form>
     <br/>
 
     <!-- Form for retrieving schedule -->
-    <form class="row g-3" th:action="@{lectures/schedule}">
+    <form class="row g-3" th:action="@{/lectures/schedule}" method="GET">
+        <input type="text" class="invisible" id="entityselector" name="entity"
+               style="height:0;width:0;padding:0;border:none"
+               value="student">
         <div class="input-group col-md-2">
-            <select size="5" id="person" list="students" class="form-control" name="id" required>
+            <select size="5" id="person" list="students" class="form-control" name="id"
+                    required>
                 <option name="entity" class="students"
                         th:each="student: ${students}"
                         th:text="${student.firstName} + ' ' + ${student.lastName}"
+                        onclick="getElementById('entityselector').setAttribute('value', 'student');"
                         th:value="${student.id}">
                 </option>
                 <option name="entity" class="teachers"
                         th:each="teacher: ${teachers}"
                         th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"
+                        onclick="getElementById('entityselector').setAttribute('value', 'teacher');"
                         th:value="${teacher.id}">
                 </option>
             </select>
