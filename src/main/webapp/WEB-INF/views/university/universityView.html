@@ -16,7 +16,7 @@
     <form method="GET" th:action="@{/lectures/search}">
         <!-- Radio to select teachers or students -->
         <div class="select-entity row g-3">
-            <label for="entity" class="form-label">Generate schedule for</label><br/>
+            <label for="entity" class="form-label">Generate schedule for:</label><br/>
             <label class="form-check-label" id="entity">
                 <input type="radio" name="entity" value="student"
                        onclick="getElementById('person').setAttribute('list', 'students');selectStudentOrTeachers()"
@@ -44,14 +44,13 @@
     <!-- Form for retrieving schedule -->
     <form class="row g-3" th:action="@{lectures/schedule}">
         <div class="input-group col-md-2">
-            <select size="5" id="person" list="students" class="form-control"  name="id"
-                    onclick="selectStudentOrTeachers()">
-                <option class="students"
+            <select size="5" id="person" list="students" class="form-control" name="id" required>
+                <option name="entity" class="students"
                         th:each="student: ${students}"
                         th:text="${student.firstName} + ' ' + ${student.lastName}"
                         th:value="${student.id}">
                 </option>
-                <option class="teachers"
+                <option name="entity" class="teachers"
                         th:each="teacher: ${teachers}"
                         th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"
                         th:value="${teacher.id}">
