@@ -21,7 +21,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.expectedSubjects;
 
 
 @ExtendWith(MockitoExtension.class)

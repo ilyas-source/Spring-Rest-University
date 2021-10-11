@@ -67,15 +67,15 @@ class ClassroomControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(classroomService.getById(1)).thenThrow(new EntityNotFoundException("Can't find classroom by id 1"));
         assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(get("/classrooms/1"))
-                                                .andExpect(view().name("exceptions/error")));
+                () -> mockMvc.perform(get("/classrooms/1"))
+                        .andExpect(view().name("exceptions/error")));
     }
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
         mockMvc.perform(post("/classrooms/update")
-                                .flashAttr("classroom", expectedClassroom1))
-                                .andExpect(status().is3xxRedirection());
+                        .flashAttr("classroom", expectedClassroom1))
+                .andExpect(status().is3xxRedirection());
 
         verify(classroomService).update(expectedClassroom1);
     }
@@ -94,7 +94,7 @@ class ClassroomControllerTest {
     @Test
     void givenClassroom_onCreate_shouldCallServiceCreate() throws Exception {
         mockMvc.perform(post("/classrooms/create")
-                                .flashAttr("classroom", expectedClassroom1))
+                        .flashAttr("classroom", expectedClassroom1))
                 .andExpect(status().is3xxRedirection());
 
         verify(classroomService).create(expectedClassroom1);
@@ -117,7 +117,7 @@ class ClassroomControllerTest {
         Location location3 = new Location(3, "Chem building", 2, 12);
         Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
 
-        List<Location> expectedLocations=new ArrayList<>(
+        List<Location> expectedLocations = new ArrayList<>(
                 Arrays.asList(location1, location2, location3));
 
         List<Classroom> expectedClassrooms = new ArrayList<>(

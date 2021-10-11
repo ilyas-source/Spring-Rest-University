@@ -22,7 +22,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.expectedHoliday1;
+import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.expectedHolidays;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayControllerTest {
@@ -73,7 +74,7 @@ class HolidayControllerTest {
     @Test
     void givenHoliday_onUpdate_shouldCallServiceUpdate() throws Exception {
         mockMvc.perform(post("/holidays/update")
-                .flashAttr("holiday", expectedHoliday1))
+                        .flashAttr("holiday", expectedHoliday1))
                 .andExpect(status().is3xxRedirection());
 
         verify(holidayService).update(expectedHoliday1);

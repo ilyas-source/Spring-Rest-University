@@ -82,6 +82,6 @@ public class JdbcHolidayDao implements HolidayDao {
 
     @Override
     public List<Holiday> findByDate(LocalDate date) {
-        return jdbcTemplate.query(FIND_BY_DATE, holidayMapper,date);
+        return jdbcTemplate.query(FIND_BY_DATE, holidayMapper, date);
     }
 }

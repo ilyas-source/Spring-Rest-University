@@ -85,7 +85,7 @@ public class JdbcClassroomDao implements ClassroomDao {
         logger.debug("Updating classroom in database: {} ", classroom);
         locationDao.update(classroom.getLocation());
         jdbcTemplate.update(UPDATE, classroom.getLocation().getId(), classroom.getName(), classroom.getCapacity(),
-                            classroom.getId());
+                classroom.getId());
     }
 
     @Override

@@ -31,7 +31,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {

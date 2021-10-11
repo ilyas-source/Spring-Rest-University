@@ -86,13 +86,14 @@ public class TeacherService {
     }
 
     boolean vacationsIntersect(Vacation v1, Vacation v2) {
+        logger.debug("Comparing vacations: {} and {}", v1, v2);
         if (v1.getStartDate().isBefore(v2.getEndDate()) && (v1.getEndDate().isAfter(v2.getStartDate()))) {
             return true;
         }
         if (v1.getStartDate().isEqual(v2.getEndDate())) {
             return true;
         }
-        if(v1.getEndDate().isEqual(v2.getStartDate())) {
+        if (v1.getEndDate().isEqual(v2.getStartDate())) {
             return true;
         }
         return false;

@@ -21,7 +21,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroups;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -36,8 +37,8 @@ class GroupControllerTest {
     @BeforeEach
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(groupController)
-                        .setControllerAdvice(new ControllerExceptionHandler())
-                        .build();
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test

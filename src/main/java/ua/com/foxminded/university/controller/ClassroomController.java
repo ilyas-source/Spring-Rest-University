@@ -40,7 +40,7 @@ public class ClassroomController {
 
     @GetMapping("/new")
     public String showCreationForm(Model model, Classroom classroom, Location location) {
-            logger.debug("Opening creation form");
+        logger.debug("Opening creation form");
         model.addAttribute("locations", locationService.findAll());
         return "classroom/create";
     }

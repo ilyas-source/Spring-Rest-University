@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.expectedVacation1;
 
 @ExtendWith(MockitoExtension.class)
 class VacationControllerTest {
@@ -56,7 +56,7 @@ class VacationControllerTest {
     void givenVacationAndTeacherId_onAddVacation_shouldCreateVacationAndUpdateTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
         mockMvc.perform(post("/vacations/create/1")
-                .flashAttr("vacation", expectedVacation1))
+                        .flashAttr("vacation", expectedVacation1))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/vacations/for/1"));
 
@@ -73,12 +73,12 @@ class VacationControllerTest {
     }
 
     interface TestData {
-    Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01));
-    Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01));
-    Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15));
-    Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
-    List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
-    List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
-}
+        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01));
+        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01));
+        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15));
+        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
+        List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
+        List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
+    }
 }
 

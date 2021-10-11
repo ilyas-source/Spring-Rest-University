@@ -104,7 +104,7 @@ class LectureControllerTest {
         when(groupService.getById(2)).thenReturn(expectedGroup2);
 
         mockMvc.perform(post("/lectures/update")
-                .flashAttr("lecture", expectedLecture1))
+                        .flashAttr("lecture", expectedLecture1))
                 .andExpect(status().is3xxRedirection());
 
         verify(lectureService).update(expectedLecture1);
@@ -127,7 +127,7 @@ class LectureControllerTest {
         when(groupService.getById(2)).thenReturn(expectedGroup2);
 
         mockMvc.perform(post("/lectures/create")
-                .flashAttr("lecture", expectedLecture1))
+                        .flashAttr("lecture", expectedLecture1))
                 .andExpect(status().is3xxRedirection());
 
         verify(lectureService).create(expectedLecture1);

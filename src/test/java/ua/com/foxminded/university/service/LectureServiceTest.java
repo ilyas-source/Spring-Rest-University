@@ -291,28 +291,28 @@ class LectureServiceTest {
 
     @Test
     void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldCallDaoFindByTeacherAndPeriod() {
-        LocalDate start=LocalDate.of(2000, 1, 1);
-        LocalDate end=LocalDate.of(2001,1,1);
-        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1,start, end))
+        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate end = LocalDate.of(2001, 1, 1);
+        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1, start, end))
                 .thenReturn(expectedLectures);
 
-        var actual=lectureService.findByTeacherAndPeriod(expectedTeacher1,start,end);
+        var actual = lectureService.findByTeacherAndPeriod(expectedTeacher1, start, end);
 
-        assertEquals(expectedLectures,actual);
-        verify(lectureDao).findByTeacherAndPeriod(expectedTeacher1,start,end);
+        assertEquals(expectedLectures, actual);
+        verify(lectureDao).findByTeacherAndPeriod(expectedTeacher1, start, end);
     }
 
     @Test
     void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallDaoFindByStudentAndPeriod() {
-        LocalDate start=LocalDate.of(2000, 1, 1);
-        LocalDate end=LocalDate.of(2001,1,1);
-        when(lectureDao.findByStudentAndPeriod(expectedStudent1,start, end))
+        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate end = LocalDate.of(2001, 1, 1);
+        when(lectureDao.findByStudentAndPeriod(expectedStudent1, start, end))
                 .thenReturn(expectedLectures);
 
-        var actual=lectureService.findByStudentAndPeriod(expectedStudent1,start,end);
+        var actual = lectureService.findByStudentAndPeriod(expectedStudent1, start, end);
 
-        assertEquals(expectedLectures,actual);
-        verify(lectureDao).findByStudentAndPeriod(expectedStudent1,start,end);
+        assertEquals(expectedLectures, actual);
+        verify(lectureDao).findByStudentAndPeriod(expectedStudent1, start, end);
     }
 
     interface TestData {
