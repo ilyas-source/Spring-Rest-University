@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
@@ -51,12 +50,6 @@ public class TeacherController {
         return "teacher/create";
     }
 
-    @GetMapping("/newvacation")
-    public String showNewVacationForm(Teacher teacher) {
-        logger.debug("Opening new vacation form");
-        return "/teacher/vacations";
-    }
-
     @PostMapping("/update")
     public String update(@ModelAttribute("teacher") Teacher teacher) {
         logger.debug("Received update data: {}", teacher);
@@ -75,13 +68,5 @@ public class TeacherController {
     public String delete(@PathVariable int id) {
         teacherService.delete(id);
         return "redirect:/teachers";
-    }
-
-    @GetMapping("/vacations/{id}")
-    public String editVacations(@PathVariable int id, Model model, Vacation vacation) {
-        logger.debug("Begin editing vacations for teacher id:{}", id);
-        Teacher teacher = teacherService.getById(id);
-        model.addAttribute(teacher);
-        return "teacher/vacations";
     }
 }

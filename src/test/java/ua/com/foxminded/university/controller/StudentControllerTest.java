@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
@@ -23,19 +24,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -54,6 +50,7 @@ class StudentControllerTest {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(studentController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
 
@@ -69,7 +66,7 @@ class StudentControllerTest {
         requestParams.add("size", "5");
 
         mockMvc.perform(get("/students").params(requestParams))
-                .andExpect(view().name("studentsView"))
+                .andExpect(view().name("student/all"))
                 .andExpect(model().attribute("studentPage", studentPage));
 
         verify(studentService).findAll(pageable);
@@ -77,28 +74,26 @@ class StudentControllerTest {
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithStudent() throws Exception {
-        when(studentService.findById(1)).thenReturn(Optional.of(expectedStudent1));
+        when(studentService.getById(1)).thenReturn(expectedStudent1);
         when(groupService.findAll()).thenReturn(expectedGroups);
 
         mockMvc.perform(get("/students/1"))
-                .andExpect(view().name("/details/student"))
+                .andExpect(view().name("student/details"))
                 .andExpect(model().attribute("student", expectedStudent1))
                 .andExpect(model().attribute("groups", expectedGroups));
 
-        verify(studentService).findById(1);
+        verify(studentService).getById(1);
         verify(groupService).findAll();
     }
 
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
-        String expected = "Can't find student by id 1";
-        when(studentService.findById(1)).thenReturn(Optional.empty());
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(get("/students/1")));
-        Throwable cause = thrown.getCause();
+        when(studentService.getById(1)).thenThrow(new EntityNotFoundException("Can't find student by id 1"));
 
-        assertEquals(cause.getClass(), EntityNotFoundException.class);
-        assertEquals(expected, cause.getMessage());
+        mockMvc.perform(get("/students/1"))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "EntityNotFoundException"))
+                .andExpect(model().attribute("message", "Can't find student by id 1"));
     }
 
     @Test
@@ -112,7 +107,7 @@ class StudentControllerTest {
     @Test
     void onShowCreationForm_shouldShowFormWithEmptyStudent() throws Exception {
         mockMvc.perform(get("/students/new"))
-                .andExpect(view().name("/create/student"))
+                .andExpect(view().name("student/create"))
                 .andExpect(model().attribute("student", new Student()));
     }
 
@@ -132,6 +127,22 @@ class StudentControllerTest {
     }
 
     interface TestData {
+        Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
+                .city("Edinburgh").streetAddress("Panmure House").build();
+        Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region("Central region")
+                .city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
+        Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
+                .city("Perm").streetAddress("Lenina 5").build();
+        Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")
+                .city("LA").streetAddress("Grove St. 15").build();
+        Address expectedAddress5 = Address.builder().country("France").id(5).postalCode("21012").region("Central")
+                .city("Paris").streetAddress("Rue 15").build();
+        Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
+                .city("Beijin").streetAddress("Main St. 125").build();
+
+        List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
+                expectedAddress4, expectedAddress5, expectedAddress6));
+
         Student expectedStudent1 = Student.builder().firstName("Ivan").lastName("Petrov")
                 .id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
                 .email("qwe@rty.com").phone("123123123").address(expectedAddress3)

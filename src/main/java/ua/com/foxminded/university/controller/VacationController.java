@@ -3,10 +3,8 @@ package ua.com.foxminded.university.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.TeacherService;
@@ -32,6 +30,12 @@ public class VacationController {
         return "redirect:/teachers";
     }
 
+    @GetMapping("/newvacation/{id}")
+    public String showNewVacationForm(@PathVariable int id) {
+        logger.debug("Opening new vacation form");
+        return "/teacher/vacations";
+    }
+
     @PostMapping("/create/{id}")
     public String addVacation(@ModelAttribute("classroom") Vacation vacation,
                               @PathVariable int id) {
@@ -41,5 +45,13 @@ public class VacationController {
         teacher.getVacations().add(vacation);
         teacherService.update(teacher);
         return "redirect:/teachers/vacations/" + teacher.getId();
+    }
+
+    @GetMapping("/for/{id}")
+    public String editVacations(@PathVariable int id, Model model, Vacation vacation) {
+        logger.debug("Begin editing vacations for teacher id:{}", id);
+        Teacher teacher = teacherService.getById(id);
+        model.addAttribute(teacher);
+        return "teacher/vacations";
     }
 }

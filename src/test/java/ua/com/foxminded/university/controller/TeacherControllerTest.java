@@ -15,26 +15,22 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeachers;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress1;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.expectedAddress2;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherControllerTest {
@@ -43,6 +39,8 @@ class TeacherControllerTest {
 
     @Mock
     private TeacherService teacherService;
+    @Mock
+    private SubjectService subjectService;
     @InjectMocks
     private TeacherController teacherController;
 
@@ -51,6 +49,7 @@ class TeacherControllerTest {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(teacherController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
 
@@ -66,7 +65,7 @@ class TeacherControllerTest {
         requestParams.add("size", "5");
 
         mockMvc.perform(get("/teachers").params(requestParams))
-                .andExpect(view().name("teachersView"))
+                .andExpect(view().name("teacher/all"))
                 .andExpect(model().attribute("teacherPage", teacherPage));
 
         verify(teacherService).findAll(pageable);
@@ -74,23 +73,23 @@ class TeacherControllerTest {
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithTeacher() throws Exception {
-        when(teacherService.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
         mockMvc.perform(get("/teachers/1"))
-                .andExpect(view().name("/details/teacher"))
+                .andExpect(view().name("teacher/details"))
                 .andExpect(model().attribute("teacher", expectedTeacher1));
     }
 
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
-        String expected = "Can't find teacher by id 1";
-        when(teacherService.findById(1)).thenReturn(Optional.empty());
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(get("/teachers/1")));
-        Throwable cause = thrown.getCause();
+        when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("Can't find teacher by id 1"));
 
-        assertEquals(cause.getClass(), EntityNotFoundException.class);
-        assertEquals(expected, cause.getMessage());
+        mockMvc.perform(get("/teachers/1"))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "EntityNotFoundException"))
+                .andExpect(model().attribute("message", "Can't find teacher by id 1"));
+
+        verify(teacherService).getById(1);
     }
 
     @Test
@@ -104,7 +103,7 @@ class TeacherControllerTest {
     @Test
     void onShowCreationForm_shouldShowFormWithEmptyTeacher() throws Exception {
         mockMvc.perform(get("/teachers/new"))
-                .andExpect(view().name("/create/teacher"))
+                .andExpect(view().name("teacher/create"))
                 .andExpect(model().attribute("teacher", new Teacher()));
     }
 
@@ -124,6 +123,10 @@ class TeacherControllerTest {
     }
 
     interface TestData {
+        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01));
+        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01));
+        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15));
+        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
         List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
         List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
         List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));

@@ -16,10 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -39,7 +36,9 @@ class HolidayControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        mockMvc = MockMvcBuilders.standaloneSetup(holidayController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(holidayController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -47,7 +46,7 @@ class HolidayControllerTest {
         when(holidayService.findAll()).thenReturn(expectedHolidays);
 
         mockMvc.perform(get("/holidays"))
-                .andExpect(view().name("holidaysView"))
+                .andExpect(view().name("holiday/all"))
                 .andExpect(model().attribute("holidays", expectedHolidays));
 
         verify(holidayService).findAll();
@@ -55,28 +54,26 @@ class HolidayControllerTest {
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithHoliday() throws Exception {
-        when(holidayService.findById(1)).thenReturn(Optional.of(expectedHoliday1));
+        when(holidayService.getById(1)).thenReturn(expectedHoliday1);
 
         mockMvc.perform(get("/holidays/1"))
-                .andExpect(view().name("/details/holiday"))
+                .andExpect(view().name("holiday/details"))
                 .andExpect(model().attribute("holiday", expectedHoliday1));
     }
 
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
-        String expected = "Can't find holiday by id 1";
-        when(holidayService.findById(1)).thenReturn(Optional.empty());
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(get("/holidays/1")));
-        Throwable cause = thrown.getCause();
+        when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("Can't find holiday by id 1"));
 
-        assertEquals(cause.getClass(), EntityNotFoundException.class);
-        assertEquals(expected, cause.getMessage());
+        mockMvc.perform(get("/holidays/1")).andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "EntityNotFoundException"))
+                .andExpect(model().attribute("message", "Can't find holiday by id 1"));
     }
 
     @Test
     void givenHoliday_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(post("/holidays/update").flashAttr("holiday", expectedHoliday1))
+        mockMvc.perform(post("/holidays/update")
+                .flashAttr("holiday", expectedHoliday1))
                 .andExpect(status().is3xxRedirection());
 
         verify(holidayService).update(expectedHoliday1);
@@ -85,7 +82,7 @@ class HolidayControllerTest {
     @Test
     void onShowCreationForm_shouldShowFormWithEmptyHoliday() throws Exception {
         mockMvc.perform(get("/holidays/new"))
-                .andExpect(view().name("/create/holiday"))
+                .andExpect(view().name("holiday/create"))
                 .andExpect(model().attribute("holiday", new Holiday()));
     }
 

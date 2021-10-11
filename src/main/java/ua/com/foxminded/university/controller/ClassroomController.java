@@ -35,7 +35,6 @@ public class ClassroomController {
     public String getClassroom(@PathVariable int id, Model model) {
         Classroom classroom = classroomService.getById(id);
         model.addAttribute("classroom", classroom);
-        model.addAttribute("locations", locationService.findAll());
         return "classroom/details";
     }
 

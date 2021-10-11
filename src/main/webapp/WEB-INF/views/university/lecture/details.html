@@ -16,7 +16,6 @@
         <form class="row g-3" method="POST" th:action="@{/lectures/update}" th:object="${lecture}">
             <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
 
-
             <!--datepicker-->
             <div class="col-md-4">
                 <label for="datepicker" class="form-label">Date</label>
@@ -45,15 +44,18 @@
 
             <!--Group multiselect-->
             <div class="col-md-4">
-                <label for="group" class="form-label">Groups (multiple select with Ctrl)</label>
-                <select class="form-control" id="group" name="group" size="5" multiple required>
+                <label class="form-label">Groups (multiple select with Ctrl)</label>
+                <select class="form-control" name="groups" size="5" multiple required>
                     <option th:each="group: ${allGroups}"
+                            th:name="id"
                             th:value="${group.id}"
-                            th:text="${group}"
+                            th:text="${group.name}"
+
                             th:selected="${lecture.groups.contains(group)}">
                     </option>
                 </select>
             </div>
+
 
             <!--Teacher select-->
             <div class="col-md-4">

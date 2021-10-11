@@ -16,14 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -37,7 +35,9 @@ class GroupControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        mockMvc = MockMvcBuilders.standaloneSetup(groupController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(groupController)
+                        .setControllerAdvice(new ControllerExceptionHandler())
+                        .build();
     }
 
     @Test
@@ -45,7 +45,7 @@ class GroupControllerTest {
         when(groupService.findAll()).thenReturn(expectedGroups);
 
         mockMvc.perform(get("/groups"))
-                .andExpect(view().name("groupsView"))
+                .andExpect(view().name("group/all"))
                 .andExpect(model().attribute("groups", expectedGroups));
 
         verify(groupService).findAll();
@@ -56,19 +56,18 @@ class GroupControllerTest {
         when(groupService.getById(1)).thenReturn(expectedGroup1);
 
         mockMvc.perform(get("/groups/1"))
-                .andExpect(view().name("/details/group"))
+                .andExpect(view().name("group/details"))
                 .andExpect(model().attribute("group", expectedGroup1));
     }
 
     @Test
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
-        String expected = "Can't find group by id 1";
         when(groupService.getById(1)).thenThrow(new EntityNotFoundException("Can't find group by id 1"));
-        assertThrows(org.springframework.web.util.NestedServletException.class, () ->
-                mockMvc.perform(get("/groups/1"))
-                        .andExpect(view().name("/exceptions/err5or"))
-                        .andExpect(model().attribute("tit2le", null))
-                        .andExpect(model().attribute("mes3sage", null)));
+
+        mockMvc.perform(get("/groups/1"))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "EntityNotFoundException"))
+                .andExpect(model().attribute("message", "Can't find group by id 1"));
     }
 
     @Test
@@ -82,7 +81,7 @@ class GroupControllerTest {
     @Test
     void onShowCreationForm_shouldShowFormWithEmptyGroup() throws Exception {
         mockMvc.perform(get("/groups/new"))
-                .andExpect(view().name("/create/group"))
+                .andExpect(view().name("group/create"))
                 .andExpect(model().attribute("group", new Group()));
     }
 

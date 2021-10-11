@@ -17,9 +17,7 @@ import ua.com.foxminded.university.service.LocationService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +48,7 @@ class ClassroomControllerTest {
         when(classroomService.findAll()).thenReturn(expectedClassrooms);
 
         mockMvc.perform(get("/classrooms"))
-                .andExpect(view().name("classroomsView"))
+                .andExpect(view().name("classroom/all"))
                 .andExpect(model().attribute("classrooms", expectedClassrooms));
 
         verify(classroomService).findAll();
@@ -58,14 +56,11 @@ class ClassroomControllerTest {
 
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithClassroom() throws Exception {
-        when(classroomService.findById(1)).thenReturn(Optional.of(expectedClassroom1));
-        when(locationService.findAll()).thenReturn(expectedLocations);
+        when(classroomService.getById(1)).thenReturn(expectedClassroom1);
 
         mockMvc.perform(get("/classrooms/1"))
-                .andExpect(view().name("/details/classroom"))
-                .andExpect(model().attribute("classroom", expectedClassroom1))
-                .andExpect(model().attribute("locations", expectedLocations))
-                .andExpect(model().attribute("location", new Location()));
+                .andExpect(view().name("classroom/details"))
+                .andExpect(model().attribute("classroom", expectedClassroom1));
     }
 
     @Test
@@ -78,7 +73,7 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-        when(locationService.findById(1)).thenReturn(Optional.of(location1));
+    //    when(locationService.findById(1)).thenReturn(Optional.of(location1));
 
         mockMvc.perform(post("/classrooms/update")
                                 .flashAttr("classroom", expectedClassroom1))
@@ -92,7 +87,7 @@ class ClassroomControllerTest {
         when(locationService.findAll()).thenReturn(expectedLocations);
 
         mockMvc.perform(get("/classrooms/new"))
-                .andExpect(view().name("/create/classroom"))
+                .andExpect(view().name("classroom/create"))
                 .andExpect(model().attribute("classroom", new Classroom()))
                 .andExpect(model().attribute("locations", expectedLocations))
                 .andExpect(model().attribute("location", new Location()));
@@ -100,7 +95,6 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onCreate_shouldCallServiceCreate() throws Exception {
-        when(locationService.findById(1)).thenReturn(Optional.of(location1));
         mockMvc.perform(post("/classrooms/create")
                                 .flashAttr("classroom", expectedClassroom1))
                 .andExpect(status().is3xxRedirection());
@@ -113,20 +107,6 @@ class ClassroomControllerTest {
         mockMvc.perform(post("/classrooms/delete/1")).andExpect(status().is3xxRedirection());
 
         verify(classroomService).delete(1);
-    }
-
-    @Test
-    void givenClassroomWithNonExistingLocation_onCreate_shouldThrowException() throws Exception {
-        when(locationService.findById(1)).thenReturn(Optional.empty());
-        String expected = "Location not found by id:1";
-        Throwable thrown = assertThrows(org.springframework.web.util.NestedServletException.class,
-                                        () -> mockMvc.perform(post("/classrooms/create")
-                                                                      .flashAttr("classroom", expectedClassroom1))
-                                                .andExpect(status().is3xxRedirection()));
-        Throwable cause = thrown.getCause();
-
-        assertEquals(cause.getClass(), EntityNotFoundException.class);
-        assertEquals(expected, cause.getMessage());
     }
 
     interface TestData {
