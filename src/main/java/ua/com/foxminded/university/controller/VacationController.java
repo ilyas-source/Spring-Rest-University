@@ -30,21 +30,15 @@ public class VacationController {
         return "redirect:/teachers";
     }
 
-    @GetMapping("/newvacation/{id}")
-    public String showNewVacationForm(@PathVariable int id) {
-        logger.debug("Opening new vacation form");
-        return "/teacher/vacations";
-    }
-
     @PostMapping("/create/{id}")
-    public String addVacation(@ModelAttribute("classroom") Vacation vacation,
+    public String addVacation(@ModelAttribute("vacation") Vacation vacation,
                               @PathVariable int id) {
         logger.debug("Create vacation={}", vacation);
         Teacher teacher = teacherService.getById(id);
         vacationService.create(vacation);
         teacher.getVacations().add(vacation);
         teacherService.update(teacher);
-        return "redirect:/teachers/vacations/" + teacher.getId();
+        return "redirect:/vacations/for/" + teacher.getId();
     }
 
     @GetMapping("/for/{id}")

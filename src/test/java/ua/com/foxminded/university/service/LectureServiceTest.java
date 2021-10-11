@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
@@ -53,6 +54,13 @@ class LectureServiceTest {
         Optional<Lecture> actual = lectureService.findById(1);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_onGetById_shouldReturnLecture() {
+        when(lectureService.findById(1)).thenReturn(Optional.of(expectedLecture1));
+
+        assertEquals(expectedLecture1, lectureService.getById(1));
     }
 
     @Test
@@ -279,6 +287,32 @@ class LectureServiceTest {
 
         assertEquals(expected, thrown.getMessage());
         verify(lectureDao, never()).delete(1);
+    }
+
+    @Test
+    void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldCallDaoFindByTeacherAndPeriod() {
+        LocalDate start=LocalDate.of(2000, 1, 1);
+        LocalDate end=LocalDate.of(2001,1,1);
+        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1,start, end))
+                .thenReturn(expectedLectures);
+
+        var actual=lectureService.findByTeacherAndPeriod(expectedTeacher1,start,end);
+
+        assertEquals(expectedLectures,actual);
+        verify(lectureDao).findByTeacherAndPeriod(expectedTeacher1,start,end);
+    }
+
+    @Test
+    void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallDaoFindByStudentAndPeriod() {
+        LocalDate start=LocalDate.of(2000, 1, 1);
+        LocalDate end=LocalDate.of(2001,1,1);
+        when(lectureDao.findByStudentAndPeriod(expectedStudent1,start, end))
+                .thenReturn(expectedLectures);
+
+        var actual=lectureService.findByStudentAndPeriod(expectedStudent1,start,end);
+
+        assertEquals(expectedLectures,actual);
+        verify(lectureDao).findByStudentAndPeriod(expectedStudent1,start,end);
     }
 
     interface TestData {

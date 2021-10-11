@@ -73,8 +73,6 @@ class ClassroomControllerTest {
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-    //    when(locationService.findById(1)).thenReturn(Optional.of(location1));
-
         mockMvc.perform(post("/classrooms/update")
                                 .flashAttr("classroom", expectedClassroom1))
                                 .andExpect(status().is3xxRedirection());

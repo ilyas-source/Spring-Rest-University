@@ -64,7 +64,7 @@ class LectureControllerTest {
         when(lectureService.findAll()).thenReturn(expectedLectures);
 
         mockMvc.perform(get("/lectures"))
-                .andExpect(view().name("lecturesView"))
+                .andExpect(view().name("lecture/all"))
                 .andExpect(model().attribute("lectures", expectedLectures));
 
         verify(lectureService).findAll();
@@ -119,6 +119,13 @@ class LectureControllerTest {
 
     @Test
     void givenLecture_onCreate_shouldCallServiceCreate() throws Exception {
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+        when(timeslotService.getById(1)).thenReturn(expectedTimeslot1);
+        when(subjectService.getById(1)).thenReturn(expectedSubject1);
+        when(classroomService.getById(1)).thenReturn(expectedClassroom1);
+        when(groupService.getById(1)).thenReturn(expectedGroup1);
+        when(groupService.getById(2)).thenReturn(expectedGroup2);
+
         mockMvc.perform(post("/lectures/create")
                 .flashAttr("lecture", expectedLecture1))
                 .andExpect(status().is3xxRedirection());

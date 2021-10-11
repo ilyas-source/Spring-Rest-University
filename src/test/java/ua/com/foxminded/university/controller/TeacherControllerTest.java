@@ -14,11 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
-import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.Degree;
+import ua.com.foxminded.university.model.Gender;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +30,13 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedAddress1;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedAddress2;
 import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
-import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeachers;
+import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.expectedVacations1;
+import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.expectedVacations2;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherControllerTest {
@@ -123,12 +129,6 @@ class TeacherControllerTest {
     }
 
     interface TestData {
-        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01));
-        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01));
-        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15));
-        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
-        List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
-        List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
         List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));
         List<Subject> expectedSubjects2 = new ArrayList<>(Arrays.asList(expectedSubject3, expectedSubject4));
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
