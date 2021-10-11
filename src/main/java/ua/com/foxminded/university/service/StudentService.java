@@ -87,4 +87,8 @@ public class StudentService {
     public List<Student> findAll() {
         return studentDao.findAll();
     }
+
+    public List<Student> findBySubstring(String substring) {
+        return  studentDao.findBySubstring(substring);
+    }
 }

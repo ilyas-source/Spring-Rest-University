@@ -43,6 +43,7 @@ public class JdbcStudentDao implements StudentDao {
     private static final String FIND_ALL = "SELECT * FROM students";
     private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM students";
+    private static final String FIND_BY_SUBSTRING = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like ?";
 
     private JdbcTemplate jdbcTemplate;
     private StudentMapper studentMapper;
@@ -146,6 +147,13 @@ public class JdbcStudentDao implements StudentDao {
         var totalStudents = jdbcTemplate.queryForObject(COUNT_TOTAL, Integer.class);
 
         return new PageImpl<>(students, pageable, totalStudents);
+    }
+
+    @Override
+    public List<Student> findBySubstring(String substring) {
+        String formattedSubstring="%"+substring.toLowerCase()+"%";
+        logger.debug("Formatted search substring is {}", formattedSubstring);
+        return jdbcTemplate.query(FIND_BY_SUBSTRING, studentMapper, formattedSubstring);
     }
 
     @Override

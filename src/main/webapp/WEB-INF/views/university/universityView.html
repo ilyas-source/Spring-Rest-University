@@ -12,7 +12,8 @@
 <div class="container mt-5">
     <h1 class="text-primary text-center">Get schedule</h1>
 
-    <form th:action="@{/lectures/search}">
+    <!-- Form for finding and retrieving persons-->
+    <form method="GET" th:action="@{/lectures/search}">
         <!-- Radio to select teachers or students -->
         <div class="select-entity row g-3">
             <label for="entity" class="form-label">Generate schedule for</label><br/>
@@ -30,15 +31,17 @@
         </div>
         <br/>
         <!-- Person search -->
-        <div class="form-group col-md-4">
+        <div class="col-md-4">
             <!--<label for="person" class="form-label">Find person</label>-->
             <div class="input-group col-md-2">
-                <input type="text" class="form-control" placeholder="Smith">
+                <input type="text" class="form-control" name="substring" placeholder="Smith">
                 <button type="submit" class="btn btn-outline-primary" role="button">Find person</button>
             </div>
         </div>
     </form>
     <br/>
+
+    <!-- Form for retrieving schedule -->
     <form class="row g-3" th:action="@{lectures/schedule}">
         <div class="input-group col-md-2">
             <select size="5" id="person" list="students" class="form-control"  name="id"

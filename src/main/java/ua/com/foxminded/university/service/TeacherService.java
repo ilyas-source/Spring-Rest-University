@@ -153,4 +153,7 @@ public class TeacherService {
     }
 
 
+    public List<Teacher> findBySubstring(String substring) {
+        return teacherDao.findBySubstring(substring);
+    }
 }

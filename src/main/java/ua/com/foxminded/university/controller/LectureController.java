@@ -48,6 +48,25 @@ public class LectureController {
         return "lecture/all";
     }
 
+    @GetMapping("/search")
+    public String searchPerson(@RequestParam("entity") String entity,
+                               @RequestParam("substring") String substring,
+                               Model model) {
+        List<Student> students=new ArrayList<>();
+        List<Teacher> teachers=new ArrayList<>();
+
+        if (entity.equals("student")) {
+            students=studentService.findBySubstring(substring);
+        } else {
+            teachers=teacherService.findBySubstring(substring);
+        }
+
+        //model.addAttribute("students", studentService.findAll());
+        model.addAttribute("students", students);
+        model.addAttribute("teachers", teachers);
+        return "universityView";
+    }
+
     @GetMapping("/schedule")
     public String findSchedule(@RequestParam("entity") String entity,
                                @RequestParam("id") int id,

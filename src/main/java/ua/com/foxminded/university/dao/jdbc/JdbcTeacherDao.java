@@ -39,6 +39,7 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String FIND_BY_ID = "SELECT * FROM teachers WHERE id = ?";
     private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM teachers WHERE address_id = ?";
     private static final String FIND_BY_NAME_AND_EMAIL = "SELECT * FROM teachers WHERE first_name = ? AND last_name = ? AND email = ?";
+    private static final String FIND_BY_SUBSTRING = "SELECT * FROM teachers WHERE lower(concat(first_name,' ',last_name)) like ?";
     private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 
     private static final String FIND_ALL_PAGEABLE = "SELECT * FROM teachers ORDER BY %s %s OFFSET ? FETCH FIRST ? ROWS ONLY";
@@ -213,5 +214,12 @@ public class JdbcTeacherDao implements TeacherDao {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Teacher> findBySubstring(String substring) {
+        String formattedSubstring="%"+substring.toLowerCase()+"%";
+        logger.debug("Formatted search substring is {}", formattedSubstring);
+        return jdbcTemplate.query(FIND_BY_SUBSTRING, teacherMapper, formattedSubstring);
     }
 }
