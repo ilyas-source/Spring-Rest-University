@@ -48,10 +48,22 @@ public class LectureController {
         return "lecture/all";
     }
 
+    @GetMapping("/new")
+    public String showCreationForm(Model model, Lecture lecture) {
+        logger.debug("Opening creation form");
+        model.addAttribute("allGroups", groupService.findAll());
+        model.addAttribute("allTimeslots", timeslotService.findAll());
+        model.addAttribute("allSubjects", subjectService.findAll());
+        model.addAttribute("allClassrooms", classroomService.findAll());
+        model.addAttribute("allTeachers", teacherService.findAll());
+        return "lecture/create";
+    }
+
     @GetMapping("/search")
     public String searchPerson(@RequestParam("entity") String entity,
                                @RequestParam("substring") String substring,
                                Model model) {
+        logger.debug("Searching for {} with substring {}", entity, substring);
         List<Student> students=new ArrayList<>();
         List<Teacher> teachers=new ArrayList<>();
 
@@ -96,17 +108,6 @@ public class LectureController {
         model.addAttribute("allTeachers", teacherService.findAll());
 
         return "lecture/details";
-    }
-
-    @GetMapping("/new")
-    public String showCreationForm(Model model, Lecture lecture) {
-        logger.debug("Opening creation form");
-        model.addAttribute("allGroups", groupService.findAll());
-        model.addAttribute("allTimeslots", timeslotService.findAll());
-        model.addAttribute("allSubjects", subjectService.findAll());
-        model.addAttribute("allClassrooms", classroomService.findAll());
-        model.addAttribute("allTeachers", teacherService.findAll());
-        return "lecture/create";
     }
 
     @GetMapping("/replacement")

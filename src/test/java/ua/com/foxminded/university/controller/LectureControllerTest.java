@@ -29,6 +29,7 @@ import static ua.com.foxminded.university.controller.ClassroomControllerTest.Tes
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.controller.LectureControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
 import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.*;
 
@@ -49,6 +50,8 @@ class LectureControllerTest {
     private ClassroomService classroomService;
     @Mock
     private TeacherService teacherService;
+    @Mock
+    private StudentService studentService;
     @InjectMocks
     private LectureController lectureController;
 
@@ -138,6 +141,31 @@ class LectureControllerTest {
         mockMvc.perform(post("/lectures/delete/1")).andExpect(status().is3xxRedirection());
 
         verify(lectureService).delete(1);
+    }
+
+
+    @Test
+    void givenStudentEntityNameAndSubstring_onSearchPerson_shouldCallStudentServiceFindBySubstring() throws Exception {
+        when(studentService.findBySubstring("test")).thenReturn(expectedStudents);
+        mockMvc.perform(get("/lectures/search")
+                .param("entity", "student")
+                .param("substring", "test"))
+                .andExpect(view().name("universityView"))
+                .andExpect(model().attribute("students", expectedStudents));
+
+        verify(studentService).findBySubstring("test");
+    }
+
+    @Test
+    void givenTeacherEntityNameAndSubstring_onSearchPerson_shouldCallTeacherServiceFindBySubstring() throws Exception {
+        when(teacherService.findBySubstring("test")).thenReturn(expectedTeachers);
+        mockMvc.perform(get("/lectures/search")
+                        .param("entity", "teacher")
+                        .param("substring", "test"))
+                .andExpect(view().name("universityView"))
+                .andExpect(model().attribute("teachers", expectedTeachers));
+
+        verify(teacherService).findBySubstring("test");
     }
 
     public interface TestData {
