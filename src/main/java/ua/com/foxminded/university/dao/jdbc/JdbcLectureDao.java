@@ -44,7 +44,7 @@ public class JdbcLectureDao implements LectureDao {
     private static final String ASSIGN_GROUP = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
     private static final String FIND_BY_TEACHER_AND_PERIOD = "SELECT * FROM lectures WHERE teacher_id = ? AND date >= ? AND date<= ?";
     private static final String FIND_BY_STUDENT_AND_PERIOD = "select * from lectures join lectures_groups lg" +
-            " on lectures.id = lg.lecture_id where group_id='?' AND date >= ? AND date<= ?";
+            " on lectures.id = lg.lecture_id where group_id=? AND date >= ? AND date<= ?";
 
 
     private JdbcTemplate jdbcTemplate;
@@ -147,8 +147,6 @@ public class JdbcLectureDao implements LectureDao {
 
     @Override
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
-        logger.debug("Start LocalDate: {}", start);
-        logger.debug("Start Date: {}", start);
         return jdbcTemplate.query(FIND_BY_STUDENT_AND_PERIOD, lectureMapper, student.getGroup().getId(), start, end);
 
     }

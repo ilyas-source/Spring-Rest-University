@@ -47,10 +47,8 @@
                 <label class="form-label">Groups (multiple select with Ctrl)</label>
                 <select class="form-control" name="groups" size="5" multiple required>
                     <option th:each="group: ${allGroups}"
-                            th:name="id"
                             th:value="${group.id}"
                             th:text="${group.name}"
-
                             th:selected="${lecture.groups.contains(group)}">
                     </option>
                 </select>
