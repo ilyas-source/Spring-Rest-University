@@ -26,11 +26,13 @@ public class LectureService {
     private LectureDao lectureDao;
     private HolidayDao holidayDao;
     private StudentDao studentDao;
+    private TeacherService teacherService;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao, TeacherService teacherService) {
         this.lectureDao = lectureDao;
         this.holidayDao = holidayDao;
         this.studentDao = studentDao;
+        this.teacherService = teacherService;
     }
 
     public void create(Lecture lecture) {
@@ -181,13 +183,45 @@ public class LectureService {
         return lectureDao.findByStudentAndPeriod(student, start, end);
     }
 
-    public void replaceTeacher(int id1, int id2, LocalDate start, LocalDate end) {
-        // найти все лекции препода 1
-        // в каждую лекцию заменить препода
-        // и сразу проверифицировать:
-        // verifyTeacherIsNotBusy(lecture);
-        // verifyTeacherIsWorking(lecture);
-        // verifyTeacherCanTeachSubject(lecture);
-        //
+    public void replaceTeacher(int id, LocalDate start, LocalDate end) {
+        var teacher = teacherService.getById(id);
+        List<Lecture> lectures = lectureDao.findByTeacher(teacher);
+        logger.debug("Found lectures for this teacher: {}", lectures);
+        List<Teacher> allTeachers = teacherService.findAll();
+        allTeachers.remove(teacher);
+
+        boolean success = true;
+        for (int i = 0; i < lectures.size(); i++) {
+            Lecture l = lectures.get(i);
+            logger.debug("Trying to replace teacher in {}", l);
+
+            for (int j = 0; j < allTeachers.size(); j++) {
+                Teacher t = allTeachers.get(j);
+                logger.debug("Trying to assign {}", t);
+                l.setTeacher(t);
+                try {
+                    verifyTeacherCanTeachSubject(l);
+                    verifyTeacherIsNotBusy(l);
+                    verifyTeacherIsWorking(l);
+                    i++;
+                } catch (Exception e) {
+                    logger.debug("Teacher is not suitable: {}", e.getMessage());
+                    if (j == allTeachers.size() - 1) {
+                        logger.debug("No suitable teacher found");
+                        success = false;
+                    }
+                }
+            }
+            if (!success) {
+                logger.debug("Found unreplaceable lecture, aborting");
+                throw new CannotReplaceTeacherException("Can't find suitable replacement teacher for one or more lectures");
+            }
+        }
+        if (success) {
+            logger.debug("All lectures have been reassigned to new teacher(s)");
+            for (Lecture l : lectures) {
+                lectureDao.update(l);
+            }
+        }
     }
 }

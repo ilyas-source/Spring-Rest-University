@@ -116,12 +116,11 @@ public class LectureController {
     }
 
     @PostMapping("/replacement")
-    public String replaceTeacher(@RequestParam("teacher1") int id1,
-                                 @RequestParam("teacher2") int id2,
+    public String replaceTeacher(@RequestParam("teacher") int id,
                                  @RequestParam("start") LocalDate start,
                                  @RequestParam("end") LocalDate end) {
-        logger.debug("Teacher replacement: from id:{} to id:{}, from {} to {}", id1, id2, start, end);
-        lectureService.replaceTeacher(id1, id2, start, end);
+        logger.debug("Teacher replacement: id:{}, from {} to {}", id, start, end);
+        lectureService.replaceTeacher(id, start, end);
         return "redirect:/lectures";
     }
 

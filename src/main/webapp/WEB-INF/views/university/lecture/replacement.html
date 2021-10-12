@@ -8,33 +8,22 @@
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
-<h2 class="text-primary text-center">Replace teacher</h2>
+<h2 class="text-primary text-center">Replace teacher in all lectures</h2>
 <div class="container mt-5">
 
 
     <form method="POST">
 
         <div class="row g-3">
-            <!--Teacher 1 select-->
+            <!--Teacher select-->
             <div class="col-md-4">
-                <label for="teacher1" class="form-label">Teacher to replace</label>
-                <select class="form-select" id="teacher1" name="teacher1">
+                <label for="teacher" class="form-label">Teacher to replace</label>
+                <select class="form-select" id="teacher" name="teacher">
                     <option th:each="teacher: ${allTeachers}"
                             th:value="${teacher.id}"
                             th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
                 </select>
             </div>
-
-            <!--Teacher 2 select-->
-            <div class="col-md-4">
-                <label for="teacher2" class="form-label">Replacement teacher</label>
-                <select class="form-select" id="teacher2" name="teacher2">
-                    <option th:each="teacher: ${allTeachers}"
-                            th:value="${teacher.id}"
-                            th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
-                </select>
-            </div>
-
 
             <div class="input-group col-md-8">
                 <input type="text" class="form-control" id="datepicker" name="start" placeholder="Replacement start">
