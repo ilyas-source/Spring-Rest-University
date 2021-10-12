@@ -180,4 +180,14 @@ public class LectureService {
         logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
         return lectureDao.findByStudentAndPeriod(student, start, end);
     }
+
+    public void replaceTeacher(int id1, int id2, LocalDate start, LocalDate end) {
+        // найти все лекции препода 1
+        // в каждую лекцию заменить препода
+        // и сразу проверифицировать:
+        // verifyTeacherIsNotBusy(lecture);
+        // verifyTeacherIsWorking(lecture);
+        // verifyTeacherCanTeachSubject(lecture);
+        //
+    }
 }

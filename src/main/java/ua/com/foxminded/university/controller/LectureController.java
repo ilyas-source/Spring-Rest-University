@@ -61,7 +61,6 @@ public class LectureController {
             teachers=teacherService.findBySubstring(substring);
         }
 
-        //model.addAttribute("students", studentService.findAll());
         model.addAttribute("students", students);
         model.addAttribute("teachers", teachers);
         return "universityView";
@@ -109,6 +108,23 @@ public class LectureController {
         model.addAttribute("allTeachers", teacherService.findAll());
         return "lecture/create";
     }
+
+    @GetMapping("/replacement")
+    public String showReplacementView(Model model) {
+        model.addAttribute("allTeachers", teacherService.findAll());
+        return "lecture/replacement";
+    }
+
+    @PostMapping("/replacement")
+    public String replaceTeacher(@RequestParam("teacher1") int id1,
+                                 @RequestParam("teacher2") int id2,
+                                 @RequestParam("start") LocalDate start,
+                                 @RequestParam("end") LocalDate end) {
+        logger.debug("Teacher replacement: from id:{} to id:{}, from {} to {}", id1, id2, start, end);
+        lectureService.replaceTeacher(id1, id2, start, end);
+        return "redirect:/lectures";
+    }
+
 
     @PostMapping("/create")
     public String create(@ModelAttribute("lecture") Lecture lecture) {

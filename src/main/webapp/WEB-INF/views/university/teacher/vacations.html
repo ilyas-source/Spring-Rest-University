@@ -38,7 +38,6 @@
 
     <form class="input-group g-3" method="POST" th:action="@{/vacations/create/{id}(id=${teacher.id})}"
           th:object="${vacation}">
-        <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:value="123">
         <input type="text" class="form-control" id="datepicker" th:field="*{startDate}"
                placeholder="Vacation start">
         <input type="text" class="form-control" id="datepicker2" th:field="*{endDate}" placeholder="Vacation end">
