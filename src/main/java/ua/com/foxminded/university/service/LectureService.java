@@ -185,8 +185,8 @@ public class LectureService {
 
     public void replaceTeacher(int id, LocalDate start, LocalDate end) {
         var teacher = teacherService.getById(id);
-        List<Lecture> lectures = lectureDao.findByTeacher(teacher);
-        logger.debug("Found lectures for this teacher: {}", lectures);
+        List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
+        logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
         List<Teacher> allTeachers = teacherService.findAll();
         allTeachers.remove(teacher);
 
