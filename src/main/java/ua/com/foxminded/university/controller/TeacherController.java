@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/teachers")
@@ -53,9 +57,39 @@ public class TeacherController {
     @PostMapping("/update")
     public String update(@ModelAttribute("teacher") Teacher teacher) {
         logger.debug("Received update data: {}", teacher);
+        refreshFieldsFromDatabase(teacher);
         teacherService.update(teacher);
         return "redirect:/teachers";
     }
+
+    private void refreshFieldsFromDatabase(Teacher teacher) {
+        List<Vacation> existingVacations=teacherService.getById(teacher.getId()).getVacations();
+        teacher.setVacations(existingVacations);
+
+        List<Subject> subjects=teacher.getSubjects();
+        for (Subject s: subjects) {
+            logger.debug("Filling out subject: {}", s);
+            Subject retrievedSubject=subjectService.getById(s.getId());
+            s.setName(retrievedSubject.getName());
+            s.setDescription(retrievedSubject.getDescription());
+            logger.debug("Filled: {}", s);
+        }
+    }
+
+
+//    private List<Subject> subjects;
+
+//    private List<Vacation> vacations;
+
+//    private void refreshFieldsFromDatabase(@ModelAttribute("lecture") Lecture lecture) {
+
+//        List<Group> groups = lecture.getGroups();
+//        for (Group group : groups) {
+//            logger.debug("Received group {}, with id {}, name {}", group, group.getId(), group.getName());
+//            group.setName(groupService.getById(group.getId()).getName());
+//        }
+//        logger.debug("Full lecture: {}", lecture);
+//    }
 
     @PostMapping("/create")
     public String create(@ModelAttribute("teacher") Teacher teacher) {

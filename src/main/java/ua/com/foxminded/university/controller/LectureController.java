@@ -9,7 +9,6 @@ import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
 @RequestMapping("/lectures")
 public class LectureController {
 
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private static final Logger logger = LoggerFactory.getLogger(LectureController.class);
 
     private final LectureService lectureService;

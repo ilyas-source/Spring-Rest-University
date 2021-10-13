@@ -80,6 +80,6 @@ public class Subject {
 
     @Override
     public String toString() {
-        return name + ": " + description;
+        return id+":"+name + ": " + description;
     }
 }

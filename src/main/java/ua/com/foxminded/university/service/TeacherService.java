@@ -138,6 +138,8 @@ public class TeacherService {
                 .stream()
                 .map(Lecture::getSubject)
                 .collect(Collectors.toList());
+        logger.debug("Required subjects for this teacher: {}", requiredSubjects);
+        logger.debug("Subject to be updated: {}", teacher.getSubjects());
         if (!teacher.getSubjects().containsAll(requiredSubjects)) {
             throw new TeacherCannotTeachSubject(
                     String.format("Updated teacher %s %s can't teach scheduled lecture(s)", teacher.getFirstName(),

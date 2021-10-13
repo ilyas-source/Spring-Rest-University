@@ -17,6 +17,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import ua.com.foxminded.university.controller.formatter.GroupFormatter;
+import ua.com.foxminded.university.controller.formatter.SubjectFormatter;
 
 import java.util.List;
 
@@ -70,6 +71,8 @@ public class MVCConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         GroupFormatter groupFormatter=new GroupFormatter();
+        SubjectFormatter subjectFormatter=new SubjectFormatter();
         registry.addFormatter(groupFormatter);
+        registry.addFormatter(subjectFormatter);
     }
 }
