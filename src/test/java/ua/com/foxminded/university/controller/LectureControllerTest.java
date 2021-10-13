@@ -168,37 +168,21 @@ class LectureControllerTest {
         verify(teacherService).findBySubstring("test");
     }
 
-//    @Test
-//    void givenTeacherIdAndDates_onFindSchedule_shouldCallServiceFindByTeacherAndPeriod() throws Exception {
-//        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
-//        mockMvc.perform(get("/lectures/schedule")
-//                .param("entity", "teacher")
-//                .param("id", "1")
-//                .param("startDate", startDate.toString())
-//                .param("endDate", endDate.toString()))
-//                .andExpect(view().name("/lecture/all"))
-//                .andExpect(model().attribute("lectures", expectedLectures));
-//
-//        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1,startDate,endDate);
-//    }
-//    @GetMapping("/schedule")
-//    public String findSchedule(@RequestParam("entity") String entity,
-//                               @RequestParam("id") int id,
-//                               @RequestParam("startDate") LocalDate startDate,
-//                               @RequestParam("endDate") LocalDate endDate,
-//                               Model model) {
-//        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
-//                entity, id, startDate, endDate);
-//        List<Lecture> schedule = new ArrayList<>();
-//        if (entity.equals("teacher")) {
-//            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
-//        } else {
-//            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
-//        }
-//
-//        model.addAttribute("lectures", schedule);
-//        return "lecture/all";
-//    }
+    @Test
+    void givenTeacherIdAndDates_onFindSchedule_shouldCallServiceFindByTeacherAndPeriod() throws Exception {
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
+        var request = get("/lectures/schedule")
+                .param("entity", "teacher")
+                .param("id", "1")
+                .param("startDate", startDate.toString())
+                .param("endDate", endDate.toString());
+
+        mockMvc.perform(request)
+                .andExpect(view().name("lecture/all"))
+                .andExpect(model().attribute("lectures", expectedLectures));
+
+        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1,startDate,endDate);
+    }
 
     public interface TestData {
 

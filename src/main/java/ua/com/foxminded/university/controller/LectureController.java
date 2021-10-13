@@ -62,13 +62,13 @@ public class LectureController {
                                @RequestParam("substring") String substring,
                                Model model) {
         logger.debug("Searching for {} with substring {}", entity, substring);
-        List<Student> students=new ArrayList<>();
-        List<Teacher> teachers=new ArrayList<>();
+        List<Student> students = new ArrayList<>();
+        List<Teacher> teachers = new ArrayList<>();
 
         if (entity.equals("student")) {
-            students=studentService.findBySubstring(substring);
+            students = studentService.findBySubstring(substring);
         } else {
-            teachers=teacherService.findBySubstring(substring);
+            teachers = teacherService.findBySubstring(substring);
         }
 
         model.addAttribute("students", students);
@@ -94,6 +94,12 @@ public class LectureController {
         model.addAttribute("lectures", schedule);
         return "lecture/all";
     }
+
+//    @GetMapping("/schedule")
+//    public String findSchedule(@RequestParam("entity") String entity, @RequestParam("id") int id,
+//                              Model model) {
+//        return "lecture/all";
+//    }
 
     @GetMapping("/{id}")
     public String getLecture(@PathVariable int id, Model model) {

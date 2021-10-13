@@ -148,7 +148,6 @@ public class JdbcLectureDao implements LectureDao {
     @Override
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         return jdbcTemplate.query(FIND_BY_STUDENT_AND_PERIOD, lectureMapper, student.getGroup().getId(), start, end);
-
     }
 
 

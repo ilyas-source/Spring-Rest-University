@@ -76,21 +76,6 @@ public class TeacherController {
         }
     }
 
-
-//    private List<Subject> subjects;
-
-//    private List<Vacation> vacations;
-
-//    private void refreshFieldsFromDatabase(@ModelAttribute("lecture") Lecture lecture) {
-
-//        List<Group> groups = lecture.getGroups();
-//        for (Group group : groups) {
-//            logger.debug("Received group {}, with id {}, name {}", group, group.getId(), group.getName());
-//            group.setName(groupService.getById(group.getId()).getName());
-//        }
-//        logger.debug("Full lecture: {}", lecture);
-//    }
-
     @PostMapping("/create")
     public String create(@ModelAttribute("teacher") Teacher teacher) {
         logger.debug("Create teacher={}", teacher);

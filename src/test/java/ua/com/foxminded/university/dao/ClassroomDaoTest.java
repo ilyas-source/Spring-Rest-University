@@ -121,6 +121,22 @@ public class ClassroomDaoTest {
         assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() {
+        var expected = Optional.of(expectedClassroom1);
+        var actual=classroomDao.findByName(expectedClassroom1.getName());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() {
+        var expected = Optional.of(expectedClassroom1);
+        var actual=classroomDao.findByLocation(expectedClassroom1.getLocation());
+
+        assertEquals(expected, actual);
+    }
+
     public interface TestData {
         Location testLocation = new Location(4, "Test location", 1, 1);
         Classroom classroomToCreate = new Classroom(4, testLocation, "Test room", 5);
@@ -138,4 +154,6 @@ public class ClassroomDaoTest {
         List<Classroom> expectedClassrooms = new ArrayList<>(
                 Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));
     }
+
+
 }
