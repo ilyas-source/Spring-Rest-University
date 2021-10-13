@@ -58,7 +58,7 @@ class LectureControllerTest {
     @BeforeEach
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
-                .setControllerAdvice(new ControllerExceptionHandler())
+          //      .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
 
@@ -168,7 +168,42 @@ class LectureControllerTest {
         verify(teacherService).findBySubstring("test");
     }
 
+//    @Test
+//    void givenTeacherIdAndDates_onFindSchedule_shouldCallServiceFindByTeacherAndPeriod() throws Exception {
+//        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
+//        mockMvc.perform(get("/lectures/schedule")
+//                .param("entity", "teacher")
+//                .param("id", "1")
+//                .param("startDate", startDate.toString())
+//                .param("endDate", endDate.toString()))
+//                .andExpect(view().name("/lecture/all"))
+//                .andExpect(model().attribute("lectures", expectedLectures));
+//
+//        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1,startDate,endDate);
+//    }
+//    @GetMapping("/schedule")
+//    public String findSchedule(@RequestParam("entity") String entity,
+//                               @RequestParam("id") int id,
+//                               @RequestParam("startDate") LocalDate startDate,
+//                               @RequestParam("endDate") LocalDate endDate,
+//                               Model model) {
+//        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
+//                entity, id, startDate, endDate);
+//        List<Lecture> schedule = new ArrayList<>();
+//        if (entity.equals("teacher")) {
+//            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
+//        } else {
+//            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
+//        }
+//
+//        model.addAttribute("lectures", schedule);
+//        return "lecture/all";
+//    }
+
     public interface TestData {
+
+        LocalDate startDate=LocalDate.of(2000,01,01);
+        LocalDate endDate=LocalDate.of(2000,02,01);
 
         Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45));
         Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));
