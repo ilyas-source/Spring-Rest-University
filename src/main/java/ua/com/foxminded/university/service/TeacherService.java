@@ -108,7 +108,7 @@ public class TeacherService {
     private void verifyHasEnoughVacationDays(Teacher teacher) {
         logger.debug("Verifying that teacher has enough vacation days");
         List<Vacation> vacations = teacher.getVacations();
-        if (vacations==null) {
+        if (vacations == null) {
             return;
         }
         int allowedDays = vacationDays.get(teacher.getDegree());
@@ -158,5 +158,9 @@ public class TeacherService {
 
     public List<Teacher> findBySubstring(String substring) {
         return teacherDao.findBySubstring(substring);
+    }
+
+    public List<Teacher> getReplacementTeachers(Lecture lecture) {
+        return teacherDao.getReplacementTeachers(lecture);
     }
 }
