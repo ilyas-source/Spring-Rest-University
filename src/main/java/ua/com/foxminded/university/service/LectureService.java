@@ -3,6 +3,7 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
@@ -85,22 +86,18 @@ public class LectureService {
     }
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
-        var classroom = lecture.getClassroom();
-        var optionalLecture = lectureDao.findByDateTimeClassroom(lecture.getDate(),
-                lecture.getTimeslot(), classroom);
-        if (optionalLecture.isPresent()) {
-            if (optionalLecture.get().getId() == lecture.getId()) {
-                return;
-            }
+        if (lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+                .filter(l -> l.getId() != lecture.getId())
+                .isPresent()) {
             throw new ClassroomOccupiedException(
-                    String.format("Classroom %s is occupied at this day and time", classroom.getName()));
+                    String.format("Classroom %s is occupied at this day and time", lecture.getClassroom().getName()));
         }
     }
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
-        var lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
-        lecturesOnThisDateAndTime.removeIf(l -> (l.getId() == lecture.getId()));
-        if (lecturesOnThisDateAndTime.stream()
+        if (lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot())
+                .stream()
+                .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
                 .flatMap(List::stream)
                 .anyMatch(lecture.getGroups()::contains)) {
@@ -123,8 +120,7 @@ public class LectureService {
                 .stream()
                 .anyMatch(v -> isDayWithinVacation(lecture.getDate(), v))) {
             throw new TeacherOnVacationException(String.format("Teacher %s %s will be on a vacation, can't schedule lecture",
-                    teacher.getFirstName(),
-                    teacher.getLastName()));
+                    teacher.getFirstName(), teacher.getLastName()));
         }
     }
 
@@ -132,17 +128,14 @@ public class LectureService {
         return !date.isBefore(vacation.getStartDate()) && !date.isAfter(vacation.getEndDate());
     }
 
-    private void verifyTeacherIsNotBusy(Lecture lecture) {
+    private void verifyTeacherIsNotBusy(Lecture lecture) { //TODO
         var teacher = lecture.getTeacher();
-        var optionalLecture = lectureDao.findByDateTimeTeacher(lecture.getDate(),
-                lecture.getTimeslot(), teacher);
-        if (optionalLecture.isPresent()) {
-            if (optionalLecture.get().getId() == lecture.getId()) {
-                return;
-            }
-            throw new TeacherBusyException(String.format("Teacher %s %s will be reading another lecture",
-                    teacher.getFirstName(),
-                    teacher.getLastName()));
+        if (lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
+                .filter(l -> l.getId() != lecture.getId())
+                .isPresent()) {
+            throw new TeacherBusyException(
+                    String.format("Teacher %s %s will be reading another lecture",
+                            teacher.getFirstName(), teacher.getLastName()));
         }
     }
 
@@ -183,22 +176,22 @@ public class LectureService {
         return lectureDao.findByStudentAndPeriod(student, start, end);
     }
 
-    public void replaceTeacher(int id, LocalDate start, LocalDate end) {
-        var teacher = teacherService.getById(id);
+    @Transactional
+    public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
         List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
         logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
         List<Teacher> allTeachers = teacherService.findAll();
         allTeachers.remove(teacher);
 
-        boolean success = true;
+        //    boolean success = true;
         for (int i = 0; i < lectures.size(); i++) {
             Lecture l = lectures.get(i);
             logger.debug("Trying to replace teacher in {}", l);
 
             for (int j = 0; j < allTeachers.size(); j++) {
-                Teacher t = allTeachers.get(j);
-                logger.debug("Trying to assign {}", t);
-                l.setTeacher(t);
+                Teacher newTeacher = allTeachers.get(j);
+                logger.debug("Trying to assign {}", newTeacher);
+                l.setTeacher(newTeacher);
                 try {
                     verifyTeacherCanTeachSubject(l);
                     verifyTeacherIsNotBusy(l);
@@ -208,20 +201,20 @@ public class LectureService {
                     logger.debug("Teacher is not suitable: {}", e.getMessage());
                     if (j == allTeachers.size() - 1) {
                         logger.debug("No suitable teacher found");
-                        success = false;
+                        //  success = false;
                     }
                 }
             }
-            if (!success) {
-                logger.debug("Found unreplaceable lecture, aborting");
-                throw new CannotReplaceTeacherException("Can't find suitable replacement teacher for one or more lectures");
-            }
+//            if (!success) {
+//                logger.debug("Found unreplaceable lecture, aborting");
+//                throw new CannotReplaceTeacherException("Can't find suitable replacement teacher for one or more lectures");
+//            }
         }
-        if (success) {
-            logger.debug("All lectures have been reassigned to new teacher(s)");
-            for (Lecture l : lectures) {
-                lectureDao.update(l);
-            }
-        }
+//        if (success) {
+//            logger.debug("All lectures have been reassigned to new teacher(s)");
+//            for (Lecture l : lectures) {
+//                lectureDao.update(l);
+//            }
+//        }
     }
 }

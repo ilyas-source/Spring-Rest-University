@@ -95,9 +95,9 @@ public class JdbcTeacherDao implements TeacherDao {
             assignSubject(subject, teacher);
         }
 
-        for (Vacation vacation : teacher.getVacations()) {
-            assignVacation(vacation, teacher);
-        }
+//        for (Vacation vacation : teacher.getVacations()) {
+//            assignVacation(vacation, teacher);
+//        }
     }
 
     @Override

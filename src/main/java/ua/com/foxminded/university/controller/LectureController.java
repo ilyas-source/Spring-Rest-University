@@ -95,12 +95,6 @@ public class LectureController {
         return "lecture/all";
     }
 
-//    @GetMapping("/schedule")
-//    public String findSchedule(@RequestParam("entity") String entity, @RequestParam("id") int id,
-//                              Model model) {
-//        return "lecture/all";
-//    }
-
     @GetMapping("/{id}")
     public String getLecture(@PathVariable int id, Model model) {
         Lecture lecture = lectureService.getById(id);
@@ -125,7 +119,8 @@ public class LectureController {
                                  @RequestParam("start") LocalDate start,
                                  @RequestParam("end") LocalDate end) {
         logger.debug("Teacher replacement: id:{}, from {} to {}", id, start, end);
-        lectureService.replaceTeacher(id, start, end);
+        Teacher teacher=teacherService.getById(id);
+        lectureService.replaceTeacher(teacher, start, end);
         return "redirect:/lectures";
     }
 

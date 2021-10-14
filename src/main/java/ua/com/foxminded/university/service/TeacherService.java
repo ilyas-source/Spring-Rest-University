@@ -106,12 +106,13 @@ public class TeacherService {
     }
 
     private void verifyHasEnoughVacationDays(Teacher teacher) {
-        int allowedDays = vacationDays.get(teacher.getDegree());
+        logger.debug("Verifying that teacher has enough vacation days");
         List<Vacation> vacations = teacher.getVacations();
-        Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
-        if (teacher.getVacations().isEmpty()) {
+        if (vacations==null) {
             return;
         }
+        int allowedDays = vacationDays.get(teacher.getDegree());
+        Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
         long maxDays = daysCountByYears.entrySet()
                 .stream()
                 .max(Comparator.comparing(Map.Entry::getValue))
