@@ -58,7 +58,7 @@ class LectureControllerTest {
     @BeforeEach
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
-          //      .setControllerAdvice(new ControllerExceptionHandler())
+           //     .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
 
@@ -148,8 +148,8 @@ class LectureControllerTest {
     void givenStudentEntityNameAndSubstring_onSearchPerson_shouldCallStudentServiceFindBySubstring() throws Exception {
         when(studentService.findBySubstring("test")).thenReturn(expectedStudents);
         mockMvc.perform(get("/lectures/search")
-                .param("entity", "student")
-                .param("substring", "test"))
+                        .param("entity", "student")
+                        .param("substring", "test"))
                 .andExpect(view().name("universityView"))
                 .andExpect(model().attribute("students", expectedStudents));
 
@@ -170,7 +170,7 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherIdAndDates_onFindSchedule_shouldCallServiceFindByTeacherAndPeriod() throws Exception {
-        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
         var request = get("/lectures/schedule")
                 .param("entity", "teacher")
                 .param("id", "1")
@@ -181,13 +181,35 @@ class LectureControllerTest {
                 .andExpect(view().name("lecture/all"))
                 .andExpect(model().attribute("lectures", expectedLectures));
 
-        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1,startDate,endDate);
+        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1, startDate, endDate);
+    }
+
+    @Test
+    void onShowReplacementView_shouldShowReplacementView() throws Exception {
+        mockMvc.perform(get("/lectures/replacement"))
+                .andExpect(view().name("lecture/replacement"));
+    }
+
+    @Test
+    void givenIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+
+        var request = post("/lectures/replacement")
+                .param("teacher", "1")
+                .param("start", startDate.toString())
+                .param("end", endDate.toString());
+
+        mockMvc.perform(request)
+           //     .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("/lectures"));
+
+        verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
     public interface TestData {
 
-        LocalDate startDate=LocalDate.of(2000,01,01);
-        LocalDate endDate=LocalDate.of(2000,02,01);
+        LocalDate startDate = LocalDate.of(2000, 01, 01);
+        LocalDate endDate = LocalDate.of(2000, 02, 01);
 
         Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45));
         Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));

@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.com.foxminded.university.service.StudentService;
@@ -20,9 +19,7 @@ public class UniversityController {
     }
 
     @GetMapping
-    public String university(Model model) {
-        //   model.addAttribute("teachers", teacherService.findAll());
-      //  model.addAttribute("students", studentService.findAll());
+    public String university() {
         return "universityView";
     }
 }

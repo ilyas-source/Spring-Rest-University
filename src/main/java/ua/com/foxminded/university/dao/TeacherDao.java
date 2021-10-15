@@ -18,5 +18,5 @@ public interface TeacherDao extends GeneralDao<Teacher> {
 
     List<Teacher> findBySubstring(String substring);
 
-    List<Teacher> getReplacementTeachers(Lecture lecture);
+    List<Teacher> getReplacementCandidates(Lecture lecture);
 }

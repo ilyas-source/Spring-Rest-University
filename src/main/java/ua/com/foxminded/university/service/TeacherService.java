@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.*;
 
@@ -23,14 +24,17 @@ public class TeacherService {
 
     private TeacherDao teacherDao;
     private LectureDao lectureDao;
+    private VacationDao vacationDao;
     private VacationService vacationService;
 
     @Value("#{${teacher.vacationdays}}")
     public Map<Degree, Integer> vacationDays = new EnumMap<>(Degree.class);
 
-    public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationService vacationService) {
+    public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationDao vacationDao,
+                          VacationService vacationService) {
         this.teacherDao = jdbcTeacherDao;
         this.lectureDao = lectureDao;
+        this.vacationDao = vacationDao;
         this.vacationService = vacationService;
     }
 
@@ -161,6 +165,28 @@ public class TeacherService {
     }
 
     public List<Teacher> getReplacementTeachers(Lecture lecture) {
-        return teacherDao.getReplacementTeachers(lecture);
+        var candidates = teacherDao.getReplacementCandidates(lecture);
+        var suitableTeachers = new ArrayList<>(candidates);
+        logger.debug("Found {} candidates from db", candidates.size());
+        if (candidates.size() == 0) {
+            return new ArrayList<>();
+        }
+        var date = lecture.getDate();
+        var timeslot = lecture.getTimeslot();
+        for (Teacher candidate : candidates) {
+            if (lectureDao.findByDateTimeTeacher(date, timeslot, candidate).isPresent()) {
+                logger.debug("{} {} is not suitable: will be reading another lecture", candidate.getFirstName(), candidate.getLastName());
+                suitableTeachers.remove(candidate);
+            }
+        }
+        for (Teacher candidate : candidates) {
+            if (vacationDao.findByTeacherId(candidate.getId()).stream()
+                    .anyMatch(v -> (!date.isBefore(v.getStartDate()) && !date.isAfter(v.getEndDate())))) {
+                logger.debug("{} {} is not suitable: will be on vacation", candidate.getFirstName(), candidate.getLastName());
+                suitableTeachers.remove(candidate);
+            }
+        }
+        logger.debug("{} valid candidates left", suitableTeachers.size());
+        return suitableTeachers;
     }
 }

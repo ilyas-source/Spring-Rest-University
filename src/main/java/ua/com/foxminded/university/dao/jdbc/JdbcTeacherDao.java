@@ -16,11 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.TeacherMapper;
-import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Vacation;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,18 +47,13 @@ public class JdbcTeacherDao implements TeacherDao {
     private static final String FIND_ALL = "SELECT * FROM teachers";
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM teachers";
 
-    private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects where teacher_id = ? AND subject_id = ?";
+    private static final String REMOVE_SUBJECT = "DELETE FROM teachers_subjects WHERE teacher_id = ? AND subject_id = ?";
     private static final String ASSIGN_SUBJECT = "INSERT INTO teachers_subjects (teacher_id, subject_id) VALUES (?, ?)";
 
-    private static final String REMOVE_VACATION = "DELETE FROM vacations where teacher_id = ? AND start_date = ? AND end_date  = ?";
+    private static final String REMOVE_VACATION = "DELETE FROM vacations WHERE teacher_id = ? AND start_date = ? AND end_date  = ?";
     private static final String ASSIGN_VACATION = "INSERT INTO vacations (teacher_id, start_date, end_date) VALUES (?, ?, ?)";
-    private static final String FIND_FREE_WORKING_TEACHER = "SELECT * FROM teachers JOIN teachers_subjects ts " +
-            "ON teachers.id = ts.teacher_id " +
-            "LEFT JOIN vacations v on teachers.id = v.teacher_id " +
-            "LEFT JOIN lectures l on teachers.id = l.teacher_id " +
-            "WHERE l.subject_id= ? " +
-            "AND (? < start_date OR ? > end_date ) " +
-            "AND (? != date OR timeslot_id != ?)";
+    private static final String FIND_REPLACEMENT = "SELECT * FROM teachers JOIN teachers_subjects ts " +
+            "ON teachers.id = ts.teacher_id WHERE subject_id= ? AND teacher_id!= ?";
 
     private JdbcTemplate jdbcTemplate;
     private TeacherMapper teacherMapper;
@@ -226,30 +223,8 @@ public class JdbcTeacherDao implements TeacherDao {
     }
 
     @Override
-    public List<Teacher> getReplacementTeachers(Lecture lecture) {
-        Teacher teacher = lecture.getTeacher();
-        LocalDate date = lecture.getDate();
-        Subject subject = lecture.getSubject();
-        Timeslot timeslot = lecture.getTimeslot();
-
-        String query1 = "SELECT * FROM teachers JOIN teachers_subjects ts " +
-                "ON teachers.id = ts.teacher_id " +
-                "LEFT JOIN vacations v on teachers.id = v.teacher_id " +
-                "LEFT JOIN lectures l on teachers.id = l.teacher_id " +
-                "WHERE l.subject_id= ? ";
-
-        String query2= "SELECT * FROM teachers JOIN teachers_subjects ts " +
-                "ON teachers.id = ts.teacher_id " +
-                "LEFT JOIN vacations v on teachers.id = v.teacher_id " +
-                "LEFT JOIN lectures l on teachers.id = l.teacher_id " +
-                "WHERE l.subject_id= ? " +
-                "AND (? < start_date) ";
-
-        var result=jdbcTemplate.query(query2, teacherMapper, 5, date);
-        logger.debug(String.valueOf(result));
-
-
-
-        return jdbcTemplate.query(FIND_FREE_WORKING_TEACHER, teacherMapper, subject.getId(), date, date, date, timeslot.getId());
+    public List<Teacher> getReplacementCandidates(Lecture lecture) {
+        return jdbcTemplate.query(FIND_REPLACEMENT, teacherMapper, lecture.getSubject().getId(),
+                                                                    lecture.getTeacher().getId());
     }
 }

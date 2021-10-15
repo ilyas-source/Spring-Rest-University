@@ -77,6 +77,7 @@ public class LectureController {
     }
 
     @GetMapping("/schedule")
+    @ResponseBody
     public String findSchedule(@RequestParam("entity") String entity,
                                @RequestParam("id") int id,
                                @RequestParam("startDate") LocalDate startDate,
@@ -92,7 +93,9 @@ public class LectureController {
         }
 
         model.addAttribute("lectures", schedule);
-        return "lecture/all";
+      //  return "lecture/all";
+
+        return "calendar";
     }
 
     @GetMapping("/{id}")

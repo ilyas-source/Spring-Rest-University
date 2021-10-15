@@ -180,40 +180,20 @@ public class LectureService {
     public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
         List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
         logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
-        List<Teacher> allTeachers = teacherService.findAll();
-        allTeachers.remove(teacher);
 
         for (Lecture lecture : lectures) {
             logger.debug("Trying to replace teacher in {}", lecture);
-            int oldTeacherId=lecture.getTeacher().getId();
 
-            List<Teacher> candidates = teacherService.getReplacementTeachers(lecture);
-            logger.debug("Found {} candidates", candidates.size());
-            if(candidates.size()==0) {
+            List<Teacher> replacementTeachers = teacherService.getReplacementTeachers(lecture);
+            logger.debug("Found {} suitable teachers", replacementTeachers.size());
+
+            if (replacementTeachers.size() == 0) {
                 throw new CannotReplaceTeacherException(String.format("Can't replace teacher in %s: no suitable teachers found", lecture));
             }
-            lecture.setTeacher(candidates.get(0));
+            Teacher goodTeacher = replacementTeachers.get(0);
+            logger.debug("Found good candidate: {} {}", goodTeacher.getFirstName(), goodTeacher.getLastName());
+            lecture.setTeacher(goodTeacher);
+            lectureDao.update(lecture);
         }
-//        for (int i = 0; i < lectures.size(); i++) {
-//            Lecture l = lectures.get(i);
-//            logger.debug("Trying to replace teacher in {}", l);
-//
-//            for (int j = 0; j < allTeachers.size(); j++) {
-//                Teacher newTeacher = allTeachers.get(j);
-//                logger.debug("Trying to assign {}", newTeacher);
-//                l.setTeacher(newTeacher);
-//                try {
-//                    verifyTeacherCanTeachSubject(l);
-//                    verifyTeacherIsNotBusy(l);
-//                    verifyTeacherIsWorking(l);
-//                    i++;
-//                } catch (Exception e) {
-//                    logger.debug("Teacher is not suitable: {}", e.getMessage());
-//                    if (j == allTeachers.size() - 1) {
-//                        logger.debug("No suitable teacher found");
-//                    }
-//                }
-//            }
-//        }
     }
 }
