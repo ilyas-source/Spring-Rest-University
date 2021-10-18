@@ -6,21 +6,29 @@
     <script src='/university/sources/js/fullcalendar.min.js'></script>
     <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
     <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/jquery.min.js"></script>
     <script th:inline="javascript">
 
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                events: [
-                    // { // this object will be "parsed" into an Event Object
-                    //     title: 'The Title',
-                    //     start: '2021-10-01T12:30:00',
-                    //     end: '2021-10-01T15:00:00'
-                    // }
-
-
-
-                ],
+                events: function (info, callback) {
+                    $.get(
+                        '/university/lectures/schedule/calendar',
+                        function (lectures) {
+                            console.log(lectures);
+                            alert(lectures)
+                        });
+                        // function (lectures) {
+                        //     let events = [];
+                        //     lectures.forEach(function (lecture) {
+                        //         events.push({
+                        //             id: lecture.id,
+                        //         });
+                        //     });
+                        //     callback(events);
+                        // });
+                },
                 initialView: 'dayGridMonth'
             });
             calendar.render();

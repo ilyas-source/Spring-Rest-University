@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -76,33 +77,12 @@ public class LectureController {
         return "universityView";
     }
 
-    @GetMapping("/schedule")
-
-    public String findSchedule(@RequestParam("entity") String entity,
-                               @RequestParam("id") int id,
-                               @RequestParam("startDate") LocalDate startDate,
-                               @RequestParam("endDate") LocalDate endDate,
-                               Model model) {
-        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
-                entity, id, startDate, endDate);
-        List<Lecture> schedule = new ArrayList<>();
-        if (entity.equals("teacher")) {
-            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
-        } else {
-            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
-        }
-
-        model.addAttribute("lectures", schedule);
-
-        return "calendar";
-    }
-
 //    @GetMapping("/schedule")
-//    @ResponseBody
-//    public List<Lecture> findSchedule(@RequestParam("entity") String entity,
+//    public String findSchedule(@RequestParam("entity") String entity,
 //                               @RequestParam("id") int id,
 //                               @RequestParam("startDate") LocalDate startDate,
-//                               @RequestParam("endDate") LocalDate endDate) {
+//                               @RequestParam("endDate") LocalDate endDate,
+//                               Model model) {
 //        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
 //                entity, id, startDate, endDate);
 //        List<Lecture> schedule = new ArrayList<>();
@@ -111,15 +91,34 @@ public class LectureController {
 //        } else {
 //            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
 //        }
-//        return schedule;
+//
+//        model.addAttribute("lectures", schedule);
+//
+//        return "calendar";
 //    }
 
-//    @GetMapping("/schedule")
-//    @ResponseBody
-//    public List<Lecture> verySimpleSchedule() {
-//        logger.debug("Got into simple schedule controller");
-//        return lectureService.findAll();
-//    }
+    @GetMapping("/schedule")
+    public String showScheduleView() {
+        return "calendar";
+    }
+
+    @GetMapping("/schedule/calendar")
+    @ResponseBody
+    public List<Lecture> verySimpleSchedule() throws JsonProcessingException {
+        logger.debug("Got into simple schedule retriever");
+        var result= lectureService.findAll();
+//        var oneLecture=lectureService.findById(1).get();
+//        logger.debug(oneLecture.toString());
+//
+//        var objectMapper=new ObjectMapper();
+//
+//        objectMapper.registerModule(new JavaTimeModule());
+//
+//        String serialized= objectMapper.writeValueAsString(oneLecture);
+//        logger.debug(serialized);
+
+        return result;
+    }
 
 
     @GetMapping("/{id}")
