@@ -77,7 +77,7 @@ public class LectureController {
     }
 
     @GetMapping("/schedule")
-    @ResponseBody
+
     public String findSchedule(@RequestParam("entity") String entity,
                                @RequestParam("id") int id,
                                @RequestParam("startDate") LocalDate startDate,
@@ -93,10 +93,34 @@ public class LectureController {
         }
 
         model.addAttribute("lectures", schedule);
-      //  return "lecture/all";
 
         return "calendar";
     }
+
+//    @GetMapping("/schedule")
+//    @ResponseBody
+//    public List<Lecture> findSchedule(@RequestParam("entity") String entity,
+//                               @RequestParam("id") int id,
+//                               @RequestParam("startDate") LocalDate startDate,
+//                               @RequestParam("endDate") LocalDate endDate) {
+//        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
+//                entity, id, startDate, endDate);
+//        List<Lecture> schedule = new ArrayList<>();
+//        if (entity.equals("teacher")) {
+//            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
+//        } else {
+//            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
+//        }
+//        return schedule;
+//    }
+
+//    @GetMapping("/schedule")
+//    @ResponseBody
+//    public List<Lecture> verySimpleSchedule() {
+//        logger.debug("Got into simple schedule controller");
+//        return lectureService.findAll();
+//    }
+
 
     @GetMapping("/{id}")
     public String getLecture(@PathVariable int id, Model model) {
