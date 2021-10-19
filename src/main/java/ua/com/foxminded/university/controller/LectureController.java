@@ -2,6 +2,7 @@ package ua.com.foxminded.university.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.*;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,9 +123,16 @@ public class LectureController {
 
     @GetMapping("/schedule/calendar")
     @ResponseBody
-    public List<Lecture> verySimpleSchedule() {
-        logger.debug("Calendar retrieves something...");
-        var result= lectureService.findAll();
+    public List<Lecture> retrieveLecturesForCalendar(@RequestParam("start")
+                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                        ZonedDateTime startTime,
+                                            @RequestParam("end")
+                                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                                                        ZonedDateTime endTime) {
+        logger.debug("Calendar retrieves lectures from {} to {}", startTime, endTime);
+      //  var result= lectureService.findAll();
+        var teacher=teacherService.getById(3);
+        var result=lectureService.findByTeacherAndPeriod(teacher,startTime.toLocalDate(), endTime.toLocalDate());
         return result;
     }
 
