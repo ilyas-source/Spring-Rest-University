@@ -109,9 +109,6 @@ public class LectureController {
         return result;
     }
 
-
-
-
     @GetMapping("/{id}")
     public String getLecture(@PathVariable int id, Model model) {
         Lecture lecture = lectureService.getById(id);

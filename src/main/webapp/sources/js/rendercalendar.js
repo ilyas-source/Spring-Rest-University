@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         events: function (info, callback) {
+            console.log(info.startStr);
             $.get(
                 '/university/lectures/schedule/calendar',
+                {start: info.startStr},
+                {end: info.endStr},
                 function (calendar) {
                     let events = [];
                     calendar.forEach(function (lecture) {
@@ -30,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             start+="0";
                         }
                         start+=time[1]+":00";
-                        console.log(start);
                         events.push({
                             id: lecture.id,
                             title: lecture.subject.name,
