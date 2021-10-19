@@ -12,6 +12,11 @@
 <body>
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container mt-5">
+    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="period" th:value="${period}">
+    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="date" th:value="${date}">
+    <script>
+        var period = document.getElementById('person').getAttribute("list");
+    </script>
     <div id='calendar'></div>
 </div>
 </body>

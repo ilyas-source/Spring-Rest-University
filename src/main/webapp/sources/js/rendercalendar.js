@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(info.startStr);
             $.get(
                 '/university/lectures/schedule/calendar',
-                {start: info.startStr},
-                {end: info.endStr},
                 function (calendar) {
                     let events = [];
                     calendar.forEach(function (lecture) {

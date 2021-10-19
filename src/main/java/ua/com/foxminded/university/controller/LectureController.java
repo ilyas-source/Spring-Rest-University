@@ -97,14 +97,32 @@ public class LectureController {
 //    }
 
     @GetMapping("/schedule")
-    public String showScheduleView() {
+    public String showScheduleView(@RequestParam("id") int personId,
+                                   @RequestParam("entity") String entity,
+                                   @RequestParam("period") String period,
+                                   @RequestParam("date") LocalDate date,
+                                   Model model) {
+        logger.debug("Received for schedule: {} with id:{}, for {}, with date...",entity, personId, period);
+        model.addAttribute("entity", entity);
+        model.addAttribute("period", period);
+        model.addAttribute("date", period);
+        var teacher=new Teacher();
+        var student=new Student();
+        if(entity=="teacher")  {
+            teacher=teacherService.getById(personId);
+        } else {
+            student=studentService.getById(personId);
+        }
+        model.addAttribute("teacher", teacher);
+        model.addAttribute("student", student);
+
         return "calendar";
     }
 
     @GetMapping("/schedule/calendar")
     @ResponseBody
     public List<Lecture> verySimpleSchedule() {
-        logger.debug("Got into simple schedule retriever");
+        logger.debug("Calendar retrieves something...");
         var result= lectureService.findAll();
         return result;
     }

@@ -21,7 +21,6 @@
                 <input type="radio" name="entity" value="student"
                        required>Student
             </label>
-            <br/>
             <label class="form-check-label">
                 <input type="radio" name="entity" value="teacher"
                        required>Teacher
@@ -44,7 +43,10 @@
         <input type="text" class="invisible" id="entityselector" name="entity"
                style="height:0;width:0;padding:0;border:none"
                value="student">
+
+
         <div class="input-group col-md-2">
+            <!-- Select for person after search-->
             <select size="5" id="person" list="students" class="form-control" name="id"
                     required>
                 <option name="entity" class="students"
@@ -60,8 +62,21 @@
                         th:value="${teacher.id}">
                 </option>
             </select>
-            <input type="text" class="form-control" id="datepicker" name="startDate" placeholder="Schedule start">
-            <input type="text" class="form-control" id="datepicker2" name="endDate" placeholder="Schedule end">
+            <!-- Radio to select day or month -->
+            <div class="select-entity row g-3">
+                <label for="period" class="form-label">Generate schedule for:</label><br/>
+                <label class="form-check-label" id="period">
+                    <input type="radio" name="period" value="day"
+                           required>Day
+                </label>
+                <label class="form-check-label">
+                    <input type="radio" name="period" value="month"
+                           required>Month
+                </label>
+            </div>
+
+            <input type="text" class="form-control" id="datepicker" name="date" placeholder="Choose date">
+
             <input type="submit" class="btn btn-primary" value="Submit"/>
         </div>
     </form>
