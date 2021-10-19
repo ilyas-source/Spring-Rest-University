@@ -78,35 +78,15 @@ public class LectureController {
         return "universityView";
     }
 
-//    @GetMapping("/schedule")
-//    public String findSchedule(@RequestParam("entity") String entity,
-//                               @RequestParam("id") int id,
-//                               @RequestParam("startDate") LocalDate startDate,
-//                               @RequestParam("endDate") LocalDate endDate,
-//                               Model model) {
-//        logger.debug("Received schedule parameters to retrieve: {} with id:{}, date:{}-{}",
-//                entity, id, startDate, endDate);
-//        List<Lecture> schedule = new ArrayList<>();
-//        if (entity.equals("teacher")) {
-//            schedule = lectureService.findByTeacherAndPeriod(teacherService.getById(id), startDate, endDate);
-//        } else {
-//            schedule = lectureService.findByStudentAndPeriod(studentService.getById(id), startDate, endDate);
-//        }
-//
-//        model.addAttribute("lectures", schedule);
-//
-//        return "calendar";
-//    }
-
     @GetMapping("/schedule")
     public String showScheduleView(@RequestParam("id") int personId,
                                    @RequestParam("entity") String entity,
-                                   @RequestParam("period") String period,
+                                   @RequestParam("periodType") String periodType,
                                    @RequestParam("date") LocalDate date,
                                    Model model) {
-        logger.debug("Received for schedule: {} with id:{}, for {}, with date {}", entity, personId, period, date);
+        logger.debug("Received for schedule: {} with id:{}, for {}, with date {}", entity, personId, periodType, date);
         model.addAttribute("entity", entity);
-        model.addAttribute("period", period);
+        model.addAttribute("period", periodType);
         model.addAttribute("date", date);
         model.addAttribute("id", date);
         var teacher = new Teacher();

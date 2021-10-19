@@ -58,7 +58,7 @@ class LectureControllerTest {
     @BeforeEach
     public void setMocks() {
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
-           //     .setControllerAdvice(new ControllerExceptionHandler())
+                .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
     }
 
@@ -200,7 +200,7 @@ class LectureControllerTest {
                 .param("end", endDate.toString());
 
         mockMvc.perform(request)
-           //     .andExpect(status().is3xxRedirection())
+                .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("/lectures"));
 
         verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);

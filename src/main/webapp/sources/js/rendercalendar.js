@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
+    let calendarEl = document.getElementById('calendar');
     let id = document.getElementById('personId').getAttribute('value');
     let date=document.getElementById('date').getAttribute('value');
     let period = document.getElementById('period').getAttribute('value');
     let entity = document.getElementById('entity').getAttribute('value');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
+    let calendar = new FullCalendar.Calendar(calendarEl, {
         events: function (info, callback) {
             $.get(
                 '/university/lectures/schedule/calendar',

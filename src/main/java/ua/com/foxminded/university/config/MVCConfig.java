@@ -75,20 +75,4 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addFormatter(groupFormatter);
         registry.addFormatter(subjectFormatter);
     }
-
-//    @Override
-//    public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
-//        messageConverters.add(createJsonHttpMessageConverter());
-//    }
-//
-//    private HttpMessageConverter<Object> createJsonHttpMessageConverter() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-//
-//        MappingJackson2HttpMessageConverter jsonConverter =
-//                new MappingJackson2HttpMessageConverter();
-//        jsonConverter.setObjectMapper(objectMapper);
-//
-//        return jsonConverter;
-//    }
 }
