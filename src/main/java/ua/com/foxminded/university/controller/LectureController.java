@@ -104,33 +104,40 @@ public class LectureController {
                                    @RequestParam("period") String period,
                                    @RequestParam("date") LocalDate date,
                                    Model model) {
-        logger.debug("Received for schedule: {} with id:{}, for {}, with date...",entity, personId, period);
+        logger.debug("Received for schedule: {} with id:{}, for {}, with date {}",entity, personId, period, date);
         model.addAttribute("entity", entity);
         model.addAttribute("period", period);
         model.addAttribute("date", date);
+        model.addAttribute("id", date);
         var teacher=new Teacher();
         var student=new Student();
-        if(entity=="teacher")  {
+        var person="";
+        if(entity.equals("teacher"))  {
             teacher=teacherService.getById(personId);
+            person="teacher "+teacher.getFirstName()+" "+teacher.getLastName();
+            logger.debug("PersonName (teacher): {}", person);
         } else {
             student=studentService.getById(personId);
+            person="student "+student.getFirstName()+" "+student.getLastName();
+            logger.debug("PersonName (student): {}", person);
         }
-        model.addAttribute("teacher", teacher);
-        model.addAttribute("student", student);
+        model.addAttribute("personName", person);
+        model.addAttribute("id", personId);
 
         return "calendar";
     }
 
     @GetMapping("/schedule/calendar")
     @ResponseBody
-    public List<Lecture> retrieveLecturesForCalendar(@RequestParam("start")
+    public List<Lecture> retrieveLecturesForCalendar(//@RequestParam("id") int id,
+                                                    // @RequestParam("entity") String entity,
+                                            @RequestParam("start")
                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                         ZonedDateTime startTime,
                                             @RequestParam("end")
                                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                         ZonedDateTime endTime) {
-        logger.debug("Calendar retrieves lectures from {} to {}", startTime, endTime);
-      //  var result= lectureService.findAll();
+        //logger.debug("Calendar retrieves lectures for {} id:{} from {} to {}", entity, id, startTime, endTime);
         var teacher=teacherService.getById(3);
         var result=lectureService.findByTeacherAndPeriod(teacher,startTime.toLocalDate(), endTime.toLocalDate());
         return result;
