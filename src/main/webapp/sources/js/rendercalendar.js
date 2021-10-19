@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
+    let id = document.getElementById('personId').getAttribute('value');
+    let date=document.getElementById('date').getAttribute('value');
+    console.log(id);
     var calendar = new FullCalendar.Calendar(calendarEl, {
         events: function (info, callback) {
             $.get(
@@ -7,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     start: info.startStr,
                     end: info.endStr,
+                    id: id,
                 },
                 function (calendar) {
                     let events = [];
@@ -44,12 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         },
         initialView: 'timeGridDay',
-        initialDate: '2021-09-01'
+        initialDate: date,
     });
     let period = document.getElementById('period').getAttribute('value');
-    let date=document.getElementById('date').getAttribute('value');
-    console.log(date);
-    console.log(period);
     if(period=='month') {
         console.log('Changing view to month');
         calendar.changeView('dayGridMonth', date);
