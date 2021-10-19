@@ -128,16 +128,22 @@ public class LectureController {
     @GetMapping("/schedule/calendar")
     @ResponseBody
     public List<Lecture> retrieveLecturesForCalendar(@RequestParam("id") int id,
-                                                     // @RequestParam("entity") String entity,
+                                                     @RequestParam("entity") String entity,
                                                      @RequestParam("start")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              ZonedDateTime startTime,
                                                      @RequestParam("end")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              ZonedDateTime endTime) {
-        //logger.debug("Calendar retrieves lectures for {} id:{} from {} to {}", entity, id, startTime, endTime);
-        var teacher = teacherService.getById(id);
-        var result = lectureService.findByTeacherAndPeriod(teacher, startTime.toLocalDate(), endTime.toLocalDate());
+        logger.debug("Calendar retrieves lectures for {} id:{} from {} to {}", entity, id, startTime, endTime);
+        List<Lecture> result;
+        if(entity.equals("teacher")) {
+            var teacher = teacherService.getById(id);
+            result = lectureService.findByTeacherAndPeriod(teacher, startTime.toLocalDate(), endTime.toLocalDate());
+        } else {
+            var student=studentService.getById(id);
+            result = lectureService.findByStudentAndPeriod(student, startTime.toLocalDate(), endTime.toLocalDate());
+        }
         return result;
     }
 

@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     let id = document.getElementById('personId').getAttribute('value');
     let date=document.getElementById('date').getAttribute('value');
-    console.log(id);
+    let period = document.getElementById('period').getAttribute('value');
+    let entity = document.getElementById('entity').getAttribute('value');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         events: function (info, callback) {
             $.get(
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     start: info.startStr,
                     end: info.endStr,
                     id: id,
+                    entity: entity,
                 },
                 function (calendar) {
                     let events = [];
@@ -50,13 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
         initialView: 'timeGridDay',
         initialDate: date,
     });
-    let period = document.getElementById('period').getAttribute('value');
     if(period=='month') {
-        console.log('Changing view to month');
         calendar.changeView('dayGridMonth', date);
-    } else {
-        console.log('Changing view to day');
-        calendar.changeView('timeGridDay', date);
     }
     calendar.render();
 });
