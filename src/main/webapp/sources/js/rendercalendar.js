@@ -39,13 +39,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     callback(events);
                 });
         },
-        initialView: 'timeGridDay'
+        initialView: 'timeGridDay',
+        initialDate: '2021-09-01'
     });
     let period = document.getElementById('period').getAttribute('value');
+    let date=document.getElementById('date').getAttribute('value');
+    console.log(date);
     console.log(period);
     if(period=='month') {
         console.log('Changing view to month');
-        calendar.changeView('dayGridMonth');
+        calendar.changeView('dayGridMonth', date);
+    } else {
+        console.log('Changing view to day');
+        calendar.changeView('timeGridDay', date);
     }
     calendar.render();
 });

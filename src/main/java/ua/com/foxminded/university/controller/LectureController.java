@@ -105,7 +105,7 @@ public class LectureController {
         logger.debug("Received for schedule: {} with id:{}, for {}, with date...",entity, personId, period);
         model.addAttribute("entity", entity);
         model.addAttribute("period", period);
-        model.addAttribute("date", period);
+        model.addAttribute("date", date);
         var teacher=new Teacher();
         var student=new Student();
         if(entity=="teacher")  {
