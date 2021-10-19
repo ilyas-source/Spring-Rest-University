@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         events: function (info, callback) {
-            console.log(info.startStr);
             $.get(
                 '/university/lectures/schedule/calendar',
                 function (calendar) {
@@ -40,8 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     callback(events);
                 });
         },
-        //
-        initialView: 'dayGridMonth'
+        initialView: 'timeGridDay'
     });
+    let period = document.getElementById('period').getAttribute('value');
+    console.log(period);
+    if(period=='month') {
+        console.log('Changing view to month');
+        calendar.changeView('dayGridMonth');
+    }
     calendar.render();
 });
