@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -104,21 +103,13 @@ public class LectureController {
 
     @GetMapping("/schedule/calendar")
     @ResponseBody
-    public List<Lecture> verySimpleSchedule() throws JsonProcessingException {
+    public List<Lecture> verySimpleSchedule() {
         logger.debug("Got into simple schedule retriever");
         var result= lectureService.findAll();
-//        var oneLecture=lectureService.findById(1).get();
-//        logger.debug(oneLecture.toString());
-//
-//        var objectMapper=new ObjectMapper();
-//
-//        objectMapper.registerModule(new JavaTimeModule());
-//
-//        String serialized= objectMapper.writeValueAsString(oneLecture);
-//        logger.debug(serialized);
-
         return result;
     }
+
+
 
 
     @GetMapping("/{id}")
