@@ -10,6 +10,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.model.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -107,6 +109,38 @@ public class TeacherDaoTest {
         assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
     }
 
+    @Test
+    void givenLecture_onGetReplacementCandidates_shouldReturnCorrectListOfTeachers() {
+        var expected = new ArrayList<Teacher>(Arrays.asList(expectedTeacher2));
+
+        var actual = teacherDao.getReplacementCandidates(lectureToReplaceTeacher);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenString_onFindBySubstring_shouldReturnCorrectListOfTeachers() {
+        var expected = new ArrayList<Teacher>(Arrays.asList(expectedTeacher1));
+
+        var actual = teacherDao.findBySubstring("adam");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenNameAndEmail_onFindByNameAndEmail_shouldReturnOptionalWithCorrectTeacher() {
+        var actual = teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com");
+
+        assertEquals(Optional.of(expectedTeacher1), actual);
+    }
+
+    @Test
+    void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
+        List<Teacher> actual = teacherDao.findAll();
+
+        assertEquals(expectedTeachers, actual);
+    }
+
     public interface TestData {
         List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
         List<Vacation> vacationsToCreate = new ArrayList<>(Arrays.asList(vacationToCreate));
@@ -135,5 +169,8 @@ public class TeacherDaoTest {
                 .email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
                 .vacations(expectedVacations2).build();
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
+
+        Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
     }
 }
