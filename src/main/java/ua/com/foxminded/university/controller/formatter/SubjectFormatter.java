@@ -15,10 +15,10 @@ public class SubjectFormatter implements Formatter<Subject> {
     @Override
     public Subject parse(String text, Locale locale) throws ParseException {
         logger.debug("Parsing {}", text);
-        Subject subject=new Subject();
+        Subject subject = new Subject();
         String[] parts = text.split(":");
         subject.setId(Integer.parseInt(parts[0]));
-        if(parts.length>1) {
+        if (parts.length > 1) {
             subject.setName(parts[1]);
         }
         logger.debug("Parsing complete: {}", subject);

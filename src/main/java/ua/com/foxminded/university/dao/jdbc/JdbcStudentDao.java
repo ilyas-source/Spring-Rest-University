@@ -151,7 +151,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public List<Student> findBySubstring(String substring) {
-        String formattedSubstring="%"+substring.toLowerCase()+"%";
+        String formattedSubstring = "%" + substring.toLowerCase() + "%";
         logger.debug("Formatted search substring is {}", formattedSubstring);
         return jdbcTemplate.query(FIND_BY_SUBSTRING, studentMapper, formattedSubstring);
     }

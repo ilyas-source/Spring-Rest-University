@@ -6,8 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.controller.converter.StringToLocalDate;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,6 +32,7 @@ import static ua.com.foxminded.university.controller.ClassroomControllerTest.Tes
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.controller.LectureControllerTest.TestData.*;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
 import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
 import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.*;
@@ -57,8 +61,12 @@ class LectureControllerTest {
 
     @BeforeEach
     public void setMocks() {
+        FormattingConversionService conversionService = new FormattingConversionService();
+        StringToLocalDate stringToLocalDate = new StringToLocalDate();
+        conversionService.addConverter(stringToLocalDate);
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
-                .setControllerAdvice(new ControllerExceptionHandler())
+            //   .setControllerAdvice(new ControllerExceptionHandler())
+                .setConversionService(conversionService)
                 .build();
     }
 
@@ -169,41 +177,88 @@ class LectureControllerTest {
     }
 
     @Test
-    void givenTeacherIdAndDates_onFindSchedule_shouldCallServiceFindByTeacherAndPeriod() throws Exception {
-        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
+    void givenTeacherIdAndDates_onShowScheduleView_shouldOpenViewWithCorrectAttributes() throws Exception {
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+
         var request = get("/lectures/schedule")
                 .param("entity", "teacher")
+                .param("date", "01.10.2021")
                 .param("id", "1")
-                .param("startDate", startDate.toString())
-                .param("endDate", endDate.toString());
+                .param("periodType", "day");
+
 
         mockMvc.perform(request)
-                .andExpect(view().name("lecture/all"))
-                .andExpect(model().attribute("lectures", expectedLectures));
-
-        verify(lectureService).findByTeacherAndPeriod(expectedTeacher1, startDate, endDate);
+                .andExpect(view().name("calendar"))
+                .andExpect(model().attribute("entity", "teacher"))
+                .andExpect(model().attribute("periodType", "day"))
+                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 01)))
+                .andExpect(model().attribute("id", 1))
+                .andExpect(model().attribute("personName", "teacher Adam Smith"));
     }
+
+    @Test
+    void givenStudentIdAndDates_onShowScheduleView_shouldOpenViewWithCorrectAttributes() throws Exception {
+        when(studentService.getById(1)).thenReturn(expectedStudent1);
+
+        var request = get("/lectures/schedule")
+                .param("entity", "student")
+                .param("date", "01.10.2021")
+                .param("id", "1")
+                .param("periodType", "day");
+
+
+        mockMvc.perform(request)
+                .andExpect(view().name("calendar"))
+                .andExpect(model().attribute("entity", "student"))
+                .andExpect(model().attribute("periodType", "day"))
+                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 01)))
+                .andExpect(model().attribute("id", 1))
+                .andExpect(model().attribute("personName", "student Ivan Petrov"));
+    }
+
+    @Test
+    void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesLise() throws Exception {
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
+
+        var request = get("/lectures/schedule/calendar")
+                .param("id","1")
+                .param("entity", "teacher")
+                .param("start", "2000-01-01T00:00%2B03:00")
+                .param("end", "2000-02-01T00:00%2B03:00");
+
+        var mvcResult = mockMvc.perform(request);
+
+        var status = mvcResult.andExpect(status().is2xxSuccessful());
+        assertEquals(true, status);
+    }
+
+//    @GetMapping("/schedule/calendar")
+//    @ResponseBody
+//    public List<Lecture> retrieveLecturesForCalendar(@RequestParam("id") int id,
+//                                                     @RequestParam("entity") String entity,
+//                                                     @RequestParam("start")
+//                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//                                                                 ZonedDateTime startTime,
+//                                                     @RequestParam("end")
+//                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+//                                                             ZonedDateTime endTime) {
+//        logger.debug("Calendar retrieves lectures for {} id:{} from {} to {}", entity, id, startTime, endTime);
+//        List<Lecture> result;
+//        if (entity.equals("teacher")) {
+//            var teacher = teacherService.getById(id);
+//            result = lectureService.findByTeacherAndPeriod(teacher, startTime.toLocalDate(), endTime.toLocalDate());
+//        } else {
+//            var student = studentService.getById(id);
+//            result = lectureService.findByStudentAndPeriod(student, startTime.toLocalDate(), endTime.toLocalDate());
+//        }
+//        return result;
+//    }
 
     @Test
     void onShowReplacementView_shouldShowReplacementView() throws Exception {
         mockMvc.perform(get("/lectures/replacement"))
                 .andExpect(view().name("lecture/replacement"));
-    }
-
-    @Test
-    void givenIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
-        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-
-        var request = post("/lectures/replacement")
-                .param("teacher", "1")
-                .param("start", startDate.toString())
-                .param("end", endDate.toString());
-
-        mockMvc.perform(request)
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("/lectures"));
-
-        verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
     public interface TestData {

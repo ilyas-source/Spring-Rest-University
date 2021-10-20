@@ -63,13 +63,13 @@ public class TeacherController {
     }
 
     private void refreshFieldsFromDatabase(Teacher teacher) {
-        List<Vacation> existingVacations=teacherService.getById(teacher.getId()).getVacations();
+        List<Vacation> existingVacations = teacherService.getById(teacher.getId()).getVacations();
         teacher.setVacations(existingVacations);
 
-        List<Subject> subjects=teacher.getSubjects();
-        for (Subject s: subjects) {
+        List<Subject> subjects = teacher.getSubjects();
+        for (Subject s : subjects) {
             logger.debug("Filling out subject: {}", s);
-            Subject retrievedSubject=subjectService.getById(s.getId());
+            Subject retrievedSubject = subjectService.getById(s.getId());
             s.setName(retrievedSubject.getName());
             s.setDescription(retrievedSubject.getDescription());
             logger.debug("Filled: {}", s);

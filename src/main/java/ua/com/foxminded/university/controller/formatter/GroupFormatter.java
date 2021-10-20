@@ -16,11 +16,10 @@ public class GroupFormatter implements Formatter<Group> {
     @Override
     public Group parse(String text, Locale locale) throws ParseException {
         logger.debug("Parsing {}", text);
-        Group group=new Group();
+        Group group = new Group();
         String[] parts = text.split(":");
-        logger.debug("Splitted parts are: {}", parts);
         group.setId(Integer.parseInt(parts[0]));
-        if(parts.length>1) {
+        if (parts.length > 1) {
             group.setName(parts[1]);
         }
         logger.debug("Parsing complete: {}", group);

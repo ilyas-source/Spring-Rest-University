@@ -225,6 +225,6 @@ public class JdbcTeacherDao implements TeacherDao {
     @Override
     public List<Teacher> getReplacementCandidates(Lecture lecture) {
         return jdbcTemplate.query(FIND_REPLACEMENT, teacherMapper, lecture.getSubject().getId(),
-                                                                    lecture.getTeacher().getId());
+                lecture.getTeacher().getId());
     }
 }

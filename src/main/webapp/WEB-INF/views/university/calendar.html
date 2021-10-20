@@ -13,7 +13,7 @@
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container mt-5">
     <h2 class="text-primary text-center" th:text="'Lectures for '+${personName}"></h2>
-    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="period" th:value="${period}">
+    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="period" th:value="${periodType}">
     <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="date" th:value="${date}">
     <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="entity" th:value="${entity}">
     <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="personId" th:value="${id}">

@@ -86,9 +86,9 @@ public class LectureController {
                                    Model model) {
         logger.debug("Received for schedule: {} with id:{}, for {}, with date {}", entity, personId, periodType, date);
         model.addAttribute("entity", entity);
-        model.addAttribute("period", periodType);
+        model.addAttribute("periodType", periodType);
         model.addAttribute("date", date);
-        model.addAttribute("id", date);
+        model.addAttribute("id", personId);
         var teacher = new Teacher();
         var student = new Student();
         var person = "";
@@ -100,7 +100,6 @@ public class LectureController {
             person = "student " + student.getFirstName() + " " + student.getLastName();
         }
         model.addAttribute("personName", person);
-        model.addAttribute("id", personId);
 
         return "calendar";
     }
@@ -117,11 +116,11 @@ public class LectureController {
                                                              ZonedDateTime endTime) {
         logger.debug("Calendar retrieves lectures for {} id:{} from {} to {}", entity, id, startTime, endTime);
         List<Lecture> result;
-        if(entity.equals("teacher")) {
+        if (entity.equals("teacher")) {
             var teacher = teacherService.getById(id);
             result = lectureService.findByTeacherAndPeriod(teacher, startTime.toLocalDate(), endTime.toLocalDate());
         } else {
-            var student=studentService.getById(id);
+            var student = studentService.getById(id);
             result = lectureService.findByStudentAndPeriod(student, startTime.toLocalDate(), endTime.toLocalDate());
         }
         return result;
