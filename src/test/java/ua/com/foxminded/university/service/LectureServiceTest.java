@@ -332,27 +332,6 @@ class LectureServiceTest {
         verify(lectureDao).update(lectureToReplaceTeacher);
     }
 
-//    @Transactional
-//    public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
-//        List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
-//        logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
-//
-//        for (Lecture lecture : lectures) {
-//            logger.debug("Trying to replace teacher in {}", lecture);
-//
-//            List<Teacher> replacementTeachers = teacherService.getReplacementTeachers(lecture);
-//            logger.debug("Found {} suitable teachers", replacementTeachers.size());
-//
-//            if (replacementTeachers.size() == 0) {
-//                throw new CannotReplaceTeacherException(String.format("Can't replace teacher in %s: no suitable teachers found", lecture));
-//            }
-//            Teacher goodTeacher = replacementTeachers.get(0);
-//            logger.debug("Found good candidate: {} {}", goodTeacher.getFirstName(), goodTeacher.getLastName());
-//            lecture.setTeacher(goodTeacher);
-//            lectureDao.update(lecture);
-//        }
-//    }
-
     interface TestData {
         Lecture lectureWithTeacherOnVacation = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

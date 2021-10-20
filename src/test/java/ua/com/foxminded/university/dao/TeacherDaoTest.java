@@ -171,6 +171,6 @@ public class TeacherDaoTest {
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
 
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
-                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
     }
 }
