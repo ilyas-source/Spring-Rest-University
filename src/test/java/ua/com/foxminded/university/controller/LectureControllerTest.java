@@ -65,7 +65,7 @@ class LectureControllerTest {
         StringToLocalDate stringToLocalDate = new StringToLocalDate();
         conversionService.addConverter(stringToLocalDate);
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
-            //   .setControllerAdvice(new ControllerExceptionHandler())
+                .setControllerAdvice(new ControllerExceptionHandler())
                 .setConversionService(conversionService)
                 .build();
     }
@@ -259,6 +259,22 @@ class LectureControllerTest {
     void onShowReplacementView_shouldShowReplacementView() throws Exception {
         mockMvc.perform(get("/lectures/replacement"))
                 .andExpect(view().name("lecture/replacement"));
+    }
+
+    @Test
+    void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+
+        var request = post("/lectures/replacement")
+                .param("teacher", "1")
+                .param("start", "01.01.2000")
+                .param("end", "01.02.2000");
+
+        mockMvc.perform(request)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/lectures"));
+
+        verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
     public interface TestData {
