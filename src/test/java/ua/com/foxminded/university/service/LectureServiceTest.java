@@ -28,6 +28,7 @@ import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -319,16 +320,38 @@ class LectureServiceTest {
 
     @Test
     void givenTeacherAndDates_onReplaceTeacher_shouldReplaceTeacher() {
-        var startDate=LocalDate.of(2000,1,1);
-        var endDate=LocalDate.of(2000,1,3);
-        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(TestData.lecturesToReplaceTeacher);
+        var startDate = LocalDate.of(2000, 1, 1);
+        var endDate = LocalDate.of(2000, 1, 3);
+        when(lectureDao.findByTeacherAndPeriod(expectedTeacher2, startDate, endDate))
+                .thenReturn(lecturesToReplaceTeacher);
         when(teacherService.getReplacementTeachers(lectureToReplaceTeacher)).thenReturn(expectedTeachers);
 
-        lectureService.replaceTeacher(expectedTeacher1, startDate, endDate);
+        lectureService.replaceTeacher(expectedTeacher2, startDate, endDate);
 
         assertThat(lectureToReplaceTeacher.getTeacher().equals(expectedTeacher1));
         verify(lectureDao).update(lectureToReplaceTeacher);
     }
+
+//    @Transactional
+//    public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
+//        List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
+//        logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
+//
+//        for (Lecture lecture : lectures) {
+//            logger.debug("Trying to replace teacher in {}", lecture);
+//
+//            List<Teacher> replacementTeachers = teacherService.getReplacementTeachers(lecture);
+//            logger.debug("Found {} suitable teachers", replacementTeachers.size());
+//
+//            if (replacementTeachers.size() == 0) {
+//                throw new CannotReplaceTeacherException(String.format("Can't replace teacher in %s: no suitable teachers found", lecture));
+//            }
+//            Teacher goodTeacher = replacementTeachers.get(0);
+//            logger.debug("Found good candidate: {} {}", goodTeacher.getFirstName(), goodTeacher.getLastName());
+//            lecture.setTeacher(goodTeacher);
+//            lectureDao.update(lecture);
+//        }
+//    }
 
     interface TestData {
         Lecture lectureWithTeacherOnVacation = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
@@ -336,8 +359,8 @@ class LectureServiceTest {
                 .teacher(expectedTeacher1).classroom(expectedClassroom1).build();
 
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
-                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
 
-        List<Lecture> lecturesToReplaceTeacher =new ArrayList<>(Arrays.asList(lectureToReplaceTeacher));
+        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(Arrays.asList(lectureToReplaceTeacher));
     }
 }
