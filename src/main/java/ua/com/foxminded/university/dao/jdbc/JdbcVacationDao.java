@@ -39,12 +39,6 @@ public class JdbcVacationDao implements VacationDao {
     }
 
     @Override
-    public int countIntersectingVacations(Vacation vacation) {
-        return jdbcTemplate.queryForObject(COUNT_INTERSECTING_VACATIONS, Integer.class, vacation.getStartDate(),
-                vacation.getEndDate());
-    }
-
-    @Override
     public void create(Vacation vacation) {
         logger.debug("Writing a new vacation to database: {} ", vacation);
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -57,16 +51,6 @@ public class JdbcVacationDao implements VacationDao {
             return ps;
         }, keyHolder);
         vacation.setId((int) keyHolder.getKeys().get("id"));
-    }
-
-    @Override
-    public Optional<Vacation> findByBothDates(Vacation vacation) {
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_BOTH_DATES, vacationMapper, vacation.getStartDate(),
-                    vacation.getEndDate()));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
     }
 
     @Override

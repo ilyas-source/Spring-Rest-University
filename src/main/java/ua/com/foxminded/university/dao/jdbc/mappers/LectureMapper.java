@@ -7,7 +7,6 @@ import ua.com.foxminded.university.model.Lecture;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Component
 public class LectureMapper implements RowMapper<Lecture> {
@@ -32,7 +31,7 @@ public class LectureMapper implements RowMapper<Lecture> {
         var lecture = new Lecture();
         lecture.setId(rs.getInt("id"));
         classroomDao.findById(rs.getInt("classroom_id")).ifPresent(lecture::setClassroom);
-        lecture.setDate(rs.getObject("date", LocalDate.class));
+        lecture.setDate(rs.getDate("date").toLocalDate());
         lecture.setGroups(groupDao.findByLectureId(rs.getInt("id")));
         subjectDao.findById(rs.getInt("subject_id")).ifPresent(lecture::setSubject);
         teacherDao.findById(rs.getInt("teacher_id")).ifPresent(lecture::setTeacher);

@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
-import ua.com.foxminded.university.exception.VacationsIntersectionException;
 import ua.com.foxminded.university.model.Vacation;
 
 import java.util.*;
@@ -47,18 +46,6 @@ class VacationServiceTest {
         vacationService.create(expectedVacation1);
 
         verify(vacationDao).create(expectedVacation1);
-    }
-
-    @Test
-    void givenIntersectingVacation_onCreate_shoultThrowException() {
-        String expected = "New vacation has intersections with existing vacations, can't create/update";
-        when(vacationDao.countIntersectingVacations(expectedVacation1)).thenReturn(1);
-
-        Throwable thrown = assertThrows(VacationsIntersectionException.class,
-                () -> vacationService.create(expectedVacation1));
-
-        assertEquals(expected, thrown.getMessage());
-        verify(vacationDao, never()).create(expectedVacation1);
     }
 
     @Test

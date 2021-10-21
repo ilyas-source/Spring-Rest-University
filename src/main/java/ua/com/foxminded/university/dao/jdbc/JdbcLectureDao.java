@@ -42,6 +42,10 @@ public class JdbcLectureDao implements LectureDao {
 
     private static final String REMOVE_GROUP = "DELETE FROM lectures_groups where lecture_id = ? AND group_id = ?";
     private static final String ASSIGN_GROUP = "INSERT INTO lectures_groups (lecture_id, group_id) VALUES (?, ?)";
+    private static final String FIND_BY_TEACHER_AND_PERIOD = "SELECT * FROM lectures WHERE teacher_id = ? AND date >= ? AND date<= ?";
+    private static final String FIND_BY_STUDENT_AND_PERIOD = "select * from lectures join lectures_groups lg" +
+            " on lectures.id = lg.lecture_id where group_id=? AND date >= ? AND date<= ?";
+
 
     private JdbcTemplate jdbcTemplate;
     private LectureMapper lectureMapper;
@@ -77,8 +81,9 @@ public class JdbcLectureDao implements LectureDao {
     @Transactional
     public void update(Lecture lecture) {
         logger.debug("Updating lecture in database: {} ", lecture);
-        jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(), lecture.getSubject().getId(),
-                lecture.getTeacher().getId(), lecture.getClassroom().getId(), lecture.getId());
+        jdbcTemplate.update(UPDATE, lecture.getDate(), lecture.getTimeslot().getId(),
+                lecture.getSubject().getId(), lecture.getTeacher().getId(),
+                lecture.getClassroom().getId(), lecture.getId());
 
         List<Group> newGroups = lecture.getGroups();
         List<Group> oldGroups = findById(lecture.getId()).get().getGroups();
@@ -136,11 +141,22 @@ public class JdbcLectureDao implements LectureDao {
     }
 
     @Override
+    public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
+        return jdbcTemplate.query(FIND_BY_TEACHER_AND_PERIOD, lectureMapper, teacher.getId(), start, end);
+    }
+
+    @Override
+    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
+        return jdbcTemplate.query(FIND_BY_STUDENT_AND_PERIOD, lectureMapper, student.getGroup().getId(), start, end);
+    }
+
+
+    @Override
     public Optional<Lecture> findByDateTimeClassroom(LocalDate date, Timeslot timeslot, Classroom classroom) {
         try {
             return Optional.of(
-                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper, date, timeslot.getId(),
-                            classroom.getId()));
+                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_CLASSROOM, lectureMapper,
+                            date, timeslot.getId(), classroom.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -154,8 +170,8 @@ public class JdbcLectureDao implements LectureDao {
     public Optional<Lecture> findByDateTimeTeacher(LocalDate date, Timeslot timeslot, Teacher teacher) {
         try {
             return Optional.of(
-                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date, timeslot.getId(),
-                            teacher.getId()));
+                    jdbcTemplate.queryForObject(FIND_BY_DATE_TIME_TEACHER, lectureMapper, date,
+                            timeslot.getId(), teacher.getId()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -173,5 +189,4 @@ public class JdbcLectureDao implements LectureDao {
             jdbcTemplate.update(ASSIGN_GROUP, lecture.getId(), group.getId());
         }
     }
-
 }

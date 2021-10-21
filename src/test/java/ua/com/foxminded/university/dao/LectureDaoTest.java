@@ -24,6 +24,7 @@ import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expected
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
@@ -195,6 +196,27 @@ public class LectureDaoTest {
         int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
 
         assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+    }
+
+    @Test
+    void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldReturnCorrectListOfLectures() {
+        var startDate=LocalDate.of(2020,1,1);
+        var endDate=LocalDate.of(2020,1,3);
+        List<Lecture> expected=new ArrayList<Lecture>(Arrays.asList(expectedLecture1));
+
+        var actual = lectureDao.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenStudentAndDates_onFindByStudentAndPeriod_shouldReturnCorrectListOfLectures() {
+        var startDate=LocalDate.of(2020,1,1);
+        var endDate=LocalDate.of(2020,1,3);
+
+        var actual = lectureDao.findByStudentAndPeriod(expectedStudent1, startDate, endDate);
+
+        assertEquals(expectedLectures, actual);
     }
 
     boolean checkIfGroupIsAssignedToLecture(int groupId, int lectureId) {

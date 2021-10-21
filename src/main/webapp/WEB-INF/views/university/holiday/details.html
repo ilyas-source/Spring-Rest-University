@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Holiday</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <a href="/university/holidays?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+        holidays...</a>
+    <h2 class="text-primary">Holiday details</h2>
+    <form class="row g-3" method="POST" th:action="@{/holidays/update}" th:object="${holiday}">
+        <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" th:field="*{id}">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="name" class="form-label">Holiday name</label>
+                <input type="text" class="form-control" id="name" placeholder="Halloween day" th:field="*{name}">
+            </div>
+            <div class="col-md-2">
+                <label for="datepicker" class="form-label">Celebration day</label>
+                <input type="text" class="form-control" id="datepicker" th:field="*{date}">
+            </div>
+        </div>
+        <div id="SubmitDeleteButtons" class="row g-3">
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-3">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#ModalDelete">Delete holiday
+                </button>
+            </div>
+        </div>
+    </form>
+    <div id="ModalDelete" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please confirm</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span>Delete this holiday?</span>
+                </div>
+                <div class="modal-footer">
+                    <form style="margin-left: .75rem;" th:method="POST"
+                          th:action="@{/holidays/delete/{id}(id=${holiday.id})}">
+                        <input class="btn btn-danger" type="submit" value="Delete"/>
+                    </form>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
+</div>
+</body>
+</html>

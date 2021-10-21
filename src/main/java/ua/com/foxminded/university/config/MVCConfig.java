@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import ua.com.foxminded.university.controller.formatter.GroupFormatter;
+import ua.com.foxminded.university.controller.formatter.SubjectFormatter;
 
 import java.util.List;
 
@@ -64,4 +67,13 @@ public class MVCConfig implements WebMvcConfigurer {
         argumentResolvers.add(resolver);
         WebMvcConfigurer.super.addArgumentResolvers(argumentResolvers);
     }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        GroupFormatter groupFormatter = new GroupFormatter();
+        SubjectFormatter subjectFormatter = new SubjectFormatter();
+        registry.addFormatter(groupFormatter);
+        registry.addFormatter(subjectFormatter);
+    }
+
 }

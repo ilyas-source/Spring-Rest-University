@@ -6,7 +6,6 @@ import ua.com.foxminded.university.model.Holiday;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Component
 public class HolidayMapper implements RowMapper<Holiday> {
@@ -16,7 +15,7 @@ public class HolidayMapper implements RowMapper<Holiday> {
         var holiday = new Holiday();
         holiday.setId(rs.getInt("id"));
         holiday.setName(rs.getString("name"));
-        holiday.setDate(rs.getObject("date", LocalDate.class));
+        holiday.setDate(rs.getDate("date").toLocalDate());
 
         return holiday;
     }

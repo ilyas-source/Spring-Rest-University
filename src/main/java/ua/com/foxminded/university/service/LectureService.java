@@ -3,11 +3,14 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 import java.time.DayOfWeek;
@@ -24,11 +27,13 @@ public class LectureService {
     private LectureDao lectureDao;
     private HolidayDao holidayDao;
     private StudentDao studentDao;
+    private TeacherService teacherService;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao) {
+    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao, TeacherService teacherService) {
         this.lectureDao = lectureDao;
         this.holidayDao = holidayDao;
         this.studentDao = studentDao;
+        this.teacherService = teacherService;
     }
 
     public void create(Lecture lecture) {
@@ -43,6 +48,11 @@ public class LectureService {
 
     public Optional<Lecture> findById(int id) {
         return lectureDao.findById(id);
+    }
+
+    public Lecture getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find lecture by id " + id));
     }
 
     public void update(Lecture lecture) {
@@ -76,17 +86,18 @@ public class LectureService {
     }
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
-        var classroom = lecture.getClassroom();
-        if (!lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), classroom)
-                .isEmpty()) {
+        if (lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+                .filter(l -> l.getId() != lecture.getId())
+                .isPresent()) {
             throw new ClassroomOccupiedException(
-                    String.format("Classroom %s is occupied at this day and time", classroom.getName()));
+                    String.format("Classroom %s is occupied at this day and time", lecture.getClassroom().getName()));
         }
     }
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
-        List<Lecture> lecturesOnThisDateAndTime = lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot());
-        if (lecturesOnThisDateAndTime.stream()
+        if (lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot())
+                .stream()
+                .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
                 .flatMap(List::stream)
                 .anyMatch(lecture.getGroups()::contains)) {
@@ -109,8 +120,7 @@ public class LectureService {
                 .stream()
                 .anyMatch(v -> isDayWithinVacation(lecture.getDate(), v))) {
             throw new TeacherOnVacationException(String.format("Teacher %s %s will be on a vacation, can't schedule lecture",
-                    teacher.getFirstName(),
-                    teacher.getLastName()));
+                    teacher.getFirstName(), teacher.getLastName()));
         }
     }
 
@@ -120,11 +130,12 @@ public class LectureService {
 
     private void verifyTeacherIsNotBusy(Lecture lecture) {
         var teacher = lecture.getTeacher();
-        if (!lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
-                .isEmpty()) {
-            throw new TeacherBusyException(String.format("Teacher %s %s will be reading another lecture",
-                    teacher.getFirstName(),
-                    teacher.getLastName()));
+        if (lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
+                .filter(l -> l.getId() != lecture.getId())
+                .isPresent()) {
+            throw new TeacherBusyException(
+                    String.format("Teacher %s %s will be reading another lecture",
+                            teacher.getFirstName(), teacher.getLastName()));
         }
     }
 
@@ -152,6 +163,37 @@ public class LectureService {
     private void verifyIdExists(int id) {
         if (!lectureDao.findById(id).isPresent()) {
             throw new EntityNotFoundException(String.format("Lecture id:%s not found, nothing to delete", id));
+        }
+    }
+
+    public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
+        logger.debug("Retrieving lectures for teacher {} {} and period {}-{}", teacher.getFirstName(), teacher.getLastName(), start, end);
+        return lectureDao.findByTeacherAndPeriod(teacher, start, end);
+    }
+
+    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
+        logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
+        return lectureDao.findByStudentAndPeriod(student, start, end);
+    }
+
+    @Transactional
+    public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
+        List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
+        logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
+
+        for (Lecture lecture : lectures) {
+            logger.debug("Trying to replace teacher in {}", lecture);
+
+            List<Teacher> replacementTeachers = teacherService.getReplacementTeachers(lecture);
+            logger.debug("Found {} suitable teachers", replacementTeachers.size());
+
+            if (replacementTeachers.size() == 0) {
+                throw new CannotReplaceTeacherException(String.format("Can't replace teacher in %s: no suitable teachers found", lecture));
+            }
+            Teacher goodTeacher = replacementTeachers.get(0);
+            logger.debug("Found good candidate: {} {}", goodTeacher.getFirstName(), goodTeacher.getLastName());
+            lecture.setTeacher(goodTeacher);
+            lectureDao.update(lecture);
         }
     }
 }

@@ -20,4 +20,6 @@ public interface StudentDao extends GeneralDao<Student> {
     Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 
     Page<Student> findAll(Pageable pageable);
+
+    List<Student> findBySubstring(String substring);
 }

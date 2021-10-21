@@ -44,6 +44,11 @@ public class ClassroomService {
         return classroomDao.findById(id);
     }
 
+    public Classroom getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find classroom by id " + id));
+    }
+
     public void update(Classroom classroom) {
         logger.debug("Updating classroom: {} ", classroom);
         verifyCapacityIsEnough(classroom);
@@ -53,9 +58,7 @@ public class ClassroomService {
 
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
-        var classroom = classroomDao.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Classroom id:%s not found, nothing to delete", id)));
-        verifyHasNoLectures(classroom);
+        verifyHasNoLectures(getById(id));
         classroomDao.delete(id);
     }
 

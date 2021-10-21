@@ -6,7 +6,6 @@ import ua.com.foxminded.university.model.Vacation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 @Component
 public class VacationMapper implements RowMapper<Vacation> {
@@ -15,8 +14,8 @@ public class VacationMapper implements RowMapper<Vacation> {
     public Vacation mapRow(ResultSet rs, int rowNum) throws SQLException {
         var vacation = new Vacation();
         vacation.setId(rs.getInt("id"));
-        vacation.setStartDate(rs.getObject("start_date", LocalDate.class));
-        vacation.setEndDate(rs.getObject("end_date", LocalDate.class));
+        vacation.setStartDate(rs.getDate("start_date").toLocalDate());
+        vacation.setEndDate(rs.getDate("end_date").toLocalDate());
 
         return vacation;
     }

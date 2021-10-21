@@ -70,10 +70,9 @@ public class JdbcAddressDao implements AddressDao {
 
     @Override
     public void update(Address address) {
-        logger.debug("Updating address in database: {} ", address);
+        logger.debug("Updating address in database: {}", address);
         jdbcTemplate.update(UPDATE, address.getCountry(), address.getPostalCode(), address.getRegion(), address.getCity(),
-                address.getStreetAddress(),
-                address.getId());
+                address.getStreetAddress(), address.getId());
     }
 
     @Override

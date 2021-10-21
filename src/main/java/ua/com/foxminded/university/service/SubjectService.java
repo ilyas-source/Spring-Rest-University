@@ -40,6 +40,11 @@ public class SubjectService {
         return subjectDao.findById(id);
     }
 
+    public Subject getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find subject by id " + id));
+    }
+
     public void update(Subject subject) {
         logger.debug("Updating subject: {} ", subject);
         verifyNameIsUnique(subject);
@@ -48,8 +53,7 @@ public class SubjectService {
 
     public void delete(int id) {
         logger.debug("Deleting subject by id: {} ", id);
-        var subject = subjectDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Subject id:%s not found, nothing to delete", id)));
+        var subject = getById(id);
         verifyIsNotAssigned(subject);
         verifyIsNotScheduled(subject);
         subjectDao.delete(id);
@@ -66,7 +70,7 @@ public class SubjectService {
     private void verifyIsNotScheduled(Subject subject) {
         if (!lectureDao.findBySubject(subject).isEmpty()) {
             throw new EntityInUseException(
-                    String.format("Subject %s is sheduled for lecture(s), can't delete", subject.getName()));
+                    String.format("Subject %s is scheduled for lecture(s), can't delete", subject.getName()));
         }
     }
 

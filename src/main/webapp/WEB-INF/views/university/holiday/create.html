@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Holiday</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <a href="/university/holidays" class="btn btn-outline-primary mb-2" role="button">Back to holidays...</a>
+    <h2 class="text-primary">Create new holiday</h2>
+    <form class="row g-3" method="POST" th:action="@{/holidays/create}" th:object="${holiday}">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="name" class="form-label">Holiday name</label>
+                <input type="text" class="form-control" id="name" placeholder="Halloween day"
+                       th:field="*{name}">
+            </div>
+            <div class="col-md-2">
+                <label for="datepicker" class="form-label">Celebration day</label>
+                <input type="text" class="form-control" id="datepicker" th:field="*{date}">
+            </div>
+        </div>
+
+        <div id="CreateButton" class="row g-3">
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+    <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
+</div>
+</body>
+</html>

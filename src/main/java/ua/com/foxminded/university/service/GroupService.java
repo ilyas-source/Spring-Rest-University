@@ -40,6 +40,11 @@ public class GroupService {
         return groupDao.findById(id);
     }
 
+    public Group getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find group by id " + id));
+    }
+
     public void update(Group group) {
         logger.debug("Updating group: {} ", group);
         verifyNameIsUnique(group);
@@ -48,9 +53,7 @@ public class GroupService {
 
     public void delete(int id) {
         logger.debug("Deleting group by id: {} ", id);
-        var group = groupDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Group id:%s not found, nothing to delete", id)));
-        verifyHasNoStudents(group);
+        verifyHasNoStudents(getById(id));
         groupDao.delete(id);
     }
 

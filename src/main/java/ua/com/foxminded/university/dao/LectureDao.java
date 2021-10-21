@@ -23,4 +23,8 @@ public interface LectureDao extends GeneralDao<Lecture> {
     List<Lecture> findBySubject(Subject subject);
 
     List<Lecture> findByTimeslot(Timeslot timeslot);
+
+    List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end);
+
+    List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end);
 }

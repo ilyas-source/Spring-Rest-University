@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
 
 @Controller
@@ -24,6 +24,39 @@ public class HolidayController {
     public String findAll(Model model) {
         logger.debug("Retrieving all holidays to controller");
         model.addAttribute("holidays", holidayService.findAll());
-        return "holidaysView";
+        return "holiday/all";
+    }
+
+    @GetMapping("/{id}")
+    public String getHoliday(@PathVariable int id, Model model) {
+        Holiday holiday = holidayService.getById(id);
+        model.addAttribute("holiday", holiday);
+        return "holiday/details";
+    }
+
+    @GetMapping("/new")
+    public String showCreationForm(Holiday holiday) {
+        logger.debug("Opening creation form");
+        return "holiday/create";
+    }
+
+    @PostMapping("/create")
+    public String create(@ModelAttribute("holiday") Holiday holiday) {
+        logger.debug("Create holiday={}", holiday);
+        holidayService.create(holiday);
+        return "redirect:/holidays";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("holiday") Holiday holiday) {
+        logger.debug("Received update data: name {}", holiday.getName());
+        holidayService.update(holiday);
+        return "redirect:/holidays";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        holidayService.delete(id);
+        return "redirect:/holidays";
     }
 }

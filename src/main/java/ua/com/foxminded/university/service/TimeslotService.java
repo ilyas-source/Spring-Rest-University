@@ -50,6 +50,11 @@ public class TimeslotService {
         return timeslotDao.findById(id);
     }
 
+    public Timeslot getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find timeslot by id " + id));
+    }
+
     public void update(Timeslot timeslot) {
         logger.debug("Updating timeslot: {} ", timeslot);
         verifyHasNoIntersections(timeslot);
@@ -59,9 +64,7 @@ public class TimeslotService {
 
     public void delete(int id) {
         logger.debug("Deleting timeslot by id: {} ", id);
-        var timeslot = timeslotDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Timeslot id:%s not found, nothing to delete", id)));
-        verifyHasNoLecturesScheduled(timeslot);
+        verifyHasNoLecturesScheduled(getById(id));
         timeslotDao.delete(id);
     }
 

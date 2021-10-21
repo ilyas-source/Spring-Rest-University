@@ -77,7 +77,7 @@ class SubjectServiceTest {
 
     @Test
     void givenScheduledSubjectId_onDelete_shouldThrowException() {
-        String expected = "Subject Test Economics is sheduled for lecture(s), can't delete";
+        String expected = "Subject Test Economics is scheduled for lecture(s), can't delete";
         when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
         when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
@@ -90,11 +90,9 @@ class SubjectServiceTest {
 
     @Test
     void givenIncorrectSubjectId_onDelete_shouldThrowException() {
-        String expected = "Subject id:1 not found, nothing to delete";
-
+        String expected = "Can't find subject by id 1";
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> subjectService.delete(1));
-
         assertEquals(expected, thrown.getMessage());
         verify(subjectDao, never()).delete(1);
     }

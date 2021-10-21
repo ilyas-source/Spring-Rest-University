@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher replacement</title>
+    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<h2 class="text-primary text-center">Replace teacher in all lectures</h2>
+<div class="container mt-5">
+
+
+    <form method="POST">
+
+        <div class="row g-3">
+            <!--Teacher select-->
+            <div class="col-md-4">
+                <label for="teacher" class="form-label">Teacher to replace</label>
+                <select class="form-select" id="teacher" name="teacher">
+                    <option th:each="teacher: ${allTeachers}"
+                            th:value="${teacher.id}"
+                            th:text="${teacher.firstName}+' '+${teacher.lastName}"></option>
+                </select>
+            </div>
+
+            <div class="input-group col-md-8">
+                <input type="text" class="form-control" id="datepicker" name="start" placeholder="Replacement start">
+                <input type="text" class="form-control" id="datepicker2" name="end" placeholder="Replacement end">
+                <input type="submit" class="btn btn-primary" value="Replace"/>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="/university/sources/js/jquery.min.js"></script>
+    <script src="/university/sources/js/jquery-ui.js"></script>
+    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script src="/university/sources/js/datepicker.js"></script>
+</div>
+</body>
+</html>

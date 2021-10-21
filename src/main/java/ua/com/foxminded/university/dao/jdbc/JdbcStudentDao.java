@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -37,8 +40,10 @@ public class JdbcStudentDao implements StudentDao {
             " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
     private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
     private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students ORDER BY %s %s OFFSET ? FETCH FIRST ? ROWS ONLY";
+    private static final String FIND_ALL = "SELECT * FROM students";
     private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM students";
+    private static final String FIND_BY_SUBSTRING = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like ?";
 
     private JdbcTemplate jdbcTemplate;
     private StudentMapper studentMapper;
@@ -62,7 +67,7 @@ public class JdbcStudentDao implements StudentDao {
         logger.debug("Writing a new student to database: {} ", student);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcAddressDao.update(student.getAddress());
+        jdbcAddressDao.create(student.getAddress());
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
@@ -122,7 +127,6 @@ public class JdbcStudentDao implements StudentDao {
         }
     }
 
-    @Override
     public Page<Student> findAll(Pageable pageable) {
         var sortProperty = defaultSortAttribute;
         var sortDirection = Sort.Direction.fromString(defaultSortDirection);
@@ -143,6 +147,19 @@ public class JdbcStudentDao implements StudentDao {
         var totalStudents = jdbcTemplate.queryForObject(COUNT_TOTAL, Integer.class);
 
         return new PageImpl<>(students, pageable, totalStudents);
+    }
+
+    @Override
+    public List<Student> findBySubstring(String substring) {
+        String formattedSubstring = "%" + substring.toLowerCase() + "%";
+        logger.debug("Formatted search substring is {}", formattedSubstring);
+        return jdbcTemplate.query(FIND_BY_SUBSTRING, studentMapper, formattedSubstring);
+    }
+
+    @Override
+    public List<Student> findAll() {
+        logger.debug("Retrieving all students");
+        return jdbcTemplate.query(FIND_ALL, studentMapper);
     }
 
     @Override

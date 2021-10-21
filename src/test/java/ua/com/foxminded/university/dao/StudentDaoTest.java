@@ -66,12 +66,13 @@ public class StudentDaoTest {
     @Test
     void givenNewStudent_onCreate_shouldCreateStudent() {
         int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 5 AND address_id = 3 AND " + TEST_WHERE_CLAUSE);
+                "students", "id = 5 AND address_id = 7 AND " + TEST_WHERE_CLAUSE);
 
         studentDao.create(studentToCreate);
+        System.out.println(studentToCreate.getAddress().getId());
 
         int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 5 AND address_id = 3 AND " + TEST_WHERE_CLAUSE);
+                "students", "id = 5 AND address_id = 7 AND " + TEST_WHERE_CLAUSE);
 
         assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
     }

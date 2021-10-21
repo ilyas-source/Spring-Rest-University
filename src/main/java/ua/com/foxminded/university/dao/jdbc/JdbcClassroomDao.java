@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LocationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.ClassroomMapper;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
@@ -46,7 +47,9 @@ public class JdbcClassroomDao implements ClassroomDao {
     @Transactional
     public void create(Classroom classroom) {
         logger.debug("Writing a new classroom to database: {} ", classroom);
-        locationDao.create(classroom.getLocation());
+        Location location = locationDao.findById(classroom.getLocation().getId()).orElseThrow(
+                () -> new EntityNotFoundException("Can't find location by id " + classroom.getLocation().getId()));
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

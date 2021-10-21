@@ -46,7 +46,6 @@ public class JdbcLocationDao implements LocationDao {
             ps.setString(1, location.getBuilding());
             ps.setInt(2, location.getFloor());
             ps.setInt(3, location.getRoomNumber());
-
             return ps;
         }, keyHolder);
         location.setId((int) keyHolder.getKeys().get("id"));

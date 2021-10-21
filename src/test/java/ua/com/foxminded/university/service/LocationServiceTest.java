@@ -86,7 +86,7 @@ class LocationServiceTest {
 
     @Test
     void givenIncorrectLocationId_onDelete_shouldThrowException() {
-        String expected = "Location id:1 not found, nothing to delete";
+        String expected = "Can't find location by id 1";
 
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> locationService.delete(1));

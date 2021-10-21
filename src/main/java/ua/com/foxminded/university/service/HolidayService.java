@@ -34,6 +34,11 @@ public class HolidayService {
         return holidayDao.findById(id);
     }
 
+    public Holiday getById(int id) {
+        return findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find holiday by id " + id));
+    }
+
     public void update(Holiday holiday) {
         logger.debug("Updating holiday: {} ", holiday);
         holidayDao.update(holiday);

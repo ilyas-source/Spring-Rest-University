@@ -7,24 +7,28 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject4;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -34,7 +38,7 @@ class LectureServiceTest {
     @Mock
     private HolidayDao holidayDao;
     @Mock
-    private StudentDao studentDao;
+    private TeacherService teacherService;
     @InjectMocks
     private LectureService lectureService;
 
@@ -53,6 +57,13 @@ class LectureServiceTest {
         Optional<Lecture> actual = lectureService.findById(1);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenId_onGetById_shouldReturnLecture() {
+        when(lectureService.findById(1)).thenReturn(Optional.of(expectedLecture1));
+
+        assertEquals(expectedLecture1, lectureService.getById(1));
     }
 
     @Test
@@ -281,9 +292,54 @@ class LectureServiceTest {
         verify(lectureDao, never()).delete(1);
     }
 
+    @Test
+    void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldCallDaoFindByTeacherAndPeriod() {
+        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate end = LocalDate.of(2001, 1, 1);
+        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1, start, end))
+                .thenReturn(expectedLectures);
+
+        var actual = lectureService.findByTeacherAndPeriod(expectedTeacher1, start, end);
+
+        assertEquals(expectedLectures, actual);
+        verify(lectureDao).findByTeacherAndPeriod(expectedTeacher1, start, end);
+    }
+
+    @Test
+    void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallDaoFindByStudentAndPeriod() {
+        LocalDate start = LocalDate.of(2000, 1, 1);
+        LocalDate end = LocalDate.of(2001, 1, 1);
+        when(lectureDao.findByStudentAndPeriod(expectedStudent1, start, end))
+                .thenReturn(expectedLectures);
+
+        var actual = lectureService.findByStudentAndPeriod(expectedStudent1, start, end);
+
+        assertEquals(expectedLectures, actual);
+        verify(lectureDao).findByStudentAndPeriod(expectedStudent1, start, end);
+    }
+
+    @Test
+    void givenTeacherAndDates_onReplaceTeacher_shouldReplaceTeacher() {
+        var startDate = LocalDate.of(2000, 1, 1);
+        var endDate = LocalDate.of(2000, 1, 3);
+        when(lectureDao.findByTeacherAndPeriod(expectedTeacher2, startDate, endDate))
+                .thenReturn(lecturesToReplaceTeacher);
+        when(teacherService.getReplacementTeachers(lectureToReplaceTeacher)).thenReturn(expectedTeachers);
+
+        lectureService.replaceTeacher(expectedTeacher2, startDate, endDate);
+
+        assertThat(lectureToReplaceTeacher.getTeacher().equals(expectedTeacher1));
+        verify(lectureDao).update(lectureToReplaceTeacher);
+    }
+
     interface TestData {
         Lecture lectureWithTeacherOnVacation = Lecture.builder().date(LocalDate.of(2000, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
                 .teacher(expectedTeacher1).classroom(expectedClassroom1).build();
+
+        Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
+
+        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(Arrays.asList(lectureToReplaceTeacher));
     }
 }
