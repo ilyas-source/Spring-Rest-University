@@ -46,7 +46,7 @@ class VacationControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/vacations/delete/1"))
+        mockMvc.perform(post("/vacations/delete/{id}",1))
                 .andExpect(status().is3xxRedirection());
 
         verify(vacationService).delete(1);
@@ -55,7 +55,7 @@ class VacationControllerTest {
     @Test
     void givenVacationAndTeacherId_onAddVacation_shouldCreateVacationAndUpdateTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        mockMvc.perform(post("/vacations/create/1")
+        mockMvc.perform(post("/vacations/create/{id}",1)
                         .flashAttr("vacation", expectedVacation1))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/vacations/for/1"));
@@ -67,7 +67,7 @@ class VacationControllerTest {
     @Test
     void voidGivenTeacherId_onEditVacations_shouldShowFormForCorrectTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        mockMvc.perform(get("/vacations/for/1"))
+        mockMvc.perform(get("/vacations/for/{id}",1))
                 .andExpect(view().name("teacher/vacations"))
                 .andExpect(model().attribute("teacher", expectedTeacher1));
     }

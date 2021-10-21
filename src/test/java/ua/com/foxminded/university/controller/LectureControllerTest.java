@@ -90,7 +90,7 @@ class LectureControllerTest {
         when(classroomService.findAll()).thenReturn(expectedClassrooms);
         when(teacherService.findAll()).thenReturn(expectedTeachers);
 
-        mockMvc.perform(get("/lectures/1"))
+        mockMvc.perform(get("/lectures/{id}", 1))
                 .andExpect(view().name("lecture/details"))
                 .andExpect(model().attribute("lecture", expectedLecture1));
     }
@@ -99,7 +99,7 @@ class LectureControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(lectureService.getById(1)).thenThrow(new EntityNotFoundException("Can't find lecture by id 1"));
 
-        mockMvc.perform(get("/lectures/1"))
+        mockMvc.perform(get("/lectures/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find lecture by id 1"));
@@ -146,7 +146,7 @@ class LectureControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/lectures/delete/1")).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/lectures/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(lectureService).delete(1);
     }

@@ -60,8 +60,8 @@ public class LectureController {
     }
 
     @GetMapping("/search")
-    public String searchPerson(@RequestParam("entity") String entity,
-                               @RequestParam("substring") String substring,
+    public String searchPerson(@RequestParam String entity,
+                               @RequestParam String substring,
                                Model model) {
         logger.debug("Searching for {} with substring {}", entity, substring);
         List<Student> students = new ArrayList<>();
@@ -80,9 +80,9 @@ public class LectureController {
 
     @GetMapping("/schedule")
     public String showScheduleView(@RequestParam("id") int personId,
-                                   @RequestParam("entity") String entity,
-                                   @RequestParam("periodType") String periodType,
-                                   @RequestParam("date") LocalDate date,
+                                   @RequestParam String entity,
+                                   @RequestParam String periodType,
+                                   @RequestParam LocalDate date,
                                    Model model) {
         logger.debug("Received for schedule: {} with id:{}, for {}, with date {}", entity, personId, periodType, date);
         model.addAttribute("entity", entity);
@@ -106,8 +106,8 @@ public class LectureController {
 
     @GetMapping("/schedule/calendar")
     @ResponseBody
-    public List<Lecture> retrieveLecturesForCalendar(@RequestParam("id") int id,
-                                                     @RequestParam("entity") String entity,
+    public List<Lecture> retrieveLecturesForCalendar(@RequestParam int id,
+                                                     @RequestParam String entity,
                                                      @RequestParam("start")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              ZonedDateTime startTime,

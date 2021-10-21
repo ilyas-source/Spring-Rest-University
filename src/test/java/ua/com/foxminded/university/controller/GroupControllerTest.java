@@ -56,7 +56,7 @@ class GroupControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithGroup() throws Exception {
         when(groupService.getById(1)).thenReturn(expectedGroup1);
 
-        mockMvc.perform(get("/groups/1"))
+        mockMvc.perform(get("/groups/{id}",1))
                 .andExpect(view().name("group/details"))
                 .andExpect(model().attribute("group", expectedGroup1));
     }
@@ -65,7 +65,7 @@ class GroupControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(groupService.getById(1)).thenThrow(new EntityNotFoundException("Can't find group by id 1"));
 
-        mockMvc.perform(get("/groups/1"))
+        mockMvc.perform(get("/groups/{id}",1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find group by id 1"));
@@ -96,7 +96,7 @@ class GroupControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/groups/delete/1")).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/groups/delete/{id}",1)).andExpect(status().is3xxRedirection());
 
         verify(groupService).delete(1);
     }
