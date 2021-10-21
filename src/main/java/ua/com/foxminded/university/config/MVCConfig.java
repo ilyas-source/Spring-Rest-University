@@ -16,7 +16,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-import ua.com.foxminded.university.controller.converter.StringToLocalDate;
 import ua.com.foxminded.university.controller.formatter.GroupFormatter;
 import ua.com.foxminded.university.controller.formatter.SubjectFormatter;
 
@@ -73,10 +72,8 @@ public class MVCConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         GroupFormatter groupFormatter = new GroupFormatter();
         SubjectFormatter subjectFormatter = new SubjectFormatter();
-        StringToLocalDate stringToLocalDate = new StringToLocalDate();
         registry.addFormatter(groupFormatter);
         registry.addFormatter(subjectFormatter);
-        registry.addConverter(stringToLocalDate);
     }
 
 }

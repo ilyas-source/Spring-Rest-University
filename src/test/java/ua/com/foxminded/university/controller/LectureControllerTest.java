@@ -6,10 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.format.support.FormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.com.foxminded.university.controller.converter.StringToLocalDate;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
@@ -61,12 +59,8 @@ class LectureControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        FormattingConversionService conversionService = new FormattingConversionService();
-        StringToLocalDate stringToLocalDate = new StringToLocalDate();
-        conversionService.addConverter(stringToLocalDate);
         mockMvc = MockMvcBuilders.standaloneSetup(lectureController)
                 .setControllerAdvice(new ControllerExceptionHandler())
-                .setConversionService(conversionService)
                 .build();
     }
 

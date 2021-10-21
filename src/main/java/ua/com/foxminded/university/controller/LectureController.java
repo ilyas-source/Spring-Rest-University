@@ -82,7 +82,7 @@ public class LectureController {
     public String showScheduleView(@RequestParam("id") int personId,
                                    @RequestParam String entity,
                                    @RequestParam String periodType,
-                                   @RequestParam LocalDate date,
+                                   @DateTimeFormat(pattern = "dd.MM.yyyy") @RequestParam LocalDate date,
                                    Model model) {
         logger.debug("Received for schedule: {} with id:{}, for {}, with date {}", entity, personId, periodType, date);
         model.addAttribute("entity", entity);
