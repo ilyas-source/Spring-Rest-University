@@ -7,10 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 @Configuration
@@ -27,15 +28,12 @@ public class ApplicationConfig {
     private String user;
     @Value("${password}")
     private String password;
+    @Value("${spring.datasource.jndi-name}")
+    private String springDataSourceJndiName;
 
     @Bean
-    DataSource dataSource() {
-        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-        driverManagerDataSource.setUrl(url);
-        driverManagerDataSource.setUsername(user);
-        driverManagerDataSource.setPassword(password);
-        driverManagerDataSource.setDriverClassName(driver);
-        return driverManagerDataSource;
+    DataSource dataSource() throws NamingException {
+        return (DataSource) new JndiTemplate().lookup(springDataSourceJndiName);
     }
 
     @Bean
