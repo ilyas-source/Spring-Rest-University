@@ -30,7 +30,6 @@ public class MVCConfig implements WebMvcConfigurer {
     @Value("${page.defaultsize}")
     private int defaultPageSize;
 
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/sources/**")
@@ -75,5 +74,4 @@ public class MVCConfig implements WebMvcConfigurer {
         registry.addFormatter(groupFormatter);
         registry.addFormatter(subjectFormatter);
     }
-
 }
