@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jndi.JndiTemplate;
@@ -17,23 +16,14 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan("ua.com.foxminded.university.dao")
-@PropertySource("classpath:database.properties")
 public class ApplicationConfig {
 
-    @Value("${driver}")
-    private String driver;
-    @Value("${url}")
-    private String url;
-    @Value("${user}")
-    private String user;
-    @Value("${password}")
-    private String password;
-    @Value("${spring.datasource.jndi-name}")
-    private String springDataSourceJndiName;
+    @Value("${jndi-name}")
+    private String jndiName;
 
     @Bean
     DataSource dataSource() throws NamingException {
-        return (DataSource) new JndiTemplate().lookup(springDataSourceJndiName);
+        return (DataSource) new JndiTemplate().lookup(jndiName);
     }
 
     @Bean
