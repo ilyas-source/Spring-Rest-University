@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="groups")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllGroups", query = "from Group order by name")})
+
 public class Group {
 
     @Id

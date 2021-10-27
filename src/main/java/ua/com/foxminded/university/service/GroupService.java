@@ -33,6 +33,7 @@ public class GroupService {
     }
 
     public List<Group> findAll() {
+        logger.debug("Retrieving all groups from DAO");
         return groupDao.findAll();
     }
 
