@@ -39,11 +39,6 @@ public class ApplicationConfig {
         return new JdbcTemplate(dataSource);
     }
 
-//    @Bean
-//    public PlatformTransactionManager transactionManager(final DataSource dataSource) {
-//        return new DataSourceTransactionManager(dataSource);
-//    }
-
     @Bean
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
