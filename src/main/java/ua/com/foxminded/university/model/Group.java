@@ -3,15 +3,19 @@ package ua.com.foxminded.university.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="groups")
+@Table(name = "groups")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllGroups", query = "from Group order by name")})
-
+        @NamedQuery(name = "SelectAllGroups",
+                query = "from Group order by name")
+    //    @NamedQuery(name = "FindByLectureId",
+    //            query = "SELECT g.id, g.name from lectures_groups AS l_g "+
+    //                    " LEFT JOIN groups AS g ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?")
+        })
 public class Group {
 
     @Id
     @Column
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column

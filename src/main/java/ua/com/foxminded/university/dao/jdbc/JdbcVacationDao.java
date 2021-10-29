@@ -77,10 +77,16 @@ public class JdbcVacationDao implements VacationDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting vacation by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Vacation vacation) {
+        logger.debug("Deleting: {} ", vacation);
+
     }
+//
+//    @Override
+//    public void delete(int id) {
+//        logger.debug("Deleting vacation by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 
     @Override
     public List<Vacation> findByTeacherId(int id) {

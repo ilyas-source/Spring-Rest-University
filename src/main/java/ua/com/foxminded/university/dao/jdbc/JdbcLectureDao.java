@@ -96,6 +96,11 @@ public class JdbcLectureDao implements LectureDao {
                 .forEach(g -> assignGroup(g, lecture));
     }
 
+    @Override
+    public void delete(Lecture lecture) {
+
+    }
+
     private void removeGroup(Group group, Lecture lecture) {
         jdbcTemplate.update(REMOVE_GROUP, lecture.getId(), group.getId());
     }
@@ -177,7 +182,7 @@ public class JdbcLectureDao implements LectureDao {
         }
     }
 
-    @Override
+    //@Override
     public void delete(int id) {
         logger.debug("Deleting lecture by id: {} ", id);
         jdbcTemplate.update(DELETE_BY_ID, id);

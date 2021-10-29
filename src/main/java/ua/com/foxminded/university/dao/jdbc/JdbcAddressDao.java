@@ -76,8 +76,13 @@ public class JdbcAddressDao implements AddressDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting address by id:{} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Address address) {
+        logger.debug("Deleting: {} ", address);
     }
+
+//    //@Override
+//    public void delete(int id) {
+//        logger.debug("Deleting address by id:{} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 }

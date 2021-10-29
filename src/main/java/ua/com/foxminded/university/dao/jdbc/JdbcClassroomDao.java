@@ -89,6 +89,12 @@ public class JdbcClassroomDao implements ClassroomDao {
     }
 
     @Override
+    public void delete(Classroom classroom) {
+        logger.debug("Deleting: {} ", classroom);
+
+    }
+
+    //@Override
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
         jdbcTemplate.update(DELETE_BY_ID, id);

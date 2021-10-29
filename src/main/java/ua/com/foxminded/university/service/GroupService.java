@@ -3,6 +3,7 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class GroupService {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
@@ -48,7 +50,7 @@ public class GroupService {
 
     public void update(Group group) {
         logger.debug("Updating group: {} ", group);
-        verifyNameIsUnique(group);
+  //      verifyNameIsUnique(group);
         groupDao.update(group);
     }
 

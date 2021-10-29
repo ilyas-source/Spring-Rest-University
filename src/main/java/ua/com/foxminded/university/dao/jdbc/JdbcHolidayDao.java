@@ -75,10 +75,16 @@ public class JdbcHolidayDao implements HolidayDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting holiday by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Holiday holiday) {
+        logger.debug("Deleting: {} ", holiday);
+
     }
+
+//    //@Override
+//    public void delete(int id) {
+//        logger.debug("Deleting holiday by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 
     @Override
     public List<Holiday> findByDate(LocalDate date) {

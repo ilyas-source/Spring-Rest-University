@@ -91,8 +91,14 @@ public class JdbcTimeslotDao implements TimeslotDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting timeslot by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Timeslot timeslot) {
+        logger.debug("Deleting: {} ", timeslot);
+
     }
+
+//    @Override
+//    public void delete(int id) {
+//        logger.debug("Deleting timeslot by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 }

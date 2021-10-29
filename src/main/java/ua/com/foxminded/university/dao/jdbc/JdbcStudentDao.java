@@ -99,6 +99,12 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    public void delete(Student student) {
+        logger.debug("Deleting: {} ", student);
+
+    }
+
+   // @Override
     public Optional<Student> findById(int id) {
         logger.debug("Retrieving student by id: {} ", id);
         try {
@@ -172,9 +178,9 @@ public class JdbcStudentDao implements StudentDao {
         return jdbcTemplate.queryForObject(COUNT_IN_GROUP, Integer.class, group.getId());
     }
 
-    @Override
-    public void delete(int id) {
-        logger.debug("Deleting student by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
-    }
+//    @Override
+//    public void delete(int id) {
+//        logger.debug("Deleting student by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 }

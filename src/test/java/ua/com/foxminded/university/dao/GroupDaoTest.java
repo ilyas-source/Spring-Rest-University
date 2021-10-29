@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +9,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 import java.util.ArrayList;
@@ -25,13 +27,17 @@ public class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";
 
+   // @Autowired
+   // HibernateTemplate hibernateTemplate;
     @Autowired
-    private GroupDao groupDao;
+    private HibernateGroupDao groupDao;
+    @Autowired
+    SessionFactory sessionFactory;
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void givenName_onFindByName_shouldReturnOptionalwithCorrectGroup() {
+    void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
         Optional<Group> expected = Optional.of(expectedGroup1);
 
         Optional<Group> actual = groupDao.findByName(expectedGroup1.getName());

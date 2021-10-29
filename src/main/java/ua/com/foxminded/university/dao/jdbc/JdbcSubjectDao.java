@@ -86,10 +86,16 @@ public class JdbcSubjectDao implements SubjectDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting subject by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Subject subject) {
+        logger.debug("Deleting: {} ", subject);
+
     }
+
+//    @Override
+//    public void delete(int id) {
+//        logger.debug("Deleting subject by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 
     @Override
     public List<Subject> getByTeacherId(int id) {

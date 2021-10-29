@@ -70,12 +70,18 @@ public class JdbcLocationDao implements LocationDao {
     @Override
     public void update(Location location) {
         logger.debug("Updating location in database: {} ", location);
-        jdbcTemplate.update(UPDATE, location.getBuilding(), location.getFloor(), location.getRoomNumber(), location.getId());
+        jdbcTemplate.update(UPDATE, location.getBuilding(), location.getFloor(), location.getRoomNumber(),
+                            location.getId());
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting location by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Location location) {
+        logger.debug("Deleting: {} ", location);
     }
+
+//    //@Override
+//    public void delete(int id) {
+//
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 }

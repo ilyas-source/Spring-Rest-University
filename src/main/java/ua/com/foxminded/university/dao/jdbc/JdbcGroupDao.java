@@ -79,10 +79,16 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     @Override
-    public void delete(int id) {
-        logger.debug("Deleting group by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
+    public void delete(Group group) {
+        logger.debug("Deleting: {} ", group);
+
     }
+
+//    //@Override
+//    public void delete(int id) {
+//        logger.debug("Deleting group by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 
     @Override
     public Optional<Group> findByName(String name) {

@@ -133,6 +133,12 @@ public class JdbcTeacherDao implements TeacherDao {
                 .forEach(v -> assignVacation(v, teacher));
     }
 
+    @Override
+    public void delete(Teacher teacher) {
+        logger.debug("Deleting: {} ", teacher);
+
+    }
+
     private void removeSubject(Subject subject, Teacher teacher) {
         jdbcTemplate.update(REMOVE_SUBJECT, teacher.getId(), subject.getId());
     }
@@ -200,11 +206,11 @@ public class JdbcTeacherDao implements TeacherDao {
         return jdbcTemplate.query(FIND_ALL, teacherMapper);
     }
 
-    @Override
-    public void delete(int id) {
-        logger.debug("Deleting teacher by id: {} ", id);
-        jdbcTemplate.update(DELETE_BY_ID, id);
-    }
+//    @Override
+//    public void delete(int id) {
+//        logger.debug("Deleting teacher by id: {} ", id);
+//        jdbcTemplate.update(DELETE_BY_ID, id);
+//    }
 
     @Override
     public Optional<Teacher> findByNameAndEmail(String firstName, String lastName, String email) {

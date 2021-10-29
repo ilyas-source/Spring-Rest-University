@@ -1,5 +1,10 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "classrooms")
 public class Classroom {
 
     private int id;
