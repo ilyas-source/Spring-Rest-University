@@ -1,18 +1,38 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "teachers")
 public class Teacher {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String firstName;
+    @Column
     private String lastName;
+    @Column
     private Gender gender;
+    @Column
     private Degree degree;
+    @ManyToMany
+    @JoinTable(
+            name="teachers_subjects",
+            joinColumns = @JoinColumn(name="teacher_id"),
+            inverseJoinColumns = @JoinColumn(name="subject_id"))
     private List<Subject> subjects;
+    @Column
     private String email;
+    @Column
     private String phone;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Address address;
+    @OneToMany
     private List<Vacation> vacations;
 
     public static Builder builder() {

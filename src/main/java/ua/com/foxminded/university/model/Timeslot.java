@@ -1,11 +1,19 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalTime;
 
+@Entity
+@Table(name = "timeslots")
 public class Timeslot {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private LocalTime beginTime;
+    @Column
     private LocalTime endTime;
 
     public Timeslot() {

@@ -47,7 +47,7 @@ public class HolidayService {
     public void delete(int id) {
         logger.debug("Deleting holiday by id: {} ", id);
         verifyIdExists(id);
-        holidayDao.delete(id);
+        holidayDao.delete(getById(id));
     }
 
     private void verifyIdExists(int id) {

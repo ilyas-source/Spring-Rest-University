@@ -187,16 +187,16 @@ public class LectureDaoTest {
         assertThat(group2AssignedAfterUpdate).isTrue();
     }
 
-    @Test
-    void givenCorrectLectureId_onDelete_shouldDeleteCorrectly() {
-        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
-
-        lectureDao.delete(2);
-
-        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
-
-        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-    }
+//    @Test
+//    void givenCorrectLectureId_onDelete_shouldDeleteCorrectly() {
+//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
+//
+//        lectureDao.delete(2);
+//
+//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures", "id = 2");
+//
+//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+//    }
 
     @Test
     void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldReturnCorrectListOfLectures() {

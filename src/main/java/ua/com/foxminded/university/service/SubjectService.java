@@ -56,7 +56,7 @@ public class SubjectService {
         var subject = getById(id);
         verifyIsNotAssigned(subject);
         verifyIsNotScheduled(subject);
-        subjectDao.delete(id);
+        subjectDao.delete(subject);
     }
 
     private void verifyNameIsUnique(Subject subject) {

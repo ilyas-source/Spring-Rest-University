@@ -64,7 +64,7 @@ public class LectureService {
     public void delete(int id) {
         logger.debug("Deleting lecture by id: {} ", id);
         verifyIdExists(id);
-        lectureDao.delete(id);
+        lectureDao.delete(getById(id));
     }
 
     private void verifyAllDataIsCorrect(Lecture lecture) {

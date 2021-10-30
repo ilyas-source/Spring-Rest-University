@@ -58,8 +58,9 @@ public class ClassroomService {
 
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
-        verifyHasNoLectures(getById(id));
-        classroomDao.delete(id);
+        Classroom classroom=getById(id);
+        verifyHasNoLectures(classroom);
+        classroomDao.delete(classroom);
     }
 
     private void verifyNameIsUnique(Classroom classroom) {

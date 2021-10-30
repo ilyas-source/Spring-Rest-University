@@ -87,16 +87,16 @@ public class AddressDaoTest {
         assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
-    @Test
-    void givenCorrectAddressId_onDelete_shouldDeleteCorrectly() {
-        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
-
-        addressDao.delete(2);
-
-        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
-
-        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-    }
+//    @Test
+//    void givenCorrectAddressId_onDelete_shouldDeleteCorrectly() {
+//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+//
+//        addressDao.delete(2);
+//
+//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "addresses", "id = 2");
+//
+//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+//    }
 
     public interface TestData {
         Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")

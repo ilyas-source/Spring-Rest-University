@@ -98,16 +98,16 @@ public class HolidayDaoTest {
         assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
-    @Test
-    void givenCorrectHolidayId_onDelete_shouldDeleteCorrectly() {
-        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
-
-        holidayDao.delete(2);
-
-        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
-
-        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-    }
+//    @Test
+//    void givenCorrectHolidayId_onDelete_shouldDeleteCorrectly() {
+//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
+//
+//        holidayDao.delete(2);
+//
+//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "holidays", "id = 2");
+//
+//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+//    }
 
     public interface TestData {
         Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 01, 01), "test");

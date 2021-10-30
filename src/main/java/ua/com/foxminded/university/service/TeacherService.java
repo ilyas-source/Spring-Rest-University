@@ -105,8 +105,9 @@ public class TeacherService {
 
     public void delete(int id) {
         logger.debug("Deleting teacher by id: {} ", id);
-        verifyHasNoLectures(getById(id));
-        teacherDao.delete(id);
+        Teacher teacher = getById(id);
+        verifyHasNoLectures(teacher);
+        teacherDao.delete(teacher);
     }
 
     private void verifyHasEnoughVacationDays(Teacher teacher) {

@@ -9,9 +9,9 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
-import ua.com.foxminded.university.dao.hibernate.HibernateGroupDao;
 import ua.com.foxminded.university.model.Group;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,14 +23,13 @@ import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class GroupDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test'";
 
-   // @Autowired
-   // HibernateTemplate hibernateTemplate;
     @Autowired
-    private HibernateGroupDao groupDao;
+    private GroupDao groupDao;
     @Autowired
     SessionFactory sessionFactory;
     @Autowired
@@ -102,16 +101,16 @@ public class GroupDaoTest {
         assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
-    @Test
-    void givenCorrectGroupId_onDelete_shouldDeleteCorrectly() {
-        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
-
-        groupDao.delete(2);
-
-        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
-
-        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-    }
+//    @Test
+//    void givenCorrectGroupId_onDelete_shouldDeleteCorrectly() {
+//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
+//
+//        groupDao.delete(2);
+//
+//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
+//
+//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+//    }
 
     public interface TestData {
         Group groupToCreate = new Group(3, "test");

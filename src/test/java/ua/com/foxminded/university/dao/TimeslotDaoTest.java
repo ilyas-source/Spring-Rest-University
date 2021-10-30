@@ -87,16 +87,16 @@ public class TimeslotDaoTest {
         assertThat(rowsAfterUpdate).isEqualTo(1);
     }
 
-    @Test
-    void givenCorrectTimeslotId_onDelete_shouldDeleteCorrectly() {
-        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
-
-        timeslotDao.delete(2);
-
-        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
-
-        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-    }
+//    @Test
+//    void givenCorrectTimeslotId_onDelete_shouldDeleteCorrectly() {
+//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
+//
+//        timeslotDao.delete(2);
+//
+//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
+//
+//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
+//    }
 
     public interface TestData {
         Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));

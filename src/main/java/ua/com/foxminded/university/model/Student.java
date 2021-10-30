@@ -1,17 +1,33 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "students")
 public class Student {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String firstName;
+    @Column
     private String lastName;
+    @Column
     private Gender gender;
+    @Column
     private LocalDate birthDate;
+    @Column
     private String email;
+    @Column
     private String phone;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Address address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Group group;
 
     public static Builder builder() {

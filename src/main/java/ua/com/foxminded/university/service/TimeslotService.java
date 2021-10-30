@@ -64,8 +64,9 @@ public class TimeslotService {
 
     public void delete(int id) {
         logger.debug("Deleting timeslot by id: {} ", id);
-        verifyHasNoLecturesScheduled(getById(id));
-        timeslotDao.delete(id);
+        Timeslot timeslot = getById(id);
+        verifyHasNoLecturesScheduled(timeslot);
+        timeslotDao.delete(timeslot);
     }
 
     private void verifyHasNoIntersections(Timeslot timeslot) {

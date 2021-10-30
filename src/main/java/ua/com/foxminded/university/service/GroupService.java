@@ -56,8 +56,9 @@ public class GroupService {
 
     public void delete(int id) {
         logger.debug("Deleting group by id: {} ", id);
-        verifyHasNoStudents(getById(id));
-        groupDao.delete(id);
+        Group group=getById(id);
+        verifyHasNoStudents(group);
+        groupDao.delete(group);
     }
 
     private void verifyNameIsUnique(Group group) {

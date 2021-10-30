@@ -1,16 +1,37 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Entity
+@Table(name = "lectures")
 public class Lecture {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column
     private LocalDate date;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Timeslot timeslot;
+    @ManyToMany
+    @JoinTable(
+            name="lectures_groups",
+            joinColumns = @JoinColumn(name="lecture_id"),
+            inverseJoinColumns = @JoinColumn(name="group_id"))
     private List<Group> groups;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Subject subject;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Teacher teacher;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Classroom classroom;
 
     public static Builder builder() {

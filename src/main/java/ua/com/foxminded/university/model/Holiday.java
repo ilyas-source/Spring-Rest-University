@@ -1,15 +1,19 @@
 package ua.com.foxminded.university.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "holidays")
 public class Holiday {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private LocalDate date;
+    @Column
     private String name;
 
     public Holiday() {

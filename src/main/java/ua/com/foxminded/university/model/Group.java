@@ -6,10 +6,12 @@ import javax.persistence.*;
 @Table(name = "groups")
 @NamedQueries({
         @NamedQuery(name = "SelectAllGroups",
-                query = "from Group order by name")
-    //    @NamedQuery(name = "FindByLectureId",
-    //            query = "SELECT g.id, g.name from lectures_groups AS l_g "+
-    //                    " LEFT JOIN groups AS g ON (l_g.group_id=g.id) WHERE l_g.lecture_id = ?")
+               query = "from Group order by name"),
+       @NamedQuery(name = "FindByName",
+               query = "from Group where name like :name")
+//        @NamedQuery(name = "FindByLectureId",
+//                query = "select Group from Lecture l join l.groups g where l.id=:id")
+
         })
 public class Group {
 
@@ -17,7 +19,6 @@ public class Group {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column
     private String name;
 

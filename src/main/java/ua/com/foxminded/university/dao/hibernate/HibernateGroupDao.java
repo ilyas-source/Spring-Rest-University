@@ -60,7 +60,7 @@ public class HibernateGroupDao implements GroupDao {
     public Optional<Group> findByName(String name) {
         logger.debug("Searching group by name: {}", name);
         Session session = sessionFactory.getCurrentSession();
-        var query = session.createNamedQuery("FindByLectureId");
+        var query = session.createNamedQuery("FindByName");
         query.setParameter("name", name);
 
         return Optional.ofNullable(session.get(Group.class, name));

@@ -56,7 +56,7 @@ public class VacationService {
     public void delete(int id) {
         logger.debug("Deleting vacation by id: {} ", id);
         verifyIdExists(id);
-        vacationDao.delete(id);
+        vacationDao.delete(getById(id));
     }
 
     private void verifyDurationIsPositive(Vacation vacation) {

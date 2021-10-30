@@ -1,10 +1,20 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "locations")
 public class Location {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String building;
+    @Column
     private int floor;
+    @Column
     private int roomNumber;
 
     public Location() {

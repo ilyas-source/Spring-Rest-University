@@ -51,8 +51,9 @@ public class LocationService {
 
     public void delete(int id) {
         logger.debug("Deleting location by id: {} ", id);
-        verifyIsNotUsed((getById(id)));
-        locationDao.delete(id);
+        Location location = getById(id);
+        verifyIsNotUsed(location);
+        locationDao.delete(location);
     }
 
     private void verifyIsNotUsed(Location location) {

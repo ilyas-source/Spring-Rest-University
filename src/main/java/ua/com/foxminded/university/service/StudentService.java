@@ -68,7 +68,7 @@ public class StudentService {
     public void delete(int id) {
         logger.debug("Deleting student by id: {} ", id);
         verifyIdExists(id);
-        studentDao.delete(id);
+        studentDao.delete(getById(id));
     }
 
     private void verifyIdExists(int id) {
