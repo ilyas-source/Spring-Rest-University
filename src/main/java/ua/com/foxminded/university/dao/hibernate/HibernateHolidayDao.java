@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -58,8 +59,12 @@ public class HibernateHolidayDao implements HolidayDao {
     }
 
     @Override
-    public List<Holiday> findByDate(LocalDate date) { // TODO
-        return null;
+    public List<Holiday> findByDate(LocalDate date) {
+        logger.debug("Searching holiday by date: {}", date);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Holiday> query = session.createNamedQuery("FindByDate")
+                .setParameter("date", date);
+        return query.list();
     }
 }
 

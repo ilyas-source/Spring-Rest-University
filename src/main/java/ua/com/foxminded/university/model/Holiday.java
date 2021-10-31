@@ -7,7 +7,9 @@ import java.time.LocalDate;
 @Table(name = "holidays")
 @NamedQueries({
         @NamedQuery(name = "SelectAllHolidays",
-                query = "from Holiday order by id")
+                query = "from Holiday order by id"),
+        @NamedQuery(name = "FindByDate",
+                query = "from Holiday where date = :date")
 })
 public class Holiday {
 
