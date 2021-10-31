@@ -39,12 +39,12 @@ public class HolidayDaoTest {
 
     @Test
     void givenNewHoliday_onCreate_shouldCreateHoliday() {
-        var actual = hibernateTemplate.get(Holiday.class, 3);
+        var actual = hibernateTemplate.get(Holiday.class, 4);
         assertNull(actual);
 
         holidayDao.create(holidayToCreate);
 
-        actual = hibernateTemplate.get(Holiday.class, 3);
+        actual = hibernateTemplate.get(Holiday.class, 4);
         assertEquals(holidayToCreate, actual);
     }
 

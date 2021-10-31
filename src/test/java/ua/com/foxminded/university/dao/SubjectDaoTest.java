@@ -38,12 +38,12 @@ public class SubjectDaoTest {
 
     @Test
     void givenNewSubject_onCreate_shouldCreateSubject() {
-        var actual = hibernateTemplate.get(Subject.class, 3);
+        var actual = hibernateTemplate.get(Subject.class, 5);
         assertNull(actual);
 
         subjectDao.create(subjectToCreate);
 
-        actual = hibernateTemplate.get(Subject.class, 3);
+        actual = hibernateTemplate.get(Subject.class, 5);
         assertEquals(subjectToCreate, actual);
     }
 

@@ -2,6 +2,7 @@ package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +60,29 @@ public class HibernateClassroomDao implements ClassroomDao {
     }
 
     @Override
-    public Optional<Classroom> findByName(String name) { // TODO
-        return Optional.empty();
+    public Optional<Classroom> findByName(String name) {
+        logger.debug("Searching classroom by name: {}", name);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Classroom> query = session.createNamedQuery("FindClassroomByName")
+                .setParameter("name", name);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<Classroom> findByLocation(Location location) { // TODO
-        return Optional.empty();
+    public Optional<Classroom> findByLocation(Location location) {
+        logger.debug("Searching classroom by location: {}", location);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Classroom> query = session.createNamedQuery("FindClassroomByLocation")
+                .setParameter("location", location);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
 

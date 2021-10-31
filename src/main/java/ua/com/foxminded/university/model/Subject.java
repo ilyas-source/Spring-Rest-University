@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "subjects")
 @NamedQueries({
         @NamedQuery(name = "SelectAllSubjects",
-                query = "from Subject order by name")
+                query = "from Subject order by id")
 })
 public class Subject {
 

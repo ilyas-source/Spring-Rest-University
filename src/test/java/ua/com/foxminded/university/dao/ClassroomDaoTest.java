@@ -98,7 +98,7 @@ public class ClassroomDaoTest {
     }
 
     @Test
-    void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() { // TODO
+    void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() {
         Optional<Classroom> expected = Optional.of(expectedClassroom1);
 
         Optional<Classroom> actual = classroomDao.findByName(expectedClassroom1.getName());
@@ -107,20 +107,25 @@ public class ClassroomDaoTest {
     }
 
     @Test
-    void givenLocation_onFindByLocation_shouldReturnOptionalwithCorrectClassroom() { // TODO
-        Optional<Classroom> expected = Optional.of(expectedClassroom1);
+    void givenWrongName_onFindByName_shouldReturnOptionalEmpty() {
+        Optional<Classroom> actual = classroomDao.findByName("wrong name");
 
-        Optional<Classroom> actual = classroomDao.findByLocation(expectedClassroom1.getLocation());
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() {
+        var expected = Optional.of(expectedClassroom1);
+        var actual=classroomDao.findByLocation(expectedClassroom1.getLocation());
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() { //TODO
-        var expected = Optional.of(expectedClassroom1);
-        var actual=classroomDao.findByLocation(expectedClassroom1.getLocation());
+    void givenWrongLocation_onFindByLocation_shouldReturnOptionalEmpty() {
+        var actual=classroomDao.findByLocation(testLocation);
 
-        assertEquals(expected, actual);
+        assertEquals(Optional.empty(), actual);
     }
 
     public interface TestData {

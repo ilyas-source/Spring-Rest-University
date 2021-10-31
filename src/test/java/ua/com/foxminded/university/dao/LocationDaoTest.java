@@ -38,12 +38,12 @@ public class LocationDaoTest {
 
     @Test
     void givenNewLocation_onCreate_shouldCreateLocation() {
-        var actual = hibernateTemplate.get(Location.class, 3);
+        var actual = hibernateTemplate.get(Location.class, 4);
         assertNull(actual);
 
         locationDao.create(locationToCreate);
 
-        actual = hibernateTemplate.get(Location.class, 3);
+        actual = hibernateTemplate.get(Location.class, 4);
         assertEquals(locationToCreate, actual);
     }
 
