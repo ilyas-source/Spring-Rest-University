@@ -5,6 +5,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "teachers")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllTeachers",
+                query = "from Teacher order by lastName")
+})
 public class Teacher {
 
     @Id

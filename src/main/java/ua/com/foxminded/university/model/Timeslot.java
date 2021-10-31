@@ -5,6 +5,10 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "timeslots")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllTimeslots",
+                query = "from Timeslot")
+})
 public class Timeslot {
 
     @Id

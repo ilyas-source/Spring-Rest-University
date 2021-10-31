@@ -4,6 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "subjects")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllSubjects",
+                query = "from Subject order by name")
+})
 public class Subject {
 
     @Id

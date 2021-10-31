@@ -6,6 +6,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "lectures")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllLectures",
+                query = "from Lecture order by date")
+})
 public class Lecture {
 
     @Id

@@ -39,29 +39,6 @@ public class GroupDaoTest {
     private HibernateTemplate hibernateTemplate;
 
     @Test
-    void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
-        var expected = Optional.of(expectedGroup1);
-
-        var actual = groupDao.findByName(expectedGroup1.getName());
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenWrongName_onFindByName_shouldReturnOptionalEmpty() {
-        var actual = groupDao.findByName("Wrong name");
-
-        assertEquals(Optional.empty(), actual);
-    }
-
-    @Test
-    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
-        var actual = groupDao.findByLectureId(1);
-
-        assertEquals(expectedGroups, actual);
-    }
-
-    @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {
         var actual = hibernateTemplate.get(Group.class, 3);
         assertNull(actual);
@@ -119,6 +96,29 @@ public class GroupDaoTest {
 
         var expected = hibernateTemplate.get(Group.class, 2);
         assertNull(expected);
+    }
+
+    @Test
+    void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
+        var expected = Optional.of(expectedGroup1);
+
+        var actual = groupDao.findByName(expectedGroup1.getName());
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenWrongName_onFindByName_shouldReturnOptionalEmpty() {
+        var actual = groupDao.findByName("Wrong name");
+
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
+        var actual = groupDao.findByLectureId(1);
+
+        assertEquals(expectedGroups, actual);
     }
 
     public interface TestData {

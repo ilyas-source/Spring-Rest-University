@@ -9,8 +9,8 @@ import javax.persistence.*;
                query = "from Group order by name"),
        @NamedQuery(name = "FindByName",
                query = "from Group where name = :name")
-//        @NamedQuery(name = "FindByLectureId",
-//                query = "select Group from Lecture l join l.groups g where l.id=:id")
+     //  @NamedQuery(name = "FindByLectureId",
+    //           query = "select g from Group g inner join g.course as c where c.id = :id")
 
         })
 public class Group {

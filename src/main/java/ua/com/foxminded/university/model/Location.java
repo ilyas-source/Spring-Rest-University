@@ -4,6 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "locations")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllLocations",
+                query = "from Location")
+})
 public class Location {
 
     @Id
