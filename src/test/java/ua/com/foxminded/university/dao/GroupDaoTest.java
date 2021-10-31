@@ -2,13 +2,15 @@ package ua.com.foxminded.university.dao;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateGroupDao;
 import ua.com.foxminded.university.model.Group;
 
 import javax.transaction.Transactional;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
@@ -26,42 +29,54 @@ import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
 @Transactional
 public class GroupDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "name='test'";
+    private static final Logger logger = LoggerFactory.getLogger(GroupDaoTest.class);
 
     @Autowired
-    private GroupDao groupDao;
+    private HibernateGroupDao groupDao;
     @Autowired
     SessionFactory sessionFactory;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
-        Optional<Group> expected = Optional.of(expectedGroup1);
+        var expected = Optional.of(expectedGroup1);
 
-        Optional<Group> actual = groupDao.findByName(expectedGroup1.getName());
+        var actual = groupDao.findByName(expectedGroup1.getName());
 
         assertEquals(expected, actual);
     }
 
     @Test
+    void givenWrongName_onFindByName_shouldReturnOptionalEmpty() {
+        var actual = groupDao.findByName("Wrong name");
+
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
+        var actual = groupDao.findByLectureId(1);
+
+        assertEquals(expectedGroups, actual);
+    }
+
+    @Test
     void givenNewGroup_onCreate_shouldCreateGroup() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
+        var actual = hibernateTemplate.get(Group.class, 3);
+        assertNull(actual);
 
         groupDao.create(groupToCreate);
 
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "groups", "id = 3 AND " + TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+        actual = hibernateTemplate.get(Group.class, 3);
+        assertEquals(groupToCreate, actual);
     }
 
     @Test
     void givenCorrectGroupId_onFindById_shouldReturnOptionalWithCorrectGroup() {
-        Optional<Group> expected = Optional.of(expectedGroup2);
+        var expected = Optional.of(expectedGroup2);
 
-        Optional<Group> actual = groupDao.findById(2);
+        var actual = groupDao.findById(2);
 
         assertEquals(expected, actual);
     }
@@ -70,23 +85,21 @@ public class GroupDaoTest {
     void givenIncorrectGroupId_onFindById_shouldReturnEmptyOptional() {
         Optional<Group> expected = Optional.empty();
 
-        Optional<Group> actual = groupDao.findById(5);
+        var actual = groupDao.findById(5);
 
         assertEquals(expected, actual);
     }
 
     @Test
     void ifDatabaseHasGroups_onFindAll_shouldReturnCorrectListOfGroups() {
-        List<Group> actual = groupDao.findAll();
-
-        assertEquals(expectedGroups, actual);
+         assertEquals(expectedGroups, groupDao.findAll());
     }
 
     @Test
     void ifDatabaseHasNoGroups_onFindAll_shouldReturnEmptyListOfGroups() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "groups");
+        hibernateTemplate.deleteAll(expectedGroups);
 
-        List<Group> groups = groupDao.findAll();
+        var groups = groupDao.findAll();
 
         assertThat(groups).isEmpty();
     }
@@ -95,22 +108,18 @@ public class GroupDaoTest {
     void givenGroup_onUpdate_shouldUpdateCorrectly() {
         groupDao.update(groupToUpdate);
 
-        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "groups", "id = 2 AND " + TEST_WHERE_CLAUSE);
+        var expected = hibernateTemplate.get(Group.class, 2);
 
-        assertThat(rowsAfterUpdate).isEqualTo(1);
+        assertEquals(groupToUpdate, expected);
     }
 
-//    @Test
-//    void givenCorrectGroupId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
-//
-//        groupDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "groups", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
+    @Test
+    void givenCorrectGroupId_onDelete_shouldDeleteCorrectly() {
+        groupDao.delete(expectedGroup2);
+
+        var expected = hibernateTemplate.get(Group.class, 2);
+        assertNull(expected);
+    }
 
     public interface TestData {
         Group groupToCreate = new Group(3, "test");

@@ -2,12 +2,14 @@ package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.model.Group;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,10 +62,13 @@ public class HibernateGroupDao implements GroupDao {
     public Optional<Group> findByName(String name) {
         logger.debug("Searching group by name: {}", name);
         Session session = sessionFactory.getCurrentSession();
-        var query = session.createNamedQuery("FindByName");
-        query.setParameter("name", name);
-
-        return Optional.ofNullable(session.get(Group.class, name));
+        Query<Group> query = session.createNamedQuery("FindByName")
+                            .setParameter("name", name);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
