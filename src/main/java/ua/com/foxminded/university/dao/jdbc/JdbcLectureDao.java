@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
-@Component
+//@Component
 public class JdbcLectureDao implements LectureDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcLectureDao.class);

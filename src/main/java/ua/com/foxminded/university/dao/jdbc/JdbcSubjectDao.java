@@ -16,7 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class JdbcSubjectDao implements SubjectDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcSubjectDao.class);

@@ -58,12 +58,12 @@ public class HibernateClassroomDao implements ClassroomDao {
     }
 
     @Override
-    public Optional<Classroom> findByName(String name) {
+    public Optional<Classroom> findByName(String name) { // TODO
         return Optional.empty();
     }
 
     @Override
-    public Optional<Classroom> findByLocation(Location location) {
+    public Optional<Classroom> findByLocation(Location location) { // TODO
         return Optional.empty();
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.dao.jdbc.mappers.VacationMapper;
 import ua.com.foxminded.university.model.Vacation;
@@ -16,7 +15,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class JdbcVacationDao implements VacationDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcVacationDao.class);

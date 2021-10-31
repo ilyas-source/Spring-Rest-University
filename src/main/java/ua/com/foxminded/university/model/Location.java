@@ -18,7 +18,7 @@ public class Location {
     private String building;
     @Column
     private int floor;
-    @Column
+    @Column (name="room_number")
     private int roomNumber;
 
     public Location() {

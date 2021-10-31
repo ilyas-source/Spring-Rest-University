@@ -39,12 +39,12 @@ public class ClassroomDaoTest {
 
     @Test
     void givenNewClassroom_onCreate_shouldCreateClassroom() {
-        var actual = hibernateTemplate.get(Classroom.class, 3);
+        var actual = hibernateTemplate.get(Classroom.class, 4);
         assertNull(actual);
 
         classroomDao.create(classroomToCreate);
 
-        actual = hibernateTemplate.get(Classroom.class, 3);
+        actual = hibernateTemplate.get(Classroom.class, 4);
         assertEquals(classroomToCreate, actual);
     }
 
@@ -97,11 +97,8 @@ public class ClassroomDaoTest {
         assertNull(expected);
     }
 
-
-
-
     @Test
-    void givenName_onFindByName_shouldReturnOptionalwithCorrectClassroom() {
+    void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() { // TODO
         Optional<Classroom> expected = Optional.of(expectedClassroom1);
 
         Optional<Classroom> actual = classroomDao.findByName(expectedClassroom1.getName());
@@ -110,7 +107,7 @@ public class ClassroomDaoTest {
     }
 
     @Test
-    void givenLocation_onFindByLocation_shouldReturnOptionalwithCorrectClassroom() {
+    void givenLocation_onFindByLocation_shouldReturnOptionalwithCorrectClassroom() { // TODO
         Optional<Classroom> expected = Optional.of(expectedClassroom1);
 
         Optional<Classroom> actual = classroomDao.findByLocation(expectedClassroom1.getLocation());
@@ -119,15 +116,7 @@ public class ClassroomDaoTest {
     }
 
     @Test
-    void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() {
-        var expected = Optional.of(expectedClassroom1);
-        var actual=classroomDao.findByName(expectedClassroom1.getName());
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() {
+    void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() { //TODO
         var expected = Optional.of(expectedClassroom1);
         var actual=classroomDao.findByLocation(expectedClassroom1.getLocation());
 

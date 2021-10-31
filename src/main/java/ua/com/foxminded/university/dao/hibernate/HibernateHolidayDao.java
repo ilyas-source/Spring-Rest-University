@@ -58,7 +58,7 @@ public class HibernateHolidayDao implements HolidayDao {
     }
 
     @Override
-    public List<Holiday> findByDate(LocalDate date) {
+    public List<Holiday> findByDate(LocalDate date) { // TODO
         return null;
     }
 }

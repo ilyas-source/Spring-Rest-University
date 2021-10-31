@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
-@Component
+//@Component
 public class JdbcTeacherDao implements TeacherDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcTeacherDao.class);

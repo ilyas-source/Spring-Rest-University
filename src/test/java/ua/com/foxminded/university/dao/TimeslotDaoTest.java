@@ -39,12 +39,12 @@ public class TimeslotDaoTest {
 
     @Test
     void givenNewTimeslot_onCreate_shouldCreateTimeslot() {
-        var actual = hibernateTemplate.get(Timeslot.class, 3);
+        var actual = hibernateTemplate.get(Timeslot.class, 4);
         assertNull(actual);
 
         timeslotDao.create(timeslotToCreate);
 
-        actual = hibernateTemplate.get(Timeslot.class, 3);
+        actual = hibernateTemplate.get(Timeslot.class, 4);
         assertEquals(timeslotToCreate, actual);
     }
 

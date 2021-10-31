@@ -15,9 +15,9 @@ public class Timeslot {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
+    @Column(name="begin_time")
     private LocalTime beginTime;
-    @Column
+    @Column(name="end_time")
     private LocalTime endTime;
 
     public Timeslot() {

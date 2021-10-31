@@ -57,12 +57,12 @@ public class HibernateTimeslotDao implements TimeslotDao {
     }
 
     @Override
-    public int countIntersectingTimeslots(Timeslot timeslot) {
+    public int countIntersectingTimeslots(Timeslot timeslot) { // TODO
         return 0;
     }
 
     @Override
-    public Optional<Timeslot> findByBothTimes(Timeslot timeslot) {
+    public Optional<Timeslot> findByBothTimes(Timeslot timeslot) { // TODO
         return Optional.empty();
     }
 }

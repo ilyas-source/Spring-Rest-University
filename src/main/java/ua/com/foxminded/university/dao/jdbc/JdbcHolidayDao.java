@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class JdbcHolidayDao implements HolidayDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcHolidayDao.class);

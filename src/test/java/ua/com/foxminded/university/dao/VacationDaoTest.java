@@ -37,12 +37,12 @@ public class VacationDaoTest {
 
     @Test
     void givenNewVacation_onCreate_shouldCreateVacation() {
-        var actual = hibernateTemplate.get(Vacation.class, 3);
+        var actual = hibernateTemplate.get(Vacation.class, 5);
         assertNull(actual);
 
         vacationDao.create(vacationToCreate);
 
-        actual = hibernateTemplate.get(Vacation.class, 3);
+        actual = hibernateTemplate.get(Vacation.class, 5);
         assertEquals(vacationToCreate, actual);
     }
 

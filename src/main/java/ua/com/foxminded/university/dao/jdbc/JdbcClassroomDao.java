@@ -20,7 +20,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class JdbcClassroomDao implements ClassroomDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcClassroomDao.class);

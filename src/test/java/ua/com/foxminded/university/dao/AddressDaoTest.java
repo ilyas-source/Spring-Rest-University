@@ -27,8 +27,6 @@ import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 @Transactional
 public class AddressDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "country='test' AND postalCode = 'test' AND region='test' AND city='test' AND streetAddress='test'";
-
     @Autowired
     private HibernateAddressDao addressDao;
     @Autowired
@@ -38,12 +36,12 @@ public class AddressDaoTest {
 
     @Test
     void givenNewAddress_onCreate_shouldCreateAddress() {
-        var actual = hibernateTemplate.get(Address.class, 3);
+        var actual = hibernateTemplate.get(Address.class, 7);
         assertNull(actual);
 
         addressDao.create(addressToCreate);
 
-        actual = hibernateTemplate.get(Address.class, 3);
+        actual = hibernateTemplate.get(Address.class, 7);
         assertEquals(addressToCreate, actual);
     }
 
@@ -60,7 +58,7 @@ public class AddressDaoTest {
     void givenIncorrectAddressId_onFindById_shouldReturnEmptyOptional() {
         Optional<Address> expected = Optional.empty();
 
-        var actual = addressDao.findById(5);
+        var actual = addressDao.findById(50);
 
         assertEquals(expected, actual);
     }

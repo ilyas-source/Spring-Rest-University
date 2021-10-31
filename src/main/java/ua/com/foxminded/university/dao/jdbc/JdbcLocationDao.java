@@ -16,7 +16,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+//@Component
 public class JdbcLocationDao implements LocationDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcLocationDao.class);

@@ -2,8 +2,6 @@ package ua.com.foxminded.university.dao;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -28,8 +26,6 @@ import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
 public class GroupDaoTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(GroupDaoTest.class);
 
     @Autowired
     private HibernateGroupDao groupDao;
