@@ -1,15 +1,17 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateSubjectDao;
 import ua.com.foxminded.university.model.Subject;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,18 +19,85 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class SubjectDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
 
     @Autowired
-    private SubjectDao subjectDao;
+    private HibernateSubjectDao subjectDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
+
+    @Test
+    void givenNewSubject_onCreate_shouldCreateSubject() {
+        var actual = hibernateTemplate.get(Subject.class, 3);
+        assertNull(actual);
+
+        subjectDao.create(subjectToCreate);
+
+        actual = hibernateTemplate.get(Subject.class, 3);
+        assertEquals(subjectToCreate, actual);
+    }
+
+    @Test
+    void givenCorrectSubjectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
+        var expected = Optional.of(expectedSubject2);
+
+        var actual = subjectDao.findById(2);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectSubjectId_onFindById_shouldReturnEmptyOptional() {
+        Optional<Subject> expected = Optional.empty();
+
+        var actual = subjectDao.findById(5);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasSubjects_onFindAll_shouldReturnCorrectListOfSubjects() {
+        assertEquals(expectedSubjects, subjectDao.findAll());
+    }
+
+    @Test
+    void ifDatabaseHasNoSubjects_onFindAll_shouldReturnEmptyListOfSubjects() {
+        hibernateTemplate.deleteAll(expectedSubjects);
+
+        var subjects = subjectDao.findAll();
+
+        assertThat(subjects).isEmpty();
+    }
+
+    @Test
+    void givenSubject_onUpdate_shouldUpdateCorrectly() {
+        subjectDao.update(subjectToUpdate);
+
+        var expected = hibernateTemplate.get(Subject.class, 2);
+
+        assertEquals(subjectToUpdate, expected);
+    }
+
+    @Test
+    void givenCorrectSubjectId_onDelete_shouldDeleteCorrectly() {
+        subjectDao.delete(expectedSubject2);
+
+        var expected = hibernateTemplate.get(Subject.class, 2);
+        assertNull(expected);
+    }
+
+
+
 
     @Test
     void givenName_onFindByName_shouldReturnOptionalwithCorrectSubject() {
@@ -47,74 +116,6 @@ public class SubjectDaoTest {
     }
 
     @Test
-    void givenNewSubject_onCreate_shouldCreateSubject() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
-
-        subjectDao.create(subjectToCreate);
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "subjects", "id = 5 AND " + TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-    }
-
-    @Test
-    void givenCorrectSubjectId_onFindById_shouldReturnOptionalWithCorrectSubject() {
-        Optional<Subject> expected = Optional.of(expectedSubject2);
-
-        Optional<Subject> actual = subjectDao.findById(2);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenIncorrectSubjectId_onFindById_shouldReturnEmptyOptional() {
-        Optional<Subject> expected = Optional.empty();
-
-        Optional<Subject> actual = subjectDao.findById(5);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void ifDatabaseHasSubjects_onFindAll_shouldReturnCorrectListOfSubjects() {
-        List<Subject> actual = subjectDao.findAll();
-
-        assertEquals(expectedSubjects, actual);
-    }
-
-    @Test
-    void ifDatabaseHasNoSubjects_onFindAll_shouldReturnEmptyListOfSubjects() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "subjects");
-
-        List<Subject> subjects = subjectDao.findAll();
-
-        assertThat(subjects).isEmpty();
-    }
-
-    @Test
-    void givenSubject_onUpdate_shouldUpdateCorrectly() {
-        subjectDao.update(subjectToUpdate);
-
-        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "subjects", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
-        assertThat(rowsAfterUpdate).isEqualTo(1);
-    }
-
-//    @Test
-//    void givenCorrectSubjectId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 2");
-//
-//        subjectDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "subjects", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
-
-    @Test
     void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
         List<Subject> actual = subjectDao.getByTeacherId(1);
 
@@ -123,7 +124,6 @@ public class SubjectDaoTest {
 
     @Test
     void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
-
         List<Subject> actual = subjectDao.getByTeacherId(3);
 
         assertThat(actual).isEmpty();

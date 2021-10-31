@@ -1,16 +1,18 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,18 +20,85 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class ClassroomDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private HibernateClassroomDao classroomDao;
     @Autowired
-    private ClassroomDao classroomDao;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
+
+    @Test
+    void givenNewClassroom_onCreate_shouldCreateClassroom() {
+        var actual = hibernateTemplate.get(Classroom.class, 3);
+        assertNull(actual);
+
+        classroomDao.create(classroomToCreate);
+
+        actual = hibernateTemplate.get(Classroom.class, 3);
+        assertEquals(classroomToCreate, actual);
+    }
+
+    @Test
+    void givenCorrectClassroomId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
+        var expected = Optional.of(expectedClassroom2);
+
+        var actual = classroomDao.findById(2);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectClassroomId_onFindById_shouldReturnEmptyOptional() {
+        Optional<Classroom> expected = Optional.empty();
+
+        var actual = classroomDao.findById(5);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasClassrooms_onFindAll_shouldReturnCorrectListOfClassrooms() {
+        assertEquals(expectedClassrooms, classroomDao.findAll());
+    }
+
+    @Test
+    void ifDatabaseHasNoClassrooms_onFindAll_shouldReturnEmptyListOfClassrooms() {
+        hibernateTemplate.deleteAll(expectedClassrooms);
+
+        var classrooms = classroomDao.findAll();
+
+        assertThat(classrooms).isEmpty();
+    }
+
+    @Test
+    void givenClassroom_onUpdate_shouldUpdateCorrectly() {
+        classroomDao.update(classroomToUpdate);
+
+        var expected = hibernateTemplate.get(Classroom.class, 2);
+
+        assertEquals(classroomToUpdate, expected);
+    }
+
+    @Test
+    void givenCorrectClassroomId_onDelete_shouldDeleteCorrectly() {
+        classroomDao.delete(expectedClassroom2);
+
+        var expected = hibernateTemplate.get(Classroom.class, 2);
+        assertNull(expected);
+    }
+
+
+
 
     @Test
     void givenName_onFindByName_shouldReturnOptionalwithCorrectClassroom() {
@@ -48,78 +117,6 @@ public class ClassroomDaoTest {
 
         assertEquals(expected, actual);
     }
-
-    @Test
-    void givenNewClassroom_onCreate_shouldCreateClassroom() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "classrooms", TEST_WHERE_CLAUSE);
-
-        classroomDao.create(classroomToCreate);
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "classrooms", TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-    }
-
-    @Test
-    void givenClassroomWithExistingId_onUpdate_shouldUpdateCorrectly() {
-        int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
-        classroomDao.update(classroomToUpdate);
-
-        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "classrooms", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
-        assertThat(rowsBeforeUpdate).isZero();
-        assertThat(rowsAfterUpdate).isEqualTo(1);
-    }
-
-    @Test
-    void givenCorrectClassroomId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
-        Optional<Classroom> expected = Optional.of(expectedClassroom2);
-
-        Optional<Classroom> actual = classroomDao.findById(2);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenIncorrectClassroomId_onFindById_shouldReturnEmptyOptional() {
-        Optional<Classroom> expected = Optional.empty();
-
-        Optional<Classroom> actual = classroomDao.findById(10);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void ifDatabaseHasClassrooms_onFindAll_shouldReturnCorrectListOfClassrooms() {
-        List<Classroom> actual = classroomDao.findAll();
-
-        assertEquals(expectedClassrooms, actual);
-    }
-
-    @Test
-    void ifDatabaseHasNoClassrooms_onFindAll_shouldReturnEmptyListOfClassrooms() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "classrooms");
-
-        List<Classroom> classrooms = classroomDao.findAll();
-
-        assertThat(classrooms).isEmpty();
-    }
-
-//    @Test
-//    void givenCorrectClassroomId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
-//
-//        classroomDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "classrooms", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
 
     @Test
     void givenName_onFindByName_shouldReturnOptionalWithCorrectClassroom() {

@@ -1,51 +1,56 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateVacationDao;
 import ua.com.foxminded.university.model.Vacation;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.*;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class VacationDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
 
     @Autowired
-    private VacationDao vacationDao;
+    private HibernateVacationDao vacationDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenNewVacation_onCreate_shouldCreateVacation() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "vacations", "id = 5 AND " + TEST_WHERE_CLAUSE);
+        var actual = hibernateTemplate.get(Vacation.class, 3);
+        assertNull(actual);
 
         vacationDao.create(vacationToCreate);
 
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "vacations", "id = 5");
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+        actual = hibernateTemplate.get(Vacation.class, 3);
+        assertEquals(vacationToCreate, actual);
     }
 
     @Test
     void givenCorrectVacationId_onFindById_shouldReturnOptionalWithCorrectVacation() {
-        Optional<Vacation> expected = Optional.of(expectedVacation2);
-        Optional<Vacation> actual = vacationDao.findById(2);
+        var expected = Optional.of(expectedVacation2);
+
+        var actual = vacationDao.findById(2);
 
         assertEquals(expected, actual);
     }
@@ -54,51 +59,41 @@ public class VacationDaoTest {
     void givenIncorrectVacationId_onFindById_shouldReturnEmptyOptional() {
         Optional<Vacation> expected = Optional.empty();
 
-        Optional<Vacation> actual = vacationDao.findById(5);
+        var actual = vacationDao.findById(5);
 
         assertEquals(expected, actual);
     }
 
     @Test
     void ifDatabaseHasVacations_onFindAll_shouldReturnCorrectListOfVacations() {
-        List<Vacation> actual = vacationDao.findAll();
-
-        assertEquals(expectedVacations, actual);
+        assertEquals(expectedVacations, vacationDao.findAll());
     }
 
     @Test
     void ifDatabaseHasNoVacations_onFindAll_shouldReturnEmptyListOfVacations() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "vacations");
+        hibernateTemplate.deleteAll(expectedVacations);
 
-        List<Vacation> vacations = vacationDao.findAll();
+        var vacations = vacationDao.findAll();
 
         assertThat(vacations).isEmpty();
     }
 
     @Test
-    void givenVacationWithExistingId_onUpdate_shouldUpdateCorrectly() {
-        int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "vacations", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
+    void givenVacation_onUpdate_shouldUpdateCorrectly() {
         vacationDao.update(vacationToUpdate);
 
-        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "vacations", "id = 2 AND " + TEST_WHERE_CLAUSE);
+        var expected = hibernateTemplate.get(Vacation.class, 2);
 
-        assertThat(rowsBeforeUpdate).isZero();
-        assertThat(rowsAfterUpdate).isEqualTo(1);
+        assertEquals(vacationToUpdate, expected);
     }
 
-//    @Test
-//    void givenCorrectVacationId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
-//
-//        vacationDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "vacations", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
+    @Test
+    void givenCorrectVacationId_onDelete_shouldDeleteCorrectly() {
+        vacationDao.delete(expectedVacation2);
+
+        var expected = hibernateTemplate.get(Vacation.class, 2);
+        assertNull(expected);
+    }
 
     public interface TestData {
         Vacation vacationToCreate = new Vacation(5, LocalDate.of(2020, 06, 01), LocalDate.of(2020, 07, 01));

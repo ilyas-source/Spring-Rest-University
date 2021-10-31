@@ -1,15 +1,17 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateTeacherDao;
 import ua.com.foxminded.university.model.*;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
@@ -26,14 +29,80 @@ import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class TeacherDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private HibernateTeacherDao teacherDao;
     @Autowired
-    private TeacherDao teacherDao;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
+
+    @Test
+    void givenNewTeacher_onCreate_shouldCreateTeacher() {
+        var actual = hibernateTemplate.get(Teacher.class, 3);
+        assertNull(actual);
+
+        teacherDao.create(teacherToCreate);
+
+        actual = hibernateTemplate.get(Teacher.class, 3);
+        assertEquals(teacherToCreate, actual);
+    }
+
+    @Test
+    void givenCorrectTeacherId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
+        var expected = Optional.of(expectedTeacher2);
+
+        var actual = teacherDao.findById(2);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectTeacherId_onFindById_shouldReturnEmptyOptional() {
+        Optional<Teacher> expected = Optional.empty();
+
+        var actual = teacherDao.findById(5);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
+        assertEquals(expectedTeachers, teacherDao.findAll());
+    }
+
+    @Test
+    void ifDatabaseHasNoTeachers_onFindAll_shouldReturnEmptyListOfTeachers() {
+        hibernateTemplate.deleteAll(expectedTeachers);
+
+        var teachers = teacherDao.findAll();
+
+        assertThat(teachers).isEmpty();
+    }
+
+    @Test
+    void givenTeacher_onUpdate_shouldUpdateCorrectly() {
+        teacherDao.update(teacherToUpdate);
+
+        var expected = hibernateTemplate.get(Teacher.class, 2);
+
+        assertEquals(teacherToUpdate, expected);
+    }
+
+    @Test
+    void givenCorrectTeacherId_onDelete_shouldDeleteCorrectly() {
+        teacherDao.delete(expectedTeacher2);
+
+        var expected = hibernateTemplate.get(Teacher.class, 2);
+        assertNull(expected);
+    }
+
+
+
 
     @Test
     void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectTeacher() {
@@ -52,62 +121,6 @@ public class TeacherDaoTest {
 
         assertEquals(expected, actual);
     }
-
-    @Test
-    void givenNewTeacher_onCreate_shouldCreateTeacher() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
-
-        teacherDao.create(teacherToCreate);
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "teachers", "id = 3 AND address_id=7 AND " + TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-    }
-
-    @Test
-    void givenCorrectTeacherId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
-        Optional<Teacher> expected = Optional.of(expectedTeacher2);
-
-        Optional<Teacher> actual = teacherDao.findById(2);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenIncorrectTeacherId_onFindById_shouldReturnEmptyOptional() {
-        Optional<Teacher> expected = Optional.empty();
-
-        Optional<Teacher> actual = teacherDao.findById(5);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenTeacher_onUpdate_shouldUpdateCorrectly() {
-        int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "teachers", "id = 2 AND address_id=2 AND " + TEST_WHERE_CLAUSE);
-
-        teacherDao.update(teacherToUpdate);
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "teachers", "id = 2 AND address_id=2 AND " + TEST_WHERE_CLAUSE);
-
-        assertThat(rowsBeforeUpdate).isZero();
-        assertThat(rowsAfterCreate).isEqualTo(1);
-    }
-
-//    @Test
-//    void givenCorrectTeacherId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
-//
-//        teacherDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "teachers", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
 
     @Test
     void givenLecture_onGetReplacementCandidates_shouldReturnCorrectListOfTeachers() {
@@ -132,13 +145,6 @@ public class TeacherDaoTest {
         var actual = teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com");
 
         assertEquals(Optional.of(expectedTeacher1), actual);
-    }
-
-    @Test
-    void ifDatabaseHasTeachers_onFindAll_shouldReturnCorrectListOfTeachers() {
-        List<Teacher> actual = teacherDao.findAll();
-
-        assertEquals(expectedTeachers, actual);
     }
 
     public interface TestData {

@@ -1,16 +1,18 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateStudentDao;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
@@ -26,15 +29,78 @@ import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class StudentDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
             "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' AND group_id = 2";
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private HibernateStudentDao studentDao;
     @Autowired
-    private StudentDao studentDao;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
+
+    @Test
+    void givenNewStudent_onCreate_shouldCreateStudent() {
+        var actual = hibernateTemplate.get(Student.class, 3);
+        assertNull(actual);
+
+        studentDao.create(studentToCreate);
+
+        actual = hibernateTemplate.get(Student.class, 3);
+        assertEquals(studentToCreate, actual);
+    }
+
+    @Test
+    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
+        var expected = Optional.of(expectedStudent2);
+
+        var actual = studentDao.findById(2);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenIncorrectStudentId_onFindById_shouldReturnEmptyOptional() {
+        Optional<Student> expected = Optional.empty();
+
+        var actual = studentDao.findById(5);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void ifDatabaseHasStudents_onFindAll_shouldReturnCorrectListOfStudents() {
+        assertEquals(expectedStudents, studentDao.findAll());
+    }
+
+    @Test
+    void ifDatabaseHasNoStudents_onFindAll_shouldReturnEmptyListOfStudents() {
+        hibernateTemplate.deleteAll(expectedStudents);
+
+        var students = studentDao.findAll();
+
+        assertThat(students).isEmpty();
+    }
+
+    @Test
+    void givenStudent_onUpdate_shouldUpdateCorrectly() {
+        studentDao.update(studentToUpdate);
+
+        var expected = hibernateTemplate.get(Student.class, 2);
+
+        assertEquals(studentToUpdate, expected);
+    }
+
+    @Test
+    void givenCorrectStudentId_onDelete_shouldDeleteCorrectly() {
+        studentDao.delete(expectedStudent2);
+
+        var expected = hibernateTemplate.get(Student.class, 2);
+        assertNull(expected);
+    }
 
     @Test
     void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectStudent() {
@@ -55,70 +121,13 @@ public class StudentDaoTest {
     }
 
     @Test
-    void givenGroup_onFindbyGroup_shouldReturnCorrectListOfStudents() {
+    void givenGroup_onFindByGroup_shouldReturnCorrectListOfStudents() {
         List<Student> expected = new ArrayList<>(Arrays.asList(expectedStudent1, expectedStudent3));
 
         List<Student> actual = studentDao.findByGroup(expectedGroup1);
 
         assertEquals(expected, actual);
     }
-
-    @Test
-    void givenNewStudent_onCreate_shouldCreateStudent() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 5 AND address_id = 7 AND " + TEST_WHERE_CLAUSE);
-
-        studentDao.create(studentToCreate);
-        System.out.println(studentToCreate.getAddress().getId());
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 5 AND address_id = 7 AND " + TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-    }
-
-    @Test
-    void givenCorrectStudentId_onFindById_shouldReturnOptionalWithCorrectStudent() {
-        Optional<Student> expected = Optional.of(expectedStudent2);
-
-        Optional<Student> actual = studentDao.findById(2);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenIncorrectStudentId_onFindById_shouldReturnEmptyOptional() {
-        Optional<Student> expected = Optional.empty();
-
-        Optional<Student> actual = studentDao.findById(5);
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void givenStudent_onUpdate_shouldUpdateCorrectly() {
-        int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
-        studentDao.update(studentToUpdate);
-
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "students", "id = 2 AND " + TEST_WHERE_CLAUSE);
-
-        assertThat(rowsBeforeUpdate).isZero();
-        assertThat(rowsAfterCreate).isEqualTo(1);
-    }
-
-//    @Test
-//    void givenCorrectStudentId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
-//
-//        studentDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "students", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
 
     @Test
     void givenGroup_onCountStudentsInGroup_shouldReturnCorrectNumber() {

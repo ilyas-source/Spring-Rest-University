@@ -1,15 +1,17 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
+import ua.com.foxminded.university.dao.hibernate.HibernateTimeslotDao;
 import ua.com.foxminded.university.model.Timeslot;
 
+import javax.transaction.Transactional;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,37 +20,39 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Transactional
 public class TimeslotDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
 
     @Autowired
-    private TimeslotDao timeslotDao;
+    private HibernateTimeslotDao timeslotDao;
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    SessionFactory sessionFactory;
+    @Autowired
+    private HibernateTemplate hibernateTemplate;
 
     @Test
     void givenNewTimeslot_onCreate_shouldCreateTimeslot() {
-        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
+        var actual = hibernateTemplate.get(Timeslot.class, 3);
+        assertNull(actual);
 
         timeslotDao.create(timeslotToCreate);
 
-        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "timeslots", "id = 4 AND " + TEST_WHERE_CLAUSE);
-
-        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
+        actual = hibernateTemplate.get(Timeslot.class, 3);
+        assertEquals(timeslotToCreate, actual);
     }
 
     @Test
     void givenCorrectTimeslotId_onFindById_shouldReturnOptionalWithCorrectTimeslot() {
-        Optional<Timeslot> expected = Optional.of(expectedTimeslot2);
+        var expected = Optional.of(expectedTimeslot2);
 
-        Optional<Timeslot> actual = timeslotDao.findById(2);
+        var actual = timeslotDao.findById(2);
 
         assertEquals(expected, actual);
     }
@@ -57,22 +61,21 @@ public class TimeslotDaoTest {
     void givenIncorrectTimeslotId_onFindById_shouldReturnEmptyOptional() {
         Optional<Timeslot> expected = Optional.empty();
 
-        Optional<Timeslot> actual = timeslotDao.findById(5);
+        var actual = timeslotDao.findById(5);
 
         assertEquals(expected, actual);
     }
 
     @Test
     void ifDatabaseHasTimeslots_onFindAll_shouldReturnCorrectListOfTimeslots() {
-        List<Timeslot> actual = timeslotDao.findAll();
-        assertEquals(expectedTimeslots, actual);
+        assertEquals(expectedTimeslots, timeslotDao.findAll());
     }
 
     @Test
     void ifDatabaseHasNoTimeslots_onFindAll_shouldReturnEmptyListOfTimeslots() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "timeslots");
+        hibernateTemplate.deleteAll(expectedTimeslots);
 
-        List<Timeslot> timeslots = timeslotDao.findAll();
+        var timeslots = timeslotDao.findAll();
 
         assertThat(timeslots).isEmpty();
     }
@@ -81,22 +84,18 @@ public class TimeslotDaoTest {
     void givenTimeslot_onUpdate_shouldUpdateCorrectly() {
         timeslotDao.update(timeslotToUpdate);
 
-        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-                "timeslots", "id = 2 AND " + TEST_WHERE_CLAUSE);
+        var expected = hibernateTemplate.get(Timeslot.class, 2);
 
-        assertThat(rowsAfterUpdate).isEqualTo(1);
+        assertEquals(timeslotToUpdate, expected);
     }
 
-//    @Test
-//    void givenCorrectTimeslotId_onDelete_shouldDeleteCorrectly() {
-//        int rowsBeforeDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
-//
-//        timeslotDao.delete(2);
-//
-//        int rowsAfterDelete = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "timeslots", "id = 2");
-//
-//        assertEquals(rowsAfterDelete, rowsBeforeDelete - 1);
-//    }
+    @Test
+    void givenCorrectTimeslotId_onDelete_shouldDeleteCorrectly() {
+        timeslotDao.delete(expectedTimeslot2);
+
+        var expected = hibernateTemplate.get(Timeslot.class, 2);
+        assertNull(expected);
+    }
 
     public interface TestData {
         Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
