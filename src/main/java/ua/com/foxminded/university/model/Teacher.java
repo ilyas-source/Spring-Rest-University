@@ -15,13 +15,15 @@ public class Teacher {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column
+    @Column(name="first_name")
     private String firstName;
-    @Column
+    @Column(name="last_name")
     private String lastName;
     @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column
+    @Enumerated(EnumType.STRING)
     private Degree degree;
     @ManyToMany
     @JoinTable(
@@ -36,7 +38,7 @@ public class Teacher {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Address address;
-    @OneToMany
+    @OneToMany(mappedBy = "teacher")
     private List<Vacation> vacations;
 
     public static Builder builder() {

@@ -23,6 +23,8 @@ public class Vacation {
     @Column(name = "end_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
+    @ManyToOne
+    private Teacher teacher;
 
     public Vacation() {
     }

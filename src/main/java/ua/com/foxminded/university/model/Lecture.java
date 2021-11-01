@@ -7,8 +7,22 @@ import java.util.List;
 @Entity
 @Table(name = "lectures")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllLectures",
-                query = "from Lecture order by date")
+        @NamedQuery(name = "SelectAllLectures", query = "from Lecture order by date"),
+        @NamedQuery(name = "FindLecturesBySubject", query = "from Lecture where subject = :subject"),
+        @NamedQuery(name = "FindLecturesByClassroom", query = "from Lecture where classroom = :classroom"),
+        @NamedQuery(name = "FindLecturesByTimeslot", query = "from Lecture where timeslot = :timeslot"),
+        @NamedQuery(name = "FindLecturesByTeacher", query = "from Lecture where teacher = :teacher"),
+        @NamedQuery(name = "FindLecturesByDateTime",
+                query = "from Lecture where date = :date and timeslot = :timeslot"),
+        @NamedQuery(name = "FindLectureByDateTimeClassroom",
+                query = "from Lecture where date = :date and timeslot = :timeslot and classroom = :classroom"),
+        @NamedQuery(name = "FindLectureByDateTimeTeacher",
+                query = "from Lecture where date = :date and timeslot = :timeslot and teacher = :teacher"),
+        @NamedQuery(name = "FindLecturesByTeacherAndPeriod",
+                query = "from Lecture where date >= :startDate and date <= :endDate and teacher = :teacher")
+    //    @NamedQuery(name = "FindLecturesByStudentAndPeriod",
+    //            query = "from Lecture where date >= :startDate and date <= :endDate and group = :group"),
+
 })
 public class Lecture {
 
@@ -24,9 +38,9 @@ public class Lecture {
     private Timeslot timeslot;
     @ManyToMany
     @JoinTable(
-            name="lectures_groups",
-            joinColumns = @JoinColumn(name="lecture_id"),
-            inverseJoinColumns = @JoinColumn(name="group_id"))
+            name = "lectures_groups",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
