@@ -26,19 +26,19 @@ import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData
 import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot2;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
-import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
-import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot2;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class LectureDaoTest {
+public class HibernateLectureDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=1 AND teacher_id=1 AND classroom_id=1";
 
@@ -155,76 +155,46 @@ public class LectureDaoTest {
     }
 
     @Test
-    void givenDateTimeslotAndClassroom_onFindByDateTimeClassroom_shouldReturnOptionalwithCorrectLecture() {
+    void givenDateTimeslotAndClassroom_onFindByDateTimeClassroom_shouldReturnOptionalWithCorrectLecture() {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
 
         Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2020, 1, 1), expectedTimeslot1,
-                expectedClassroom1);
+                                                                      expectedClassroom1);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void givenDateTimeslotAndTeacher_onFindByDateTimeTeacher_shouldReturnOptionalwithCorrectLecture() {
+    void givenWrongData_onFindByDateTimeClassroom_shouldReturnOptionalEmpty() {
+        Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2025, 1, 1), expectedTimeslot1,
+                                                                      expectedClassroom1);
+
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenDateTimeslotAndTeacher_onFindByDateTimeTeacher_shouldReturnOptionalWithCorrectLecture() {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
 
         Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2020, 1, 1), expectedTimeslot1,
-                expectedTeacher1);
+                                                                    expectedTeacher1);
 
         assertEquals(expected, actual);
     }
 
-    // TODO
-//    @Test
-//    void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
-//        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//                "lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
-//        int lecturesGroupsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//                "lecture_id=3 AND group_id=1");
-//        lecturesGroupsBeforeCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//                "lecture_id=3 AND group_id=2");
-//
-//        lectureDao.create(lectureToCreate);
-//
-//        int rowsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//                "lectures", "id = 3 AND " + TEST_WHERE_CLAUSE);
-//        int lecturesGroupsAfterCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//                "lecture_id=3 AND group_id=1");
-//        lecturesGroupsAfterCreate += JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//                "lecture_id=3 AND group_id=2");
-//
-//        assertEquals(rowsAfterCreate, rowsBeforeCreate + 1);
-//        assertThat(lecturesGroupsBeforeCreate).isZero();
-//        assertThat(lecturesGroupsAfterCreate).isEqualTo(2);
-//    }
+    @Test
+    void givenWrongData_onFindByDateTimeTeacher_shouldReturnOptionalEmpty() {
+        Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2025, 1, 1), expectedTimeslot1,
+                                                                    expectedTeacher1);
 
-//    @Test
-//    void givenLecture_onUpdate_shouldUpdateCorrectly() {
-//        int rowsBeforeUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//                "lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-//        var group1AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-//        var group2AssignedBeforeUpdate = checkIfGroupIsAssignedToLecture(2, 2);
-//
-//        lectureDao.update(lectureToUpdate);
-//
-//        int rowsAfterUpdate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,
-//                "lectures", "id = 2 AND " + TEST_WHERE_CLAUSE);
-//        var group1AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(1, 2);
-//        var group2AssignedAfterUpdate = checkIfGroupIsAssignedToLecture(2, 2);
-//
-//        assertThat(rowsBeforeUpdate).isZero();
-//        assertThat(rowsAfterUpdate).isEqualTo(1);
-//        assertThat(group1AssignedBeforeUpdate).isTrue();
-//        assertThat(group2AssignedBeforeUpdate).isFalse();
-//        assertThat(group1AssignedAfterUpdate).isFalse();
-//        assertThat(group2AssignedAfterUpdate).isTrue();
-//    }
+        assertEquals(Optional.empty(), actual);
+    }
 
     @Test
     void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldReturnCorrectListOfLectures() {
-        var startDate=LocalDate.of(2020,1,1);
-        var endDate=LocalDate.of(2020,1,3);
-        List<Lecture> expected=new ArrayList<Lecture>(Arrays.asList(expectedLecture1));
+        var startDate = LocalDate.of(2020, 1, 1);
+        var endDate = LocalDate.of(2020, 1, 3);
+        List<Lecture> expected = new ArrayList<Lecture>(Arrays.asList(expectedLecture1));
 
         var actual = lectureDao.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate);
 
@@ -233,21 +203,13 @@ public class LectureDaoTest {
 
     @Test
     void givenStudentAndDates_onFindByStudentAndPeriod_shouldReturnCorrectListOfLectures() {
-        var startDate=LocalDate.of(2020,1,1);
-        var endDate=LocalDate.of(2020,1,3);
+        var startDate = LocalDate.of(2020, 1, 1);
+        var endDate = LocalDate.of(2020, 1, 3);
 
         var actual = lectureDao.findByStudentAndPeriod(expectedStudent1, startDate, endDate);
 
         assertEquals(expectedLectures, actual);
     }
-
-//    boolean checkIfGroupIsAssignedToLecture(int groupId, int lectureId) {
-//        if (JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "lectures_groups",
-//                "lecture_id=" + lectureId + " AND group_id=" + groupId) == 1) {
-//            return true;
-//        }
-//        return false;
-//    }
 
     public interface TestData {
         List<Group> testGroups = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));

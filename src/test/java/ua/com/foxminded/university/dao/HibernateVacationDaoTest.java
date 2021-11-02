@@ -19,8 +19,8 @@ import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -98,7 +98,7 @@ public class HibernateVacationDaoTest {
     void givenTeacher_onFindByTeacher_shouldReturnCorrectListWithVacations() {
         var expected = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
 
-        var actual=vacationDao.findByTeacher(expectedTeacher1);
+        var actual = vacationDao.findByTeacher(expectedTeacher1);
 
         assertEquals(expected, actual);
     }

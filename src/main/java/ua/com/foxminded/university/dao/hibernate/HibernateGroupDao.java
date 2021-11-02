@@ -31,7 +31,7 @@ public class HibernateGroupDao implements GroupDao {
     }
 
     @Override
-     public Optional<Group> findById(int id) {
+    public Optional<Group> findById(int id) {
         logger.debug("Getting by id: {}", id);
         Session session = sessionFactory.getCurrentSession();
         return Optional.ofNullable(session.get(Group.class, id));
@@ -63,7 +63,7 @@ public class HibernateGroupDao implements GroupDao {
         logger.debug("Searching group by name: {}", name);
         Session session = sessionFactory.getCurrentSession();
         Query<Group> query = session.createNamedQuery("FindGroupByName")
-                            .setParameter("name", name);
+                .setParameter("name", name);
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
@@ -76,11 +76,11 @@ public class HibernateGroupDao implements GroupDao {
         logger.debug("Searching by lecture id: {}", lectureId);
         Session session = sessionFactory.getCurrentSession();
         String sqlString = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
-        "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = :lectureId";
+                "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = :lectureId";
 
         return session.createSQLQuery(sqlString)
-                        .addEntity(Group.class)
-                        .setParameter("lectureId", lectureId)
-                        .list();
+                .addEntity(Group.class)
+                .setParameter("lectureId", lectureId)
+                .list();
     }
 }

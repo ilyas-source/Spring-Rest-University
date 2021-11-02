@@ -97,8 +97,6 @@ public class SubjectDaoTest {
     }
 
 
-
-
     @Test
     void givenName_onFindByName_shouldReturnOptionalwithCorrectSubject() {
         Optional<Subject> expected = Optional.of(expectedSubject1);

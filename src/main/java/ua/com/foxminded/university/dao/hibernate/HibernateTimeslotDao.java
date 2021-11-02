@@ -64,9 +64,9 @@ public class HibernateTimeslotDao implements TimeslotDao {
         logger.debug("Counting timeslots that intersect {}", timeslot);
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createSQLQuery(
-                "select count(*) from timeslots where end_time >= :beginTime AND begin_time <=:endTime")
-            .setParameter("beginTime", timeslot.getBeginTime())
-            .setParameter("endTime", timeslot.getEndTime());
+                        "select count(*) from timeslots where end_time >= :beginTime AND begin_time <=:endTime")
+                .setParameter("beginTime", timeslot.getBeginTime())
+                .setParameter("endTime", timeslot.getEndTime());
 
         return ((BigInteger) query.getSingleResult()).intValue();
     }

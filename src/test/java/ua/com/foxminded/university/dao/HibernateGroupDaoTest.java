@@ -65,7 +65,7 @@ public class HibernateGroupDaoTest {
 
     @Test
     void ifDatabaseHasGroups_onFindAll_shouldReturnCorrectListOfGroups() {
-         assertEquals(expectedGroups, groupDao.findAll());
+        assertEquals(expectedGroups, groupDao.findAll());
     }
 
     @Test

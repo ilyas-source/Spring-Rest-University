@@ -118,8 +118,8 @@ public class HibernateStudentDao implements StudentDao {
             sortProperty = sortOrder.get().getProperty();
             sortDirection = sortOrder.get().getDirection();
         }
-        int offset= Math.toIntExact(pageable.getOffset());
-        int pageSize=pageable.getPageSize();
+        int offset = Math.toIntExact(pageable.getOffset());
+        int pageSize = pageable.getPageSize();
 
         logger.debug("Retrieving offset {}, size {}, sort {}", offset, pageSize, pageable.getSort());
 

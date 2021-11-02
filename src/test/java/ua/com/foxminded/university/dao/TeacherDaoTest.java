@@ -22,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -100,8 +100,6 @@ public class TeacherDaoTest {
         var expected = hibernateTemplate.get(Teacher.class, 2);
         assertNull(expected);
     }
-
-
 
 
     @Test

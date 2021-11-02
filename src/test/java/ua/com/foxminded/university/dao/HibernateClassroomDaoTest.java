@@ -116,14 +116,14 @@ public class HibernateClassroomDaoTest {
     @Test
     void givenLocation_onFindByLocation_shouldReturnOptionalWithCorrectClassroom() {
         var expected = Optional.of(expectedClassroom1);
-        var actual=classroomDao.findByLocation(expectedClassroom1.getLocation());
+        var actual = classroomDao.findByLocation(expectedClassroom1.getLocation());
 
         assertEquals(expected, actual);
     }
 
     @Test
     void givenWrongLocation_onFindByLocation_shouldReturnOptionalEmpty() {
-        var actual=classroomDao.findByLocation(testLocation);
+        var actual = classroomDao.findByLocation(testLocation);
 
         assertEquals(Optional.empty(), actual);
     }

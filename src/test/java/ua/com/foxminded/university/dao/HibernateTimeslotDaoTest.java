@@ -99,30 +99,30 @@ public class HibernateTimeslotDaoTest {
 
     @Test
     void givenTimeslot_onFindByBothTimes_shouldReturnOptionalWithCorrectTimeslot() {
-        var actual=timeslotDao.findByBothTimes(expectedTimeslot1);
+        var actual = timeslotDao.findByBothTimes(expectedTimeslot1);
 
         assertEquals(Optional.of(expectedTimeslot1), actual);
     }
 
     @Test
     void givenWrongTimes_onFindByBothTimes_shouldReturnOptionalEmpty() {
-        var actual=timeslotDao.findByBothTimes(timeslotToCreate);
+        var actual = timeslotDao.findByBothTimes(timeslotToCreate);
 
         assertEquals(Optional.empty(), actual);
     }
 
     @Test
     void givenIntersectingTimeslot_onCountIntersectingTimeslots_shouldReturnCount() {
-        int actual=timeslotDao.countIntersectingTimeslots(intersectingTimeslot);
+        int actual = timeslotDao.countIntersectingTimeslots(intersectingTimeslot);
 
-        assertEquals(2,actual);
+        assertEquals(2, actual);
     }
 
     @Test
     void givenNonIntersectingTimeslot_onCountIntersectingTimeslots_shouldReturnZero() {
-        int actual=timeslotDao.countIntersectingTimeslots(timeslotToCreate);
+        int actual = timeslotDao.countIntersectingTimeslots(timeslotToCreate);
 
-        assertEquals(0,actual);
+        assertEquals(0, actual);
     }
 
     public interface TestData {
@@ -133,7 +133,7 @@ public class HibernateTimeslotDaoTest {
         Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));
         Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45));
 
-        Timeslot intersectingTimeslot =  new Timeslot(LocalTime.of(10, 30), LocalTime.of(11, 15));
+        Timeslot intersectingTimeslot = new Timeslot(LocalTime.of(10, 30), LocalTime.of(11, 15));
 
         List<Timeslot> expectedTimeslots = new ArrayList<>(
                 Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));

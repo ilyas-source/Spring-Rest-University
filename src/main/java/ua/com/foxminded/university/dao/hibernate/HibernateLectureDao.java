@@ -151,9 +151,19 @@ public class HibernateLectureDao implements LectureDao {
         return query.list();
     }
 
-    @Override // TODO
-    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
-        return null;
+    @Override
+    public List<Lecture> findByStudentAndPeriod(Student student, LocalDate startDate, LocalDate endDate) {
+        logger.debug("Searching for lectures for {} on {}-{}", student, startDate, endDate);
+        Session session = sessionFactory.getCurrentSession();
+        String sqlString = "select * from lectures join lectures_groups lg " +
+                " on lectures.id = lg.lecture_id where group_id=:id AND date >= :start AND date<= :end";
+
+        return session.createSQLQuery(sqlString)
+                .addEntity(Lecture.class)
+                .setParameter("id", student.getGroup().getId())
+                .setParameter("start", startDate)
+                .setParameter("end", endDate)
+                .list();
     }
 }
 
