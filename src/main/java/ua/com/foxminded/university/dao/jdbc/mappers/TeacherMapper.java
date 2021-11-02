@@ -37,7 +37,7 @@ public class TeacherMapper implements RowMapper<Teacher> {
         teacher.setDegree(Degree.valueOf(rs.getString("degree")));
         addressDao.findById(rs.getInt("address_id")).ifPresent(teacher::setAddress);
         teacher.setSubjects(subjectDao.getByTeacherId(teacher.getId()));
-        teacher.setVacations(vacationDao.findByTeacherId(teacher.getId()));
+        teacher.setVacations(vacationDao.findByTeacher(teacher));
 
         return teacher;
     }

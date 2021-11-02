@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.daysByYearsMap;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.daysByYearsMap;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {

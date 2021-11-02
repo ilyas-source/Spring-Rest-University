@@ -14,7 +14,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class VacationServiceTest {

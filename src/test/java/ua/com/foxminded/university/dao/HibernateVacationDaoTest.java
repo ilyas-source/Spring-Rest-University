@@ -19,14 +19,13 @@ import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class VacationDaoTest {
-
-    private static final String TEST_WHERE_CLAUSE = "start_date='2020-06-01' AND end_date='2020-07-01'";
+public class HibernateVacationDaoTest {
 
     @Autowired
     private HibernateVacationDao vacationDao;
@@ -82,9 +81,9 @@ public class VacationDaoTest {
     void givenVacation_onUpdate_shouldUpdateCorrectly() {
         vacationDao.update(vacationToUpdate);
 
-        var expected = hibernateTemplate.get(Vacation.class, 2);
+        var actual = hibernateTemplate.get(Vacation.class, 2);
 
-        assertEquals(vacationToUpdate, expected);
+        assertEquals(vacationToUpdate, actual);
     }
 
     @Test
@@ -93,6 +92,15 @@ public class VacationDaoTest {
 
         var expected = hibernateTemplate.get(Vacation.class, 2);
         assertNull(expected);
+    }
+
+    @Test
+    void givenTeacher_onFindByTeacher_shouldReturnCorrectListWithVacations() {
+        var expected = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
+
+        var actual=vacationDao.findByTeacher(expectedTeacher1);
+
+        assertEquals(expected, actual);
     }
 
     public interface TestData {

@@ -181,7 +181,7 @@ public class TeacherService {
             }
         }
         for (Teacher candidate : candidates) {
-            if (vacationDao.findByTeacherId(candidate.getId()).stream()
+            if (vacationDao.findByTeacher(candidate).stream()
                     .anyMatch(v -> (!date.isBefore(v.getStartDate()) && !date.isAfter(v.getEndDate())))) {
                 logger.debug("{} {} is not suitable: will be on vacation", candidate.getFirstName(), candidate.getLastName());
                 suitableTeachers.remove(candidate);

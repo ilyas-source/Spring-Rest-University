@@ -2,10 +2,12 @@ package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
 
 import java.util.List;
@@ -57,8 +59,13 @@ public class HibernateVacationDao implements VacationDao {
     }
 
     @Override
-    public List<Vacation> findByTeacherId(int id) { // TODO
-        return null;
+    public List<Vacation> findByTeacher(Teacher teacher) {
+        logger.debug("Searching vacations by teacher: {}", teacher);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Vacation> query = session.createNamedQuery("FindVacationsByTeacher")
+                .setParameter("teacher", teacher);
+
+        return query.list();
     }
 }
 

@@ -25,7 +25,7 @@ import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
