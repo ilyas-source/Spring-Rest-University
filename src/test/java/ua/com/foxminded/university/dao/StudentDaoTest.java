@@ -149,7 +149,7 @@ public class StudentDaoTest {
     void givenSubstring_onFindBySubstring_thenReturnCorrectListOfStudents() {
         var expected = new ArrayList<>(Arrays.asList(expectedStudent1));
 
-        var actual = studentDao.findBySubstring("ivan");
+        var actual = studentDao.findBySubstring("Ivan");
 
         assertEquals(expected, actual);
     }

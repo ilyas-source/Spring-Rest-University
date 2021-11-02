@@ -138,13 +138,12 @@ public class HibernateStudentDao implements StudentDao {
     public List<Student> findBySubstring(String substring) {
         logger.debug("Searching students by substring: {}", substring);
         Session session = sessionFactory.getCurrentSession();
-
-        String FIND_BY_SUBSTRING = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like :substring";
-        Query<Student> query = session.createSQLQuery(FIND_BY_SUBSTRING)
-                .setParameter("substring", substring);
-        System.out.println(query);
-
-        return query.list();
+        String formattedSubstring = "%" + substring.toLowerCase() + "%";
+        String sqlString = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like :substring";
+        return session.createSQLQuery(sqlString)
+                .setParameter("substring", formattedSubstring)
+                .addEntity(Student.class)
+                .list();
     }
 }
 
