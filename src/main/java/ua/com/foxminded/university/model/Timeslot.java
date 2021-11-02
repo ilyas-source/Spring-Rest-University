@@ -6,8 +6,8 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "timeslots")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllTimeslots",
-                query = "from Timeslot")
+        @NamedQuery(name = "SelectAllTimeslots", query = "from Timeslot"),
+        @NamedQuery(name = "FindTimeslotByBothTimes", query = "from Timeslot where beginTime = : beginTime and endTime = :endTime")
 })
 public class Timeslot {
 

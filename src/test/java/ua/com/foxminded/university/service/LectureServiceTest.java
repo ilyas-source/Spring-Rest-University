@@ -26,7 +26,7 @@ import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;
 

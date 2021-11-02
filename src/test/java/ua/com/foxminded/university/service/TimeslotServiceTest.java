@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class TimeslotServiceTest {

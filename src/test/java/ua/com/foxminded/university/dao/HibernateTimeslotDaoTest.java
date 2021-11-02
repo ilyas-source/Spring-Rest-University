@@ -21,12 +21,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class TimeslotDaoTest {
+public class HibernateTimeslotDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
 
@@ -97,6 +97,34 @@ public class TimeslotDaoTest {
         assertNull(expected);
     }
 
+    @Test
+    void givenTimeslot_onFindByBothTimes_shouldReturnOptionalWithCorrectTimeslot() {
+        var actual=timeslotDao.findByBothTimes(expectedTimeslot1);
+
+        assertEquals(Optional.of(expectedTimeslot1), actual);
+    }
+
+    @Test
+    void givenWrongTimes_onFindByBothTimes_shouldReturnOptionalEmpty() {
+        var actual=timeslotDao.findByBothTimes(timeslotToCreate);
+
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenIntersectingTimeslot_onCountIntersectingTimeslots_shouldReturnCount() {
+        int actual=timeslotDao.countIntersectingTimeslots(intersectingTimeslot);
+
+        assertEquals(2,actual);
+    }
+
+    @Test
+    void givenNonIntersectingTimeslot_onCountIntersectingTimeslots_shouldReturnZero() {
+        int actual=timeslotDao.countIntersectingTimeslots(timeslotToCreate);
+
+        assertEquals(0,actual);
+    }
+
     public interface TestData {
         Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 00), LocalTime.of(12, 15));
         Timeslot timeslotToUpdate = new Timeslot(2, LocalTime.of(12, 00), LocalTime.of(12, 15));
@@ -104,6 +132,9 @@ public class TimeslotDaoTest {
         Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45));
         Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));
         Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45));
+
+        Timeslot intersectingTimeslot =  new Timeslot(LocalTime.of(10, 30), LocalTime.of(11, 15));
+
         List<Timeslot> expectedTimeslots = new ArrayList<>(
                 Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));
 

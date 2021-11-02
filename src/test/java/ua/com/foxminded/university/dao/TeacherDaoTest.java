@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
