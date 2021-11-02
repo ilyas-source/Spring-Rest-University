@@ -5,12 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "classrooms")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllClassrooms",
-                query = "from Classroom order by id"),
-        @NamedQuery(name = "FindClassroomByName",
-                query = "from Classroom where name = :name"),
-        @NamedQuery(name = "FindClassroomByLocation",
-                query = "from Classroom where location = :location")
+        @NamedQuery(name = "SelectAllClassrooms", query = "from Classroom order by id"),
+        @NamedQuery(name = "FindClassroomByName", query = "from Classroom where name = :name"),
+        @NamedQuery(name = "FindClassroomByLocation", query = "from Classroom where location = :location")
 })
 public class Classroom {
 

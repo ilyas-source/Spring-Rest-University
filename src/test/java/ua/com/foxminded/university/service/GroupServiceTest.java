@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
 
 @ExtendWith(MockitoExtension.class)

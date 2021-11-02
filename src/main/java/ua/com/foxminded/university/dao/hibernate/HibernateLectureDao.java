@@ -151,7 +151,7 @@ public class HibernateLectureDao implements LectureDao {
         return query.list();
     }
 
-    @Override
+    @Override // TODO
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         return null;
     }

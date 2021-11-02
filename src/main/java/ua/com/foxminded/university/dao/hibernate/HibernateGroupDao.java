@@ -75,8 +75,12 @@ public class HibernateGroupDao implements GroupDao {
     public List<Group> findByLectureId(int lectureId) {
         logger.debug("Searching by lecture id: {}", lectureId);
         Session session = sessionFactory.getCurrentSession();
-        var query = session.createNamedQuery("FindByLectureId");
-        query.setParameter("id", lectureId);
-        return query.list();
+        String sqlString = "SELECT g.id, g.name from lectures_groups AS l_g LEFT JOIN groups AS g " +
+        "ON (l_g.group_id=g.id) WHERE l_g.lecture_id = :lectureId";
+
+        return session.createSQLQuery(sqlString)
+                        .addEntity(Group.class)
+                        .setParameter("lectureId", lectureId)
+                        .list();
     }
 }

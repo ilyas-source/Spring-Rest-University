@@ -20,12 +20,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class GroupDaoTest {
+public class HibernateGroupDaoTest {
 
     @Autowired
     private HibernateGroupDao groupDao;
@@ -111,7 +111,7 @@ public class GroupDaoTest {
     }
 
     @Test
-    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() { // TODO
+    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
         var actual = groupDao.findByLectureId(1);
 
         assertEquals(expectedGroups, actual);

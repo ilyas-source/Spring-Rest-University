@@ -23,8 +23,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)

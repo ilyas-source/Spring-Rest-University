@@ -6,10 +6,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "holidays")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllHolidays",
-                query = "from Holiday order by id"),
-        @NamedQuery(name = "FindByDate",
-                query = "from Holiday where date = :date")
+        @NamedQuery(name = "SelectAllHolidays", query = "from Holiday order by id"),
+        @NamedQuery(name = "FindByDate", query = "from Holiday where date = :date")
 })
 public class Holiday {
 

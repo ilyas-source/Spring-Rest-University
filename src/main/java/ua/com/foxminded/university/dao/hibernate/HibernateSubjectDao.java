@@ -59,11 +59,6 @@ public class HibernateSubjectDao implements SubjectDao {
     }
 
     @Override
-    public List<Subject> getByTeacherId(int id) {
-        return null;
-    }
-
-    @Override
     public Optional<Subject> findByName(String name) {
         logger.debug("Searching subject by name: {}", name);
         Session session = sessionFactory.getCurrentSession();
@@ -74,6 +69,11 @@ public class HibernateSubjectDao implements SubjectDao {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Subject> getByTeacherId(int id) {
+        return null;
     }
 
     @Override
