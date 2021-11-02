@@ -5,8 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "subjects")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllSubjects",
-                query = "from Subject order by id")
+        @NamedQuery(name = "SelectAllSubjects", query = "from Subject order by id"),
+        @NamedQuery(name = "FindSubjectByName", query = "from Subject where name = :name")
 })
 public class Subject {
 

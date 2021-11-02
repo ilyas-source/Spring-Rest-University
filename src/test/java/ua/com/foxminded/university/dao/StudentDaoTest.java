@@ -145,6 +145,15 @@ public class StudentDaoTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void givenSubstring_onFindBySubstring_thenReturnCorrectListOfStudents() {
+        var expected = new ArrayList<>(Arrays.asList(expectedStudent1));
+
+        var actual=studentDao.findBySubstring("ivan");
+
+        assertEquals(expected, actual);
+    }
+
     public interface TestData {
         Student studentToCreate = Student.builder().firstName("Name").lastName("Lastname")
                 .id(5).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))

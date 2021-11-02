@@ -7,7 +7,7 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "SelectAllGroups",
                query = "from Group order by name"),
-       @NamedQuery(name = "FindByName",
+       @NamedQuery(name = "FindGroupByName",
                query = "from Group where name = :name")
      //  @NamedQuery(name = "FindByLectureId",
     //           query = "select g from Group g inner join g.course as c where c.id = :id")
