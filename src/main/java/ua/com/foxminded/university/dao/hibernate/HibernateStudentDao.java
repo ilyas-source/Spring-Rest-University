@@ -2,15 +2,21 @@ package ua.com.foxminded.university.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
+import javax.persistence.NoResultException;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +25,12 @@ import java.util.Optional;
 public class HibernateStudentDao implements StudentDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateStudentDao.class);
+
+    @Value("${student.defaultsortattribute}")
+    private String defaultSortAttribute;
+
+    @Value("${defaultsortdirection}")
+    private String defaultSortDirection;
 
     private SessionFactory sessionFactory;
 
@@ -62,27 +74,64 @@ public class HibernateStudentDao implements StudentDao {
 
     @Override
     public int countInGroup(Group group) {
-        return 0;
-    }
+        logger.debug("Counting students in {}", group);
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createSQLQuery(
+                "select count(*) from students where group_id=:id");
+        query.setParameter("id", group.getId());
 
-    @Override
-    public Optional<Student> findByAddressId(int id) {
-        return Optional.empty();
+        return ((BigInteger) query.getSingleResult()).intValue();
     }
 
     @Override
     public List<Student> findByGroup(Group group) {
-        return null;
+        logger.debug("Searching students by group: {}", group);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Student> query = session.createNamedQuery("FindStudentByGroup")
+                .setParameter("group", group);
+
+        return query.list();
     }
 
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
-        return Optional.empty();
+        logger.debug("Searching for {} {}, born {}", firstName, lastName, birthDate);
+        Session session = sessionFactory.getCurrentSession();
+        Query<Student> query = session.createNamedQuery("findStudentByNameAndBirthDate")
+                .setParameter("firstName", firstName)
+                .setParameter("lastName", lastName)
+                .setParameter("birthDate", birthDate);
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Page<Student> findAll(Pageable pageable) {
-        return null;
+        var sortProperty = defaultSortAttribute;
+        var sortDirection = Sort.Direction.fromString(defaultSortDirection);
+
+        var sortOrder = pageable.getSort().get().findFirst();
+        if (sortOrder.isPresent()) {
+            sortProperty = sortOrder.get().getProperty();
+            sortDirection = sortOrder.get().getDirection();
+        }
+        int offset= Math.toIntExact(pageable.getOffset());
+        int pageSize=pageable.getPageSize();
+
+        logger.debug("Retrieving offset {}, size {}, sort {}", offset, pageSize, pageable.getSort());
+
+        Session session = sessionFactory.getCurrentSession();
+        var students = session.createNamedQuery("selectAllStudents")
+                .setFirstResult(offset)
+                .setFetchSize(pageSize)
+                .list();
+        Query query = session.createSQLQuery("select count(*) from students");
+        var totalStudents = ((BigInteger) query.getSingleResult()).longValue();
+
+        return new PageImpl<>(students, pageable, totalStudents);
     }
 
     @Override

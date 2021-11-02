@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.AddressDao;
 import ua.com.foxminded.university.dao.StudentDao;
@@ -114,14 +113,14 @@ public class JdbcStudentDao implements StudentDao {
         }
     }
 
-    @Override
-    public Optional<Student> findByAddressId(int id) {
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
+//    @Override
+//    public Optional<Student> findByAddressId(int id) {
+//        try {
+//            return Optional.of(jdbcTemplate.queryForObject(FIND_BY_ADDRESS_ID, studentMapper, id));
+//        } catch (EmptyResultDataAccessException e) {
+//            return Optional.empty();
+//        }
+//    }
 
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
@@ -177,10 +176,4 @@ public class JdbcStudentDao implements StudentDao {
     public int countInGroup(Group group) {
         return jdbcTemplate.queryForObject(COUNT_IN_GROUP, Integer.class, group.getId());
     }
-
-//    @Override
-//    public void delete(int id) {
-//        logger.debug("Deleting student by id: {} ", id);
-//        jdbcTemplate.update(DELETE_BY_ID, id);
-//    }
 }

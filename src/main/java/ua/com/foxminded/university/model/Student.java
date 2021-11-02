@@ -6,8 +6,13 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "students")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllStudents",
-                query = "from Student order by lastName")
+        @NamedQuery(name = "SelectAllStudents", query = "from Student"),
+        @NamedQuery(name = "FindStudentByGroup", query = "from Student where group = :group"),
+        @NamedQuery(name = "FindStudentByAddress", query = "from Student where address = :address"),
+        @NamedQuery(name = "findStudentByNameAndBirthDate",
+                query = "from Student where firstName = :firstName AND lastName = :lastName AND birthDate = :birthDate")
+
+
 })
 public class Student {
 
@@ -20,8 +25,9 @@ public class Student {
     @Column(name="last_name")
     private String lastName;
     @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column
+    @Column(name="birth_date")
     private LocalDate birthDate;
     @Column
     private String email;

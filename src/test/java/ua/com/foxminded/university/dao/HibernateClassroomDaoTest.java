@@ -21,12 +21,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class ClassroomDaoTest {
+public class HibernateClassroomDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
 

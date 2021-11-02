@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.duplicateNameClassroom;
 import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.invalidCapacityClassroom;

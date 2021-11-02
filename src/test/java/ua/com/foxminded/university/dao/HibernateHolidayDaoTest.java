@@ -21,12 +21,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class HolidayDaoTest {
+public class HibernateHolidayDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "date='2000-01-01' AND name = 'test'";
 

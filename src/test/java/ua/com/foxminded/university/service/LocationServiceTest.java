@@ -16,9 +16,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.HibernateLocationDaoTest.TestData.expectedLocation1;
+import static ua.com.foxminded.university.dao.HibernateLocationDaoTest.TestData.expectedLocations;
 
 @ExtendWith(MockitoExtension.class)
 class LocationServiceTest {

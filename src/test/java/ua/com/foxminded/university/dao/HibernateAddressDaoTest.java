@@ -20,12 +20,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class AddressDaoTest {
+public class HibernateAddressDaoTest {
 
     @Autowired
     private HibernateAddressDao addressDao;

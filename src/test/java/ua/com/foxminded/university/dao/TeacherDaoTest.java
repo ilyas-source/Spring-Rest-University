@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;

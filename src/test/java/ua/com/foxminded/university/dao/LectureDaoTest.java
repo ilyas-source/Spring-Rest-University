@@ -22,8 +22,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
@@ -174,6 +174,7 @@ public class LectureDaoTest {
         assertEquals(expected, actual);
     }
 
+    // TODO
 //    @Test
 //    void givenNewLecture_onCreate_shouldCreateLectureAndAssignSubjects() {
 //        int rowsBeforeCreate = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate,

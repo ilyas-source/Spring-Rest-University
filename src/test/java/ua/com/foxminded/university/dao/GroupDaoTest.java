@@ -111,7 +111,7 @@ public class GroupDaoTest {
     }
 
     @Test
-    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
+    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() { // TODO
         var actual = groupDao.findByLectureId(1);
 
         assertEquals(expectedGroups, actual);

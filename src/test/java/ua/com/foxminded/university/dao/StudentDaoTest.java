@@ -22,7 +22,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.AddressDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
@@ -44,12 +44,12 @@ public class StudentDaoTest {
 
     @Test
     void givenNewStudent_onCreate_shouldCreateStudent() {
-        var actual = hibernateTemplate.get(Student.class, 3);
+        var actual = hibernateTemplate.get(Student.class, 5);
         assertNull(actual);
 
         studentDao.create(studentToCreate);
 
-        actual = hibernateTemplate.get(Student.class, 3);
+        actual = hibernateTemplate.get(Student.class, 5);
         assertEquals(studentToCreate, actual);
     }
 
@@ -102,14 +102,14 @@ public class StudentDaoTest {
         assertNull(expected);
     }
 
-    @Test
-    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectStudent() {
-        Optional<Student> expected = Optional.of(expectedStudent1);
-
-        Optional<Student> actual = studentDao.findByAddressId(3);
-
-        assertEquals(expected, actual);
-    }
+//    @Test
+//    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectStudent() {
+//        Optional<Student> expected = Optional.of(expectedStudent1);
+//
+//        Optional<Student> actual = studentDao.findByAddressId(3);
+//
+//        assertEquals(expected, actual);
+//    }
 
     @Test
     void givenNameAndBirthdate_onFindByNameAndBirthdate_shouldReturnOptionalwithCorrectStudent() {
@@ -118,6 +118,13 @@ public class StudentDaoTest {
         Optional<Student> actual = studentDao.findByNameAndBirthDate("Ivan", "Petrov", LocalDate.of(1980, 11, 1));
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void givenWrongData_onFindByNameAndBirthdate_shouldReturnOptionalEmpty() {
+        Optional<Student> actual = studentDao.findByNameAndBirthDate("Ivan1", "Petrov", LocalDate.of(1980, 11, 1));
+
+        assertEquals(Optional.empty(), actual);
     }
 
     @Test

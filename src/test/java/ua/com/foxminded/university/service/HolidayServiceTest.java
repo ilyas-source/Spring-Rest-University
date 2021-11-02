@@ -14,8 +14,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHoliday1;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHoliday1;
+import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHolidays;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayServiceTest {

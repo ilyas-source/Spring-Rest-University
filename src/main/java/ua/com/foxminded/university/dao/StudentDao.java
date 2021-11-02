@@ -13,7 +13,7 @@ public interface StudentDao extends GeneralDao<Student> {
 
     int countInGroup(Group group);
 
-    Optional<Student> findByAddressId(int id);
+   // Optional<Student> findByAddressId(int id);
 
     List<Student> findByGroup(Group group);
 
