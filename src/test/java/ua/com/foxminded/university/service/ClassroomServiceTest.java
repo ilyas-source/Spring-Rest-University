@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.ClassroomOccupiedException;
@@ -31,8 +30,6 @@ class ClassroomServiceTest {
     private ClassroomDao classroomDao;
     @Mock
     private LectureDao lectureDao;
-    @Mock
-    private GroupDao groupDao;
     @Mock
     private LectureService lectureService;
     @InjectMocks

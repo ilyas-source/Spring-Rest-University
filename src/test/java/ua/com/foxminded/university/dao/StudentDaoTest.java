@@ -32,9 +32,6 @@ import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
 @Transactional
 public class StudentDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "first_name = 'Name' AND last_name = 'Lastname' AND gender = 'MALE' " +
-            "AND birth_date = '1980-02-02' AND email = 'test@mail' AND phone = '+phone' AND group_id = 2";
-
     @Autowired
     private HibernateStudentDao studentDao;
     @Autowired
@@ -102,17 +99,8 @@ public class StudentDaoTest {
         assertNull(expected);
     }
 
-//    @Test
-//    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectStudent() {
-//        Optional<Student> expected = Optional.of(expectedStudent1);
-//
-//        Optional<Student> actual = studentDao.findByAddressId(3);
-//
-//        assertEquals(expected, actual);
-//    }
-
     @Test
-    void givenNameAndBirthdate_onFindByNameAndBirthdate_shouldReturnOptionalwithCorrectStudent() {
+    void givenNameAndBirthdate_onFindByNameAndBirthdate_shouldReturnOptionalWithCorrectStudent() {
         Optional<Student> expected = Optional.of(expectedStudent1);
 
         Optional<Student> actual = studentDao.findByNameAndBirthDate("Ivan", "Petrov", LocalDate.of(1980, 11, 1));
@@ -147,7 +135,7 @@ public class StudentDaoTest {
 
     @Test
     void givenSubstring_onFindBySubstring_thenReturnCorrectListOfStudents() {
-        var expected = new ArrayList<>(Arrays.asList(expectedStudent1));
+        var expected = new ArrayList<>(List.of(expectedStudent1));
 
         var actual = studentDao.findBySubstring("Ivan");
 
@@ -183,7 +171,5 @@ public class StudentDaoTest {
 
         List<Student> expectedStudents = new ArrayList<>(
                 Arrays.asList(expectedStudent1, expectedStudent2, expectedStudent3, expectedStudent4));
-
-        List<Student> noStudents = new ArrayList<>();
     }
 }

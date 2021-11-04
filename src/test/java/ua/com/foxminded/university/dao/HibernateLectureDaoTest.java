@@ -40,8 +40,6 @@ import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTe
 @Transactional
 public class HibernateLectureDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "date='2010-10-10' AND timeslot_id=1 AND subject_id=1 AND teacher_id=1 AND classroom_id=1";
-
     @Autowired
     private HibernateLectureDao lectureDao;
     @Autowired

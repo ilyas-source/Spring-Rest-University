@@ -27,8 +27,6 @@ import static ua.com.foxminded.university.dao.HibernateLocationDaoTest.TestData.
 @Transactional
 public class HibernateLocationDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "building='test' AND floor=10 and room_number=100";
-
     @Autowired
     private HibernateLocationDao locationDao;
     @Autowired

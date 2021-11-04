@@ -28,8 +28,6 @@ import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData
 @Transactional
 public class HibernateClassroomDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "location_id=4 AND name='Test room' AND capacity=5";
-
     @Autowired
     private HibernateClassroomDao classroomDao;
     @Autowired

@@ -28,8 +28,6 @@ import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.
 @Transactional
 public class HibernateTimeslotDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "begin_time='12:00:00' AND end_time = '12:15:00'";
-
     @Autowired
     private HibernateTimeslotDao timeslotDao;
     @Autowired

@@ -28,8 +28,6 @@ import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.*
 @Transactional
 public class HibernateHolidayDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "date='2000-01-01' AND name = 'test'";
-
     @Autowired
     private HibernateHolidayDao holidayDao;
     @Autowired
