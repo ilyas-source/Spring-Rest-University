@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHolidays;
 import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;

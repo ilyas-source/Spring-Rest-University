@@ -1,12 +1,15 @@
 package ua.com.foxminded.university.dao;
 
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.hibernate.HibernateStudentDao;
 import ua.com.foxminded.university.model.Gender;
@@ -25,12 +28,21 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class StudentDaoTest {
+public class HibernateStudentDaoTest {
+
+    private static final String defaultSortDirection = "ASC";
+    private static final String defaultSortAttribute = "last_name";
+
+    @BeforeEach
+    void init() {
+        ReflectionTestUtils.setField(studentDao, "defaultSortDirection", defaultSortDirection);
+        ReflectionTestUtils.setField(studentDao, "defaultSortAttribute", defaultSortAttribute);
+    }
 
     @Autowired
     private HibernateStudentDao studentDao;
@@ -142,6 +154,18 @@ public class StudentDaoTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    void givenPageable_onFindAll_shouldReturnCorrectPageOfStudents() {
+        Pageable pageable = PageRequest.of(1, 2,Sort.by("id").ascending());
+
+        Page<Student> expected = new PageImpl<Student>(expectedStudentsPage, pageable, 4);
+        var actual = studentDao.findAll(pageable);
+
+        System.out.println(actual.getContent());
+
+        assertEquals(expected, actual);
+    }
+
     public interface TestData {
         Student studentToCreate = Student.builder().firstName("Name").lastName("Lastname")
                 .id(5).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))
@@ -171,5 +195,7 @@ public class StudentDaoTest {
 
         List<Student> expectedStudents = new ArrayList<>(
                 Arrays.asList(expectedStudent1, expectedStudent2, expectedStudent3, expectedStudent4));
+        List<Student> expectedStudentsPage = new ArrayList<>(
+                Arrays.asList(expectedStudent3, expectedStudent4));
     }
 }

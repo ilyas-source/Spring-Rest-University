@@ -110,6 +110,7 @@ public class HibernateStudentDao implements StudentDao {
 
     @Override
     public Page<Student> findAll(Pageable pageable) {
+        logger.debug("Retrieving Students pageable");
         var sortProperty = defaultSortAttribute;
         var sortDirection = Sort.Direction.fromString(defaultSortDirection);
 
