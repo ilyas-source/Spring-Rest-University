@@ -18,18 +18,8 @@ public class JdbcStudentDao {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcStudentDao.class);
 
-    private static final String CREATE = "INSERT INTO students (first_name, last_name, gender, birth_date," +
-            " email, phone, address_id, group_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
-    private static final String FIND_BY_ADDRESS_ID = "SELECT * FROM students WHERE address_id = ?";
-    private static final String FIND_BY_GROUP_ID = "SELECT * FROM students WHERE group_id = ?";
-    private static final String FIND_BY_NAME_AND_BIRTH = "SELECT * FROM students WHERE first_name = ? AND last_name = ? AND birth_date = ?";
-    private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, gender = ?, " +
-            " birth_date = ?, email = ?, phone = ?, address_id = ?, group_id = ? WHERE id = ?";
-    private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
     private static final String FIND_ALL_PAGEABLE = "SELECT * FROM students ORDER BY %s %s OFFSET ? FETCH FIRST ? ROWS ONLY";
-    private static final String FIND_ALL = "SELECT * FROM students";
-    private static final String COUNT_IN_GROUP = "SELECT COUNT(*) FROM students WHERE group_id = ?";
+
     private static final String COUNT_TOTAL = "SELECT COUNT(*) FROM students";
     private static final String FIND_BY_SUBSTRING = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like ?";
 

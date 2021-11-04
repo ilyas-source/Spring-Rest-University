@@ -120,13 +120,12 @@ public class HibernateStudentDao implements StudentDao {
         }
         int offset = Math.toIntExact(pageable.getOffset());
         int pageSize = pageable.getPageSize();
-
         logger.debug("Retrieving offset {}, size {}, sort {}", offset, pageSize, pageable.getSort());
-
         Session session = sessionFactory.getCurrentSession();
-        var students = session.createNamedQuery("selectAllStudents")
+        String request = String.format("from Student order by %s %s", sortProperty, sortDirection);
+        List<Student> students = session.createQuery(request)
                 .setFirstResult(offset)
-                .setFetchSize(pageSize)
+                .setMaxResults(pageSize)
                 .list();
         Query query = session.createSQLQuery("select count(*) from students");
         var totalStudents = ((BigInteger) query.getSingleResult()).longValue();
