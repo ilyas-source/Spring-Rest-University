@@ -13,10 +13,12 @@ import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.*;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @PropertySource("classpath:university.properties")
+@Transactional
 @Service
 public class TeacherService {
 

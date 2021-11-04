@@ -12,10 +12,12 @@ import ua.com.foxminded.university.exception.TimeslotTooShortException;
 import ua.com.foxminded.university.exception.TimeslotsIntersectionException;
 import ua.com.foxminded.university.model.Timeslot;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class TimeslotService {
 
