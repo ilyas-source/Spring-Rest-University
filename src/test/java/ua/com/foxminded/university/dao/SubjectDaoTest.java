@@ -107,24 +107,10 @@ public class SubjectDaoTest {
     }
 
     @Test
-    void givenSubject_onCountAssignments_shouldReturnCount() {
-        int actual = subjectDao.countAssignments(expectedSubject1);
+    void givenWrongName_onFindByName_shouldReturnOptionalEmpty() {
+        Optional<Subject> actual = subjectDao.findByName("Wrong name");
 
-        assertEquals(1, actual);
-    }
-
-    @Test
-    void givenCorrectTeacherId_ongetSubjectsByTeacher_shouldReturnCorrectListOfSubjects() {
-        List<Subject> actual = subjectDao.getByTeacherId(1);
-
-        assertEquals(expectedSubjectsForTeacher1, actual);
-    }
-
-    @Test
-    void givenIncorrectTeacherId_ongetSubjectsByTeacher_shouldReturnEmptyListOfSubjects() {
-        List<Subject> actual = subjectDao.getByTeacherId(3);
-
-        assertThat(actual).isEmpty();
+        assertEquals(Optional.empty(), actual);
     }
 
     public interface TestData {
