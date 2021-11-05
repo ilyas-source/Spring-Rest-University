@@ -278,7 +278,7 @@ class LectureServiceTest {
 
         lectureService.delete(1);
 
-       verify(lectureDao).delete(expectedLecture1);
+        verify(lectureDao).delete(expectedLecture1);
     }
 
     @Test

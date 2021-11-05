@@ -57,7 +57,7 @@ class SubjectControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithSubject() throws Exception {
         when(subjectService.getById(1)).thenReturn(expectedSubject1);
 
-        mockMvc.perform(get("/subjects/{id}",1))
+        mockMvc.perform(get("/subjects/{id}", 1))
                 .andExpect(view().name("subject/details"))
                 .andExpect(model().attribute("subject", expectedSubject1));
 
@@ -68,7 +68,7 @@ class SubjectControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(subjectService.getById(1)).thenThrow(new EntityNotFoundException("Can't find subject by id 1"));
 
-        mockMvc.perform(get("/subjects/{id}",1))
+        mockMvc.perform(get("/subjects/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find subject by id 1"));
@@ -99,7 +99,7 @@ class SubjectControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/subjects/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/subjects/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(subjectService).delete(1);
     }

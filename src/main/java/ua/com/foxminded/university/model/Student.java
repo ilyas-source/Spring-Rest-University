@@ -20,14 +20,14 @@ public class Student {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(name="birth_date")
+    @Column(name = "birth_date")
     private LocalDate birthDate;
     @Column
     private String email;

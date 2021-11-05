@@ -19,8 +19,8 @@ import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

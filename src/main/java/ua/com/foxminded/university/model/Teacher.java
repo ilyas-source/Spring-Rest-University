@@ -17,9 +17,9 @@ public class Teacher {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
@@ -29,9 +29,9 @@ public class Teacher {
     private Degree degree;
     @ManyToMany
     @JoinTable(
-            name="teachers_subjects",
-            joinColumns = @JoinColumn(name="teacher_id"),
-            inverseJoinColumns = @JoinColumn(name="subject_id"))
+            name = "teachers_subjects",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private List<Subject> subjects;
     @Column
     private String email;

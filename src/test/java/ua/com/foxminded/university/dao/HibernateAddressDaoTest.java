@@ -125,6 +125,6 @@ public class HibernateAddressDaoTest {
 
         List<Address> expectedAddresses = new ArrayList<>(
                 Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
-                              expectedAddress4, expectedAddress5, expectedAddress6));
+                        expectedAddress4, expectedAddress5, expectedAddress6));
     }
 }

@@ -78,7 +78,7 @@ class StudentControllerTest {
         when(studentService.getById(1)).thenReturn(expectedStudent1);
         when(groupService.findAll()).thenReturn(expectedGroups);
 
-        mockMvc.perform(get("/students/{id}",1))
+        mockMvc.perform(get("/students/{id}", 1))
                 .andExpect(view().name("student/details"))
                 .andExpect(model().attribute("student", expectedStudent1))
                 .andExpect(model().attribute("groups", expectedGroups));
@@ -91,7 +91,7 @@ class StudentControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(studentService.getById(1)).thenThrow(new EntityNotFoundException("Can't find student by id 1"));
 
-        mockMvc.perform(get("/students/{id}",1))
+        mockMvc.perform(get("/students/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find student by id 1"));
@@ -122,7 +122,7 @@ class StudentControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/students/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/students/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(studentService).delete(1);
     }

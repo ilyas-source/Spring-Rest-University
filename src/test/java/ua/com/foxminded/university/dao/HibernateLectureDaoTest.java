@@ -27,13 +27,13 @@ import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
-import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot2;
 import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot2;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -157,7 +157,7 @@ public class HibernateLectureDaoTest {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
 
         Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2020, 1, 1), expectedTimeslot1,
-                                                                      expectedClassroom1);
+                expectedClassroom1);
 
         assertEquals(expected, actual);
     }
@@ -165,7 +165,7 @@ public class HibernateLectureDaoTest {
     @Test
     void givenWrongData_onFindByDateTimeClassroom_shouldReturnOptionalEmpty() {
         Optional<Lecture> actual = lectureDao.findByDateTimeClassroom(LocalDate.of(2025, 1, 1), expectedTimeslot1,
-                                                                      expectedClassroom1);
+                expectedClassroom1);
 
         assertEquals(Optional.empty(), actual);
     }
@@ -175,7 +175,7 @@ public class HibernateLectureDaoTest {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
 
         Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2020, 1, 1), expectedTimeslot1,
-                                                                    expectedTeacher1);
+                expectedTeacher1);
 
         assertEquals(expected, actual);
     }
@@ -183,7 +183,7 @@ public class HibernateLectureDaoTest {
     @Test
     void givenWrongData_onFindByDateTimeTeacher_shouldReturnOptionalEmpty() {
         Optional<Lecture> actual = lectureDao.findByDateTimeTeacher(LocalDate.of(2025, 1, 1), expectedTimeslot1,
-                                                                    expectedTeacher1);
+                expectedTeacher1);
 
         assertEquals(Optional.empty(), actual);
     }

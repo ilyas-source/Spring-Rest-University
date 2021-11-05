@@ -81,7 +81,7 @@ class TeacherControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
-        mockMvc.perform(get("/teachers/{id}",1))
+        mockMvc.perform(get("/teachers/{id}", 1))
                 .andExpect(view().name("teacher/details"))
                 .andExpect(model().attribute("teacher", expectedTeacher1));
     }
@@ -90,7 +90,7 @@ class TeacherControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("Can't find teacher by id 1"));
 
-        mockMvc.perform(get("/teachers/{id}",1))
+        mockMvc.perform(get("/teachers/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find teacher by id 1"));
@@ -123,7 +123,7 @@ class TeacherControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/teachers/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/teachers/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(teacherService).delete(1);
     }

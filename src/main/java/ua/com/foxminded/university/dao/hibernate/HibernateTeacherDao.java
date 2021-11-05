@@ -127,7 +127,7 @@ public class HibernateTeacherDao implements TeacherDao {
     @Override
     public List<Teacher> getReplacementCandidates(Lecture lecture) {
         String sqlQuery = "SELECT * FROM teachers JOIN teachers_subjects ts " +
-            "ON teachers.id = ts.teacher_id WHERE subject_id= :subject_id AND teacher_id!= :teacher_id";
+                "ON teachers.id = ts.teacher_id WHERE subject_id= :subject_id AND teacher_id!= :teacher_id";
         Session session = sessionFactory.getCurrentSession();
         return session.createSQLQuery(sqlQuery)
                 .addEntity(Teacher.class)

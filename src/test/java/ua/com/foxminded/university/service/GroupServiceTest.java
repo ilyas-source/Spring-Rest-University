@@ -84,7 +84,7 @@ class GroupServiceTest {
 
         groupService.delete(1);
 
-       verify(groupDao).delete(expectedGroup1);
+        verify(groupDao).delete(expectedGroup1);
     }
 
     @Test

@@ -105,7 +105,7 @@ class SubjectServiceTest {
 
         subjectService.delete(1);
 
-       verify(subjectDao).delete(expectedSubject1);
+        verify(subjectDao).delete(expectedSubject1);
     }
 
     @Test

@@ -213,10 +213,10 @@ class LectureControllerTest {
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesLise() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        when(lectureService.findByTeacherAndPeriod(expectedTeacher1,startDate, endDate)).thenReturn(expectedLectures);
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
 
         var request = get("/lectures/schedule/calendar")
-                .param("id","1")
+                .param("id", "1")
                 .param("entity", "teacher")
                 .param("start", "2000-01-01T00:00%2B03:00")
                 .param("end", "2000-02-01T00:00%2B03:00");

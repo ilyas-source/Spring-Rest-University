@@ -26,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -56,9 +56,8 @@ public class HibernateTeacherDaoTest {
         var actual = hibernateTemplate.get(Teacher.class, 3);
         assertNull(actual);
 
-        System.out.println("Creating "+teacherToCreate);
+        System.out.println("Creating " + teacherToCreate);
         teacherDao.create(teacherToCreate);
-
 
 
         actual = hibernateTemplate.get(Teacher.class, 3);

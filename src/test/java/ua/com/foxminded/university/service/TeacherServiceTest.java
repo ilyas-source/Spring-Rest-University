@@ -121,7 +121,7 @@ class TeacherServiceTest {
 
         teacherService.delete(1);
 
-       verify(teacherDao).delete(expectedTeacher1);
+        verify(teacherDao).delete(expectedTeacher1);
     }
 
     @Test

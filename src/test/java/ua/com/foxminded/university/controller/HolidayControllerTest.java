@@ -57,7 +57,7 @@ class HolidayControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithHoliday() throws Exception {
         when(holidayService.getById(1)).thenReturn(expectedHoliday1);
 
-        mockMvc.perform(get("/holidays/{id}",1))
+        mockMvc.perform(get("/holidays/{id}", 1))
                 .andExpect(view().name("holiday/details"))
                 .andExpect(model().attribute("holiday", expectedHoliday1));
     }
@@ -66,7 +66,7 @@ class HolidayControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("Can't find holiday by id 1"));
 
-        mockMvc.perform(get("/holidays/{id}",1))
+        mockMvc.perform(get("/holidays/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find holiday by id 1"));
@@ -98,7 +98,7 @@ class HolidayControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/holidays/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/holidays/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(holidayService).delete(1);
     }

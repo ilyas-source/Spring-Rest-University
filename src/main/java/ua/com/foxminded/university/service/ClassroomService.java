@@ -60,7 +60,7 @@ public class ClassroomService {
 
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
-        Classroom classroom=getById(id);
+        Classroom classroom = getById(id);
         verifyHasNoLectures(classroom);
         classroomDao.delete(classroom);
     }

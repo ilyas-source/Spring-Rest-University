@@ -102,6 +102,6 @@ class StudentServiceTest {
                 () -> studentService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-       verify(studentDao, never()).delete(any());
+        verify(studentDao, never()).delete(any());
     }
 }
