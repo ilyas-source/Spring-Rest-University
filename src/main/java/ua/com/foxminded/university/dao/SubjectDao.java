@@ -6,8 +6,6 @@ import java.util.Optional;
 
 public interface SubjectDao extends GeneralDao<Subject> {
 
-  //  List<Subject> findAll();
-
     Optional<Subject> findByName(String name);
 
     long countAssignments(Subject subject);

@@ -64,7 +64,7 @@ class HolidayServiceTest {
                 () -> holidayService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(holidayDao, never()).delete(1);
+        verify(holidayDao, never()).delete(any());
     }
 
     @Test
@@ -73,6 +73,6 @@ class HolidayServiceTest {
 
         holidayService.delete(1);
 
-     //   verify(holidayDao).delete(1);
+        verify(holidayDao).delete(expectedHoliday1);
     }
 }

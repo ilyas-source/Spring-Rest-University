@@ -82,7 +82,7 @@ class TimeslotServiceTest {
                 () -> timeslotService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-    //    verify(timeslotDao, never()).delete(1);
+        verify(timeslotDao, never()).delete(any());
     }
 
     @Test
@@ -103,7 +103,7 @@ class TimeslotServiceTest {
 
         timeslotService.delete(1);
 
-    //    verify(timeslotDao).delete(1);
+        verify(timeslotDao).delete(expectedTimeslot1);
     }
 
     @Test
@@ -117,7 +117,7 @@ class TimeslotServiceTest {
                 () -> timeslotService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(timeslotDao, never()).delete(1);
+        verify(timeslotDao, never()).delete(expectedTimeslot1);
     }
 
     @Test

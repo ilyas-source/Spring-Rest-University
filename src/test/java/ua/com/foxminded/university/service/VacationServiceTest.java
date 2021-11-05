@@ -63,7 +63,7 @@ class VacationServiceTest {
                 () -> vacationService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(vacationDao, never()).delete(1);
+        verify(vacationDao, never()).delete(any());
     }
 
     @Test
@@ -72,7 +72,7 @@ class VacationServiceTest {
 
         vacationService.delete(1);
 
-      //  verify(vacationDao).delete(1);
+        verify(vacationDao).delete(expectedVacation1);
     }
 
     @Test

@@ -76,7 +76,7 @@ class ClassroomServiceTest {
 
         classroomService.delete(1);
 
-     //   verify(classroomDao).delete(1);
+        verify(classroomDao).delete(expectedClassroom1);
     }
 
     @Test
@@ -102,7 +102,7 @@ class ClassroomServiceTest {
         Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(classroomDao, never()).delete(1);
+        verify(classroomDao, never()).delete(any());
     }
 
     @Test
@@ -136,7 +136,7 @@ class ClassroomServiceTest {
                 () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(classroomDao, never()).delete(1);
+        verify(classroomDao, never()).delete(any());
     }
 
     interface TestData {

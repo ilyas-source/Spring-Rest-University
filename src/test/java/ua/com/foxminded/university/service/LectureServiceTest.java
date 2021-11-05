@@ -278,7 +278,7 @@ class LectureServiceTest {
 
         lectureService.delete(1);
 
-     //   verify(lectureDao).delete(1);
+       verify(lectureDao).delete(expectedLecture1);
     }
 
     @Test
@@ -289,7 +289,7 @@ class LectureServiceTest {
                 () -> lectureService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-     //   verify(lectureDao, never()).delete(1);
+        verify(lectureDao, never()).delete(any());
     }
 
     @Test

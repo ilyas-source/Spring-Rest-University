@@ -20,9 +20,6 @@ import java.util.List;
                 query = "from Lecture where date = :date and timeslot = :timeslot and teacher = :teacher"),
         @NamedQuery(name = "FindLecturesByTeacherAndPeriod",
                 query = "from Lecture where date >= :startDate and date <= :endDate and teacher = :teacher")
-    //    @NamedQuery(name = "FindLecturesByStudentAndPeriod",
-    //            query = "from Lecture where date >= :startDate and date <= :endDate and group = :group"),
-
 })
 public class Lecture {
 

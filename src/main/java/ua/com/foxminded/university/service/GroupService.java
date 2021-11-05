@@ -50,7 +50,7 @@ public class GroupService {
 
     public void update(Group group) {
         logger.debug("Updating group: {} ", group);
-  //      verifyNameIsUnique(group);
+        verifyNameIsUnique(group);
         groupDao.update(group);
     }
 
