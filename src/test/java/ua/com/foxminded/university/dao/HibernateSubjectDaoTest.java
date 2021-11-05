@@ -20,12 +20,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class SubjectDaoTest {
+public class HibernateSubjectDaoTest {
 
     private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
 
@@ -112,6 +112,21 @@ public class SubjectDaoTest {
 
         assertEquals(Optional.empty(), actual);
     }
+
+    @Test
+    void givenSubject_onCountAssignments_shouldReturnNumberOfAssignments() {
+        var actual = subjectDao.countAssignments(expectedSubject1);
+
+        assertEquals(1, actual);
+    }
+
+    @Test
+    void givenUnassignedSubject_onCountAssignments_shouldReturnZero() {
+        var actual = subjectDao.countAssignments(subjectToCreate);
+
+        assertEquals(0, actual);
+    }
+
 
     public interface TestData {
         Subject subjectToCreate = new Subject(5, "test", "test");

@@ -7,9 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.SubjectDao;
-import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.model.Subject;
-import ua.com.foxminded.university.model.Teacher;
 
 import javax.persistence.NoResultException;
 import java.util.List;
@@ -20,12 +18,10 @@ public class HibernateSubjectDao implements SubjectDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateSubjectDao.class);
 
-    private TeacherDao teacherDao;
     private SessionFactory sessionFactory;
 
-    public HibernateSubjectDao(SessionFactory sessionFactory, TeacherDao teacherDao) {
+    public HibernateSubjectDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        this.teacherDao=teacherDao;
     }
 
     @Override
@@ -76,23 +72,12 @@ public class HibernateSubjectDao implements SubjectDao {
     }
 
     @Override
-    public List<Subject> getByTeacherId(int id) {
-        logger.debug("Retrieving subjects by teacher id: {}", id);
-        Optional<Teacher> optionalTeacher = teacherDao.findById(id);
-        Teacher teacher=new Teacher();
-        if(optionalTeacher.isPresent()) {
-            teacher=optionalTeacher.get();
-        }
-
+    public long countAssignments(Subject subject) {
+        logger.debug("Counting assignments to teachers: {}", subject);
         Session session = sessionFactory.getCurrentSession();
-        return session.createNamedQuery("FindSubjectsByTeacher")
-                .setParameter("teacher", teacher)
-                .list();
-    }
-
-    @Override
-    public int countAssignments(Subject subject) {
-        return 0;
+        Query query = session.createQuery("select count(*) from Teacher where :subject in elements(subjects)")
+                .setParameter("subject", subject);
+        return (long) query.getSingleResult();
     }
 }
 

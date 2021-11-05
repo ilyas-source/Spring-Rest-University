@@ -30,8 +30,8 @@ import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot2;
 import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject1;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
 

@@ -6,8 +6,8 @@ import java.util.List;
 @Entity
 @Table(name = "teachers")
 @NamedQueries({
-        @NamedQuery(name = "SelectAllTeachers",
-                query = "from Teacher order by lastName")
+        @NamedQuery(name = "SelectAllTeachers", query = "from Teacher order by lastName"),
+        @NamedQuery(name = "FindTeachersBySubject", query = "from Teacher where :subject in elements(subjects)")
 })
 public class Teacher {
 
