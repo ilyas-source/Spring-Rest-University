@@ -12,8 +12,6 @@ public interface TeacherDao extends GeneralDao<Teacher> {
 
     Page<Teacher> findAll(Pageable pageable);
 
-    Optional<Teacher> findByAddressId(int id);
-
     Optional<Teacher> findByNameAndEmail(String firstName, String lastName, String email);
 
     List<Teacher> findBySubstring(String substring);

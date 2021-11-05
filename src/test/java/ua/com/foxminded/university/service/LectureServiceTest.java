@@ -25,7 +25,7 @@ import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.e
 import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;

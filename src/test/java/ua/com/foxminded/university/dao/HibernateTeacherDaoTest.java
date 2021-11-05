@@ -1,12 +1,15 @@
 package ua.com.foxminded.university.dao;
 
 import org.hibernate.SessionFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.util.ReflectionTestUtils;
 import ua.com.foxminded.university.SpringTestConfig;
 import ua.com.foxminded.university.dao.hibernate.HibernateTeacherDao;
 import ua.com.foxminded.university.model.*;
@@ -22,17 +25,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
-public class TeacherDaoTest {
+public class HibernateTeacherDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "first_name='Test' AND last_name='Teacher' AND gender='MALE' AND degree='DOCTOR' AND email='test@mail' AND phone='phone'";
+    private static final String defaultSortDirection = "ASC";
+    private static final String defaultSortAttribute = "last_name";
+
+    @BeforeEach
+    void init() {
+        ReflectionTestUtils.setField(teacherDao, "defaultSortDirection", defaultSortDirection);
+        ReflectionTestUtils.setField(teacherDao, "defaultSortAttribute", defaultSortAttribute);
+    }
 
     @Autowired
     private HibernateTeacherDao teacherDao;
@@ -46,7 +56,10 @@ public class TeacherDaoTest {
         var actual = hibernateTemplate.get(Teacher.class, 3);
         assertNull(actual);
 
+        System.out.println("Creating "+teacherToCreate);
         teacherDao.create(teacherToCreate);
+
+
 
         actual = hibernateTemplate.get(Teacher.class, 3);
         assertEquals(teacherToCreate, actual);
@@ -101,16 +114,6 @@ public class TeacherDaoTest {
         assertNull(expected);
     }
 
-
-    @Test
-    void givenAddressId_onFindByAddressId_shouldReturnOptionalwithCorrectTeacher() {
-        Optional<Teacher> expected = Optional.of(expectedTeacher1);
-
-        Optional<Teacher> actual = teacherDao.findByAddressId(1);
-
-        assertEquals(expected, actual);
-    }
-
     @Test
     void givenNameAndEmail_onFindByNameAndEmail_shouldReturnOptionalwithCorrectTeacher() {
         Optional<Teacher> expected = Optional.of(expectedTeacher1);
@@ -131,7 +134,7 @@ public class TeacherDaoTest {
 
     @Test
     void givenString_onFindBySubstring_shouldReturnCorrectListOfTeachers() {
-        var expected = new ArrayList<Teacher>(Arrays.asList(expectedTeacher1));
+        var expected = new ArrayList<>(Arrays.asList(expectedTeacher1));
 
         var actual = teacherDao.findBySubstring("adam");
 
@@ -145,25 +148,43 @@ public class TeacherDaoTest {
         assertEquals(Optional.of(expectedTeacher1), actual);
     }
 
+    @Test
+    void givenWrongData_onFindByNameAndEmail_shouldReturnOptionalEmpty() {
+        var actual = teacherDao.findByNameAndEmail("Adam1", "Smith", "adam@smith.com");
+
+        assertEquals(Optional.empty(), actual);
+    }
+
+    @Test
+    void givenPageable_onFindAll_shouldReturnCorrectPageOfTeachers() {
+        Pageable pageable = PageRequest.of(1, 1, Sort.by("id").ascending());
+
+        Page<Teacher> expected = new PageImpl<>(expectedTeachersPage, pageable, 2);
+        var actual = teacherDao.findAll(pageable);
+
+        assertEquals(expected, actual);
+    }
+
     public interface TestData {
         List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
         List<Vacation> vacationsToCreate = new ArrayList<>(Arrays.asList(vacationToCreate));
         List<Vacation> vacationsToUpdate = new ArrayList<>(Arrays.asList(vacationToUpdate));
 
-        Teacher teacherToCreate = Teacher.builder().firstName("Test").lastName("Teacher").id(3)
-                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
-                .email("test@mail").phoneNumber("phone").address(addressToCreate)
-                .vacations(vacationsToCreate).build();
-
-        Teacher teacherToUpdate = Teacher.builder().firstName("Test").lastName("Teacher").id(2)
-                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
-                .email("test@mail").phoneNumber("phone").address(addressToUpdate)
-                .vacations(vacationsToUpdate).build();
-
         List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
         List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
         List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));
         List<Subject> expectedSubjects2 = new ArrayList<>(Arrays.asList(expectedSubject3, expectedSubject4));
+
+        Teacher teacherToCreate = Teacher.builder().firstName("Test").lastName("Teacher").id(3)
+                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
+                .email("test@mail").phoneNumber("phone").address(expectedAddress3)
+                .vacations(vacationsToCreate).build();
+
+        Teacher teacherToUpdate = Teacher.builder().firstName("Test").lastName("Teacher").id(2)
+                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
+                .email("test@mail").phoneNumber("phone").address(addressToUpdate)
+                .vacations(expectedVacations1).build();
+
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
                 .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
@@ -175,6 +196,8 @@ public class TeacherDaoTest {
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
 
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
-                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
+
+        List<Teacher> expectedTeachersPage = new ArrayList<>(Arrays.asList(expectedTeacher2));
     }
 }

@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
 import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.daysByYearsMap;
 
 @ExtendWith(MockitoExtension.class)

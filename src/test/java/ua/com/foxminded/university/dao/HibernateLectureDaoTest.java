@@ -32,8 +32,8 @@ import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.
 import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.expectedSubject2;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.expectedTeacher2;
 
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)

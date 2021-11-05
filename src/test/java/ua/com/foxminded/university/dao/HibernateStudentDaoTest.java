@@ -161,8 +161,6 @@ public class HibernateStudentDaoTest {
         Page<Student> expected = new PageImpl<Student>(expectedStudentsPage, pageable, 4);
         var actual = studentDao.findAll(pageable);
 
-        System.out.println(actual.getContent());
-
         assertEquals(expected, actual);
     }
 
