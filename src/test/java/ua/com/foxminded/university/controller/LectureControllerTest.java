@@ -185,7 +185,7 @@ class LectureControllerTest {
                 .andExpect(view().name("calendar"))
                 .andExpect(model().attribute("entity", "teacher"))
                 .andExpect(model().attribute("periodType", "day"))
-                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 01)))
+                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 1)))
                 .andExpect(model().attribute("id", 1))
                 .andExpect(model().attribute("personName", "teacher Adam Smith"));
     }
@@ -205,13 +205,13 @@ class LectureControllerTest {
                 .andExpect(view().name("calendar"))
                 .andExpect(model().attribute("entity", "student"))
                 .andExpect(model().attribute("periodType", "day"))
-                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 01)))
+                .andExpect(model().attribute("date", LocalDate.of(2021, 10, 1)))
                 .andExpect(model().attribute("id", 1))
                 .andExpect(model().attribute("personName", "student Ivan Petrov"));
     }
 
     @Test
-    void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesLise() throws Exception {
+    void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
         when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
 
@@ -251,17 +251,17 @@ class LectureControllerTest {
 
     public interface TestData {
 
-        LocalDate startDate = LocalDate.of(2000, 01, 01);
-        LocalDate endDate = LocalDate.of(2000, 02, 01);
+        LocalDate startDate = LocalDate.of(2000, 1, 1);
+        LocalDate endDate = LocalDate.of(2000, 2, 1);
 
-        Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 00), LocalTime.of(9, 45));
-        Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 00), LocalTime.of(10, 45));
-        Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 00), LocalTime.of(11, 45));
+        Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 0), LocalTime.of(9, 45));
+        Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 0), LocalTime.of(10, 45));
+        Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 0), LocalTime.of(11, 45));
         List<Timeslot> expectedTimeslots = new ArrayList<>(
                 Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));
 
         List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
-        List<Group> expectedGroups2 = new ArrayList<>(Arrays.asList(expectedGroup1));
+        List<Group> expectedGroups2 = new ArrayList<>(List.of(expectedGroup1));
 
         Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

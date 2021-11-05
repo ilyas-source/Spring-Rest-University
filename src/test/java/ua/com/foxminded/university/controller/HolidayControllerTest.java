@@ -106,7 +106,7 @@ class HolidayControllerTest {
     interface TestData {
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
-        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 03, 8), "International womens day");
+        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");
 
         List<Holiday> expectedHolidays = new ArrayList<>(
                 Arrays.asList(expectedHoliday1, expectedHoliday2, expectedHoliday3));

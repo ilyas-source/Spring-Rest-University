@@ -27,8 +27,6 @@ import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*
 @Transactional
 public class HibernateSubjectDaoTest {
 
-    private static final String TEST_WHERE_CLAUSE = "name='test' AND description = 'test'";
-
     @Autowired
     private HibernateSubjectDao subjectDao;
     @Autowired
@@ -139,8 +137,5 @@ public class HibernateSubjectDaoTest {
 
         List<Subject> expectedSubjects = new ArrayList<>(
                 Arrays.asList(expectedSubject1, expectedSubject2, expectedSubject3, expectedSubject4));
-
-        List<Subject> expectedSubjectsForTeacher1 = new ArrayList<>(
-                Arrays.asList(expectedSubject1, expectedSubject2));
     }
 }

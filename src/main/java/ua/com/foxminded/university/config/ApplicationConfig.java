@@ -43,7 +43,7 @@ public class ApplicationConfig {
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-        sessionFactory.setPackagesToScan(new String[]{"ua.com.foxminded.university"});
+        sessionFactory.setPackagesToScan("ua.com.foxminded.university");
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
@@ -56,7 +56,7 @@ public class ApplicationConfig {
         return transactionManager;
     }
 
-    private final Properties hibernateProperties() {
+    private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
         hibernateProperties.setProperty("hibernate.dialect", orgHibernateDialectH2Dialect);

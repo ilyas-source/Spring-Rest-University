@@ -97,8 +97,7 @@ public class HibernateHolidayDaoTest {
 
     @Test
     void givenDate_onFindByDate_shouldReturnListWithCorrectHolidays() {
-        List<Holiday> expected = new ArrayList<>(
-                Arrays.asList(expectedHoliday1));
+        List<Holiday> expected = new ArrayList<>(List.of(expectedHoliday1));
 
         List<Holiday> actual = holidayDao.findByDate(expectedHoliday1.getDate());
 
@@ -106,12 +105,12 @@ public class HibernateHolidayDaoTest {
     }
 
     public interface TestData {
-        Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 01, 01), "test");
-        Holiday holidayToUpdate = new Holiday(2, LocalDate.of(2000, 01, 01), "test");
+        Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 1, 1), "test");
+        Holiday holidayToUpdate = new Holiday(2, LocalDate.of(2000, 1, 1), "test");
 
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
-        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 03, 8), "International womens day");
+        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");
 
         List<Holiday> expectedHolidays = new ArrayList<>(
                 Arrays.asList(expectedHoliday1, expectedHoliday2, expectedHoliday3));

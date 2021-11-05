@@ -109,7 +109,7 @@ public class HibernateLectureDaoTest {
 
     @Test
     void givenClassroom_onFindByClassroom_shouldReturnCorrectListOfLectures() {
-        List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         List<Lecture> actual = lectureDao.findByClassroom(expectedClassroom1);
 
@@ -118,7 +118,7 @@ public class HibernateLectureDaoTest {
 
     @Test
     void givenTeacher_onFindByTeacher_shouldReturnCorrectListOfLectures() {
-        List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         List<Lecture> actual = lectureDao.findByTeacher(expectedTeacher1);
 
@@ -127,7 +127,7 @@ public class HibernateLectureDaoTest {
 
     @Test
     void givenSubject_onFindBySubject_shouldReturnCorrectListOfLectures() {
-        List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         List<Lecture> actual = lectureDao.findBySubject(expectedSubject1);
 
@@ -136,7 +136,7 @@ public class HibernateLectureDaoTest {
 
     @Test
     void givenTimeslot_onFindByTimeslot_shouldReturnCorrectListOfLectures() {
-        List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         List<Lecture> actual = lectureDao.findByTimeslot(expectedTimeslot1);
 
@@ -145,7 +145,7 @@ public class HibernateLectureDaoTest {
 
     @Test
     void givenDateAndTimeslot_onFindByDateTime_shouldReturnCorrectListOfLectures() {
-        List<Lecture> expected = new ArrayList<>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         List<Lecture> actual = lectureDao.findByDateTime(LocalDate.of(2020, 1, 1), expectedTimeslot1);
 
@@ -192,7 +192,7 @@ public class HibernateLectureDaoTest {
     void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldReturnCorrectListOfLectures() {
         var startDate = LocalDate.of(2020, 1, 1);
         var endDate = LocalDate.of(2020, 1, 3);
-        List<Lecture> expected = new ArrayList<Lecture>(Arrays.asList(expectedLecture1));
+        List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
         var actual = lectureDao.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate);
 
@@ -216,14 +216,14 @@ public class HibernateLectureDaoTest {
                 .timeslot(expectedTimeslot1).groups(testGroups).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(3).build();
 
-        List<Group> expectedGroupsAfterUpdate = new ArrayList<>(Arrays.asList(expectedGroup2));
+        List<Group> expectedGroupsAfterUpdate = new ArrayList<>(List.of(expectedGroup2));
 
         Lecture lectureToUpdate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(expectedGroupsAfterUpdate).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(2).build();
 
         List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
-        List<Group> expectedGroups2 = new ArrayList<>(Arrays.asList(expectedGroup1));
+        List<Group> expectedGroups2 = new ArrayList<>(List.of(expectedGroup1));
 
         Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

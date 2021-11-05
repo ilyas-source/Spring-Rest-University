@@ -50,9 +50,8 @@ public class TeacherService {
     public Page<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
                 pageable.getSort());
-        Page<Teacher> teachers = teacherDao.findAll(pageable);
 
-        return teachers;
+        return teacherDao.findAll(pageable);
     }
 
     public List<Teacher> findAll() {
@@ -122,7 +121,7 @@ public class TeacherService {
         Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
         long maxDays = daysCountByYears.entrySet()
                 .stream()
-                .max(Comparator.comparing(Map.Entry::getValue))
+                .max(Map.Entry.comparingByValue())
                 .get()
                 .getValue();
         if (maxDays > allowedDays) {

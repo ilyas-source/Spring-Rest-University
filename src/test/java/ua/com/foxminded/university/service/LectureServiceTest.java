@@ -12,7 +12,6 @@ import ua.com.foxminded.university.model.Lecture;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -340,6 +339,6 @@ class LectureServiceTest {
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
                 subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
 
-        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(Arrays.asList(lectureToReplaceTeacher));
+        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(List.of(lectureToReplaceTeacher));
     }
 }

@@ -124,7 +124,7 @@ public class HibernateTeacherDaoTest {
 
     @Test
     void givenLecture_onGetReplacementCandidates_shouldReturnCorrectListOfTeachers() {
-        var expected = new ArrayList<Teacher>(Arrays.asList(expectedTeacher2));
+        var expected = new ArrayList<>(List.of(expectedTeacher2));
 
         var actual = teacherDao.getReplacementCandidates(lectureToReplaceTeacher);
 
@@ -133,7 +133,7 @@ public class HibernateTeacherDaoTest {
 
     @Test
     void givenString_onFindBySubstring_shouldReturnCorrectListOfTeachers() {
-        var expected = new ArrayList<>(Arrays.asList(expectedTeacher1));
+        var expected = new ArrayList<>(List.of(expectedTeacher1));
 
         var actual = teacherDao.findBySubstring("adam");
 
@@ -165,9 +165,8 @@ public class HibernateTeacherDaoTest {
     }
 
     public interface TestData {
-        List<Subject> testSubjects = new ArrayList<>(Arrays.asList(subjectToUpdate));
-        List<Vacation> vacationsToCreate = new ArrayList<>(Arrays.asList(vacationToCreate));
-        List<Vacation> vacationsToUpdate = new ArrayList<>(Arrays.asList(vacationToUpdate));
+        List<Subject> testSubjects = new ArrayList<>(List.of(subjectToUpdate));
+        List<Vacation> vacationsToCreate = new ArrayList<>(List.of(vacationToCreate));
 
         List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
         List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
@@ -197,6 +196,6 @@ public class HibernateTeacherDaoTest {
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
                 subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
 
-        List<Teacher> expectedTeachersPage = new ArrayList<>(Arrays.asList(expectedTeacher2));
+        List<Teacher> expectedTeachersPage = new ArrayList<>(List.of(expectedTeacher2));
     }
 }

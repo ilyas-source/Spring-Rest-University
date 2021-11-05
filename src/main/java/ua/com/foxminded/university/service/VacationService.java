@@ -3,7 +3,6 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.VacationIncorrectException;
@@ -24,11 +23,10 @@ public class VacationService {
     private static final Logger logger = LoggerFactory.getLogger(VacationService.class);
 
     private VacationDao vacationDao;
-    private TeacherDao teacherDao;
 
-    public VacationService(VacationDao vacationDao, TeacherDao teacherDao) {
+
+    public VacationService(VacationDao vacationDao) {
         this.vacationDao = vacationDao;
-        this.teacherDao = teacherDao;
     }
 
     public void create(Vacation vacation) {

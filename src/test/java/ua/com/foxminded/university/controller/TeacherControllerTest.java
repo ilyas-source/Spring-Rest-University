@@ -18,7 +18,6 @@ import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.util.ArrayList;
@@ -45,8 +44,6 @@ class TeacherControllerTest {
 
     @Mock
     private TeacherService teacherService;
-    @Mock
-    private SubjectService subjectService;
     @InjectMocks
     private TeacherController teacherController;
 

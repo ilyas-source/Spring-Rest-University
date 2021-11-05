@@ -53,7 +53,7 @@ public class HolidayService {
     }
 
     private void verifyIdExists(int id) {
-        if (!holidayDao.findById(id).isPresent()) {
+        if (holidayDao.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Holiday id:%s not found, nothing to delete", id));
         }
     }

@@ -158,7 +158,7 @@ public class HibernateStudentDaoTest {
     void givenPageable_onFindAll_shouldReturnCorrectPageOfStudents() {
         Pageable pageable = PageRequest.of(1, 2, Sort.by("id").ascending());
 
-        Page<Student> expected = new PageImpl<Student>(expectedStudentsPage, pageable, 4);
+        Page<Student> expected = new PageImpl<>(expectedStudentsPage, pageable, 4);
         var actual = studentDao.findAll(pageable);
 
         assertEquals(expected, actual);
