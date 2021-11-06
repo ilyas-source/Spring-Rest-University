@@ -20,9 +20,7 @@ import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.service.TeacherService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -126,8 +124,8 @@ class TeacherControllerTest {
     }
 
     interface TestData {
-        List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));
-        List<Subject> expectedSubjects2 = new ArrayList<>(Arrays.asList(expectedSubject3, expectedSubject4));
+        Set<Subject> expectedSubjects1 = new HashSet<>(Arrays.asList(expectedSubject1, expectedSubject2));
+        Set<Subject> expectedSubjects2 = new HashSet<>(Arrays.asList(expectedSubject3, expectedSubject4));
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
                 .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)

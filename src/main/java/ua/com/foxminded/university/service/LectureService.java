@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Transactional
 @Service
@@ -100,7 +101,7 @@ public class LectureService {
                 .stream()
                 .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
-                .flatMap(List::stream)
+                .flatMap(Set::stream)
                 .anyMatch(lecture.getGroups()::contains)) {
             throw new GroupBusyException("Group(s) will be attending another lecture");
         }

@@ -14,10 +14,7 @@ import ua.com.foxminded.university.model.Lecture;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -210,20 +207,20 @@ public class HibernateLectureDaoTest {
     }
 
     public interface TestData {
-        List<Group> testGroups = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        Set<Group> testGroups = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
 
         Lecture lectureToCreate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(testGroups).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(3).build();
 
-        List<Group> expectedGroupsAfterUpdate = new ArrayList<>(List.of(expectedGroup2));
+        Set<Group> expectedGroupsAfterUpdate = new HashSet<>(List.of(expectedGroup2));
 
         Lecture lectureToUpdate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(expectedGroupsAfterUpdate).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(2).build();
 
-        List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
-        List<Group> expectedGroups2 = new ArrayList<>(List.of(expectedGroup1));
+        Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        Set<Group> expectedGroups2 = new HashSet<>(List.of(expectedGroup1));
 
         Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

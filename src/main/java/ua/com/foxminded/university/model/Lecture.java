@@ -2,7 +2,7 @@ package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "lectures")
@@ -33,12 +33,12 @@ public class Lecture {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Timeslot timeslot;
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "lectures_groups",
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Group> groups;
+    private Set<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Subject subject;
@@ -58,7 +58,7 @@ public class Lecture {
         private LocalDate date;
         private Subject subject;
         private Timeslot timeslot;
-        private List<Group> groups;
+        private Set<Group> groups;
         private Teacher teacher;
         private Classroom classroom;
 
@@ -85,7 +85,7 @@ public class Lecture {
             return this;
         }
 
-        public Builder groups(List<Group> val) {
+        public Builder groups(Set<Group> val) {
             this.groups = val;
             return this;
         }
@@ -142,11 +142,11 @@ public class Lecture {
         this.timeslot = timeSlot;
     }
 
-    public List<Group> getGroups() {
+    public Set<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(Set<Group> groups) {
         this.groups = groups;
     }
 

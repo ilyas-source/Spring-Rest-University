@@ -16,11 +16,8 @@ import ua.com.foxminded.university.service.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -78,7 +75,7 @@ class LectureControllerTest {
     @Test
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithLecture() throws Exception {
         when(lectureService.getById(1)).thenReturn(expectedLecture1);
-        when(groupService.findAll()).thenReturn(expectedGroups1);
+        when(groupService.findAll()).thenReturn(expectedGroupsList);
         when(timeslotService.findAll()).thenReturn(expectedTimeslots);
         when(subjectService.findAll()).thenReturn(expectedSubjects);
         when(classroomService.findAll()).thenReturn(expectedClassrooms);
@@ -212,8 +209,8 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
-        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
+    //    when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+    //    when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
 
         var request = get("/lectures/schedule/calendar")
                 .param("id", "1")
@@ -221,10 +218,11 @@ class LectureControllerTest {
                 .param("start", "2000-01-01T00:00%2B03:00")
                 .param("end", "2000-02-01T00:00%2B03:00");
 
-        var mvcResult = mockMvc.perform(request);
+        var mvcResult = mockMvc.perform(request)
+                .andExpect(status().is2xxSuccessful());
 
-        var status = mvcResult.andExpect(status().is2xxSuccessful());
-        assertEquals(true, status);
+       // var status = mvcResult.andExpect(status().is2xxSuccessful());
+      //  assertEquals(true, status);
     }
 
     @Test
@@ -260,8 +258,9 @@ class LectureControllerTest {
         List<Timeslot> expectedTimeslots = new ArrayList<>(
                 Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));
 
-        List<Group> expectedGroups1 = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
-        List<Group> expectedGroups2 = new ArrayList<>(List.of(expectedGroup1));
+        Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        List<Group> expectedGroupsList = new ArrayList<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        Set<Group> expectedGroups2 = new HashSet<>(List.of(expectedGroup1));
 
         Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

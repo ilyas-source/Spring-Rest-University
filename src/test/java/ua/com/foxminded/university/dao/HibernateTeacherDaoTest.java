@@ -16,10 +16,7 @@ import ua.com.foxminded.university.model.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -165,13 +162,13 @@ public class HibernateTeacherDaoTest {
     }
 
     public interface TestData {
-        List<Subject> testSubjects = new ArrayList<>(List.of(subjectToUpdate));
+        Set<Subject> testSubjects = new HashSet<>(List.of(subjectToUpdate));
         List<Vacation> vacationsToCreate = new ArrayList<>(List.of(vacationToCreate));
 
         List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
         List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
-        List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));
-        List<Subject> expectedSubjects2 = new ArrayList<>(Arrays.asList(expectedSubject3, expectedSubject4));
+        Set<Subject> expectedSubjects1 = new HashSet<>(Arrays.asList(expectedSubject1, expectedSubject2));
+        Set<Subject> expectedSubjects2 = new HashSet<>(Arrays.asList(expectedSubject3, expectedSubject4));
 
         Teacher teacherToCreate = Teacher.builder().firstName("Test").lastName("Teacher").id(3)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(testSubjects)
@@ -194,7 +191,7 @@ public class HibernateTeacherDaoTest {
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
 
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
-                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher1).build();
+                subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
 
         List<Teacher> expectedTeachersPage = new ArrayList<>(List.of(expectedTeacher2));
     }

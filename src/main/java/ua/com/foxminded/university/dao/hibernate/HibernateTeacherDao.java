@@ -68,7 +68,9 @@ public class HibernateTeacherDao implements TeacherDao {
     public List<Teacher> findAll() {
         logger.debug("Retrieving all teachers from DB");
         Session session = sessionFactory.getCurrentSession();
-        return session.createNamedQuery("SelectAllTeachers").list();
+        List<Teacher> result = session.createNamedQuery("SelectAllTeachers").list();
+
+        return result;
     }
 
     @Override

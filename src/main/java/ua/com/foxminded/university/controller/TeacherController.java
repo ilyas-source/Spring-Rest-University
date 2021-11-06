@@ -14,6 +14,7 @@ import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/teachers")
@@ -66,7 +67,7 @@ public class TeacherController {
         List<Vacation> existingVacations = teacherService.getById(teacher.getId()).getVacations();
         teacher.setVacations(existingVacations);
 
-        List<Subject> subjects = teacher.getSubjects();
+        Set<Subject> subjects = teacher.getSubjects();
         for (Subject s : subjects) {
             logger.debug("Filling out subject: {}", s);
             Subject retrievedSubject = subjectService.getById(s.getId());
