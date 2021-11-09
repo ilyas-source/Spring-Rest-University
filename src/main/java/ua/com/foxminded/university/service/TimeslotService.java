@@ -12,10 +12,12 @@ import ua.com.foxminded.university.exception.TimeslotTooShortException;
 import ua.com.foxminded.university.exception.TimeslotsIntersectionException;
 import ua.com.foxminded.university.model.Timeslot;
 
+import javax.transaction.Transactional;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class TimeslotService {
 
@@ -64,8 +66,9 @@ public class TimeslotService {
 
     public void delete(int id) {
         logger.debug("Deleting timeslot by id: {} ", id);
-        verifyHasNoLecturesScheduled(getById(id));
-        timeslotDao.delete(id);
+        Timeslot timeslot = getById(id);
+        verifyHasNoLecturesScheduled(timeslot);
+        timeslotDao.delete(timeslot);
     }
 
     private void verifyHasNoIntersections(Timeslot timeslot) {

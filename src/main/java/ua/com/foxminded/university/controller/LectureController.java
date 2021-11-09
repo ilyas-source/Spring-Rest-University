@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/lectures")
@@ -183,7 +184,7 @@ public class LectureController {
         lecture.setSubject(subject);
         lecture.setClassroom(classroom);
 
-        List<Group> groups = lecture.getGroups();
+        Set<Group> groups = lecture.getGroups();
         for (Group group : groups) {
             logger.debug("Received group {}, with id {}, name {}", group, group.getId(), group.getName());
             group.setName(groupService.getById(group.getId()).getName());

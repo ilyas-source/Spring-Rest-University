@@ -12,9 +12,11 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class StudentService {
 
@@ -68,20 +70,19 @@ public class StudentService {
     public void delete(int id) {
         logger.debug("Deleting student by id: {} ", id);
         verifyIdExists(id);
-        studentDao.delete(id);
+        studentDao.delete(getById(id));
     }
 
     private void verifyIdExists(int id) {
-        if (!studentDao.findById(id).isPresent()) {
+        if (studentDao.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Student with id:%s not found, nothing to delete", id));
         }
     }
 
     public Page<Student> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-        Page<Student> students = studentDao.findAll(pageable);
 
-        return students;
+        return studentDao.findAll(pageable);
     }
 
     public List<Student> findAll() {

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.Formatter;
 import ua.com.foxminded.university.model.Subject;
 
-import java.text.ParseException;
 import java.util.Locale;
 
 public class SubjectFormatter implements Formatter<Subject> {
@@ -13,7 +12,7 @@ public class SubjectFormatter implements Formatter<Subject> {
     private static final Logger logger = LoggerFactory.getLogger(SubjectFormatter.class);
 
     @Override
-    public Subject parse(String text, Locale locale) throws ParseException {
+    public Subject parse(String text, Locale locale) {
         logger.debug("Parsing {}", text);
         Subject subject = new Subject();
         String[] parts = text.split(":");

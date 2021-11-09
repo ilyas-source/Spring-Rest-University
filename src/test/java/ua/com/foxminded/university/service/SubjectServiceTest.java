@@ -18,8 +18,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
@@ -66,13 +66,13 @@ class SubjectServiceTest {
     void givenAssignedSubjectId_onDelete_shouldThrowException() {
         String expected = "Subject Test Economics is assigned to teacher(s), can't delete";
         when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3);
+        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3L);
 
         Throwable thrown = assertThrows(EntityInUseException.class,
                 () -> subjectService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(1);
+        verify(subjectDao, never()).delete(any());
     }
 
     @Test
@@ -85,7 +85,7 @@ class SubjectServiceTest {
                 () -> subjectService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(1);
+        verify(subjectDao, never()).delete(expectedSubject1);
     }
 
     @Test
@@ -94,18 +94,18 @@ class SubjectServiceTest {
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> subjectService.delete(1));
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(1);
+        verify(subjectDao, never()).delete(any());
     }
 
     @Test
     void givenFreeSubject_onDelete_shouldCallDaoDelete() {
         when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(0);
+        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(0L);
         when(lectureDao.findBySubject(expectedSubject1)).thenReturn(new ArrayList<>());
 
         subjectService.delete(1);
 
-        verify(subjectDao).delete(1);
+        verify(subjectDao).delete(expectedSubject1);
     }
 
     @Test

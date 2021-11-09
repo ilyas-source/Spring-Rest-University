@@ -1,16 +1,52 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "lectures")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllLectures", query = "from Lecture order by date"),
+        @NamedQuery(name = "FindLecturesBySubject", query = "from Lecture where subject = :subject"),
+        @NamedQuery(name = "FindLecturesByClassroom", query = "from Lecture where classroom = :classroom"),
+        @NamedQuery(name = "FindLecturesByTimeslot", query = "from Lecture where timeslot = :timeslot"),
+        @NamedQuery(name = "FindLecturesByTeacher", query = "from Lecture where teacher = :teacher"),
+        @NamedQuery(name = "FindLecturesByDateTime",
+                query = "from Lecture where date = :date and timeslot = :timeslot"),
+        @NamedQuery(name = "FindLectureByDateTimeClassroom",
+                query = "from Lecture where date = :date and timeslot = :timeslot and classroom = :classroom"),
+        @NamedQuery(name = "FindLectureByDateTimeTeacher",
+                query = "from Lecture where date = :date and timeslot = :timeslot and teacher = :teacher"),
+        @NamedQuery(name = "FindLecturesByTeacherAndPeriod",
+                query = "from Lecture where date >= :startDate and date <= :endDate and teacher = :teacher")
+})
 public class Lecture {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column
     private LocalDate date;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Timeslot timeslot;
-    private List<Group> groups;
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+            name = "lectures_groups",
+            joinColumns = @JoinColumn(name = "lecture_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Set<Group> groups;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Subject subject;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Teacher teacher;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Classroom classroom;
 
     public static Builder builder() {
@@ -22,7 +58,7 @@ public class Lecture {
         private LocalDate date;
         private Subject subject;
         private Timeslot timeslot;
-        private List<Group> groups;
+        private Set<Group> groups;
         private Teacher teacher;
         private Classroom classroom;
 
@@ -49,7 +85,7 @@ public class Lecture {
             return this;
         }
 
-        public Builder groups(List<Group> val) {
+        public Builder groups(Set<Group> val) {
             this.groups = val;
             return this;
         }
@@ -106,11 +142,11 @@ public class Lecture {
         this.timeslot = timeSlot;
     }
 
-    public List<Group> getGroups() {
+    public Set<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
+    public void setGroups(Set<Group> groups) {
         this.groups = groups;
     }
 

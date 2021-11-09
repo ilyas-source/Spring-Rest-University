@@ -1,12 +1,30 @@
 package ua.com.foxminded.university.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "vacations")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllVacations", query = "from Vacation"),
+        @NamedQuery(name = "FindVacationsByTeacher", query = "from Vacation where teacher = :teacher"),
+})
 public class Vacation {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "start_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate startDate;
+    @Column(name = "end_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
+    @ManyToOne
+    private Teacher teacher;
 
     public Vacation() {
     }

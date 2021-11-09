@@ -19,9 +19,9 @@ import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.daysByYearsMap;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.daysByYearsMap;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceTest {
@@ -98,7 +98,7 @@ class TeacherServiceTest {
                 () -> teacherService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).delete(1);
+        verify(teacherDao, never()).delete(any());
     }
 
     @Test
@@ -111,7 +111,7 @@ class TeacherServiceTest {
                 () -> teacherService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).delete(1);
+        verify(teacherDao, never()).delete(expectedTeacher1);
     }
 
     @Test
@@ -121,7 +121,7 @@ class TeacherServiceTest {
 
         teacherService.delete(1);
 
-        verify(teacherDao).delete(1);
+        verify(teacherDao).delete(expectedTeacher1);
     }
 
     @Test

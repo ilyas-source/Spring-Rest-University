@@ -18,12 +18,9 @@ import ua.com.foxminded.university.model.Degree;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
-import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,8 +42,6 @@ class TeacherControllerTest {
 
     @Mock
     private TeacherService teacherService;
-    @Mock
-    private SubjectService subjectService;
     @InjectMocks
     private TeacherController teacherController;
 
@@ -81,7 +76,7 @@ class TeacherControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
-        mockMvc.perform(get("/teachers/{id}",1))
+        mockMvc.perform(get("/teachers/{id}", 1))
                 .andExpect(view().name("teacher/details"))
                 .andExpect(model().attribute("teacher", expectedTeacher1));
     }
@@ -90,7 +85,7 @@ class TeacherControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(teacherService.getById(1)).thenThrow(new EntityNotFoundException("Can't find teacher by id 1"));
 
-        mockMvc.perform(get("/teachers/{id}",1))
+        mockMvc.perform(get("/teachers/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find teacher by id 1"));
@@ -123,14 +118,14 @@ class TeacherControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/teachers/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/teachers/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(teacherService).delete(1);
     }
 
     interface TestData {
-        List<Subject> expectedSubjects1 = new ArrayList<>(Arrays.asList(expectedSubject1, expectedSubject2));
-        List<Subject> expectedSubjects2 = new ArrayList<>(Arrays.asList(expectedSubject3, expectedSubject4));
+        Set<Subject> expectedSubjects1 = new HashSet<>(Arrays.asList(expectedSubject1, expectedSubject2));
+        Set<Subject> expectedSubjects2 = new HashSet<>(Arrays.asList(expectedSubject3, expectedSubject4));
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
                 .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)

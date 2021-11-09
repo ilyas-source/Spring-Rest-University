@@ -1,18 +1,47 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "teachers")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllTeachers", query = "from Teacher"),
+        @NamedQuery(name = "FindTeachersBySubject", query = "from Teacher where :subject in elements(subjects)"),
+        @NamedQuery(name = "findTeacherByNameAndEmail",
+                query = "from Teacher where firstName = :firstName AND lastName = :lastName AND email = :email")
+})
 public class Teacher {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column
+    @Enumerated(EnumType.STRING)
     private Degree degree;
-    private List<Subject> subjects;
+    @ManyToMany(fetch=FetchType.EAGER)
+    @JoinTable(
+            name = "teachers_subjects",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    private Set<Subject> subjects;
+    @Column
     private String email;
+    @Column
     private String phone;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Address address;
+    @OneToMany(mappedBy = "teacher", fetch=FetchType.EAGER)
     private List<Vacation> vacations;
 
     public static Builder builder() {
@@ -25,7 +54,7 @@ public class Teacher {
         private String lastName;
         private Gender gender;
         private Degree degree;
-        private List<Subject> subjects;
+        private Set<Subject> subjects;
         private String email;
         private String phoneNumber;
         private Address address;
@@ -59,7 +88,7 @@ public class Teacher {
             return this;
         }
 
-        public Builder subjects(List<Subject> val) {
+        public Builder subjects(Set<Subject> val) {
             this.subjects = val;
             return this;
         }
@@ -177,11 +206,11 @@ public class Teacher {
         this.vacations = vacations;
     }
 
-    public List<Subject> getSubjects() {
+    public Set<Subject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(List<Subject> subjects) {
+    public void setSubjects(Set<Subject> subjects) {
         this.subjects = subjects;
     }
 

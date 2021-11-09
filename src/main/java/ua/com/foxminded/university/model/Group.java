@@ -1,8 +1,22 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "groups")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllGroups",
+                query = "from Group order by name"),
+        @NamedQuery(name = "FindGroupByName",
+                query = "from Group where name = :name")
+})
 public class Group {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String name;
 
     public Group() {

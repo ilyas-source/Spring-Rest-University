@@ -13,10 +13,12 @@ import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.*;
 
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @PropertySource("classpath:university.properties")
+@Transactional
 @Service
 public class TeacherService {
 
@@ -48,9 +50,8 @@ public class TeacherService {
     public Page<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
                 pageable.getSort());
-        Page<Teacher> teachers = teacherDao.findAll(pageable);
 
-        return teachers;
+        return teacherDao.findAll(pageable);
     }
 
     public List<Teacher> findAll() {
@@ -105,8 +106,9 @@ public class TeacherService {
 
     public void delete(int id) {
         logger.debug("Deleting teacher by id: {} ", id);
-        verifyHasNoLectures(getById(id));
-        teacherDao.delete(id);
+        Teacher teacher = getById(id);
+        verifyHasNoLectures(teacher);
+        teacherDao.delete(teacher);
     }
 
     private void verifyHasEnoughVacationDays(Teacher teacher) {
@@ -119,7 +121,7 @@ public class TeacherService {
         Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
         long maxDays = daysCountByYears.entrySet()
                 .stream()
-                .max(Comparator.comparing(Map.Entry::getValue))
+                .max(Map.Entry.comparingByValue())
                 .get()
                 .getValue();
         if (maxDays > allowedDays) {
@@ -180,7 +182,7 @@ public class TeacherService {
             }
         }
         for (Teacher candidate : candidates) {
-            if (vacationDao.findByTeacherId(candidate.getId()).stream()
+            if (vacationDao.findByTeacher(candidate).stream()
                     .anyMatch(v -> (!date.isBefore(v.getStartDate()) && !date.isAfter(v.getEndDate())))) {
                 logger.debug("{} {} is not suitable: will be on vacation", candidate.getFirstName(), candidate.getLastName());
                 suitableTeachers.remove(candidate);

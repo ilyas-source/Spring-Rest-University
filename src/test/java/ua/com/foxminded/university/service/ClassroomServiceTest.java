@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.ClassroomDao;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.ClassroomOccupiedException;
@@ -19,8 +18,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
 import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.duplicateNameClassroom;
 import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.invalidCapacityClassroom;
 
@@ -31,8 +30,6 @@ class ClassroomServiceTest {
     private ClassroomDao classroomDao;
     @Mock
     private LectureDao lectureDao;
-    @Mock
-    private GroupDao groupDao;
     @Mock
     private LectureService lectureService;
     @InjectMocks
@@ -79,7 +76,7 @@ class ClassroomServiceTest {
 
         classroomService.delete(1);
 
-        verify(classroomDao).delete(1);
+        verify(classroomDao).delete(expectedClassroom1);
     }
 
     @Test
@@ -105,7 +102,7 @@ class ClassroomServiceTest {
         Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).delete(1);
+        verify(classroomDao, never()).delete(any());
     }
 
     @Test
@@ -139,7 +136,7 @@ class ClassroomServiceTest {
                 () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).delete(1);
+        verify(classroomDao, never()).delete(any());
     }
 
     interface TestData {

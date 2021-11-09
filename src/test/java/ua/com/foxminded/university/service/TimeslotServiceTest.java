@@ -21,8 +21,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class TimeslotServiceTest {
@@ -82,7 +82,7 @@ class TimeslotServiceTest {
                 () -> timeslotService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(timeslotDao, never()).delete(1);
+        verify(timeslotDao, never()).delete(any());
     }
 
     @Test
@@ -103,7 +103,7 @@ class TimeslotServiceTest {
 
         timeslotService.delete(1);
 
-        verify(timeslotDao).delete(1);
+        verify(timeslotDao).delete(expectedTimeslot1);
     }
 
     @Test
@@ -117,7 +117,7 @@ class TimeslotServiceTest {
                 () -> timeslotService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(timeslotDao, never()).delete(1);
+        verify(timeslotDao, never()).delete(expectedTimeslot1);
     }
 
     @Test

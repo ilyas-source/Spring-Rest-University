@@ -57,7 +57,7 @@ class HolidayControllerTest {
     void givenCorrectGetRequest_onShowDetails_shouldReturnDetailsPageWithHoliday() throws Exception {
         when(holidayService.getById(1)).thenReturn(expectedHoliday1);
 
-        mockMvc.perform(get("/holidays/{id}",1))
+        mockMvc.perform(get("/holidays/{id}", 1))
                 .andExpect(view().name("holiday/details"))
                 .andExpect(model().attribute("holiday", expectedHoliday1));
     }
@@ -66,7 +66,7 @@ class HolidayControllerTest {
     void givenIncorrectGetRequest_onShowDetails_shouldThrowException() throws Exception {
         when(holidayService.getById(1)).thenThrow(new EntityNotFoundException("Can't find holiday by id 1"));
 
-        mockMvc.perform(get("/holidays/{id}",1))
+        mockMvc.perform(get("/holidays/{id}", 1))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "EntityNotFoundException"))
                 .andExpect(model().attribute("message", "Can't find holiday by id 1"));
@@ -98,7 +98,7 @@ class HolidayControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/holidays/delete/{id}",1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(post("/holidays/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
         verify(holidayService).delete(1);
     }
@@ -106,7 +106,7 @@ class HolidayControllerTest {
     interface TestData {
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
-        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 03, 8), "International womens day");
+        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");
 
         List<Holiday> expectedHolidays = new ArrayList<>(
                 Arrays.asList(expectedHoliday1, expectedHoliday2, expectedHoliday3));

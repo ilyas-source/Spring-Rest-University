@@ -1,12 +1,27 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "addresses")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllAddresses", query = "from Address")
+})
 public class Address {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String country;
+    @Column
     private String postalCode;
+    @Column
     private String region;
+    @Column
     private String city;
+    @Column
     private String streetAddress;
 
     public static Builder builder() {

@@ -17,8 +17,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.GroupDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudents;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
@@ -84,7 +84,7 @@ class GroupServiceTest {
 
         groupService.delete(1);
 
-        verify(groupDao).delete(1);
+        verify(groupDao).delete(expectedGroup1);
     }
 
     @Test
@@ -94,7 +94,7 @@ class GroupServiceTest {
                 () -> groupService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(groupDao, never()).delete(1);
+        verify(groupDao, never()).delete(any());
     }
 
     @Test
@@ -107,6 +107,6 @@ class GroupServiceTest {
                 () -> groupService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(groupDao, never()).delete(1);
+        verify(groupDao, never()).delete(expectedGroup1);
     }
 }

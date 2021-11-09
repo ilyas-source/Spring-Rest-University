@@ -1,17 +1,43 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "students")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllStudents", query = "from Student"),
+        @NamedQuery(name = "FindStudentByGroup", query = "from Student where group = :group"),
+        @NamedQuery(name = "FindStudentByAddress", query = "from Student where address = :address"),
+        @NamedQuery(name = "findStudentByNameAndBirthDate",
+                query = "from Student where firstName = :firstName AND lastName = :lastName AND birthDate = :birthDate")
+
+
+})
 public class Student {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(name = "birth_date")
     private LocalDate birthDate;
+    @Column
     private String email;
+    @Column
     private String phone;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Address address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(referencedColumnName = "id")
     private Group group;
 
     public static Builder builder() {

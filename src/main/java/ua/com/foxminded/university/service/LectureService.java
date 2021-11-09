@@ -18,7 +18,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+@Transactional
 @Service
 public class LectureService {
 
@@ -64,7 +66,7 @@ public class LectureService {
     public void delete(int id) {
         logger.debug("Deleting lecture by id: {} ", id);
         verifyIdExists(id);
-        lectureDao.delete(id);
+        lectureDao.delete(getById(id));
     }
 
     private void verifyAllDataIsCorrect(Lecture lecture) {
@@ -99,7 +101,7 @@ public class LectureService {
                 .stream()
                 .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
-                .flatMap(List::stream)
+                .flatMap(Set::stream)
                 .anyMatch(lecture.getGroups()::contains)) {
             throw new GroupBusyException("Group(s) will be attending another lecture");
         }
@@ -161,7 +163,7 @@ public class LectureService {
     }
 
     private void verifyIdExists(int id) {
-        if (!lectureDao.findById(id).isPresent()) {
+        if (lectureDao.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Lecture id:%s not found, nothing to delete", id));
         }
     }

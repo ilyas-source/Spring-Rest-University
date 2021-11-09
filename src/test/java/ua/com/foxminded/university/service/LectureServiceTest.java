@@ -7,12 +7,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.dao.LectureDao;
+import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.HolidayDaoTest.TestData.expectedHolidays;
-import static ua.com.foxminded.university.dao.LectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.SubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.TimeslotDaoTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;
 
@@ -37,6 +37,8 @@ class LectureServiceTest {
     private LectureDao lectureDao;
     @Mock
     private HolidayDao holidayDao;
+    @Mock
+    private StudentDao studentDao;
     @Mock
     private TeacherService teacherService;
     @InjectMocks
@@ -278,7 +280,7 @@ class LectureServiceTest {
 
         lectureService.delete(1);
 
-        verify(lectureDao).delete(1);
+        verify(lectureDao).delete(expectedLecture1);
     }
 
     @Test
@@ -289,7 +291,7 @@ class LectureServiceTest {
                 () -> lectureService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).delete(1);
+        verify(lectureDao, never()).delete(any());
     }
 
     @Test
@@ -340,6 +342,6 @@ class LectureServiceTest {
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
                 subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
 
-        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(Arrays.asList(lectureToReplaceTeacher));
+        List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(List.of(lectureToReplaceTeacher));
     }
 }

@@ -1,10 +1,31 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name = "subjects")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllSubjects", query = "from Subject order by id"),
+        @NamedQuery(name = "FindSubjectByName", query = "from Subject where name = :name"),
+        @NamedQuery(name = "FindSubjectsByTeacher", query = "from Subject where :teacher in elements(teachers)")
+})
 public class Subject {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String name;
+    @Column
     private String description;
+    @ManyToMany
+    @JoinTable(
+            name = "teachers_subjects",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+    private List<Teacher> teachers;
 
     public Subject() {
     }

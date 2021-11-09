@@ -7,9 +7,11 @@ import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Holiday;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class HolidayService {
 
@@ -47,11 +49,11 @@ public class HolidayService {
     public void delete(int id) {
         logger.debug("Deleting holiday by id: {} ", id);
         verifyIdExists(id);
-        holidayDao.delete(id);
+        holidayDao.delete(getById(id));
     }
 
     private void verifyIdExists(int id) {
-        if (!holidayDao.findById(id).isPresent()) {
+        if (holidayDao.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Holiday id:%s not found, nothing to delete", id));
         }
     }

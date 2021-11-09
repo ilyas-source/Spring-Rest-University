@@ -1,11 +1,23 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "holidays")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllHolidays", query = "from Holiday order by id"),
+        @NamedQuery(name = "FindByDate", query = "from Holiday where date = :date")
+})
 public class Holiday {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private LocalDate date;
+    @Column
     private String name;
 
     public Holiday() {

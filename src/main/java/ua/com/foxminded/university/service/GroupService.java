@@ -3,6 +3,7 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class GroupService {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
@@ -33,6 +35,7 @@ public class GroupService {
     }
 
     public List<Group> findAll() {
+        logger.debug("Retrieving all groups from DAO");
         return groupDao.findAll();
     }
 
@@ -53,8 +56,9 @@ public class GroupService {
 
     public void delete(int id) {
         logger.debug("Deleting group by id: {} ", id);
-        verifyHasNoStudents(getById(id));
-        groupDao.delete(id);
+        Group group = getById(id);
+        verifyHasNoStudents(group);
+        groupDao.delete(group);
     }
 
     private void verifyNameIsUnique(Group group) {

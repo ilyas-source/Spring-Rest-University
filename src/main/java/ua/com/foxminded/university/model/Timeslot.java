@@ -1,11 +1,23 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
 import java.time.LocalTime;
 
+@Entity
+@Table(name = "timeslots")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllTimeslots", query = "from Timeslot"),
+        @NamedQuery(name = "FindTimeslotByBothTimes", query = "from Timeslot where beginTime = : beginTime and endTime = :endTime")
+})
 public class Timeslot {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "begin_time")
     private LocalTime beginTime;
+    @Column(name = "end_time")
     private LocalTime endTime;
 
     public Timeslot() {

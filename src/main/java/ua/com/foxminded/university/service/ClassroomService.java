@@ -11,9 +11,11 @@ import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class ClassroomService {
 
@@ -58,8 +60,9 @@ public class ClassroomService {
 
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
-        verifyHasNoLectures(getById(id));
-        classroomDao.delete(id);
+        Classroom classroom = getById(id);
+        verifyHasNoLectures(classroom);
+        classroomDao.delete(classroom);
     }
 
     private void verifyNameIsUnique(Classroom classroom) {

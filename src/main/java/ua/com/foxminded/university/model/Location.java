@@ -1,10 +1,24 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "locations")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllLocations",
+                query = "from Location")
+})
 public class Location {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column
     private String building;
+    @Column
     private int floor;
+    @Column(name = "room_number")
     private int roomNumber;
 
     public Location() {

@@ -1,10 +1,26 @@
 package ua.com.foxminded.university.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "classrooms")
+@NamedQueries({
+        @NamedQuery(name = "SelectAllClassrooms", query = "from Classroom order by id"),
+        @NamedQuery(name = "FindClassroomByName", query = "from Classroom where name = :name"),
+        @NamedQuery(name = "FindClassroomByLocation", query = "from Classroom where location = :location")
+})
 public class Classroom {
 
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(referencedColumnName = "id")
     private Location location;
+    @Column
     private String name;
+    @Column
     private int capacity;
 
     public Classroom() {

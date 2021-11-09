@@ -14,7 +14,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.VacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class VacationServiceTest {
@@ -63,7 +63,7 @@ class VacationServiceTest {
                 () -> vacationService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(vacationDao, never()).delete(1);
+        verify(vacationDao, never()).delete(any());
     }
 
     @Test
@@ -72,7 +72,7 @@ class VacationServiceTest {
 
         vacationService.delete(1);
 
-        verify(vacationDao).delete(1);
+        verify(vacationDao).delete(expectedVacation1);
     }
 
     @Test

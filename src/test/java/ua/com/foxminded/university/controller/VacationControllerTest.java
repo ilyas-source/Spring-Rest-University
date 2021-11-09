@@ -46,7 +46,7 @@ class VacationControllerTest {
 
     @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(post("/vacations/delete/{id}",1))
+        mockMvc.perform(post("/vacations/delete/{id}", 1))
                 .andExpect(status().is3xxRedirection());
 
         verify(vacationService).delete(1);
@@ -55,7 +55,7 @@ class VacationControllerTest {
     @Test
     void givenVacationAndTeacherId_onAddVacation_shouldCreateVacationAndUpdateTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        mockMvc.perform(post("/vacations/create/{id}",1)
+        mockMvc.perform(post("/vacations/create/{id}", 1)
                         .flashAttr("vacation", expectedVacation1))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/vacations/for/1"));
@@ -67,16 +67,16 @@ class VacationControllerTest {
     @Test
     void voidGivenTeacherId_onEditVacations_shouldShowFormForCorrectTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        mockMvc.perform(get("/vacations/for/{id}",1))
+        mockMvc.perform(get("/vacations/for/{id}", 1))
                 .andExpect(view().name("teacher/vacations"))
                 .andExpect(model().attribute("teacher", expectedTeacher1));
     }
 
     interface TestData {
-        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 01, 01), LocalDate.of(2000, 02, 01));
-        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 05, 01), LocalDate.of(2000, 06, 01));
-        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 01, 15), LocalDate.of(2000, 02, 15));
-        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 06, 01), LocalDate.of(2000, 07, 01));
+        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
+        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 5, 1), LocalDate.of(2000, 6, 1));
+        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 1, 15), LocalDate.of(2000, 2, 15));
+        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 6, 1), LocalDate.of(2000, 7, 1));
         List<Vacation> expectedVacations1 = new ArrayList<>(Arrays.asList(expectedVacation1, expectedVacation2));
         List<Vacation> expectedVacations2 = new ArrayList<>(Arrays.asList(expectedVacation3, expectedVacation4));
     }

@@ -18,8 +18,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.StudentDaoTest.TestData.expectedStudent2;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent2;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -91,7 +91,7 @@ class StudentServiceTest {
 
         studentService.delete(1);
 
-        verify(studentDao).delete(1);
+        verify(studentDao).delete(expectedStudent1);
     }
 
     @Test
@@ -102,6 +102,6 @@ class StudentServiceTest {
                 () -> studentService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(studentDao, never()).delete(1);
+        verify(studentDao, never()).delete(any());
     }
 }

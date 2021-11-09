@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.Formatter;
 import ua.com.foxminded.university.model.Group;
 
-import java.text.ParseException;
 import java.util.Locale;
 
 public class GroupFormatter implements Formatter<Group> {
@@ -14,7 +13,7 @@ public class GroupFormatter implements Formatter<Group> {
 
 
     @Override
-    public Group parse(String text, Locale locale) throws ParseException {
+    public Group parse(String text, Locale locale) {
         logger.debug("Parsing {}", text);
         Group group = new Group();
         String[] parts = text.split(":");

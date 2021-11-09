@@ -16,9 +16,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.ClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocation1;
-import static ua.com.foxminded.university.dao.LocationDaoTest.TestData.expectedLocations;
+import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.dao.HibernateLocationDaoTest.TestData.expectedLocation1;
+import static ua.com.foxminded.university.dao.HibernateLocationDaoTest.TestData.expectedLocations;
 
 @ExtendWith(MockitoExtension.class)
 class LocationServiceTest {
@@ -68,7 +68,7 @@ class LocationServiceTest {
 
         locationService.delete(expectedLocation1.getId());
 
-        verify(locationDao).delete(1);
+        verify(locationDao).delete(expectedLocation1);
     }
 
     @Test
@@ -81,7 +81,7 @@ class LocationServiceTest {
                 () -> locationService.delete(expectedLocation1.getId()));
 
         assertEquals(expected, thrown.getMessage());
-        verify(locationDao, never()).delete(expectedLocation1.getId());
+        verify(locationDao, never()).delete(expectedLocation1);
     }
 
     @Test
@@ -92,6 +92,6 @@ class LocationServiceTest {
                 () -> locationService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(locationDao, never()).delete(1);
+        verify(locationDao, never()).delete(any());
     }
 }
