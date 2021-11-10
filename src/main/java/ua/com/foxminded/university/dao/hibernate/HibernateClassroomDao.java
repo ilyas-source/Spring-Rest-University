@@ -55,7 +55,7 @@ public class HibernateClassroomDao implements ClassroomDao {
     @Override
     public List<Classroom> findAll() {
         logger.debug("Retrieving all classrooms from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createNamedQuery("SelectAllClassrooms").list();
     }
 

@@ -17,7 +17,7 @@ import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@PropertySource("classpath:university.properties")
+@PropertySource("classpath:application.properties")
 @Transactional
 @Service
 public class TeacherService {

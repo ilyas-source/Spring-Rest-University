@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -209,8 +210,8 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
-    //    when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-    //    when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
 
         var request = get("/lectures/schedule/calendar")
                 .param("id", "1")
@@ -221,8 +222,8 @@ class LectureControllerTest {
         var mvcResult = mockMvc.perform(request)
                 .andExpect(status().is2xxSuccessful());
 
-       // var status = mvcResult.andExpect(status().is2xxSuccessful());
-      //  assertEquals(true, status);
+        var status = mvcResult.andExpect(status().is2xxSuccessful());
+        assertEquals(true, status);
     }
 
     @Test
