@@ -1,11 +1,9 @@
 package ua.com.foxminded.university;
 
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import javax.sql.DataSource;
 
@@ -21,8 +19,8 @@ public class SpringTestConfig {
                 .build();
     }
 
-    @Bean
-    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
-        return new HibernateTemplate(sessionFactory);
-    }
+//    @Bean
+//    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
+//        return new HibernateTemplate(sessionFactory);
+//    }
 }
