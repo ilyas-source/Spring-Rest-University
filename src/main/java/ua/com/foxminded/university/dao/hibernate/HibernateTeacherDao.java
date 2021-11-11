@@ -39,35 +39,35 @@ public class HibernateTeacherDao implements TeacherDao {
 
     @Override
     public void create(Teacher teacher) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.save(teacher);
     }
 
     @Override
     public Optional<Teacher> findById(int id) {
         logger.debug("Getting by id: {}", id);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return Optional.ofNullable(session.get(Teacher.class, id));
     }
 
     @Override
     public void update(Teacher teacher) {
         logger.debug("Updating: {}", teacher);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.merge(teacher);
     }
 
     @Override
     public void delete(Teacher teacher) {
         logger.debug("Deleting: {}", teacher);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.delete(teacher);
     }
 
     @Override
     public List<Teacher> findAll() {
         logger.debug("Retrieving all teachers from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         List<Teacher> result = session.createNamedQuery("SelectAllTeachers").list();
 
         return result;
@@ -87,7 +87,7 @@ public class HibernateTeacherDao implements TeacherDao {
         int offset = Math.toIntExact(pageable.getOffset());
         int pageSize = pageable.getPageSize();
         logger.debug("Retrieving offset {}, size {}, sort {}", offset, pageSize, pageable.getSort());
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         String request = String.format("from Teacher order by %s %s", sortProperty, sortDirection);
         List<Teacher> teachers = session.createQuery(request)
                 .setFirstResult(offset)
@@ -102,7 +102,7 @@ public class HibernateTeacherDao implements TeacherDao {
     @Override
     public Optional<Teacher> findByNameAndEmail(String firstName, String lastName, String email) {
         logger.debug("Looking for {} {} with email {}", lastName, firstName, email);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query<Teacher> query = session.createNamedQuery("findTeacherByNameAndEmail")
                 .setParameter("lastName", lastName)
                 .setParameter("firstName", firstName)
@@ -117,7 +117,7 @@ public class HibernateTeacherDao implements TeacherDao {
     @Override
     public List<Teacher> findBySubstring(String substring) {
         logger.debug("Searching teachers by substring: {}", substring);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         String formattedSubstring = "%" + substring.toLowerCase() + "%";
         String sqlString = "SELECT * FROM teachers WHERE lower(concat(first_name,' ',last_name)) like :substring";
         return session.createSQLQuery(sqlString)
@@ -130,7 +130,7 @@ public class HibernateTeacherDao implements TeacherDao {
     public List<Teacher> getReplacementCandidates(Lecture lecture) {
         String sqlQuery = "SELECT * FROM teachers JOIN teachers_subjects ts " +
                 "ON teachers.id = ts.teacher_id WHERE subject_id= :subject_id AND teacher_id!= :teacher_id";
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createSQLQuery(sqlQuery)
                 .addEntity(Teacher.class)
                 .setParameter("subject_id", lecture.getSubject().getId())
