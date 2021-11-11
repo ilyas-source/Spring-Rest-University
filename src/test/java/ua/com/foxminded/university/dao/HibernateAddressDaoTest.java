@@ -64,17 +64,17 @@ public class HibernateAddressDaoTest {
     }
 
     @Test
-    void ifDatabaseHasAddresss_onFindAll_shouldReturnCorrectListOfAddresss() {
+    void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
         assertEquals(expectedAddresses, addressDao.findAll());
     }
 
     @Test
-    void ifDatabaseHasNoAddresss_onFindAll_shouldReturnEmptyListOfAddresss() {
+    void ifDatabaseHasNoAddresses_onFindAll_shouldReturnEmptyListOfAddresses() {
         hibernateTemplate.deleteAll(expectedAddresses);
 
-        var addresss = addressDao.findAll();
+        var addresses = addressDao.findAll();
 
-        assertThat(addresss).isEmpty();
+        assertThat(addresses).isEmpty();
     }
 
     @Test
@@ -92,13 +92,6 @@ public class HibernateAddressDaoTest {
 
         var expected = hibernateTemplate.get(Address.class, 2);
         assertNull(expected);
-    }
-
-    @Test
-    void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
-        List<Address> actual = addressDao.findAll();
-
-        assertEquals(expectedAddresses, actual);
     }
 
     public interface TestData {
