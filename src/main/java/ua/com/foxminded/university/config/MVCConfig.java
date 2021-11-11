@@ -31,8 +31,6 @@ public class MVCConfig implements WebMvcConfigurer {
                 .addResourceLocations("/sources/css/", "/sources/img", "/sources/js");
     }
 
-
-
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
