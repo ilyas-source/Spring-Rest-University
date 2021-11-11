@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Student</title>
-    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 <body>
@@ -73,10 +73,10 @@
         </div>
 
     </form>
-    <script src="/university/sources/js/jquery.min.js"></script>
-    <script src="/university/sources/js/jquery-ui.js"></script>
-    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
-    <script src="/university/sources/js/datepicker.js"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/datepicker.js}"></script>
 </div>
 </body>
 </html>

@@ -2,23 +2,25 @@
 <html lang='en'>
 <head>
     <meta charset='utf-8'/>
-    <link href='/university/sources/css/fullcalendar.min.css' rel='stylesheet'/>
-    <script src='/university/sources/js/fullcalendar.min.js'></script>
-    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
-    <script src="/university/sources/js/jquery.min.js"></script>
+    <link th:href="@{/css/fullcalendar.min.css}" rel='stylesheet'/>
+    <script th:src="@{/js/fullcalendar.min.js}"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
 
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
 <div class="container mt-5">
     <h2 class="text-primary text-center" th:text="'Lectures for '+${personName}"></h2>
-    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="period" th:value="${periodType}">
+    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="period"
+           th:value="${periodType}">
     <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="date" th:value="${date}">
-    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="entity" th:value="${entity}">
+    <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="entity"
+           th:value="${entity}">
     <input type="text" class="invisible" style="height:0;width:0;padding:0;border:none" id="personId" th:value="${id}">
     <p></p>
-    <script src="/university/sources/js/rendercalendar.js"></script>
+    <script th:src="@{/js/rendercalendar.js}"></script>
     <div id='calendar'></div>
 </div>
 </body>

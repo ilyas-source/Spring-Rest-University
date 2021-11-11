@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Subjects</title>
-    <link href="/university/sources/css/tablesort.css" rel="stylesheet">
-    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/tablesort.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -34,8 +34,8 @@
             </tr>
             </tbody>
         </table>
-    <script src="/university/sources/js/tablesort.js"></script>
-    <script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/tablesort.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </div>
 </body>
 </html>

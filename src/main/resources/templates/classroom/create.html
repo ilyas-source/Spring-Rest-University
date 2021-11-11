@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Classroom</title>
-    <link href="/university/sources/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
 <header th:insert="fragments/header.html :: header"></header>
@@ -45,7 +45,7 @@
         </div>
     </form>
 </div>
-<script src="/university/sources/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 
 </body>
 </html>
