@@ -19,7 +19,7 @@ public class SpringTestConfig {
                 .build();
     }
 
-//    @Bean
+    //@Bean
 //    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
 //        return new HibernateTemplate(sessionFactory);
 //    }
