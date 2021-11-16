@@ -5,6 +5,8 @@ hibernate:
 teacher:
   vacationdays: '{''BACHELOR'': 10, ''DOCTOR'': 20, ''MASTER'': 30}'
   defaultsortattribute: id
+student:
+  defaultsortattribute: last_name
 group:
   maxstudents: '30'
 defaultsortdirection: ASC
@@ -16,10 +18,15 @@ spring:
     url: jdbc:postgresql://localhost:5432/university
     username: rector
     password: 1
-student:
-  defaultsortattribute: last_name
+  thymeleaf:
+    suffix: .html
+    prefix: classpath:/templates/
+  data:
+    web:
+      pageable:
+        max-page-size:
+
 current_session_context_class: thread
 server:
   servlet:
     context-path: /university
-

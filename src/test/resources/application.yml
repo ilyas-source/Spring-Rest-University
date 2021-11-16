@@ -1,0 +1,19 @@
+student:
+  defaultsortattribute: last_name
+defaultsortdirection: ASC
+teacher:
+  vacationdays: '{''BACHELOR'': 10, ''DOCTOR'': 20, ''MASTER'': 30}'
+  defaultsortattribute: id
+timeslot:
+  minimumlength: '30'
+  minimumbreaklength: '15'
+group:
+  maxstudents: '30'
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect

@@ -9,6 +9,7 @@
     <properties>
         <postgresql.version>42.3.1</postgresql.version>
         <jackson.version>2.13.0</jackson.version>
+        <spring.boot.version>2.5.6</spring.boot.version>
         <com.h2database.version>1.4.200</com.h2database.version>
     </properties>
 
@@ -17,29 +18,29 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <!--Frontend-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -47,7 +48,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-            <version>2.5.6</version>
+            <version>${spring.boot.version}</version>
         </dependency>
 
         <!--Database-->
@@ -75,6 +76,12 @@
             <artifactId>junit-bom</artifactId>
             <version>5.8.1</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.12.RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

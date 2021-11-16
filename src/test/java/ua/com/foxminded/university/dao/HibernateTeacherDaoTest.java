@@ -1,9 +1,9 @@
 package ua.com.foxminded.university.dao;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
+@SpringBootTest
 public class HibernateTeacherDaoTest {
 
     private static final String defaultSortDirection = "ASC";
@@ -43,8 +44,6 @@ public class HibernateTeacherDaoTest {
 
     @Autowired
     private HibernateTeacherDao teacherDao;
-    @Autowired
-    SessionFactory sessionFactory;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 

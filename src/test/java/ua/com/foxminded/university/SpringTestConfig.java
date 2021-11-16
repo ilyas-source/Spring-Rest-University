@@ -1,15 +1,17 @@
 package ua.com.foxminded.university;
 
+import org.hibernate.SessionFactory;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import javax.sql.DataSource;
 
-@EnableTransactionManagement
-@Configuration
+//@EnableTransactionManagement
+        //@Configuration
+@SpringBootApplication
 public class SpringTestConfig {
 
     @Bean
@@ -17,12 +19,11 @@ public class SpringTestConfig {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("schema.sql")
-                .addScript("test-data.sql")
                 .build();
     }
 
-    //@Bean
-//    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
-//        return new HibernateTemplate(sessionFactory);
-//    }
+    @Bean
+    public HibernateTemplate hibernateTemplate(SessionFactory sessionFactory) {
+        return new HibernateTemplate(sessionFactory);
+    }
 }

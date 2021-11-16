@@ -3,6 +3,7 @@ package ua.com.foxminded.university.dao;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -35,12 +36,11 @@ import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
+@SpringBootTest
 public class HibernateLectureDaoTest {
 
     @Autowired
     private HibernateLectureDao lectureDao;
-    @Autowired
-    SessionFactory sessionFactory;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
