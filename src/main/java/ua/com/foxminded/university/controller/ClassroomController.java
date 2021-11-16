@@ -28,6 +28,7 @@ public class ClassroomController {
     public String findAll(Model model) {
         logger.debug("Retrieving all classrooms to controller");
         model.addAttribute("classrooms", classroomService.findAll());
+
         return "classroom/all";
     }
 
