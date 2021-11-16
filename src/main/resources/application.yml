@@ -19,3 +19,7 @@ spring:
 student:
   defaultsortattribute: last_name
 current_session_context_class: thread
+server:
+  servlet:
+    context-path: /university
+
