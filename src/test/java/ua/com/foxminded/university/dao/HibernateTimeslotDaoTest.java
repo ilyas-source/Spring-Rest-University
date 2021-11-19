@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.dao;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +34,8 @@ public class HibernateTimeslotDaoTest {
     private HibernateTimeslotDao timeslotDao;
     @Autowired
     private HibernateTemplate hibernateTemplate;
+    @Autowired
+    SessionFactory sessionFactory;
 
     @Test
     void givenNewTimeslot_onCreate_shouldCreateTimeslot() {

@@ -2,8 +2,9 @@ package ua.com.foxminded.university.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TimeslotDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
@@ -26,11 +27,8 @@ public class TimeslotService {
     private TimeslotDao timeslotDao;
     private LectureDao lectureDao;
 
-    @Value("${timeslot.minimumlength}")
-    public int minimumTimeslotLength;
-
-    @Value("${timeslot.minimumbreaklength}")
-    public int minimumBreakLength;
+    @Autowired
+    private UniversityProperties universityProperties;
 
     public TimeslotService(TimeslotDao timeslotDao, LectureDao lectureDao) {
         this.timeslotDao = timeslotDao;
@@ -75,6 +73,7 @@ public class TimeslotService {
         if (timeslotDao.findByBothTimes(timeslot).isPresent()) {
             return;
         }
+        int minimumBreakLength=universityProperties.getTimeslot().get("minimumbreaklength");
         var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
                 timeslot.getEndTime().plusMinutes(minimumBreakLength));
         if (timeslotDao.countIntersectingTimeslots(timeslotWithBreaks) > 0) {
@@ -85,7 +84,9 @@ public class TimeslotService {
 
     private void verifyIsLongEnough(Timeslot timeslot) {
         long duration = (Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds()) / 60;
+        int minimumTimeslotLength = universityProperties.getTimeslot().get("minimumlength");
         if (duration < minimumTimeslotLength) {
+            universityProperties.getTimeslot().get("minimumlength");
             throw new TimeslotTooShortException(String.format(
                     "Minimum timeslot length %s min, but was %s min, can't create timeslot", minimumTimeslotLength, duration));
         }

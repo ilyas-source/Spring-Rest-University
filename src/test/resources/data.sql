@@ -22,6 +22,8 @@ VALUES (1, '2000-01-01', '2000-02-01'),
        (2, '2000-01-15', '2000-02-15'),
        (2, '2000-06-01', '2000-07-01');
 
+TRUNCATE TABLE teachers_subjects;
+
 INSERT INTO teachers_subjects(teacher_id, subject_id)
 VALUES (1, 1),
        (1, 2),
@@ -63,6 +65,7 @@ VALUES ('2000-12-25', 'Christmas'),
        ('2000-10-30', 'Halloween'),
        ('2000-3-8', 'International womens day');
 
+TRUNCATE TABLE lectures_groups;
 INSERT INTO lectures_groups (lecture_id, group_id)
 VALUES (1, 1),
        (1, 2),

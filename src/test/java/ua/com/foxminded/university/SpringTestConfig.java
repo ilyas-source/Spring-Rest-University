@@ -9,8 +9,6 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import javax.sql.DataSource;
 
-//@EnableTransactionManagement
-        //@Configuration
 @SpringBootApplication
 public class SpringTestConfig {
 
@@ -18,7 +16,6 @@ public class SpringTestConfig {
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("schema.sql")
                 .build();
     }
 

@@ -1,19 +1,11 @@
-hibernate:
-  hbm2ddl:
-    auto: update
-  dialect: org.hibernate.dialect.PostgreSQL9Dialect
 university:
-  teacher:
-    vacationdays:
-      BACHELOR: 10
-      DOCTOR: 20
-      MASTER: 30
-    defaultsortattribute: id
-  student:
-    defaultsortattribute: last_name
-  group:
-    maxstudents: 30
+  defaultsortattribute: last_name
   defaultsortdirection: ASC
+  maxstudents: 30
+  vacationdays:
+    BACHELOR: 10
+    DOCTOR: 20
+    MASTER: 30
   timeslot:
     minimumlength: 30
     minimumbreaklength: 15
@@ -33,3 +25,7 @@ current_session_context_class: thread
 server:
   servlet:
     context-path: /university
+hibernate:
+  hbm2ddl:
+    auto: update
+  dialect: org.hibernate.dialect.PostgreSQL9Dialect

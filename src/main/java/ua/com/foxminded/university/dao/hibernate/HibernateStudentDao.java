@@ -5,12 +5,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -26,11 +27,8 @@ public class HibernateStudentDao implements StudentDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateStudentDao.class);
 
-    @Value("${student.defaultsortattribute}")
-    private String defaultSortAttribute;
-
-    @Value("${defaultsortdirection}")
-    private String defaultSortDirection;
+    @Autowired
+    private UniversityProperties universityProperties;
 
     private SessionFactory sessionFactory;
 
@@ -111,8 +109,8 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public Page<Student> findAll(Pageable pageable) {
         logger.debug("Retrieving Students pageable");
-        var sortProperty = defaultSortAttribute;
-        var sortDirection = Sort.Direction.fromString(defaultSortDirection);
+        var sortProperty = universityProperties.getDefaultSortAttribute();
+        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSortDirection());
 
         var sortOrder = pageable.getSort().get().findFirst();
         if (sortOrder.isPresent()) {
