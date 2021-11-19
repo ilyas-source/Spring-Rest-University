@@ -2,17 +2,21 @@ hibernate:
   hbm2ddl:
     auto: update
   dialect: org.hibernate.dialect.PostgreSQL9Dialect
-teacher:
-  vacationdays: '{''BACHELOR'': 10, ''DOCTOR'': 20, ''MASTER'': 30}'
-  defaultsortattribute: id
-student:
-  defaultsortattribute: last_name
-group:
-  maxstudents: '30'
-defaultsortdirection: ASC
-timeslot:
-  minimumlength: '30'
-  minimumbreaklength: '15'
+university:
+  teacher:
+    vacationdays:
+      BACHELOR: 10
+      DOCTOR: 20
+      MASTER: 30
+    defaultsortattribute: id
+  student:
+    defaultsortattribute: last_name
+  group:
+    maxstudents: 30
+  defaultsortdirection: ASC
+  timeslot:
+    minimumlength: 30
+    minimumbreaklength: 15
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/university
@@ -25,7 +29,6 @@ spring:
     web:
       pageable:
         max-page-size:
-
 current_session_context_class: thread
 server:
   servlet:
