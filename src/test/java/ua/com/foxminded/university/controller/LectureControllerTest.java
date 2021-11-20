@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -219,11 +218,7 @@ class LectureControllerTest {
                 .param("start", "2000-01-01T00:00%2B03:00")
                 .param("end", "2000-02-01T00:00%2B03:00");
 
-        var mvcResult = mockMvc.perform(request)
-                .andExpect(status().is2xxSuccessful());
-
-        var status = mvcResult.andExpect(status().is2xxSuccessful());
-        assertEquals(true, status);
+        mockMvc.perform(request).andExpect(status().is2xxSuccessful());
     }
 
     @Test

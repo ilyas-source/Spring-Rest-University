@@ -6,9 +6,8 @@ university:
     BACHELOR: 10
     DOCTOR: 20
     MASTER: 30
-  timeslot:
-    minimumlength: 30
-    minimumbreaklength: 15
+  minimumtimeslotlength: 30
+  minimumbreaklength: 30
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/university

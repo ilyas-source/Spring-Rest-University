@@ -2,7 +2,6 @@ package ua.com.foxminded.university.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,10 +10,16 @@ import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
-import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Vacation;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -27,16 +32,15 @@ public class TeacherService {
     private LectureDao lectureDao;
     private VacationDao vacationDao;
     private VacationService vacationService;
-
-    @Autowired
     private UniversityProperties universityProperties;
 
     public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationDao vacationDao,
-                          VacationService vacationService) {
+                          VacationService vacationService, UniversityProperties universityProperties) {
         this.teacherDao = jdbcTeacherDao;
         this.lectureDao = lectureDao;
         this.vacationDao = vacationDao;
         this.vacationService = vacationService;
+        this.universityProperties=universityProperties;
     }
 
     public void create(Teacher teacher) {

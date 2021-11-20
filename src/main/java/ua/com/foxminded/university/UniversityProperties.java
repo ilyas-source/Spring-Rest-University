@@ -16,7 +16,25 @@ public class UniversityProperties {
     private String defaultSortDirection;
     private Integer maxStudents;
     private Map<Degree, Integer> vacationDays;
-    private Map<String, Integer> timeslot;
+    private Integer minimumTimeslotLength;
+
+    public Integer getMinimumTimeslotLength() {
+        return minimumTimeslotLength;
+    }
+
+    public void setMinimumTimeslotLength(Integer minimumTimeslotLength) {
+        this.minimumTimeslotLength = minimumTimeslotLength;
+    }
+
+    public Integer getMinimumBreakLength() {
+        return minimumBreakLength;
+    }
+
+    public void setMinimumBreakLength(Integer minimumBreakLength) {
+        this.minimumBreakLength = minimumBreakLength;
+    }
+
+    private Integer minimumBreakLength;
 
     public String getDefaultSortAttribute() {
         return defaultSortAttribute;
@@ -48,13 +66,5 @@ public class UniversityProperties {
 
     public void setVacationDays(Map<Degree, Integer> vacationDays) {
         this.vacationDays = vacationDays;
-    }
-
-    public Map<String, Integer> getTimeslot() {
-        return timeslot;
-    }
-
-    public void setTimeslot(Map<String, Integer> timeslot) {
-        this.timeslot = timeslot;
     }
 }
