@@ -30,7 +30,7 @@ public class TimeslotService {
     public TimeslotService(TimeslotDao timeslotDao, LectureDao lectureDao, UniversityProperties universityProperties) {
         this.timeslotDao = timeslotDao;
         this.lectureDao = lectureDao;
-        this.universityProperties=universityProperties;
+        this.universityProperties = universityProperties;
     }
 
     public void create(Timeslot timeslot) {
@@ -71,7 +71,7 @@ public class TimeslotService {
         if (timeslotDao.findByBothTimes(timeslot).isPresent()) {
             return;
         }
-        int minimumBreakLength=universityProperties.getMinimumBreakLength();
+        int minimumBreakLength = universityProperties.getMinimumBreakLength();
         var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
                 timeslot.getEndTime().plusMinutes(minimumBreakLength));
         if (timeslotDao.countIntersectingTimeslots(timeslotWithBreaks) > 0) {
@@ -82,11 +82,10 @@ public class TimeslotService {
 
     private void verifyIsLongEnough(Timeslot timeslot) {
         long duration = (Duration.between(timeslot.getBeginTime(), timeslot.getEndTime()).getSeconds()) / 60;
-        int minimumTimeslotLength = universityProperties.getMinimumTimeslotLength();
-        if (duration < minimumTimeslotLength) {
-            universityProperties.getMinimumTimeslotLength();
+        if (duration < universityProperties.getMinimumTimeslotLength()) {
             throw new TimeslotTooShortException(String.format(
-                    "Minimum timeslot length %s min, but was %s min, can't create timeslot", minimumTimeslotLength, duration));
+                    "Minimum timeslot length %s min, but was %s min, can't create timeslot",
+                    universityProperties.getMinimumTimeslotLength(), duration));
         }
     }
 

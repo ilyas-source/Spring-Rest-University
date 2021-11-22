@@ -1,6 +1,7 @@
 university:
-  defaultsortattribute: last_name
-  defaultsortdirection: ASC
+  defaultsort:
+    property: last_name
+    direction: ASC
   maxstudents: 30
   vacationdays:
     BACHELOR: 10

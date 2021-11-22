@@ -27,7 +27,7 @@ public class StudentService {
 
     public StudentService(StudentDao studentDao, UniversityProperties universityProperties) {
         this.studentDao = studentDao;
-        this.universityProperties=universityProperties;
+        this.universityProperties = universityProperties;
     }
 
     public void create(Student student) {
@@ -46,10 +46,9 @@ public class StudentService {
     }
 
     public void verifyGroupIsNotOverflowed(Student student) {
-        int maxStudentsInGroup=universityProperties.getMaxStudents();
-        if (studentDao.countInGroup(student.getGroup()) > maxStudentsInGroup - 1) {
+        if (studentDao.countInGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
             throw new GroupOverflowException(
-                    String.format("Group limit of %s students reached, can't add more", maxStudentsInGroup));
+                    String.format("Group limit of %s students reached, can't add more", universityProperties.getMaxStudents()));
         }
     }
 
