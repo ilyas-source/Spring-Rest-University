@@ -40,7 +40,7 @@ class StudentServiceTest {
     }
 
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
     @InjectMocks
     private StudentService studentService;
 

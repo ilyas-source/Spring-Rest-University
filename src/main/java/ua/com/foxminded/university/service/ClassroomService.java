@@ -3,13 +3,13 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.repository.ClassroomRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,12 +22,12 @@ public class ClassroomService {
     private static final Logger logger = LoggerFactory.getLogger(ClassroomService.class);
 
     private ClassroomRepository classroomRepository;
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     private LectureService lectureService;
 
-    public ClassroomService(ClassroomRepository classroomRepository, LectureDao lectureDao, LectureService lectureService) {
+    public ClassroomService(ClassroomRepository classroomRepository, LectureRepository lectureRepository, LectureService lectureService) {
         this.classroomRepository = classroomRepository;
-        this.lectureDao = lectureDao;
+        this.lectureRepository = lectureRepository;
         this.lectureService = lectureService;
     }
 
@@ -75,7 +75,7 @@ public class ClassroomService {
     }
 
     private void verifyCapacityIsEnough(Classroom classroom) {
-        int requiredCapacity = lectureDao.findByClassroom(classroom)
+        int requiredCapacity = lectureRepository.findByClassroom(classroom)
                 .stream()
                 .map(lectureService::countStudentsInLecture)
                 .mapToInt(v -> v)
@@ -93,7 +93,7 @@ public class ClassroomService {
     }
 
     private void verifyHasNoLectures(Classroom classroom) {
-        if (!lectureDao.findByClassroom(classroom).isEmpty()) {
+        if (!lectureRepository.findByClassroom(classroom).isEmpty()) {
             throw new ClassroomOccupiedException(
                     String.format("There are scheduled lectures, can't delete classroom %s", classroom.getName()));
         }

@@ -44,7 +44,7 @@ class TeacherServiceTest {
     @Mock
     private TeacherDao teacherDao;
     @Mock
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     @Mock
     private VacationService vacationService;
     @InjectMocks

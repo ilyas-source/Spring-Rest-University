@@ -37,11 +37,11 @@ import static ua.com.foxminded.university.service.TimeslotServiceTest.TestData.e
 class LectureServiceTest {
 
     @Mock
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     @Mock
-    private HolidayDao holidayDao;
+    private HolidayRepository holidayRepository;
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
     @Mock
     private TeacherService teacherService;
     @InjectMocks

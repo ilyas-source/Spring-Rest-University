@@ -42,7 +42,7 @@ class TimeslotServiceTest {
     @Mock
     private TimeslotDao timeslotDao;
     @Mock
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     @InjectMocks
     private TimeslotService timeslotService;
 

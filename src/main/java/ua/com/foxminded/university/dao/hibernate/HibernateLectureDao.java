@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public class HibernateLectureDao implements LectureDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateLectureDao.class);

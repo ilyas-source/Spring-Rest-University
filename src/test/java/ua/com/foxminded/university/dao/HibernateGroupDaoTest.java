@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class HibernateGroupDaoTest {
 
 //    @Autowired
-//    private HibernateGroupDao groupDao;
+//    private HibernateGroupRepository groupRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

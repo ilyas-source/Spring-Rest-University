@@ -27,9 +27,9 @@ import static ua.com.foxminded.university.service.LocationServiceTest.TestData.e
 class LocationServiceTest {
 
     @Mock
-    private LocationDao locationDao;
+    private LocationRepository locationRepository;
     @Mock
-    private ClassroomDao classroomDao;
+    private ClassroomRepository classroomRepository;
     @InjectMocks
     private LocationService locationService;
 

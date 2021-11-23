@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Holiday;
+import ua.com.foxminded.university.repository.HolidayRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import static ua.com.foxminded.university.service.HolidayServiceTest.TestData.ex
 class HolidayServiceTest {
 
     @Mock
-    private HolidayDao holidayDao;
+    private HolidayRepository holidayRepository;
     @InjectMocks
     private HolidayService holidayService;
 

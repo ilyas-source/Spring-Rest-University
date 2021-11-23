@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.dao.StudentRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
@@ -22,11 +22,11 @@ public class StudentService {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
     private UniversityProperties universityProperties;
 
-    public StudentService(StudentDao studentDao, UniversityProperties universityProperties) {
-        this.studentDao = studentDao;
+    public StudentService(StudentRepository studentRepository, UniversityProperties universityProperties) {
+        this.studentRepository = studentRepository;
         this.universityProperties = universityProperties;
     }
 
@@ -34,11 +34,11 @@ public class StudentService {
         logger.debug("Creating a new student: {} ", student);
         verifyStudentIsUnique(student);
         verifyGroupIsNotOverflowed(student);
-        studentDao.create(student);
+        studentRepository.save(student);
     }
 
     public void verifyStudentIsUnique(Student student) {
-        if (studentDao.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate())
+        if (studentRepository.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate())
                 .isPresent()) {
             throw new EntityNotUniqueException(String.format("Student %s %s, born %s already exists, can't create duplicate",
                     student.getFirstName(), student.getLastName(), student.getBirthDate()));
@@ -46,14 +46,14 @@ public class StudentService {
     }
 
     public void verifyGroupIsNotOverflowed(Student student) {
-        if (studentDao.countInGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
+        if (studentRepository.countInGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
             throw new GroupOverflowException(
                     String.format("Group limit of %s students reached, can't add more", universityProperties.getMaxStudents()));
         }
     }
 
     public Optional<Student> findById(int id) {
-        return studentDao.findById(id);
+        return studentRepository.findById(id);
     }
 
     public Student getById(int id) {
@@ -63,17 +63,17 @@ public class StudentService {
 
     public void update(Student student) {
         logger.debug("Updating student: {} ", student);
-        studentDao.update(student);
+        studentRepository.save(student);
     }
 
     public void delete(int id) {
         logger.debug("Deleting student by id: {} ", id);
         verifyIdExists(id);
-        studentDao.delete(getById(id));
+        studentRepository.delete(getById(id));
     }
 
     private void verifyIdExists(int id) {
-        if (studentDao.findById(id).isEmpty()) {
+        if (studentRepository.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Student with id:%s not found, nothing to delete", id));
         }
     }
@@ -81,14 +81,14 @@ public class StudentService {
     public Page<Student> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 
-        return studentDao.findAll(pageable);
+        return studentRepository.findAll(pageable);
     }
 
     public List<Student> findAll() {
-        return studentDao.findAll();
+        return studentRepository.findAll();
     }
 
     public List<Student> findBySubstring(String substring) {
-        return studentDao.findBySubstring(substring);
+        return studentRepository.findBySubstring(substring);
     }
 }

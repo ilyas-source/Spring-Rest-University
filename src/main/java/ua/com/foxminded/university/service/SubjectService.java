@@ -3,12 +3,12 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.SubjectDao;
 import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.SubjectRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -20,26 +20,26 @@ public class SubjectService {
 
     private static final Logger logger = LoggerFactory.getLogger(SubjectService.class);
 
-    private SubjectDao subjectDao;
-    private LectureDao lectureDao;
+    private SubjectRepository subjectRepository;
+    private LectureRepository lectureRepository;
 
-    public SubjectService(SubjectDao subjectDao, LectureDao lectureDao) {
-        this.subjectDao = subjectDao;
-        this.lectureDao = lectureDao;
+    public SubjectService(SubjectRepository subjectRepository, LectureRepository lectureRepository) {
+        this.subjectRepository = subjectRepository;
+        this.lectureRepository = lectureRepository;
     }
 
     public void create(Subject subject) {
         logger.debug("Creating a new subject: {} ", subject);
         verifyNameIsUnique(subject);
-        subjectDao.create(subject);
+        subjectRepository.save(subject);
     }
 
     public List<Subject> findAll() {
-        return subjectDao.findAll();
+        return subjectRepository.findAll();
     }
 
     public Optional<Subject> findById(int id) {
-        return subjectDao.findById(id);
+        return subjectRepository.findById(id);
     }
 
     public Subject getById(int id) {
@@ -50,7 +50,7 @@ public class SubjectService {
     public void update(Subject subject) {
         logger.debug("Updating subject: {} ", subject);
         verifyNameIsUnique(subject);
-        subjectDao.update(subject);
+        subjectRepository.save(subject);
     }
 
     public void delete(int id) {
@@ -58,11 +58,11 @@ public class SubjectService {
         var subject = getById(id);
         verifyIsNotAssigned(subject);
         verifyIsNotScheduled(subject);
-        subjectDao.delete(subject);
+        subjectRepository.delete(subject);
     }
 
     private void verifyNameIsUnique(Subject subject) {
-        subjectDao.findByName(subject.getName())
+        subjectRepository.findByName(subject.getName())
                 .filter(s -> s.getId() != subject.getId())
                 .ifPresent(s -> {
                     throw new EntityNotUniqueException(String.format("Subject %s already exists", s.getName()));
@@ -70,14 +70,14 @@ public class SubjectService {
     }
 
     private void verifyIsNotScheduled(Subject subject) {
-        if (!lectureDao.findBySubject(subject).isEmpty()) {
+        if (!lectureRepository.findBySubject(subject).isEmpty()) {
             throw new EntityInUseException(
                     String.format("Subject %s is scheduled for lecture(s), can't delete", subject.getName()));
         }
     }
 
     private void verifyIsNotAssigned(Subject subject) {
-        if (subjectDao.countAssignments(subject) > 0) {
+        if (subjectRepository.countAssignments(subject) > 0) {
             throw new EntityInUseException(
                     String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
         }

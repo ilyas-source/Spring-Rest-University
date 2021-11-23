@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class HibernateLocationDaoTest {
 
 //    @Autowired
-//    private HibernateLocationDao locationDao;
+//    private HibernateLocationRepository locationRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

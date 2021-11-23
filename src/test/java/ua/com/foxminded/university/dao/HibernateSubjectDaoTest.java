@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class HibernateSubjectDaoTest {
 
 //    @Autowired
-//    private HibernateSubjectDao subjectDao;
+//    private HibernateSubjectRepository subjectRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

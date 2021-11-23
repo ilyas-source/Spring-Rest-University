@@ -27,9 +27,9 @@ import static ua.com.foxminded.university.service.SubjectServiceTest.TestData.*;
 class SubjectServiceTest {
 
     @Mock
-    private SubjectDao subjectDao;
+    private SubjectRepository subjectRepository;
     @Mock
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     @InjectMocks
     private SubjectService subjectService;
 

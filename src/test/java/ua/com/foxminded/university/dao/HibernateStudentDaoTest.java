@@ -24,7 +24,7 @@ public class HibernateStudentDaoTest {
 //    }
 //
 //    @Autowired
-//    private HibernateStudentDao studentDao;
+//    private HibernateStudentRepository studentRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

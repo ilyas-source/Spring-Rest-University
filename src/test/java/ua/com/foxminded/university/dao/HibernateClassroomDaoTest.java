@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 public class HibernateClassroomDaoTest {
 
 //    @Autowired
-//    private HibernateClassroomDao classroomDao;
+//    private HibernateClassroomRepository classroomRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

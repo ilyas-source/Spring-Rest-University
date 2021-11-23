@@ -14,7 +14,7 @@ import ua.com.foxminded.university.SpringTestConfig;
 public class HibernateHolidayDaoTest {
 
 //    @Autowired
-//    private HibernateHolidayDao holidayDao;
+//    private HibernateHolidayRepository holidayRepository;
 //    @Autowired
 //    private HibernateTemplate hibernateTemplate;
 //

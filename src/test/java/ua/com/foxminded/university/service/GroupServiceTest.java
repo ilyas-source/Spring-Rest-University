@@ -5,12 +5,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.GroupDao;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
+import ua.com.foxminded.university.repository.GroupRepository;
 
 import java.util.*;
 
@@ -24,9 +24,9 @@ import static ua.com.foxminded.university.service.StudentServiceTest.TestData.ex
 class GroupServiceTest {
 
     @Mock
-    private GroupDao groupDao;
+    private GroupRepository groupRepository;
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
     @InjectMocks
     private GroupService groupService;
 
