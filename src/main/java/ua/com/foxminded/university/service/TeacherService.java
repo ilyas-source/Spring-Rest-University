@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.LectureRepository;
-import ua.com.foxminded.university.dao.TeacherRepository;
-import ua.com.foxminded.university.dao.VacationRepository;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.repository.VacationRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class TeacherService {
     }
 
     public void verifyIsUnique(Teacher teacher) {
-        if (teacherRepository.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
+        if (teacherRepository.findByFirstNameAndLastNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
                 teacher.getEmail()).isPresent()) {
             throw new EntityNotUniqueException(
                     String.format("Teacher %s %s with email %s already exists, can't create duplicate",
@@ -170,7 +170,8 @@ public class TeacherService {
     }
 
     public List<Teacher> getReplacementTeachers(Lecture lecture) {
-        var candidates = teacherRepository.getReplacementCandidates(lecture);
+        var candidates = teacherRepository.getReplacementCandidates(
+                lecture.getSubject().getId(), lecture.getTeacher().getId());
         var suitableTeachers = new ArrayList<>(candidates);
         logger.debug("Found {} candidates from db", candidates.size());
         if (candidates.size() == 0) {
@@ -179,7 +180,7 @@ public class TeacherService {
         var date = lecture.getDate();
         var timeslot = lecture.getTimeslot();
         for (Teacher candidate : candidates) {
-            if (lectureRepository.findByDateTimeTeacher(date, timeslot, candidate).isPresent()) {
+            if (lectureRepository.findByDateAndTimeslotAndTeacher(date, timeslot, candidate).isPresent()) {
                 logger.debug("{} {} is not suitable: will be reading another lecture", candidate.getFirstName(), candidate.getLastName());
                 suitableTeachers.remove(candidate);
             }

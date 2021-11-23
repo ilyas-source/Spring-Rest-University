@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.StudentRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -38,7 +38,7 @@ public class StudentService {
     }
 
     public void verifyStudentIsUnique(Student student) {
-        if (studentRepository.findByNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate())
+        if (studentRepository.findByFirstNameAndLastNameAndBirthDate(student.getFirstName(), student.getLastName(), student.getBirthDate())
                 .isPresent()) {
             throw new EntityNotUniqueException(String.format("Student %s %s, born %s already exists, can't create duplicate",
                     student.getFirstName(), student.getLastName(), student.getBirthDate()));
@@ -46,7 +46,7 @@ public class StudentService {
     }
 
     public void verifyGroupIsNotOverflowed(Student student) {
-        if (studentRepository.countInGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
+        if (studentRepository.countByGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
             throw new GroupOverflowException(
                     String.format("Group limit of %s students reached, can't add more", universityProperties.getMaxStudents()));
         }

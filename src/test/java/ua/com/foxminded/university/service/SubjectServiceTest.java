@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.SubjectDao;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.SubjectRepository;
 import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
@@ -35,14 +35,14 @@ class SubjectServiceTest {
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(subjectDao.findAll()).thenReturn(expectedSubjects);
+        when(subjectRepository.findAll()).thenReturn(expectedSubjects);
 
         assertEquals(expectedSubjects, subjectService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectSubject() {
-        when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
+        when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
         Optional<Subject> expected = Optional.of(expectedSubject1);
 
         Optional<Subject> actual = subjectService.findById(1);
@@ -51,43 +51,43 @@ class SubjectServiceTest {
     }
 
     @Test
-    void givenSubject_onCreate_shouldCallDaoCreate() {
+    void givenSubject_onCreate_shouldCallRepositoryCreate() {
         subjectService.create(expectedSubject1);
 
-        verify(subjectDao).create(expectedSubject1);
+        verify(subjectRepository).save(expectedSubject1);
     }
 
     @Test
-    void givenSubject_onUpdate_shouldCallDaoUpdate() {
+    void givenSubject_onUpdate_shouldCallRepositoryUpdate() {
         subjectService.update(expectedSubject1);
 
-        verify(subjectDao).update(expectedSubject1);
+        verify(subjectRepository).save(expectedSubject1);
     }
 
     @Test
     void givenAssignedSubjectId_onDelete_shouldThrowException() {
         String expected = "Subject Test Economics is assigned to teacher(s), can't delete";
-        when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(3L);
+        when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
+        when(subjectRepository.countAssignments(expectedSubject1.getId())).thenReturn(3L);
 
         Throwable thrown = assertThrows(EntityInUseException.class,
                 () -> subjectService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(any());
+        verify(subjectRepository, never()).delete(any());
     }
 
     @Test
     void givenScheduledSubjectId_onDelete_shouldThrowException() {
         String expected = "Subject Test Economics is scheduled for lecture(s), can't delete";
-        when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(lectureDao.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
+        when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
+        when(lectureRepository.findBySubject(expectedSubject1)).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(EntityInUseException.class,
                 () -> subjectService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(expectedSubject1);
+        verify(subjectRepository, never()).delete(expectedSubject1);
     }
 
     @Test
@@ -96,31 +96,31 @@ class SubjectServiceTest {
         Throwable thrown = assertThrows(EntityNotFoundException.class,
                 () -> subjectService.delete(1));
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).delete(any());
+        verify(subjectRepository, never()).delete(any());
     }
 
     @Test
-    void givenFreeSubject_onDelete_shouldCallDaoDelete() {
-        when(subjectDao.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectDao.countAssignments(expectedSubject1)).thenReturn(0L);
-        when(lectureDao.findBySubject(expectedSubject1)).thenReturn(new ArrayList<>());
+    void givenFreeSubject_onDelete_shouldCallRepositoryDelete() {
+        when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
+        when(subjectRepository.countAssignments(expectedSubject1.getId())).thenReturn(0L);
+        when(lectureRepository.findBySubject(expectedSubject1)).thenReturn(new ArrayList<>());
 
         subjectService.delete(1);
 
-        verify(subjectDao).delete(expectedSubject1);
+        verify(subjectRepository).delete(expectedSubject1);
     }
 
     @Test
     void givenSubjectWithOldNameAndNewId_onUpdate_shouldThrowException() {
         String expected = "Subject Test Philosophy already exists";
         Subject subject = new Subject(5, "Test Philosophy", "Test");
-        when(subjectDao.findByName("Test Philosophy")).thenReturn(Optional.of(expectedSubject2));
+        when(subjectRepository.findByName("Test Philosophy")).thenReturn(Optional.of(expectedSubject2));
 
         Throwable thrown = assertThrows(EntityNotUniqueException.class,
                 () -> subjectService.update(subject));
 
         assertEquals(expected, thrown.getMessage());
-        verify(subjectDao, never()).update(subject);
+        verify(subjectRepository, never()).save(subject);
     }
 
     public interface TestData {

@@ -3,7 +3,7 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.VacationRepository;
+import ua.com.foxminded.university.repository.VacationRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.VacationIncorrectException;
 import ua.com.foxminded.university.model.Vacation;

@@ -88,7 +88,7 @@ public class LectureService {
     }
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
-        if (lectureRepository.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+        if (lectureRepository.findByDateAndTimeslotAndClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
                 .filter(l -> l.getId() != lecture.getId())
                 .isPresent()) {
             throw new ClassroomOccupiedException(
@@ -97,7 +97,7 @@ public class LectureService {
     }
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
-        if (lectureRepository.findByDateTime(lecture.getDate(), lecture.getTimeslot())
+        if (lectureRepository.findByDateAndTimeslot(lecture.getDate(), lecture.getTimeslot())
                 .stream()
                 .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
@@ -132,7 +132,7 @@ public class LectureService {
 
     private void verifyTeacherIsNotBusy(Lecture lecture) {
         var teacher = lecture.getTeacher();
-        if (lectureRepository.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
+        if (lectureRepository.findByDateAndTimeslotAndTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
                 .filter(l -> l.getId() != lecture.getId())
                 .isPresent()) {
             throw new TeacherBusyException(
@@ -158,7 +158,7 @@ public class LectureService {
     public int countStudentsInLecture(Lecture lecture) {
         return lecture.getGroups()
                 .stream()
-                .mapToInt(studentRepository::countInGroup)
+                .mapToInt(studentRepository::countByGroup)
                 .sum();
     }
 
@@ -170,17 +170,17 @@ public class LectureService {
 
     public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
         logger.debug("Retrieving lectures for teacher {} {} and period {}-{}", teacher.getFirstName(), teacher.getLastName(), start, end);
-        return lectureRepository.findByTeacherAndPeriod(teacher, start, end);
+        return lectureRepository.findByTeacherAndDateBetween(teacher, start, end);
     }
 
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
-        return lectureRepository.findByStudentAndPeriod(student, start, end);
+        return lectureRepository.findByGroupAndDateBetween(student.getGroup(), start, end);
     }
 
     @Transactional
     public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
-        List<Lecture> lectures = lectureRepository.findByTeacherAndPeriod(teacher, start, end);
+        List<Lecture> lectures = lectureRepository.findByTeacherAndDateBetween(teacher, start, end);
         logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
 
         for (Lecture lecture : lectures) {

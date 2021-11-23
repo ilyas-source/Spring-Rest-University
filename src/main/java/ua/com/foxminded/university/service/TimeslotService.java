@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.LectureRepository;
-import ua.com.foxminded.university.dao.TimeslotRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TimeslotRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.TimeslotInUseException;
 import ua.com.foxminded.university.exception.TimeslotTooShortException;
@@ -68,13 +68,15 @@ public class TimeslotService {
     }
 
     private void verifyHasNoIntersections(Timeslot timeslot) {
-        if (timeslotRepository.findByBothTimes(timeslot).isPresent()) {
+        if (timeslotRepository.findByBeginTimeAndEndTime(
+                timeslot.getEndTime(), timeslot.getEndTime()).isPresent()) {
             return;
         }
         int minimumBreakLength = universityProperties.getMinimumBreakLength();
         var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
                 timeslot.getEndTime().plusMinutes(minimumBreakLength));
-        if (timeslotRepository.countIntersectingTimeslots(timeslotWithBreaks) > 0) {
+        if (timeslotRepository.countByEndTimeIsGreaterThanEqualAndBeginTimeIsLessThanEqual(
+                timeslotWithBreaks.getBeginTime(), timeslotWithBreaks.getEndTime()) > 0) {
             throw new TimeslotsIntersectionException(
                     "New timeslot has intersections with existing timetable, can't create/update");
         }

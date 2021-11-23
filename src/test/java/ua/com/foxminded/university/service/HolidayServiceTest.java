@@ -31,14 +31,14 @@ class HolidayServiceTest {
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(holidayDao.findAll()).thenReturn(expectedHolidays);
+        when(holidayRepository.findAll()).thenReturn(expectedHolidays);
 
         assertEquals(expectedHolidays, holidayService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectHoliday() {
-        when(holidayDao.findById(1)).thenReturn(Optional.of(expectedHoliday1));
+        when(holidayRepository.findById(1)).thenReturn(Optional.of(expectedHoliday1));
         Optional<Holiday> expected = Optional.of(expectedHoliday1);
 
         Optional<Holiday> actual = holidayService.findById(1);
@@ -47,17 +47,17 @@ class HolidayServiceTest {
     }
 
     @Test
-    void givenHoliday_onCreate_shouldCallDaoCreate() {
+    void givenHoliday_onCreate_shouldCallRepositoryCreate() {
         holidayService.create(expectedHoliday1);
 
-        verify(holidayDao).create(expectedHoliday1);
+        verify(holidayRepository).save(expectedHoliday1);
     }
 
     @Test
-    void givenHoliday_onUpdate_shouldCallDaoUpdate() {
+    void givenHoliday_onUpdate_shouldCallRepositoryUpdate() {
         holidayService.update(expectedHoliday1);
 
-        verify(holidayDao).update(expectedHoliday1);
+        verify(holidayRepository).save(expectedHoliday1);
     }
 
     @Test
@@ -68,16 +68,16 @@ class HolidayServiceTest {
                 () -> holidayService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(holidayDao, never()).delete(any());
+        verify(holidayRepository, never()).delete(any());
     }
 
     @Test
-    void givenExistingId_onDelete_shouldCallDaoDelete() {
-        when(holidayDao.findById(1)).thenReturn(Optional.of(expectedHoliday1));
+    void givenExistingId_onDelete_shouldCallRepositoryDelete() {
+        when(holidayRepository.findById(1)).thenReturn(Optional.of(expectedHoliday1));
 
         holidayService.delete(1);
 
-        verify(holidayDao).delete(expectedHoliday1);
+        verify(holidayRepository).delete(expectedHoliday1);
     }
 
     public interface TestData {

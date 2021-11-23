@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.TeacherDao;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.*;
 
@@ -42,7 +42,7 @@ class TeacherServiceTest {
     }
 
     @Mock
-    private TeacherDao teacherDao;
+    private TeacherRepository teacherRepository;
     @Mock
     private LectureRepository lectureRepository;
     @Mock
@@ -52,7 +52,7 @@ class TeacherServiceTest {
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectTeacher() {
-        when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(expectedTeacher1));
         Optional<Teacher> expected = Optional.of(expectedTeacher1);
 
         Optional<Teacher> actual = teacherService.findById(1);
@@ -72,25 +72,25 @@ class TeacherServiceTest {
                 () -> teacherService.create(expectedTeacher1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).create(expectedTeacher1);
+        verify(teacherRepository, never()).save(expectedTeacher1);
     }
 
     @Test
-    void givenSuitableTeacher_onCreate_shouldCallDaoCreate() {
+    void givenSuitableTeacher_onCreate_shouldCallRepositoryCreate() {
         when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
         teacherService.create(expectedTeacher1);
 
-        verify(teacherDao).create(expectedTeacher1);
+        verify(teacherRepository).save(expectedTeacher1);
     }
 
     @Test
-    void givenSuitableTeacher_onUpdate_shouldCallDaoUpdate() {
+    void givenSuitableTeacher_onUpdate_shouldCallRepositoryUpdate() {
         when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
         teacherService.update(expectedTeacher1);
 
-        verify(teacherDao).update(expectedTeacher1);
+        verify(teacherRepository).save(expectedTeacher1);
     }
 
     @Test
@@ -101,54 +101,55 @@ class TeacherServiceTest {
                 () -> teacherService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).delete(any());
+        verify(teacherRepository, never()).delete(any());
     }
 
     @Test
     void givenTeacherWithLectures_onDelete_shouldThrowException() {
         String expected = "Teacher Adam Smith has scheduled lecture(s), can't delete";
-        when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
-        when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+        when(lectureRepository.findByTeacher(expectedTeacher1)).thenReturn(expectedLectures);
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(expectedTeacher1));
 
         Throwable thrown = assertThrows(TeacherBusyException.class,
                 () -> teacherService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).delete(expectedTeacher1);
+        verify(teacherRepository, never()).delete(expectedTeacher1);
     }
 
     @Test
-    void givenTeacherWithNoLecturesId_onDelete_shouldCallDaoDelete() {
-        when(teacherDao.findById(1)).thenReturn(Optional.of(expectedTeacher1));
-        when(lectureDao.findByTeacher(expectedTeacher1)).thenReturn(new ArrayList<>());
+    void givenTeacherWithNoLecturesId_onDelete_shouldCallRepositoryDelete() {
+        when(teacherRepository.findById(1)).thenReturn(Optional.of(expectedTeacher1));
+        when(lectureRepository.findByTeacher(expectedTeacher1)).thenReturn(new ArrayList<>());
 
         teacherService.delete(1);
 
-        verify(teacherDao).delete(expectedTeacher1);
+        verify(teacherRepository).delete(expectedTeacher1);
     }
 
     @Test
     void givenTeacherWithExistingNameAndEmail_onCreate_shouldThrowException() {
         String expected = "Teacher Adam Smith with email adam@smith.com already exists, can't create duplicate";
-        when(teacherDao.findByNameAndEmail("Adam", "Smith", "adam@smith.com")).thenReturn(Optional.of(expectedTeacher2));
+        when(teacherRepository.findByFirstNameAndLastNameAndEmail(
+                "Adam", "Smith", "adam@smith.com")).thenReturn(Optional.of(expectedTeacher2));
 
         Throwable thrown = assertThrows(EntityNotUniqueException.class,
                 () -> teacherService.create(expectedTeacher1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).create(expectedTeacher1);
+        verify(teacherRepository, never()).save(expectedTeacher1);
     }
 
     @Test
     void givenTeacherThatCannotTeachRequiredSubjects_onUpdate_shouldThrowException() {
         String expected = "Updated teacher Test Teacher can't teach scheduled lecture(s)";
-        when(lectureDao.findByTeacher(teacherToCreate)).thenReturn(expectedLectures);
+        when(lectureRepository.findByTeacher(teacherToCreate)).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(TeacherCannotTeachSubject.class,
                 () -> teacherService.update(teacherToCreate));
 
         assertEquals(expected, thrown.getMessage());
-        verify(teacherDao, never()).update(teacherToCreate);
+        verify(teacherRepository, never()).save(teacherToCreate);
     }
 
     public interface TestData {

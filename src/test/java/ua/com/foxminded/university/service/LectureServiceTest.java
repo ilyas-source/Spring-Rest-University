@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.HolidayDao;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.StudentDao;
+import ua.com.foxminded.university.repository.HolidayRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 
@@ -49,14 +49,14 @@ class LectureServiceTest {
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(lectureDao.findAll()).thenReturn(expectedLectures);
+        when(lectureRepository.findAll()).thenReturn(expectedLectures);
 
         assertEquals(expectedLectures, lectureService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectLecture() {
-        when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
+        when(lectureRepository.findById(1)).thenReturn(Optional.of(expectedLecture1));
         Optional<Lecture> expected = Optional.of(expectedLecture1);
 
         Optional<Lecture> actual = lectureService.findById(1);
@@ -80,19 +80,19 @@ class LectureServiceTest {
                 () -> lectureService.create(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureOnHoliday_onCreate_shouldThrowException() {
         String expected = "Can't schedule lecture to a holiday";
-        when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
+        when(holidayRepository.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
         Throwable thrown = assertThrows(LectureOnHolidayException.class,
                 () -> lectureService.create(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
@@ -102,20 +102,20 @@ class LectureServiceTest {
                 () -> lectureService.create(lectureToCreate));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(lectureToCreate);
+        verify(lectureRepository, never()).save(lectureToCreate);
     }
 
     @Test
     void givenLectureWithBusyTeacher_onCreate_shouldThrowException() {
         String expected = "Teacher Adam Smith will be reading another lecture";
-        when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+        when(lectureRepository.findByDateAndTimeslotAndTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
                 expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
         Throwable thrown = assertThrows(TeacherBusyException.class,
                 () -> lectureService.create(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
@@ -125,7 +125,7 @@ class LectureServiceTest {
                 () -> lectureService.create(lectureWithTeacherOnVacation));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(lectureWithTeacherOnVacation);
+        verify(lectureRepository, never()).save(lectureWithTeacherOnVacation);
     }
 
     @Test
@@ -138,39 +138,39 @@ class LectureServiceTest {
 
         expectedLecture1.setSubject(expectedSubject1);
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureWithBusyGroup_onCreate_shouldThrowException() {
         String expected = "Group(s) will be attending another lecture";
-        when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
+        when(lectureRepository.findByDateAndTimeslot(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(GroupBusyException.class,
                 () -> lectureService.create(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureWithOccupiedClassroom_onCreate_shouldThrowException() {
         String expected = "Classroom Big physics auditory is occupied at this day and time";
-        when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+        when(lectureRepository.findByDateAndTimeslotAndClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
                 expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
         Throwable thrown = assertThrows(ClassroomOccupiedException.class,
                 () -> lectureService.create(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).create(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
-    void givenGoodLecture_onCreate_shouldCallDaoCreate() {
+    void givenGoodLecture_onCreate_shouldCallRepositoryCreate() {
         lectureService.create(expectedLecture1);
 
-        verify(lectureDao).create(expectedLecture1);
+        verify(lectureRepository).save(expectedLecture1);
     }
 
     @Test
@@ -182,19 +182,19 @@ class LectureServiceTest {
                 () -> lectureService.update(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureOnHoliday_onUpdate_shouldThrowException() {
         String expected = "Can't schedule lecture to a holiday";
-        when(holidayDao.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
+        when(holidayRepository.findByDate(expectedLecture1.getDate())).thenReturn(expectedHolidays);
 
         Throwable thrown = assertThrows(LectureOnHolidayException.class,
                 () -> lectureService.update(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
@@ -205,20 +205,20 @@ class LectureServiceTest {
                 () -> lectureService.update(lectureToUpdate));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(lectureToUpdate);
+        verify(lectureRepository, never()).save(lectureToUpdate);
     }
 
     @Test
     void givenLectureWithBusyTeacher_onUpdate_shouldThrowException() {
         String expected = "Teacher Adam Smith will be reading another lecture";
-        when(lectureDao.findByDateTimeTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+        when(lectureRepository.findByDateAndTimeslotAndTeacher(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
                 expectedLecture1.getTeacher())).thenReturn(Optional.of(expectedLecture2));
 
         Throwable thrown = assertThrows(TeacherBusyException.class,
                 () -> lectureService.update(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
@@ -229,7 +229,7 @@ class LectureServiceTest {
                 () -> lectureService.update(lectureWithTeacherOnVacation));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
@@ -242,48 +242,48 @@ class LectureServiceTest {
 
         expectedLecture1.setSubject(expectedSubject1);
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureWithBusyGroup_onUpdate_shouldThrowException() {
         String expected = "Group(s) will be attending another lecture";
-        when(lectureDao.findByDateTime(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
+        when(lectureRepository.findByDateAndTimeslot(expectedLecture1.getDate(), expectedLecture1.getTimeslot())).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(GroupBusyException.class,
                 () -> lectureService.update(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenLectureWithOccupiedClassroom_onUpdate_shouldThrowException() {
         String expected = "Classroom Big physics auditory is occupied at this day and time";
-        when(lectureDao.findByDateTimeClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
+        when(lectureRepository.findByDateAndTimeslotAndClassroom(expectedLecture1.getDate(), expectedLecture1.getTimeslot(),
                 expectedLecture1.getClassroom())).thenReturn(Optional.of(expectedLecture2));
 
         Throwable thrown = assertThrows(ClassroomOccupiedException.class,
                 () -> lectureService.update(expectedLecture1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).update(expectedLecture1);
+        verify(lectureRepository, never()).save(expectedLecture1);
     }
 
     @Test
     void givenGoodLecture_onUpdate_shouldCallUpdate() {
         lectureService.update(expectedLecture1);
 
-        verify(lectureDao).update(expectedLecture1);
+        verify(lectureRepository).save(expectedLecture1);
     }
 
     @Test
-    void givenExistingLectureId_onDelete_shouldCallDaoDelete() {
-        when(lectureDao.findById(1)).thenReturn(Optional.of(expectedLecture1));
+    void givenExistingLectureId_onDelete_shouldCallRepositoryDelete() {
+        when(lectureRepository.findById(1)).thenReturn(Optional.of(expectedLecture1));
 
         lectureService.delete(1);
 
-        verify(lectureDao).delete(expectedLecture1);
+        verify(lectureRepository).delete(expectedLecture1);
     }
 
     @Test
@@ -294,47 +294,47 @@ class LectureServiceTest {
                 () -> lectureService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(lectureDao, never()).delete(any());
+        verify(lectureRepository, never()).delete(any());
     }
 
     @Test
-    void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldCallDaoFindByTeacherAndPeriod() {
+    void givenTeacherAndDates_onFindByTeacherAndPeriod_shouldCallRepositoryFindByTeacherAndPeriod() {
         LocalDate start = LocalDate.of(2000, 1, 1);
         LocalDate end = LocalDate.of(2001, 1, 1);
-        when(lectureDao.findByTeacherAndPeriod(expectedTeacher1, start, end))
+        when(lectureRepository.findByTeacherAndDateBetween(expectedTeacher1, start, end))
                 .thenReturn(expectedLectures);
 
         var actual = lectureService.findByTeacherAndPeriod(expectedTeacher1, start, end);
 
         assertEquals(expectedLectures, actual);
-        verify(lectureDao).findByTeacherAndPeriod(expectedTeacher1, start, end);
+        verify(lectureRepository).findByTeacherAndDateBetween(expectedTeacher1, start, end);
     }
 
     @Test
-    void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallDaoFindByStudentAndPeriod() {
+    void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallRepositoryFindByStudentAndPeriod() {
         LocalDate start = LocalDate.of(2000, 1, 1);
         LocalDate end = LocalDate.of(2001, 1, 1);
-        when(lectureDao.findByStudentAndPeriod(expectedStudent1, start, end))
+        when(lectureRepository.findByGroupAndDateBetween(expectedGroup1, start, end))
                 .thenReturn(expectedLectures);
 
         var actual = lectureService.findByStudentAndPeriod(expectedStudent1, start, end);
 
         assertEquals(expectedLectures, actual);
-        verify(lectureDao).findByStudentAndPeriod(expectedStudent1, start, end);
+        verify(lectureRepository).findByGroupAndDateBetween(expectedGroup1, start, end);
     }
 
     @Test
     void givenTeacherAndDates_onReplaceTeacher_shouldReplaceTeacher() {
         var startDate = LocalDate.of(2000, 1, 1);
         var endDate = LocalDate.of(2000, 1, 3);
-        when(lectureDao.findByTeacherAndPeriod(expectedTeacher2, startDate, endDate))
+        when(lectureRepository.findByTeacherAndDateBetween(expectedTeacher2, startDate, endDate))
                 .thenReturn(lecturesToReplaceTeacher);
         when(teacherService.getReplacementTeachers(lectureToReplaceTeacher)).thenReturn(expectedTeachers);
 
         lectureService.replaceTeacher(expectedTeacher2, startDate, endDate);
 
         assertThat(lectureToReplaceTeacher.getTeacher().equals(expectedTeacher1));
-        verify(lectureDao).update(lectureToReplaceTeacher);
+        verify(lectureRepository).save(lectureToReplaceTeacher);
     }
 
     interface TestData {

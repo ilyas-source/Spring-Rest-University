@@ -5,12 +5,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.repository.GroupRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import java.util.*;
 
@@ -32,14 +32,14 @@ class GroupServiceTest {
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(groupDao.findAll()).thenReturn(expectedGroups);
+        when(groupRepository.findAll()).thenReturn(expectedGroups);
 
         assertEquals(expectedGroups, groupService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectGroup() {
-        when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
+        when(groupRepository.findById(1)).thenReturn(Optional.of(expectedGroup1));
         Optional<Group> expected = Optional.of(expectedGroup1);
 
         Optional<Group> actual = groupService.findById(1);
@@ -48,43 +48,43 @@ class GroupServiceTest {
     }
 
     @Test
-    void givenNewGroup_onCreate_shouldCallDaoCreate() {
-        when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
+    void givenNewGroup_onCreate_shouldCallRepositoryCreate() {
+        when(groupRepository.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
 
         groupService.create(expectedGroup1);
 
-        verify(groupDao).create(expectedGroup1);
+        verify(groupRepository).save(expectedGroup1);
     }
 
     @Test
-    void givenNewGroup_onUpdate_shouldCallDaoUpdate() {
-        when(groupDao.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
+    void givenNewGroup_onUpdate_shouldCallRepositoryUpdate() {
+        when(groupRepository.findByName(expectedGroup1.getName())).thenReturn(Optional.empty());
 
         groupService.update(expectedGroup1);
 
-        verify(groupDao).update(expectedGroup1);
+        verify(groupRepository).save(expectedGroup1);
     }
 
     @Test
     void givenGroupWithOldNameAndNewId_onUpdate_shouldThrowException() {
         String expected = "Group ZI-08 already exists";
         Group group = new Group(5, "ZI-08");
-        when(groupDao.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
+        when(groupRepository.findByName("ZI-08")).thenReturn(Optional.of(expectedGroup2));
 
         Throwable thrown = assertThrows(EntityNotUniqueException.class,
                 () -> groupService.update(group));
 
         assertEquals(expected, thrown.getMessage());
-        verify(groupDao, never()).update(group);
+        verify(groupRepository, never()).save(group);
     }
 
     @Test
-    void givenCorrectId_onDelete_shouldCallDaoDelete() {
-        when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
+    void givenCorrectId_onDelete_shouldCallRepositoryDelete() {
+        when(groupRepository.findById(1)).thenReturn(Optional.of(expectedGroup1));
 
         groupService.delete(1);
 
-        verify(groupDao).delete(expectedGroup1);
+        verify(groupRepository).delete(expectedGroup1);
     }
 
     @Test
@@ -94,20 +94,20 @@ class GroupServiceTest {
                 () -> groupService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(groupDao, never()).delete(any());
+        verify(groupRepository, never()).delete(any());
     }
 
     @Test
     void givenNonEmptyGroup_onDelete_shouldThrowException() {
         String expected = "Group AB-11 has assigned students, can't delete";
-        when(groupDao.findById(1)).thenReturn(Optional.of(expectedGroup1));
-        when(studentDao.findByGroup(expectedGroup1)).thenReturn(expectedStudents);
+        when(groupRepository.findById(1)).thenReturn(Optional.of(expectedGroup1));
+        when(studentRepository.findByGroup(expectedGroup1)).thenReturn(expectedStudents);
 
         Throwable thrown = assertThrows(GroupNotEmptyException.class,
                 () -> groupService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(groupDao, never()).delete(expectedGroup1);
+        verify(groupRepository, never()).delete(expectedGroup1);
     }
     public interface TestData {
         Group expectedGroup1 = new Group(1, "AB-11");

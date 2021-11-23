@@ -77,7 +77,7 @@ public class SubjectService {
     }
 
     private void verifyIsNotAssigned(Subject subject) {
-        if (subjectRepository.countAssignments(subject) > 0) {
+        if (subjectRepository.countAssignments(subject.getId()) > 0) {
             throw new EntityInUseException(
                     String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
         }

@@ -48,7 +48,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenGoodClassroom_onCreate_shouldCallDaoCreate() {
+    void givenGoodClassroom_onCreate_shouldCallRepositoryCreate() {
         when(classroomRepository.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.create(expectedClassroom1);
@@ -57,7 +57,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenClassroomWithSameNameAndId_onUpdate_shouldCallDaoUpdate() {
+    void givenClassroomWithSameNameAndId_onUpdate_shouldCallRepositoryUpdate() {
         when(classroomRepository.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.update(expectedClassroom1);
@@ -66,7 +66,7 @@ class ClassroomServiceTest {
     }
 
     @Test
-    void givenExistingClassroom_onDelete_shouldCallDaoDelete() {
+    void givenExistingClassroom_onDelete_shouldCallRepositoryDelete() {
         when(classroomRepository.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.delete(1);

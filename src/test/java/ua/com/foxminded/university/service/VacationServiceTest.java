@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.repository.VacationRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Vacation;
 
@@ -22,20 +22,20 @@ import static ua.com.foxminded.university.service.VacationServiceTest.TestData.*
 class VacationServiceTest {
 
     @Mock
-    private VacationDao vacationDao;
+    private VacationRepository vacationRepository;
     @InjectMocks
     private VacationService vacationService;
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(vacationDao.findAll()).thenReturn(expectedVacations);
+        when(vacationRepository.findAll()).thenReturn(expectedVacations);
 
         assertEquals(expectedVacations, vacationService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectVacation() {
-        when(vacationDao.findById(1)).thenReturn(Optional.of(expectedVacation1));
+        when(vacationRepository.findById(1)).thenReturn(Optional.of(expectedVacation1));
         Optional<Vacation> expected = Optional.of(expectedVacation1);
 
         Optional<Vacation> actual = vacationService.findById(1);
@@ -47,14 +47,14 @@ class VacationServiceTest {
     void givenVacation_onCreate_shouldCallCreate() {
         vacationService.create(expectedVacation1);
 
-        verify(vacationDao).create(expectedVacation1);
+        verify(vacationRepository).save(expectedVacation1);
     }
 
     @Test
     void givenVacation_onUpdate_shouldCallUpdate() {
         vacationService.update(expectedVacation1);
 
-        verify(vacationDao).update(expectedVacation1);
+        verify(vacationRepository).save(expectedVacation1);
     }
 
     @Test
@@ -65,16 +65,16 @@ class VacationServiceTest {
                 () -> vacationService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(vacationDao, never()).delete(any());
+        verify(vacationRepository, never()).delete(any());
     }
 
     @Test
     void givenCorrectVacationId_onDelete_shouldCallDelete() {
-        when(vacationDao.findById(1)).thenReturn(Optional.of(expectedVacation1));
+        when(vacationRepository.findById(1)).thenReturn(Optional.of(expectedVacation1));
 
         vacationService.delete(1);
 
-        verify(vacationDao).delete(expectedVacation1);
+        verify(vacationRepository).delete(expectedVacation1);
     }
 
     @Test
