@@ -1,6 +1,5 @@
 package ua.com.foxminded.university.dao;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -110,12 +109,12 @@ public class HibernateGroupDaoTest {
         assertEquals(Optional.empty(), actual);
     }
 
-    @Test
-    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
-        var actual = groupDao.findByLectureId(1);
-
-        assertEquals(expectedGroups, actual);
-    }
+//    @Test
+//    void givenLectureId_onFindByLectureId_shouldReturnListOfGroups() {
+//        var actual = groupDao.findByLectureId(1);
+//
+//        assertEquals(expectedGroups, actual);
+//    }
 
     public interface TestData {
         Group groupToCreate = new Group(3, "test");

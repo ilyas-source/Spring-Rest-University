@@ -109,8 +109,8 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public Page<Student> findAll(Pageable pageable) {
         logger.debug("Retrieving Students pageable");
-        var sortProperty = universityProperties.getDefaultSortAttribute();
-        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSortDirection());
+        var sortProperty = universityProperties.getDefaultSort().get("property");
+        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSort().get("direction"));
 
         var sortOrder = pageable.getSort().get().findFirst();
         if (sortOrder.isPresent()) {

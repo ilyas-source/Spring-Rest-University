@@ -74,8 +74,8 @@ public class HibernateTeacherDao implements TeacherDao {
     @Override
     public Page<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving Teachers pageable");
-        var sortProperty=universityProperties.getDefaultSortAttribute();
-        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSortDirection());
+        var sortProperty=universityProperties.getDefaultSort().get("property");
+        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSort().get("direction"));
 
         var sortOrder = pageable.getSort().get().findFirst();
         if (sortOrder.isPresent()) {

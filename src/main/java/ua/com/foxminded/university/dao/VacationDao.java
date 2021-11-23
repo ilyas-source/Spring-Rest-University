@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface VacationDao extends GeneralDao<Vacation> {
 
-    List<Vacation> findAll();
-
     List<Vacation> findByTeacher(Teacher teacher);
 }
