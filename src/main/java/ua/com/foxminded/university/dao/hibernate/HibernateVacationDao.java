@@ -26,42 +26,42 @@ public class HibernateVacationDao implements VacationDao {
 
     @Override
     public void create(Vacation vacation) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.save(vacation);
     }
 
     @Override
     public Optional<Vacation> findById(int id) {
         logger.debug("Getting by id: {}", id);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return Optional.ofNullable(session.get(Vacation.class, id));
     }
 
     @Override
     public void update(Vacation vacation) {
         logger.debug("Updating: {}", vacation);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.merge(vacation);
     }
 
     @Override
     public void delete(Vacation vacation) {
         logger.debug("Deleting: {}", vacation);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.delete(vacation);
     }
 
     @Override
     public List<Vacation> findAll() {
         logger.debug("Retrieving all vacations from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createNamedQuery("SelectAllVacations").list();
     }
 
     @Override
     public List<Vacation> findByTeacher(Teacher teacher) {
         logger.debug("Searching vacations by teacher: {}", teacher);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query<Vacation> query = session.createNamedQuery("FindVacationsByTeacher")
                 .setParameter("teacher", teacher);
 

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Classroom</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <a href="/university/classrooms" class="btn btn-outline-primary mb-2" role="button">Back to classrooms...</a>
+    <h2 class="text-primary">Create new classroom</h2>
+    <form class="row g-3" method="POST" th:action="@{/classrooms/create}" th:object="${classroom}">
+
+        <!--Name and capacity-->
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="name" class="form-label">Classroom name</label>
+                <input type="text" class="form-control" id="name" placeholder="Chemistry lab" th:field="*{name}">
+            </div>
+            <div class="col-md-2">
+                <label for="capacity" class="form-label">Capacity, students</label>
+                <input type="text" class="form-control" id="capacity" placeholder="30" th:field="*{capacity}">
+            </div>
+        </div>
+
+        <!--Location in-page-->
+        <div class="col-md-3">
+            <label for="building" class="form-label">Building name</label>
+            <input type="text" class="form-control" id="building" placeholder="Chemistry building"
+                   th:field="*{location.building}">
+        </div>
+        <div class="col-md-3">
+            <label for="floor" class="form-label">Floor</label>
+            <input type="text" class="form-control" id="floor" placeholder="5"
+                   th:field="*{location.floor}">
+        </div>
+        <div class="col-md-3">
+            <label for="number" class="form-label">Room number</label>
+            <input type="text" class="form-control" id="number" placeholder="10"
+                   th:field="*{location.roomNumber}">
+        </div>
+        <div class="col-md-5">
+            <input type="submit" class="btn btn-primary" value="Create"/>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

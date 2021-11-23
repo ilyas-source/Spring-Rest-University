@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Subject</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <a href="/university/subjects" class="btn btn-outline-primary mb-2" role="button">Back to subjects...</a>
+    <h2 class="text-primary">Create new subject</h2>
+    <form class="row g-3" method="POST" action="/university/subjects/create" th:object="${subject}">
+        <div class="row g-3">
+            <div class="col-md-2">
+                <label for="name" class="form-label">Subject name</label>
+                <input type="text" class="form-control" id="name" placeholder="Chemistry" th:field="*{name}">
+            </div>
+            <div class="col-md-4">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" class="form-control" id="description" placeholder="Advanced course"
+                       th:field="*{description}">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <input type="submit" class="btn btn-primary" value="Create"/>
+        </div>
+    </form>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>

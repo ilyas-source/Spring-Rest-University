@@ -24,35 +24,35 @@ public class HibernateAddressDao implements AddressDao {
 
     @Override
     public void create(Address address) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.save(address);
     }
 
     @Override
     public Optional<Address> findById(int id) {
         logger.debug("Getting by id: {}", id);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return Optional.ofNullable(session.get(Address.class, id));
     }
 
     @Override
     public void update(Address address) {
         logger.debug("Updating: {}", address);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.merge(address);
     }
 
     @Override
     public void delete(Address address) {
         logger.debug("Deleting: {}", address);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.delete(address);
     }
 
     @Override
     public List<Address> findAll() {
         logger.debug("Retrieving all addresses from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createNamedQuery("SelectAllAddresses").list();
     }
 }

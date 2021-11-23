@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>University main</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+
+<div class="container mt-5">
+    <h1 class="text-primary text-center">Get schedule</h1>
+
+    <!-- Form for finding and retrieving persons-->
+    <form method="GET" th:action="@{/lectures/search}">
+        <!-- Radio to select teachers or students -->
+        <div class="select-entity row g-3">
+            <label for="entity" class="form-label">Generate schedule for:</label><br/>
+            <label class="form-check-label" id="entity">
+                <input type="radio" name="entity" value="student"
+                       required>Student
+            </label>
+            <label class="form-check-label">
+                <input type="radio" name="entity" value="teacher"
+                       required>Teacher
+            </label>
+        </div>
+        <br/>
+        <!-- Person search -->
+        <div class="col-md-4">
+            <div class="input-group col-md-2">
+                <input type="text" class="form-control" name="substring" placeholder="Smith">
+                <button type="submit" class="btn btn-outline-primary" role="button">Find person</button>
+            </div>
+            <p>Case insensitive, enter any part of first name and/or last name</p>
+        </div>
+    </form>
+    <br/>
+
+    <!-- Form for retrieving schedule -->
+    <form class="row g-3" th:action="@{/lectures/schedule}" method="GET">
+        <input type="text" class="invisible" id="entityselector" name="entity"
+               style="height:0;width:0;padding:0;border:none"
+               value="student">
+
+
+        <div class="input-group col-md-2">
+            <!-- Select for person after search-->
+            <select size="5" id="person" list="students" class="form-control" name="id"
+                    required>
+                <option name="entity" class="students"
+                        th:each="student: ${students}"
+                        th:text="${student.firstName} + ' ' + ${student.lastName}"
+                        onclick="getElementById('entityselector').setAttribute('value', 'student');"
+                        th:value="${student.id}">
+                </option>
+                <option name="entity" class="teachers"
+                        th:each="teacher: ${teachers}"
+                        th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"
+                        onclick="getElementById('entityselector').setAttribute('value', 'teacher');"
+                        th:value="${teacher.id}">
+                </option>
+            </select>
+            <!-- Radio to select day or month -->
+            <div class="select-entity row g-3">
+                <label for="period" class="form-label">Generate schedule for:</label><br/>
+                <label class="form-check-label" id="period">
+                    <input type="radio" name="periodType" value="day"
+                           required>Day
+                </label>
+                <label class="form-check-label">
+                    <input type="radio" name="periodType" value="month"
+                           required>Month
+                </label>
+            </div>
+
+            <input type="text" class="form-control" id="datepicker" name="date" placeholder="Choose date">
+
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+        </div>
+    </form>
+</div>
+
+
+<div class="container">
+    <script th:src="@{/js/homepageselector.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery-ui.js}"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/datepicker.js}"></script>
+
+
+</div>
+</body>
+</html>

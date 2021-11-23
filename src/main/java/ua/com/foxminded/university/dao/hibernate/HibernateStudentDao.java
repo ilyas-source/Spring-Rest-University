@@ -5,12 +5,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
@@ -26,11 +27,8 @@ public class HibernateStudentDao implements StudentDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateStudentDao.class);
 
-    @Value("${student.defaultsortattribute}")
-    private String defaultSortAttribute;
-
-    @Value("${defaultsortdirection}")
-    private String defaultSortDirection;
+    @Autowired
+    private UniversityProperties universityProperties;
 
     private SessionFactory sessionFactory;
 
@@ -40,42 +38,42 @@ public class HibernateStudentDao implements StudentDao {
 
     @Override
     public void create(Student student) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.save(student);
     }
 
     @Override
     public Optional<Student> findById(int id) {
         logger.debug("Getting by id: {}", id);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return Optional.ofNullable(session.get(Student.class, id));
     }
 
     @Override
     public void update(Student student) {
         logger.debug("Updating: {}", student);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.merge(student);
     }
 
     @Override
     public void delete(Student student) {
         logger.debug("Deleting: {}", student);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.delete(student);
     }
 
     @Override
     public List<Student> findAll() {
         logger.debug("Retrieving all students from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createNamedQuery("SelectAllStudents").list();
     }
 
     @Override
     public int countInGroup(Group group) {
         logger.debug("Counting students in {}", group);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query query = session.createSQLQuery(
                 "select count(*) from students where group_id=:id");
         query.setParameter("id", group.getId());
@@ -86,7 +84,7 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public List<Student> findByGroup(Group group) {
         logger.debug("Searching students by group: {}", group);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query<Student> query = session.createNamedQuery("FindStudentByGroup")
                 .setParameter("group", group);
 
@@ -96,7 +94,7 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public Optional<Student> findByNameAndBirthDate(String firstName, String lastName, LocalDate birthDate) {
         logger.debug("Searching for {} {}, born {}", firstName, lastName, birthDate);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query<Student> query = session.createNamedQuery("findStudentByNameAndBirthDate")
                 .setParameter("firstName", firstName)
                 .setParameter("lastName", lastName)
@@ -111,8 +109,8 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public Page<Student> findAll(Pageable pageable) {
         logger.debug("Retrieving Students pageable");
-        var sortProperty = defaultSortAttribute;
-        var sortDirection = Sort.Direction.fromString(defaultSortDirection);
+        var sortProperty = universityProperties.getDefaultSortAttribute();
+        var sortDirection = Sort.Direction.fromString(universityProperties.getDefaultSortDirection());
 
         var sortOrder = pageable.getSort().get().findFirst();
         if (sortOrder.isPresent()) {
@@ -122,7 +120,7 @@ public class HibernateStudentDao implements StudentDao {
         int offset = Math.toIntExact(pageable.getOffset());
         int pageSize = pageable.getPageSize();
         logger.debug("Retrieving offset {}, size {}, sort {}", offset, pageSize, pageable.getSort());
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         String request = String.format("from Student order by %s %s", sortProperty, sortDirection);
         List<Student> students = session.createQuery(request)
                 .setFirstResult(offset)
@@ -137,7 +135,7 @@ public class HibernateStudentDao implements StudentDao {
     @Override
     public List<Student> findBySubstring(String substring) {
         logger.debug("Searching students by substring: {}", substring);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         String formattedSubstring = "%" + substring.toLowerCase() + "%";
         String sqlString = "SELECT * FROM students WHERE lower(concat(first_name,' ',last_name)) like :substring";
         return session.createSQLQuery(sqlString)

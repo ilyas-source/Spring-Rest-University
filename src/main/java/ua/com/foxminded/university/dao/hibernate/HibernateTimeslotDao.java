@@ -27,42 +27,42 @@ public class HibernateTimeslotDao implements TimeslotDao {
 
     @Override
     public void create(Timeslot timeslot) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.save(timeslot);
     }
 
     @Override
     public Optional<Timeslot> findById(int id) {
         logger.debug("Getting by id: {}", id);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return Optional.ofNullable(session.get(Timeslot.class, id));
     }
 
     @Override
     public void update(Timeslot timeslot) {
         logger.debug("Updating: {}", timeslot);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.merge(timeslot);
     }
 
     @Override
     public void delete(Timeslot timeslot) {
         logger.debug("Deleting: {}", timeslot);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.delete(timeslot);
     }
 
     @Override
     public List<Timeslot> findAll() {
         logger.debug("Retrieving all timeslots from DB");
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createNamedQuery("SelectAllTimeslots").list();
     }
 
     @Override
     public int countIntersectingTimeslots(Timeslot timeslot) {
         logger.debug("Counting timeslots that intersect {}", timeslot);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query query = session.createSQLQuery(
                         "select count(*) from timeslots where end_time >= :beginTime AND begin_time <=:endTime")
                 .setParameter("beginTime", timeslot.getBeginTime())
@@ -74,7 +74,7 @@ public class HibernateTimeslotDao implements TimeslotDao {
     @Override
     public Optional<Timeslot> findByBothTimes(Timeslot timeslot) {
         logger.debug("Searching for timeslot {}", timeslot);
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         Query<Timeslot> query = session.createNamedQuery("FindTimeslotByBothTimes")
                 .setParameter("beginTime", timeslot.getBeginTime())
                 .setParameter("endTime", timeslot.getEndTime());

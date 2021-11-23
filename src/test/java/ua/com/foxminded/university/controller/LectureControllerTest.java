@@ -209,8 +209,8 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
-    //    when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-    //    when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
+        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
 
         var request = get("/lectures/schedule/calendar")
                 .param("id", "1")
@@ -218,11 +218,7 @@ class LectureControllerTest {
                 .param("start", "2000-01-01T00:00%2B03:00")
                 .param("end", "2000-02-01T00:00%2B03:00");
 
-        var mvcResult = mockMvc.perform(request)
-                .andExpect(status().is2xxSuccessful());
-
-       // var status = mvcResult.andExpect(status().is2xxSuccessful());
-      //  assertEquals(true, status);
+        mockMvc.perform(request).andExpect(status().is2xxSuccessful());
     }
 
     @Test

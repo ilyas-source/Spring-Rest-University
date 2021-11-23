@@ -15,13 +15,13 @@ public class Address {
     private int id;
     @Column
     private String country;
-    @Column
+    @Column(name="postalcode")
     private String postalCode;
     @Column
     private String region;
     @Column
     private String city;
-    @Column
+    @Column(name="streetaddress")
     private String streetAddress;
 
     public static Builder builder() {

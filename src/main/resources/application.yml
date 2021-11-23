@@ -1,0 +1,31 @@
+university:
+  defaultsort:
+    property: last_name
+    direction: ASC
+  maxstudents: 30
+  vacationdays:
+    BACHELOR: 10
+    DOCTOR: 20
+    MASTER: 30
+  minimumtimeslotlength: 30
+  minimumbreaklength: 30
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/university
+    username: rector
+    password: 1
+  thymeleaf:
+    suffix: .html
+    prefix: classpath:/templates/
+  data:
+    web:
+      pageable:
+        max-page-size:
+current_session_context_class: thread
+server:
+  servlet:
+    context-path: /university
+hibernate:
+  hbm2ddl:
+    auto: update
+  dialect: org.hibernate.dialect.PostgreSQL9Dialect

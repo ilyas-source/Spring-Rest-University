@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<header th:insert="fragments/header.html :: header"></header>
+<div class="container mt-5">
+    <a href="/university/teachers?sort=id" class="btn btn-outline-primary mb-2" role="button">Back to
+        teachers...</a>
+    <h2 class="text-primary">Teacher details</h2>
+    <form class="row g-3" method="POST" th:action="@{/teachers/create}" th:object="${teacher}">
+
+        <!--1st row: names, gender, degree -->
+        <div class="col-md-4">
+            <label for="firstname" class="form-label">First name</label>
+            <input type="text" class="form-control" id="firstname" th:field="*{firstName}">
+        </div>
+        <div class="col-md-4">
+            <label for="lastname" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="lastname" th:field="*{lastName}">
+        </div>
+        <div class="col-md-2">
+            <label for="gender" class="form-label">Gender</label>
+            <select class="form-select" id="gender" th:field="*{gender}">
+                <option th:each="gender : ${T(ua.com.foxminded.university.model.Gender).values()}"
+                        th:value="${gender}" th:text="${gender}"></option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="degree" class="form-label">Degree</label>
+            <select class="form-select" id="degree" th:field="*{degree}">
+                <option th:each="degree : ${T(ua.com.foxminded.university.model.Degree).values()}"
+                        th:value="${degree}" th:text="${degree}"></option>
+            </select>
+        </div>
+
+        <!-- mail, phone -->
+        <div class="col-md-6">
+            <label for="mail" class="form-label">Mail</label>
+            <input type="email" class="form-control" id="mail" placeholder="mail@example.com" th:field="*{email}">
+        </div>
+        <div class="col-md-6">
+            <label for="phone" class="form-label">Phone number</label>
+            <input type="text" class="form-control" id="phone" placeholder="+1 800 11111" th:field="*{phoneNumber}">
+        </div>
+
+        <!--Address -->
+        <div class="col-12">
+            <label for="street" class="form-label">Address</label>
+            <input type="text" class="form-control" id="street" placeholder="1234 Main St"
+                   th:field="*{address.streetAddress}">
+        </div>
+        <div class="col-md-3">
+            <label for="country" class="form-label">Country</label>
+            <input type="text" class="form-control" id="country" placeholder="United Kingdom"
+                   th:field="*{address.country}">
+        </div>
+        <div class="col-md-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="city" placeholder="Edinburgh" th:field="*{address.city}">
+        </div>
+        <div class="col-md-4">
+            <label for="region" class="form-label">Region/State</label>
+            <input type="text" class="form-control" id="region" placeholder="Central" th:field="*{address.region}">
+        </div>
+        <div class="col-md-2">
+            <label for="postalcode" class="form-label">Zip</label>
+            <input type="text" class="form-control" id="postalcode" placeholder="90210"
+                   th:field="*{address.postalCode}">
+        </div>
+
+        <!--Subjects multiselect -->
+        <div class="col-md-6">
+            <label for="subjects" class="form-label">Subjects (multiple select with Ctrl)</label>
+            <select class="form-control" id="subjects" name="subjects" size="5" multiple required>
+                <option th:each="subject: ${allSubjects}"
+                        th:value="${subject.id}"
+                        th:text="${subject.name}"
+                </option>
+            </select>
+        </div>
+
+        <div class="row g-3">
+            <!--form buttons -->
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+    <br/>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</div>
+</body>
+</html>

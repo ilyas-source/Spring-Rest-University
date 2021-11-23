@@ -1,8 +1,8 @@
 package ua.com.foxminded.university.dao;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -25,12 +25,11 @@ import static ua.com.foxminded.university.dao.HibernateAddressDaoTest.TestData.*
 @SpringJUnitConfig(SpringTestConfig.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
+@SpringBootTest
 public class HibernateAddressDaoTest {
 
     @Autowired
     private HibernateAddressDao addressDao;
-    @Autowired
-    SessionFactory sessionFactory;
     @Autowired
     private HibernateTemplate hibernateTemplate;
 
@@ -64,17 +63,17 @@ public class HibernateAddressDaoTest {
     }
 
     @Test
-    void ifDatabaseHasAddresss_onFindAll_shouldReturnCorrectListOfAddresss() {
+    void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
         assertEquals(expectedAddresses, addressDao.findAll());
     }
 
     @Test
-    void ifDatabaseHasNoAddresss_onFindAll_shouldReturnEmptyListOfAddresss() {
+    void ifDatabaseHasNoAddresses_onFindAll_shouldReturnEmptyListOfAddresses() {
         hibernateTemplate.deleteAll(expectedAddresses);
 
-        var addresss = addressDao.findAll();
+        var addresses = addressDao.findAll();
 
-        assertThat(addresss).isEmpty();
+        assertThat(addresses).isEmpty();
     }
 
     @Test
@@ -92,13 +91,6 @@ public class HibernateAddressDaoTest {
 
         var expected = hibernateTemplate.get(Address.class, 2);
         assertNull(expected);
-    }
-
-    @Test
-    void ifDatabaseHasAddresses_onFindAll_shouldReturnCorrectListOfAddresses() {
-        List<Address> actual = addressDao.findAll();
-
-        assertEquals(expectedAddresses, actual);
     }
 
     public interface TestData {

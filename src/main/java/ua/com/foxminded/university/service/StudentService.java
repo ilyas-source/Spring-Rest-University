@@ -2,10 +2,10 @@ package ua.com.foxminded.university.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
@@ -23,12 +23,11 @@ public class StudentService {
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     private StudentDao studentDao;
+    private UniversityProperties universityProperties;
 
-    @Value("${group.maxstudents}")
-    public int maxStudentsInGroup;
-
-    public StudentService(StudentDao studentDao) {
+    public StudentService(StudentDao studentDao, UniversityProperties universityProperties) {
         this.studentDao = studentDao;
+        this.universityProperties = universityProperties;
     }
 
     public void create(Student student) {
@@ -47,9 +46,9 @@ public class StudentService {
     }
 
     public void verifyGroupIsNotOverflowed(Student student) {
-        if (studentDao.countInGroup(student.getGroup()) > maxStudentsInGroup - 1) {
+        if (studentDao.countInGroup(student.getGroup()) > universityProperties.getMaxStudents() - 1) {
             throw new GroupOverflowException(
-                    String.format("Group limit of %s students reached, can't add more", maxStudentsInGroup));
+                    String.format("Group limit of %s students reached, can't add more", universityProperties.getMaxStudents()));
         }
     }
 

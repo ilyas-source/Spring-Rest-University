@@ -2,22 +2,26 @@ package ua.com.foxminded.university.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.dao.TeacherDao;
 import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
-import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.model.Teacher;
+import ua.com.foxminded.university.model.Vacation;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@PropertySource("classpath:university.properties")
 @Transactional
 @Service
 public class TeacherService {
@@ -28,16 +32,15 @@ public class TeacherService {
     private LectureDao lectureDao;
     private VacationDao vacationDao;
     private VacationService vacationService;
-
-    @Value("#{${teacher.vacationdays}}")
-    public Map<Degree, Integer> vacationDays = new EnumMap<>(Degree.class);
+    private UniversityProperties universityProperties;
 
     public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationDao vacationDao,
-                          VacationService vacationService) {
+                          VacationService vacationService, UniversityProperties universityProperties) {
         this.teacherDao = jdbcTeacherDao;
         this.lectureDao = lectureDao;
         this.vacationDao = vacationDao;
         this.vacationService = vacationService;
+        this.universityProperties=universityProperties;
     }
 
     public void create(Teacher teacher) {
@@ -117,7 +120,7 @@ public class TeacherService {
         if (vacations == null) {
             return;
         }
-        int allowedDays = vacationDays.get(teacher.getDegree());
+        int allowedDays = universityProperties.getVacationDays().get(teacher.getDegree());
         Map<Integer, Long> daysCountByYears = vacationService.countDaysByYears(vacations);
         long maxDays = daysCountByYears.entrySet()
                 .stream()
