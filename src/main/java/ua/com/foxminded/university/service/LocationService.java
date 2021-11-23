@@ -9,6 +9,7 @@ import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.repository.ClassroomRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,7 +24,7 @@ public class LocationService {
     private LocationDao locationDao;
     private ClassroomDao classroomDao;
 
-    public LocationService(LocationDao locationDao, ClassroomDao classroomDao) {
+    public LocationService(LocationDao locationDao, ClassroomRepository classroomRepository) {
         this.locationDao = locationDao;
         this.classroomDao = classroomDao;
     }

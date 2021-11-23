@@ -5,13 +5,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.repository.ClassroomRepository;
 
 import java.util.Optional;
 
@@ -27,7 +27,7 @@ import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.
 class ClassroomServiceTest {
 
     @Mock
-    private ClassroomDao classroomDao;
+    private ClassroomRepository classroomRepository;
     @Mock
     private LectureDao lectureDao;
     @Mock
@@ -37,14 +37,14 @@ class ClassroomServiceTest {
 
     @Test
     void onFindAll_shouldReturnCorrectList() {
-        when(classroomDao.findAll()).thenReturn(expectedClassrooms);
+        when(classroomRepository.findAll()).thenReturn(expectedClassrooms);
 
         assertEquals(expectedClassrooms, classroomService.findAll());
     }
 
     @Test
     void givenId_onFindById_shouldReturnOptionalWithCorrectClassroom() {
-        when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findById(1)).thenReturn(Optional.of(expectedClassroom1));
         Optional<Classroom> expected = Optional.of(expectedClassroom1);
 
         Optional<Classroom> actual = classroomService.findById(1);
@@ -54,29 +54,29 @@ class ClassroomServiceTest {
 
     @Test
     void givenGoodClassroom_onCreate_shouldCallDaoCreate() {
-        when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.create(expectedClassroom1);
 
-        verify(classroomDao).create(expectedClassroom1);
+        verify(classroomRepository).save(expectedClassroom1);
     }
 
     @Test
     void givenClassroomWithSameNameAndId_onUpdate_shouldCallDaoUpdate() {
-        when(classroomDao.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findByName(expectedClassroom1.getName())).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.update(expectedClassroom1);
 
-        verify(classroomDao).update(expectedClassroom1);
+        verify(classroomRepository).save(expectedClassroom1);
     }
 
     @Test
     void givenExistingClassroom_onDelete_shouldCallDaoDelete() {
-        when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findById(1)).thenReturn(Optional.of(expectedClassroom1));
 
         classroomService.delete(1);
 
-        verify(classroomDao).delete(expectedClassroom1);
+        verify(classroomRepository).delete(expectedClassroom1);
     }
 
     @Test
@@ -90,31 +90,31 @@ class ClassroomServiceTest {
                 () -> classroomService.update(expectedClassroom1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).update(expectedClassroom1);
+        verify(classroomRepository, never()).save(expectedClassroom1);
     }
 
     @Test
     void givenOccupiedClassroom_onDelete_shouldThrowException() {
         String expected = "There are scheduled lectures, can't delete classroom Big physics auditory";
-        when(classroomDao.findById(1)).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findById(1)).thenReturn(Optional.of(expectedClassroom1));
         when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).delete(any());
+        verify(classroomRepository, never()).delete(any());
     }
 
     @Test
     void givenClassroomWithExistingName_onCreate_shouldThrowException() {
         String expected = "Classroom Big physics auditory already exists";
-        when(classroomDao.findByName(duplicateNameClassroom.getName())).thenReturn(Optional.of(expectedClassroom1));
+        when(classroomRepository.findByName(duplicateNameClassroom.getName())).thenReturn(Optional.of(expectedClassroom1));
 
         Throwable thrown = assertThrows(EntityNotUniqueException.class,
                 () -> classroomService.create(duplicateNameClassroom));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).create(duplicateNameClassroom);
+        verify(classroomRepository, never()).save(duplicateNameClassroom);
     }
 
     @Test
@@ -125,7 +125,7 @@ class ClassroomServiceTest {
                 () -> classroomService.create(invalidCapacityClassroom));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).create(invalidCapacityClassroom);
+        verify(classroomRepository, never()).save(invalidCapacityClassroom);
     }
 
     @Test
@@ -136,7 +136,7 @@ class ClassroomServiceTest {
                 () -> classroomService.delete(1));
 
         assertEquals(expected, thrown.getMessage());
-        verify(classroomDao, never()).delete(any());
+        verify(classroomRepository, never()).delete(any());
     }
 
     interface TestData {

@@ -3,13 +3,13 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.dao.LectureDao;
 import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
 import ua.com.foxminded.university.exception.ClassroomOccupiedException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.repository.ClassroomRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -21,12 +21,12 @@ public class ClassroomService {
 
     private static final Logger logger = LoggerFactory.getLogger(ClassroomService.class);
 
-    private ClassroomDao classroomDao;
+    private ClassroomRepository classroomRepository;
     private LectureDao lectureDao;
     private LectureService lectureService;
 
-    public ClassroomService(ClassroomDao classroomDao, LectureDao lectureDao, LectureService lectureService) {
-        this.classroomDao = classroomDao;
+    public ClassroomService(ClassroomRepository classroomRepository, LectureDao lectureDao, LectureService lectureService) {
+        this.classroomRepository = classroomRepository;
         this.lectureDao = lectureDao;
         this.lectureService = lectureService;
     }
@@ -35,15 +35,15 @@ public class ClassroomService {
         logger.debug("Creating a new classroom: {} ", classroom);
         verifyCapacityIsCorrect(classroom);
         verifyNameIsUnique(classroom);
-        classroomDao.create(classroom);
+        classroomRepository.save(classroom);
     }
 
     public List<Classroom> findAll() {
-        return classroomDao.findAll();
+        return classroomRepository.findAll();
     }
 
     public Optional<Classroom> findById(int id) {
-        return classroomDao.findById(id);
+        return classroomRepository.findById(id);
     }
 
     public Classroom getById(int id) {
@@ -55,18 +55,18 @@ public class ClassroomService {
         logger.debug("Updating classroom: {} ", classroom);
         verifyCapacityIsEnough(classroom);
         verifyNameIsUnique(classroom);
-        classroomDao.update(classroom);
+        classroomRepository.save(classroom);
     }
 
     public void delete(int id) {
         logger.debug("Deleting classroom by id: {} ", id);
         Classroom classroom = getById(id);
         verifyHasNoLectures(classroom);
-        classroomDao.delete(classroom);
+        classroomRepository.delete(classroom);
     }
 
     private void verifyNameIsUnique(Classroom classroom) {
-        classroomDao.findByName(classroom.getName())
+        classroomRepository.findByName(classroom.getName())
                 .filter(c -> c.getId() != classroom.getId())
                 .ifPresent(c -> {
                     throw new EntityNotUniqueException(

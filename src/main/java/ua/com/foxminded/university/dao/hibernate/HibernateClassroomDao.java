@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import ua.com.foxminded.university.dao.ClassroomDao;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
@@ -14,7 +13,7 @@ import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+//@Repository
 public class HibernateClassroomDao implements ClassroomDao {
 
     private static final Logger logger = LoggerFactory.getLogger(HibernateClassroomDao.class);
