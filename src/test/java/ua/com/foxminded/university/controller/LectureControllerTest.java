@@ -243,7 +243,7 @@ class LectureControllerTest {
         verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
-    public interface TestData {
+    interface TestData {
 
         LocalDate startDate = LocalDate.of(2000, 1, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 1);

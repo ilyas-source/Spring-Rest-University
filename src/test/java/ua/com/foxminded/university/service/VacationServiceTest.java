@@ -9,12 +9,14 @@ import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Vacation;
 
+import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.Map.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateVacationDaoTest.TestData.*;
+import static ua.com.foxminded.university.service.VacationServiceTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class VacationServiceTest {
@@ -87,5 +89,21 @@ class VacationServiceTest {
         Map<Integer, Long> actual = vacationService.countDaysByYears(vacationsToCount);
 
         assertEquals(expected, actual);
+    }
+
+    public interface TestData {
+        Vacation vacationToCreate = new Vacation(5, LocalDate.of(2020, 6, 1), LocalDate.of(2020, 7, 1));
+        Vacation vacationToUpdate = new Vacation(2, LocalDate.of(2020, 6, 1), LocalDate.of(2020, 7, 1));
+
+        Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
+        Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 5, 1), LocalDate.of(2000, 6, 1));
+        Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 1, 15), LocalDate.of(2000, 2, 15));
+        Vacation expectedVacation4 = new Vacation(4, LocalDate.of(2000, 6, 1), LocalDate.of(2000, 7, 1));
+        List<Vacation> expectedVacations = new ArrayList<>(
+                Arrays.asList(expectedVacation1, expectedVacation2, expectedVacation3, expectedVacation4));
+
+        Vacation vacationGoingOverNewYear = new Vacation(LocalDate.of(2000, 12, 25), LocalDate.of(2001, 1, 10));
+
+        Map<Integer, Long> daysByYearsMap = Map.ofEntries(entry(2000, 20L));
     }
 }

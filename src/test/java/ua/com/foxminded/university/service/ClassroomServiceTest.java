@@ -5,23 +5,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
-import ua.com.foxminded.university.exception.ClassroomOccupiedException;
-import ua.com.foxminded.university.exception.EntityNotFoundException;
-import ua.com.foxminded.university.exception.EntityNotUniqueException;
+import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Classroom;
+import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.repository.ClassroomRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
 
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.duplicateNameClassroom;
-import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.invalidCapacityClassroom;
+import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClassroomServiceTest {
@@ -29,7 +24,7 @@ class ClassroomServiceTest {
     @Mock
     private ClassroomRepository classroomRepository;
     @Mock
-    private LectureDao lectureDao;
+    private LectureRepository lectureRepository;
     @Mock
     private LectureService lectureService;
     @InjectMocks
@@ -82,7 +77,7 @@ class ClassroomServiceTest {
     @Test
     void givenSmallClassroom_onUpdate_shouldThrowException() {
         String expected = "Classroom too small: required 501, but was 500";
-        when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
+        when(lectureRepository.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
         when(lectureService.countStudentsInLecture(expectedLecture1)).thenReturn(501);
         when(lectureService.countStudentsInLecture(expectedLecture2)).thenReturn(200);
 
@@ -97,7 +92,7 @@ class ClassroomServiceTest {
     void givenOccupiedClassroom_onDelete_shouldThrowException() {
         String expected = "There are scheduled lectures, can't delete classroom Big physics auditory";
         when(classroomRepository.findById(1)).thenReturn(Optional.of(expectedClassroom1));
-        when(lectureDao.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
+        when(lectureRepository.findByClassroom(expectedClassroom1)).thenReturn(expectedLectures);
 
         Throwable thrown = assertThrows(ClassroomOccupiedException.class, () -> classroomService.delete(1));
 
@@ -140,6 +135,22 @@ class ClassroomServiceTest {
     }
 
     interface TestData {
+        Location testLocation = new Location(4, "Test location", 1, 1);
+        Classroom classroomToCreate = new Classroom(4, testLocation, "Test room", 5);
+        Classroom classroomToUpdate = new Classroom(2, testLocation, "Test room", 5);
+
+        Location location1 = new Location(1, "Phys building", 2, 22);
+        Classroom expectedClassroom1 = new Classroom(1, location1, "Big physics auditory", 500);
+
+        Location location2 = new Location(2, "Chem building", 1, 12);
+        Classroom expectedClassroom2 = new Classroom(2, location2, "Small chemistry auditory", 30);
+
+        Location location3 = new Location(3, "Chem building", 2, 12);
+        Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
+
+        List<Classroom> expectedClassrooms = new ArrayList<>(
+                Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));
+
         Classroom duplicateNameClassroom = new Classroom(2, location1, "Big physics auditory", 500);
         Classroom invalidCapacityClassroom = new Classroom(1, location1, "Big physics auditory", -5);
     }

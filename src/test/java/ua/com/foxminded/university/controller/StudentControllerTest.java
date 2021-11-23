@@ -128,10 +128,6 @@ class StudentControllerTest {
     }
 
     interface TestData {
-        Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
-                .city("Edinburgh").streetAddress("Panmure House").build();
-        Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region("Central region")
-                .city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
         Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
                 .city("Perm").streetAddress("Lenina 5").build();
         Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")
@@ -140,9 +136,6 @@ class StudentControllerTest {
                 .city("Paris").streetAddress("Rue 15").build();
         Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
                 .city("Beijin").streetAddress("Main St. 125").build();
-
-        List<Address> expectedAddresses = new ArrayList<>(Arrays.asList(expectedAddress1, expectedAddress2, expectedAddress3,
-                expectedAddress4, expectedAddress5, expectedAddress6));
 
         Student expectedStudent1 = Student.builder().firstName("Ivan").lastName("Petrov")
                 .id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))

@@ -104,7 +104,7 @@ class SubjectControllerTest {
         verify(subjectService).delete(1);
     }
 
-    public interface TestData {
+    interface TestData {
 
         Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
         Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");

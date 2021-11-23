@@ -13,22 +13,25 @@ import ua.com.foxminded.university.model.Lecture;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateClassroomDaoTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHolidays;
-import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateTeacherDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateTimeslotDaoTest.TestData.expectedTimeslot1;
-import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureWithTeacherOnVacation;
-import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lecturesToReplaceTeacher;
+import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.service.GroupServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.HolidayServiceTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.lectureToReplaceTeacher;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.StudentServiceTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.service.SubjectServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.TeacherServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.TimeslotServiceTest.TestData.expectedTimeslot1;
+import static ua.com.foxminded.university.service.TimeslotServiceTest.TestData.expectedTimeslot2;
 
 @ExtendWith(MockitoExtension.class)
 class LectureServiceTest {
@@ -343,5 +346,25 @@ class LectureServiceTest {
                 subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
 
         List<Lecture> lecturesToReplaceTeacher = new ArrayList<>(List.of(lectureToReplaceTeacher));
+
+        Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
+                .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)
+                .teacher(expectedTeacher1).classroom(expectedClassroom1).build();
+
+        Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2020, 1, 2)).subject(expectedSubject2)
+                .id(2).timeslot(expectedTimeslot2).groups(expectedGroups2)
+                .teacher(expectedTeacher2).classroom(expectedClassroom2).build();
+
+        List<Lecture> expectedLectures = new ArrayList<>(Arrays.asList(expectedLecture1, expectedLecture2));
+
+        Lecture lectureToCreate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
+                .timeslot(expectedTimeslot1).groups(testGroups).teacher(expectedTeacher1)
+                .classroom(expectedClassroom1).id(3).build();
+
+        Lecture lectureToUpdate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
+                .timeslot(expectedTimeslot1).groups(expectedGroupsAfterUpdate).teacher(expectedTeacher1)
+                .classroom(expectedClassroom1).id(2).build();
+
+
     }
 }

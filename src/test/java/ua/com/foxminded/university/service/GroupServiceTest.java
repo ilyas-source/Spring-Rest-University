@@ -12,13 +12,13 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupNotEmptyException;
 import ua.com.foxminded.university.model.Group;
 
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateGroupDaoTest.TestData.*;
-import static ua.com.foxminded.university.dao.HibernateStudentDaoTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.service.GroupServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.StudentServiceTest.TestData.expectedStudents;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
@@ -108,5 +108,17 @@ class GroupServiceTest {
 
         assertEquals(expected, thrown.getMessage());
         verify(groupDao, never()).delete(expectedGroup1);
+    }
+    public interface TestData {
+        Group expectedGroup1 = new Group(1, "AB-11");
+        Group expectedGroup2 = new Group(2, "ZI-08");
+
+        List<Group> expectedGroups = new ArrayList<>(
+                Arrays.asList(expectedGroup1, expectedGroup2));
+
+        Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        Set<Group> expectedGroups2 = new HashSet<>(List.of(expectedGroup1));
+        Set<Group> testGroups = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
+        Set<Group> expectedGroupsAfterUpdate = new HashSet<>(List.of(expectedGroup2));
     }
 }

@@ -6,9 +6,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,11 +57,5 @@ public class ClassroomRepositoryTest {
 
         Location location2 = new Location(2, "Chem building", 1, 12);
         Classroom expectedClassroom2 = new Classroom(2, location2, "Small chemistry auditory", 30);
-
-        Location location3 = new Location(3, "Chem building", 2, 12);
-        Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
-
-        List<Classroom> expectedClassrooms = new ArrayList<>(
-                Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));
     }
 }

@@ -13,13 +13,15 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateLectureDaoTest.TestData.expectedLectures;
-import static ua.com.foxminded.university.dao.HibernateSubjectDaoTest.TestData.*;
+import static ua.com.foxminded.university.service.LectureServiceTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.service.SubjectServiceTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
@@ -119,5 +121,18 @@ class SubjectServiceTest {
 
         assertEquals(expected, thrown.getMessage());
         verify(subjectDao, never()).update(subject);
+    }
+
+    public interface TestData {
+        Subject subjectToCreate = new Subject(5, "test", "test");
+        Subject subjectToUpdate = new Subject(2, "test", "test");
+
+        Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
+        Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");
+        Subject expectedSubject3 = new Subject(3, "Test Chemistry", "Base chemistry");
+        Subject expectedSubject4 = new Subject(4, "Test Radiology", "Explore radiation");
+
+        List<Subject> expectedSubjects = new ArrayList<>(
+                Arrays.asList(expectedSubject1, expectedSubject2, expectedSubject3, expectedSubject4));
     }
 }

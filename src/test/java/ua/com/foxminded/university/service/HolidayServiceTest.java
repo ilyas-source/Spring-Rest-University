@@ -9,13 +9,17 @@ import ua.com.foxminded.university.dao.HolidayDao;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Holiday;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHoliday1;
-import static ua.com.foxminded.university.dao.HibernateHolidayDaoTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.service.HolidayServiceTest.TestData.expectedHoliday1;
+import static ua.com.foxminded.university.service.HolidayServiceTest.TestData.expectedHolidays;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayServiceTest {
@@ -74,5 +78,17 @@ class HolidayServiceTest {
         holidayService.delete(1);
 
         verify(holidayDao).delete(expectedHoliday1);
+    }
+
+    public interface TestData {
+        Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 1, 1), "test");
+        Holiday holidayToUpdate = new Holiday(2, LocalDate.of(2000, 1, 1), "test");
+
+        Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
+        Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
+        Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");
+
+        List<Holiday> expectedHolidays = new ArrayList<>(
+                Arrays.asList(expectedHoliday1, expectedHoliday2, expectedHoliday3));
     }
 }
