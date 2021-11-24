@@ -25,5 +25,5 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
     List<Lecture> findByTeacherAndDateBetween(Teacher teacher, LocalDate start, LocalDate end);
 
-    List<Lecture> findByGroupAndDateBetween(Group group, LocalDate start, LocalDate end);
+    List<Lecture> findByGroups_NameAndDateBetween(String groupName, LocalDate start, LocalDate end);
 }

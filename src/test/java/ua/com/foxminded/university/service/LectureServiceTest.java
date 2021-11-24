@@ -314,13 +314,13 @@ class LectureServiceTest {
     void givenStudentAndDates_onFindByStudentAndPeriod_shouldCallRepositoryFindByStudentAndPeriod() {
         LocalDate start = LocalDate.of(2000, 1, 1);
         LocalDate end = LocalDate.of(2001, 1, 1);
-        when(lectureRepository.findByGroupAndDateBetween(expectedGroup1, start, end))
+        when(lectureRepository.findByGroups_NameAndDateBetween(expectedGroup1.getName(), start, end))
                 .thenReturn(expectedLectures);
 
         var actual = lectureService.findByStudentAndPeriod(expectedStudent1, start, end);
 
         assertEquals(expectedLectures, actual);
-        verify(lectureRepository).findByGroupAndDateBetween(expectedGroup1, start, end);
+        verify(lectureRepository).findByGroups_NameAndDateBetween(expectedGroup1.getName(), start, end);
     }
 
     @Test

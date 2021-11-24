@@ -41,7 +41,11 @@ public class LectureRepositoryTest {
     void givenTeacher_onFindByTeacher_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
 
+        System.out.println(expectedLecture1.getTeacher().getVacations());
+
         List<Lecture> actual = lectureRepository.findByTeacher(expectedTeacher1);
+
+        System.out.println(actual.get(0).getTeacher().getVacations());
 
         assertEquals(expected, actual);
     }

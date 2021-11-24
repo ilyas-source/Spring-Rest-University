@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ua.com.foxminded.university.model.Group;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -17,7 +19,7 @@ public class GroupRepositoryTest {
     void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
         var actual= groupRepository.findByName("AB-11");
 
-        var expected=new Group(1, "AB-11");
+        var expected= Optional.of(new Group(1, "AB-11"));
 
         assertEquals(expected, actual);
     }
