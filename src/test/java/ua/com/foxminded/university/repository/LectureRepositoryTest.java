@@ -15,6 +15,7 @@ import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestDat
 import static ua.com.foxminded.university.repository.ClassroomRepositoryTest.TestData.expectedClassroom1;
 import static ua.com.foxminded.university.repository.ClassroomRepositoryTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.expectedLecture1;
+import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.repository.TeacherRepositoryTest.TestData.expectedTeacher1;
@@ -128,15 +129,15 @@ public class LectureRepositoryTest {
         assertEquals(expected, actual);
     }
 
-//    @Test
-//    void givenStudentAndDates_onFindByStudentAndPeriod_shouldReturnCorrectListOfLectures() {
-//        var startDate = LocalDate.of(2020, 1, 1);
-//        var endDate = LocalDate.of(2020, 1, 3);
-//
-//        var actual = lectureRepository.findByStudentAndDateBetween(expectedStudent1, startDate, endDate);
-//
-//        assertEquals(expectedLectures, actual);
-//    }
+    @Test
+    void givenGroupAndDates_onFindByGroupAndPeriod_shouldReturnCorrectListOfLectures() {
+        var startDate = LocalDate.of(2020, 1, 1);
+        var endDate = LocalDate.of(2020, 1, 3);
+
+        var actual = lectureRepository.findByGroups_NameAndDateBetween(expectedGroup1.getName(), startDate, endDate);
+
+        assertEquals(expectedLectures, actual);
+    }
 
     interface TestData {
     Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
