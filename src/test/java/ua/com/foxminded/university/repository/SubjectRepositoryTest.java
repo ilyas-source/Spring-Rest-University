@@ -11,18 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SubjectRepositoryTest {
 
     @Autowired
-    SubjectRepository SubjectRepository;
+    SubjectRepository subjectRepository;
 
     @Test
     void givenSubjectId_onCountAssignments_shouldReturnNumberOfAssignments() {
-        var actual = SubjectRepository.countAssignments(1);
+        var actual = subjectRepository.countAssignments(1);
 
         assertEquals(1, actual);
     }
 
     @Test
     void givenUnassignedSubjectId_onCountAssignments_shouldReturnZero() {
-        var actual = SubjectRepository.countAssignments(5);
+        var actual = subjectRepository.countAssignments(5);
 
         assertEquals(0, actual);
     }
