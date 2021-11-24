@@ -1,19 +1,18 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import ua.com.foxminded.university.repository.StudentRepository;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.exception.GroupOverflowException;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,13 +33,10 @@ class StudentServiceTest {
 
     private static final int MAX_STUDENTS_IN_GROUP = 30;
 
-    @BeforeEach
-    void init() {
-        ReflectionTestUtils.setField(studentService, "maxStudentsInGroup", MAX_STUDENTS_IN_GROUP);
-    }
-
     @Mock
     private StudentRepository studentRepository;
+    @Mock
+    private UniversityProperties universityProperties;
     @InjectMocks
     private StudentService studentService;
 
@@ -56,6 +52,7 @@ class StudentServiceTest {
 
     @Test
     void givenUniqueStudent_onCreate_shouldCallRepositoryCreate() {
+        when(universityProperties.getMaxStudents()).thenReturn(MAX_STUDENTS_IN_GROUP);
         studentService.create(expectedStudent1);
 
         verify(studentRepository).save(expectedStudent1);
@@ -63,6 +60,7 @@ class StudentServiceTest {
 
     @Test
     void givenExcessiveStudent_onCreate_shouldThrowException() {
+        when(universityProperties.getMaxStudents()).thenReturn(MAX_STUDENTS_IN_GROUP);
         String expected = "Group limit of 30 students reached, can't add more";
         when(studentRepository.countByGroup(expectedStudent1.getGroup())).thenReturn(30);
 

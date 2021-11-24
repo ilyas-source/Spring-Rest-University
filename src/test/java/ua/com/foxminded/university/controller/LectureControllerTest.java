@@ -209,9 +209,6 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
-     //   when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-     //  when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
-
         var request = get("/lectures/schedule/calendar")
                 .param("id", "1")
                 .param("entity", "teacher")

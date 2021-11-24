@@ -1,16 +1,15 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import ua.com.foxminded.university.repository.LectureRepository;
-import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.*;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -36,17 +35,14 @@ class TeacherServiceTest {
 
     private static final Map<Degree, Integer> vacationDays = new EnumMap<>(vacationDaysMap);
 
-    @BeforeEach
-    void init() {
-        ReflectionTestUtils.setField(teacherService, "vacationDays", vacationDays);
-    }
-
     @Mock
     private TeacherRepository teacherRepository;
     @Mock
     private LectureRepository lectureRepository;
     @Mock
     private VacationService vacationService;
+    @Mock
+    private UniversityProperties universityProperties;
     @InjectMocks
     private TeacherService teacherService;
 
@@ -62,6 +58,7 @@ class TeacherServiceTest {
 
     @Test
     void givenTeacherWithTooLongVacations_onCreate_shouldThrowException() {
+        when(universityProperties.getVacationDays()).thenReturn(vacationDays);
         String expected = "Teacher has maximum 20 vacation days per year, can't assign 40 days";
         Map<Integer, Long> daysByYearsMap = new HashMap<>();
         daysByYearsMap.put(2000, 40L);
@@ -77,6 +74,7 @@ class TeacherServiceTest {
 
     @Test
     void givenSuitableTeacher_onCreate_shouldCallRepositoryCreate() {
+        when(universityProperties.getVacationDays()).thenReturn(vacationDays);
         when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
         teacherService.create(expectedTeacher1);
@@ -86,6 +84,7 @@ class TeacherServiceTest {
 
     @Test
     void givenSuitableTeacher_onUpdate_shouldCallRepositoryUpdate() {
+        when(universityProperties.getVacationDays()).thenReturn(vacationDays);
         when(vacationService.countDaysByYears(expectedTeacher1.getVacations())).thenReturn(daysByYearsMap);
 
         teacherService.update(expectedTeacher1);

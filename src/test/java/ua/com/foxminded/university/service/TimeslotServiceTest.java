@@ -1,19 +1,18 @@
 package ua.com.foxminded.university.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
-import ua.com.foxminded.university.repository.LectureRepository;
-import ua.com.foxminded.university.repository.TimeslotRepository;
+import ua.com.foxminded.university.UniversityProperties;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.TimeslotInUseException;
 import ua.com.foxminded.university.exception.TimeslotTooShortException;
 import ua.com.foxminded.university.exception.TimeslotsIntersectionException;
 import ua.com.foxminded.university.model.Timeslot;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TimeslotRepository;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -33,16 +32,12 @@ class TimeslotServiceTest {
     private static final int MINIMUM_TIMESLOT_LENGTH = 30;
     private static final int MINIMUM_BREAK_LENGTH = 15;
 
-    @BeforeEach
-    void init() {
-        ReflectionTestUtils.setField(timeslotService, "minimumTimeslotLength", MINIMUM_TIMESLOT_LENGTH);
-        ReflectionTestUtils.setField(timeslotService, "minimumBreakLength", MINIMUM_BREAK_LENGTH);
-    }
-
     @Mock
     private TimeslotRepository timeslotRepository;
     @Mock
     private LectureRepository lectureRepository;
+    @Mock
+    private UniversityProperties universityProperties;
     @InjectMocks
     private TimeslotService timeslotService;
 
@@ -90,6 +85,7 @@ class TimeslotServiceTest {
 
     @Test
     void givenShortTimeslot_onCreate_shouldThrowException() {
+        when(universityProperties.getMinimumTimeslotLength()).thenReturn(MINIMUM_TIMESLOT_LENGTH);
         String expected = "Minimum timeslot length 30 min, but was 15 min, can't create timeslot";
 
         Throwable thrown = assertThrows(TimeslotTooShortException.class,
@@ -125,6 +121,7 @@ class TimeslotServiceTest {
 
     @Test
     void givenIntersectingTimeslot_onCreate_shouldThrowException() {
+        when(universityProperties.getMinimumBreakLength()).thenReturn(MINIMUM_BREAK_LENGTH);
         String expected = "New timeslot has intersections with existing timetable, can't create/update";
         when(timeslotRepository.countByEndTimeIsGreaterThanEqualAndBeginTimeIsLessThanEqual(
                 timeslotWithBreaks.getBeginTime(), timeslotWithBreaks.getEndTime())).thenReturn(1L);

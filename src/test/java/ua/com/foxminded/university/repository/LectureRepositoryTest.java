@@ -137,6 +137,7 @@ public class LectureRepositoryTest {
 //
 //        assertEquals(expectedLectures, actual);
 //    }
+
     interface TestData {
     Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
     Set<Group> expectedGroups2 = new HashSet<>(List.of(expectedGroup1));
