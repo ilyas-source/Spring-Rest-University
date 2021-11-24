@@ -20,6 +20,17 @@ public class TeacherRepositoryTest {
     TeacherRepository teacherRepository;
 
     @Test
+    void testTeacherIsCorrectInTestDatabase() {
+        System.out.println("*************************");
+        System.out.println(teacherRepository.getById(1));
+        System.out.println(teacherRepository.getById(2));
+        System.out.println(teacherRepository.getById(3));
+        System.out.println(teacherRepository.getById(4));
+        System.out.println(teacherRepository.findAll().size());
+        System.out.println("*************************");
+    }
+
+    @Test
     void givenString_onFindBySubstring_shouldReturnCorrectListOfTeachers() {
         var expected = new ArrayList<>(List.of(expectedTeacher1));
 
