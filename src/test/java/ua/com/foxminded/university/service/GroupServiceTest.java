@@ -109,6 +109,7 @@ class GroupServiceTest {
         assertEquals(expected, thrown.getMessage());
         verify(groupRepository, never()).delete(expectedGroup1);
     }
+
     public interface TestData {
         Group expectedGroup1 = new Group(1, "AB-11");
         Group expectedGroup2 = new Group(2, "ZI-08");

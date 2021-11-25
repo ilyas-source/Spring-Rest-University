@@ -174,11 +174,6 @@ class TeacherServiceTest {
         Address addressToUpdate = Address.builder().country("test").id(2).postalCode("test").region("test")
                 .city("test").streetAddress("test").build();
 
-        Teacher teacherToUpdate = Teacher.builder().firstName("Test").lastName("Teacher").id(2)
-                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
-                .email("test@mail").phoneNumber("phone").address(addressToUpdate)
-                .vacations(expectedVacations1).build();
-
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
                 .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
@@ -191,7 +186,5 @@ class TeacherServiceTest {
 
         Lecture lectureToReplaceTeacher = Lecture.builder().date(LocalDate.of(2021, 1, 1)).
                 subject(expectedSubject3).timeslot(expectedTimeslot1).teacher(expectedTeacher2).build();
-
-        List<Teacher> expectedTeachersPage = new ArrayList<>(List.of(expectedTeacher2));
     }
 }

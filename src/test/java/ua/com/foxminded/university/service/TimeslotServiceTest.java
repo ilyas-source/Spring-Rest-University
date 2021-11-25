@@ -133,15 +133,12 @@ class TimeslotServiceTest {
         verify(timeslotRepository, never()).save(expectedTimeslot1);
     }
 
-        public interface TestData {
+    public interface TestData {
         Timeslot timeslotToCreate = new Timeslot(4, LocalTime.of(12, 0), LocalTime.of(12, 15));
-        Timeslot timeslotToUpdate = new Timeslot(2, LocalTime.of(12, 0), LocalTime.of(12, 15));
 
         Timeslot expectedTimeslot1 = new Timeslot(1, LocalTime.of(9, 0), LocalTime.of(9, 45));
         Timeslot expectedTimeslot2 = new Timeslot(2, LocalTime.of(10, 0), LocalTime.of(10, 45));
         Timeslot expectedTimeslot3 = new Timeslot(3, LocalTime.of(11, 0), LocalTime.of(11, 45));
-
-        Timeslot intersectingTimeslot = new Timeslot(LocalTime.of(10, 30), LocalTime.of(11, 15));
 
         List<Timeslot> expectedTimeslots = new ArrayList<>(
                 Arrays.asList(expectedTimeslot1, expectedTimeslot2, expectedTimeslot3));

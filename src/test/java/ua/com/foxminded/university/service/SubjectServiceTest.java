@@ -5,12 +5,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.repository.LectureRepository;
-import ua.com.foxminded.university.repository.SubjectRepository;
 import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.SubjectRepository;
 import ua.com.foxminded.university.repository.TeacherRepository;
 
 import java.util.ArrayList;
@@ -128,7 +128,6 @@ class SubjectServiceTest {
     }
 
     public interface TestData {
-        Subject subjectToCreate = new Subject(5, "test", "test");
         Subject subjectToUpdate = new Subject(2, "test", "test");
 
         Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");

@@ -170,8 +170,8 @@ public class TeacherService {
     }
 
     public List<Teacher> getReplacementTeachers(Lecture lecture) {
-        var candidates = teacherRepository.getReplacementCandidates(
-                lecture.getSubject().getId(), lecture.getTeacher().getId());
+        var candidates=teacherRepository.findBySubjects(lecture.getSubject());
+        candidates.remove(lecture.getTeacher());
         var suitableTeachers = new ArrayList<>(candidates);
         logger.debug("Found {} candidates from db", candidates.size());
         if (candidates.size() == 0) {

@@ -5,9 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.repository.VacationRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Vacation;
+import ua.com.foxminded.university.repository.VacationRepository;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -93,7 +93,6 @@ class VacationServiceTest {
 
     public interface TestData {
         Vacation vacationToCreate = new Vacation(5, LocalDate.of(2020, 6, 1), LocalDate.of(2020, 7, 1));
-        Vacation vacationToUpdate = new Vacation(2, LocalDate.of(2020, 6, 1), LocalDate.of(2020, 7, 1));
 
         Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
         Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 5, 1), LocalDate.of(2000, 6, 1));

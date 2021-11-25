@@ -141,16 +141,5 @@ class StudentServiceTest {
 
         List<Student> expectedStudents = new ArrayList<>(
                 Arrays.asList(expectedStudent1, expectedStudent2, expectedStudent3, expectedStudent4));
-        List<Student> expectedStudentsPage = new ArrayList<>(
-                Arrays.asList(expectedStudent3, expectedStudent4));
-
-        Student studentToCreate = Student.builder().firstName("Name").lastName("Lastname")
-                .id(5).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))
-                .email("test@mail").phone("+phone").address(expectedAddress3)
-                .group(expectedGroup2).build();
-        Student studentToUpdate = Student.builder().firstName("Name").lastName("Lastname")
-                .id(2).gender(Gender.MALE).birthDate(LocalDate.of(1980, 2, 2))
-                .email("test@mail").phone("+phone").address(expectedAddress3)
-                .group(expectedGroup2).build();
     }
 }

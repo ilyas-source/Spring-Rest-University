@@ -5,11 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.repository.ClassroomRepository;
-import ua.com.foxminded.university.repository.LocationRepository;
 import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Location;
+import ua.com.foxminded.university.repository.ClassroomRepository;
+import ua.com.foxminded.university.repository.LocationRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;

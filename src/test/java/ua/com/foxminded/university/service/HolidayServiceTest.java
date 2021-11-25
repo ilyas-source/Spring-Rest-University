@@ -81,9 +81,6 @@ class HolidayServiceTest {
     }
 
     public interface TestData {
-        Holiday holidayToCreate = new Holiday(4, LocalDate.of(2000, 1, 1), "test");
-        Holiday holidayToUpdate = new Holiday(2, LocalDate.of(2000, 1, 1), "test");
-
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
         Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");

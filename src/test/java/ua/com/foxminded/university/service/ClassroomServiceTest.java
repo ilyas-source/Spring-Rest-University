@@ -5,15 +5,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.exception.*;
+import ua.com.foxminded.university.exception.ClassroomInvalidCapacityException;
+import ua.com.foxminded.university.exception.ClassroomOccupiedException;
+import ua.com.foxminded.university.exception.EntityNotFoundException;
+import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.repository.ClassroomRepository;
 import ua.com.foxminded.university.repository.LectureRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.service.ClassroomServiceTest.TestData.*;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.*;
@@ -135,10 +142,6 @@ class ClassroomServiceTest {
     }
 
     interface TestData {
-        Location testLocation = new Location(4, "Test location", 1, 1);
-        Classroom classroomToCreate = new Classroom(4, testLocation, "Test room", 5);
-        Classroom classroomToUpdate = new Classroom(2, testLocation, "Test room", 5);
-
         Location location1 = new Location(1, "Phys building", 2, 22);
         Classroom expectedClassroom1 = new Classroom(1, location1, "Big physics auditory", 500);
 

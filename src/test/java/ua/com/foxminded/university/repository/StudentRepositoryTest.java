@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestData.expectedGroup2;
 import static ua.com.foxminded.university.repository.StudentRepositoryTest.TestData.expectedStudent1;
 import static ua.com.foxminded.university.repository.StudentRepositoryTest.TestData.expectedStudent3;
 
@@ -83,17 +82,9 @@ public class StudentRepositoryTest {
                 .id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
                 .email("qwe@rty.com").phone("123123123").address(expectedAddress3)
                 .group(expectedGroup1).build();
-        Student expectedStudent2 = Student.builder().firstName("John").lastName("Doe")
-                .id(2).gender(Gender.MALE).birthDate(LocalDate.of(1981, 11, 1))
-                .email("qwe@qwe.com").phone("1231223").address(expectedAddress4)
-                .group(expectedGroup2).build();
         Student expectedStudent3 = Student.builder().firstName("Janna").lastName("DArk")
                 .id(3).gender(Gender.FEMALE).birthDate(LocalDate.of(1881, 11, 1))
                 .email("qwe@no.fr").phone("1231223").address(expectedAddress5)
                 .group(expectedGroup1).build();
-        Student expectedStudent4 = Student.builder().firstName("Mao").lastName("Zedun")
-                .id(4).gender(Gender.MALE).birthDate(LocalDate.of(1921, 9, 14))
-                .email("qwe@no.cn").phone("1145223").address(expectedAddress6)
-                .group(expectedGroup2).build();
     }
 }

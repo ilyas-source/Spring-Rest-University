@@ -10,7 +10,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.*;
 import static ua.com.foxminded.university.repository.TeacherRepositoryTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.repository.TeacherRepositoryTest.TestData.replacementTeacher;
 import static ua.com.foxminded.university.repository.VacationRepositoryTest.TestData.*;
 
 @DataJpaTest
@@ -45,18 +44,6 @@ public class TeacherRepositoryTest {
         assertEquals(Optional.of(expectedTeacher1), actual);
     }
 
-    @Test
-    void givenSubjectIdAndTeacherId_onGetReplacementCandidates_shouldReturnCorrectListOfTeachers() {
-        teacherRepository.save(replacementTeacher);
-
-        var expected = new ArrayList<>(List.of(replacementTeacher));
-
-        var actual = teacherRepository.getReplacementCandidates(3, 2);
-
-        assertEquals(expected, actual);
-        teacherRepository.delete(replacementTeacher);
-    }
-
     interface TestData {
         Address expectedAddress1 = Address.builder().country("UK").id(1).postalCode("12345").region("City-Of-Edinburgh")
                 .city("Edinburgh").streetAddress("Panmure House").build();
@@ -77,10 +64,6 @@ public class TeacherRepositoryTest {
         Teacher expectedTeacher2 = Teacher.builder().firstName("Marie").lastName("Curie").id(2)
                 .gender(Gender.FEMALE).degree(Degree.MASTER).subjects(expectedSubjects2)
                 .email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
-                .vacations(expectedVacations2).build();
-        Teacher replacementTeacher = Teacher.builder().firstName("Replacement").lastName("Teacher").id(3)
-                .gender(Gender.FEMALE).degree(Degree.MASTER).subjects(expectedSubjects2)
-                .email("new@teacher.com").phoneNumber("+322223").address(expectedAddress2)
                 .vacations(expectedVacations2).build();
     }
 

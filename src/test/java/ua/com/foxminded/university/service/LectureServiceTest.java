@@ -5,11 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ua.com.foxminded.university.repository.HolidayRepository;
-import ua.com.foxminded.university.repository.LectureRepository;
-import ua.com.foxminded.university.repository.StudentRepository;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
+import ua.com.foxminded.university.repository.HolidayRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,8 +39,6 @@ class LectureServiceTest {
     private LectureRepository lectureRepository;
     @Mock
     private HolidayRepository holidayRepository;
-    @Mock
-    private StudentRepository studentRepository;
     @Mock
     private TeacherService teacherService;
     @InjectMocks
@@ -364,7 +361,5 @@ class LectureServiceTest {
         Lecture lectureToUpdate = Lecture.builder().date(LocalDate.of(2010, 10, 10)).subject(expectedSubject1)
                 .timeslot(expectedTimeslot1).groups(expectedGroupsAfterUpdate).teacher(expectedTeacher1)
                 .classroom(expectedClassroom1).id(2).build();
-
-
     }
 }

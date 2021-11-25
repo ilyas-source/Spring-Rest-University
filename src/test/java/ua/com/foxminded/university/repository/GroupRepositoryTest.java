@@ -18,9 +18,9 @@ public class GroupRepositoryTest {
 
     @Test
     void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
-        var actual= groupRepository.findByName("AB-11");
+        var actual = groupRepository.findByName("AB-11");
 
-        var expected= Optional.of(expectedGroup1);
+        var expected = Optional.of(expectedGroup1);
 
         assertEquals(expected, actual);
     }
