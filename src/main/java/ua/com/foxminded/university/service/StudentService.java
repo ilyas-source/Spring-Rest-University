@@ -89,6 +89,6 @@ public class StudentService {
     }
 
     public List<Student> findBySubstring(String substring) {
-        return studentRepository.findBySubstring(substring);
+        return studentRepository.findByFirstNameContainingOrLastNameContainingAllIgnoreCase(substring, substring);
     }
 }

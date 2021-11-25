@@ -11,6 +11,7 @@ import ua.com.foxminded.university.exception.EntityInUseException;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
+import ua.com.foxminded.university.repository.TeacherRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static ua.com.foxminded.university.service.LectureServiceTest.TestData.expectedLectures;
 import static ua.com.foxminded.university.service.SubjectServiceTest.TestData.*;
+import static ua.com.foxminded.university.service.TeacherServiceTest.TestData.expectedTeachers;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectServiceTest {
@@ -30,6 +32,8 @@ class SubjectServiceTest {
     private SubjectRepository subjectRepository;
     @Mock
     private LectureRepository lectureRepository;
+    @Mock
+    private TeacherRepository teacherRepository;
     @InjectMocks
     private SubjectService subjectService;
 
@@ -68,7 +72,7 @@ class SubjectServiceTest {
     void givenAssignedSubjectId_onDelete_shouldThrowException() {
         String expected = "Subject Test Economics is assigned to teacher(s), can't delete";
         when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectRepository.countAssignments(expectedSubject1.getId())).thenReturn(3L);
+        when(teacherRepository.findBySubjects(expectedSubject1)).thenReturn(expectedTeachers);
 
         Throwable thrown = assertThrows(EntityInUseException.class,
                 () -> subjectService.delete(1));
@@ -102,7 +106,7 @@ class SubjectServiceTest {
     @Test
     void givenFreeSubject_onDelete_shouldCallRepositoryDelete() {
         when(subjectRepository.findById(1)).thenReturn(Optional.of(expectedSubject1));
-        when(subjectRepository.countAssignments(expectedSubject1.getId())).thenReturn(0L);
+        when(teacherRepository.findBySubjects(expectedSubject1)).thenReturn(new ArrayList<>());
         when(lectureRepository.findBySubject(expectedSubject1)).thenReturn(new ArrayList<>());
 
         subjectService.delete(1);

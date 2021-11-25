@@ -20,10 +20,19 @@ public class TeacherRepositoryTest {
     TeacherRepository teacherRepository;
 
     @Test
+    void givenSubject_onFindBySubject_shouldReturnCorrectListOfTeachers() {
+        var expected = new ArrayList<>(List.of(expectedTeacher1));
+
+        var actual = teacherRepository.findBySubjects(expectedSubject1);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void givenString_onFindBySubstring_shouldReturnCorrectListOfTeachers() {
         var expected = new ArrayList<>(List.of(expectedTeacher1));
 
-        var actual = teacherRepository.findBySubstring("adam s");
+        var actual = teacherRepository.findByFirstNameContainingOrLastNameContainingAllIgnoreCase("adam", "aDam");
 
         assertEquals(expected, actual);
     }

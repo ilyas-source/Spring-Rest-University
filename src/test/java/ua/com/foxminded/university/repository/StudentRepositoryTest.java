@@ -63,7 +63,7 @@ public class StudentRepositoryTest {
     void givenSubstring_onFindBySubstring_thenReturnCorrectListOfStudents() {
         var expected = new ArrayList<>(List.of(expectedStudent1));
 
-        var actual = studentRepository.findBySubstring("ivAn pe");
+        var actual = studentRepository.findByFirstNameContainingOrLastNameContainingAllIgnoreCase("ivAn", "ivan");
 
         assertEquals(expected, actual);
     }

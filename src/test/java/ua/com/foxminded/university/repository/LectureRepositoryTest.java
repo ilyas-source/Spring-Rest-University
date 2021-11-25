@@ -16,23 +16,24 @@ import static ua.com.foxminded.university.repository.ClassroomRepositoryTest.Tes
 import static ua.com.foxminded.university.repository.ClassroomRepositoryTest.TestData.expectedClassroom2;
 import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.expectedLecture1;
-import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.expectedLectures;
+import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.*;
 import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.expectedSubject1;
 import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.expectedSubject2;
 import static ua.com.foxminded.university.repository.TeacherRepositoryTest.TestData.expectedTeacher1;
 import static ua.com.foxminded.university.repository.TeacherRepositoryTest.TestData.expectedTeacher2;
-import static ua.com.foxminded.university.repository.LectureRepositoryTest.TestData.expectedTimeslot1;
 
 @DataJpaTest
 public class LectureRepositoryTest {
 
     @Autowired
     LectureRepository lectureRepository;
+    @Autowired
+    TeacherRepository teacherRepository;
 
     @Test
     void givenClassroom_onFindByClassroom_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
+        teacherRepository.findAll();
 
         List<Lecture> actual = lectureRepository.findByClassroom(expectedClassroom1);
 
@@ -42,12 +43,9 @@ public class LectureRepositoryTest {
     @Test
     void givenTeacher_onFindByTeacher_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
-
-        System.out.println(expectedLecture1.getTeacher().getVacations());
+        teacherRepository.findAll();
 
         List<Lecture> actual = lectureRepository.findByTeacher(expectedTeacher1);
-
-        System.out.println(actual.get(0).getTeacher().getVacations());
 
         assertEquals(expected, actual);
     }
@@ -55,6 +53,7 @@ public class LectureRepositoryTest {
     @Test
     void givenSubject_onFindBySubject_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
+        teacherRepository.findAll();
 
         List<Lecture> actual = lectureRepository.findBySubject(expectedSubject1);
 
@@ -64,6 +63,7 @@ public class LectureRepositoryTest {
     @Test
     void givenTimeslot_onFindByTimeslot_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
+        teacherRepository.findAll();
 
         List<Lecture> actual = lectureRepository.findByTimeslot(expectedTimeslot1);
 
@@ -73,6 +73,7 @@ public class LectureRepositoryTest {
     @Test
     void givenDateAndTimeslot_onFindByDateAndTimeslot_shouldReturnCorrectListOfLectures() {
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
+        teacherRepository.findAll();
 
         List<Lecture> actual = lectureRepository.findByDateAndTimeslot(LocalDate.of(2020, 1, 1), expectedTimeslot1);
 
@@ -82,6 +83,7 @@ public class LectureRepositoryTest {
     @Test
     void givenDateTimeslotAndClassroom_onFindByDateTimeClassroom_shouldReturnOptionalWithCorrectLecture() {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
+        teacherRepository.findAll();
 
         Optional<Lecture> actual = lectureRepository
                 .findByDateAndTimeslotAndClassroom(LocalDate.of(2020, 1, 1),
@@ -102,6 +104,7 @@ public class LectureRepositoryTest {
     @Test
     void givenDateTimeslotAndTeacher_onFindByDateAndTimeslotAndTeacher_shouldReturnOptionalWithCorrectLecture() {
         Optional<Lecture> expected = Optional.of(expectedLecture1);
+        teacherRepository.findAll();
 
         Optional<Lecture> actual = lectureRepository
                 .findByDateAndTimeslotAndTeacher(LocalDate.of(2020, 1, 1),
@@ -112,6 +115,7 @@ public class LectureRepositoryTest {
 
     @Test
     void givenWrongData_onFindByDateTimeTeacher_shouldReturnOptionalEmpty() {
+        teacherRepository.findAll();
         Optional<Lecture> actual = lectureRepository
                 .findByDateAndTimeslotAndTeacher(LocalDate.of(2025, 1, 1),
                         expectedTimeslot1, expectedTeacher1);
@@ -124,6 +128,7 @@ public class LectureRepositoryTest {
         var startDate = LocalDate.of(2020, 1, 1);
         var endDate = LocalDate.of(2020, 1, 3);
         List<Lecture> expected = new ArrayList<>(List.of(expectedLecture1));
+        teacherRepository.findAll();
 
         var actual = lectureRepository.findByTeacherAndDateBetween(expectedTeacher1, startDate, endDate);
 
@@ -134,8 +139,9 @@ public class LectureRepositoryTest {
     void givenGroupAndDates_onFindByGroupAndPeriod_shouldReturnCorrectListOfLectures() {
         var startDate = LocalDate.of(2020, 1, 1);
         var endDate = LocalDate.of(2020, 1, 3);
+        teacherRepository.findAll();
 
-        var actual = lectureRepository.findByGroups_NameAndDateBetween(expectedGroup1.getName(), startDate, endDate);
+        var actual = lectureRepository.findByGroupsAndDateBetween(expectedGroup1, startDate, endDate);
 
         assertEquals(expectedLectures, actual);
     }

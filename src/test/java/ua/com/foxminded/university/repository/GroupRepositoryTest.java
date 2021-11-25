@@ -8,6 +8,7 @@ import ua.com.foxminded.university.model.Group;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.repository.GroupRepositoryTest.TestData.expectedGroup1;
 
 @DataJpaTest
 public class GroupRepositoryTest {
@@ -19,7 +20,7 @@ public class GroupRepositoryTest {
     void givenName_onFindByName_shouldReturnOptionalWithCorrectGroup() {
         var actual= groupRepository.findByName("AB-11");
 
-        var expected= Optional.of(new Group(1, "AB-11"));
+        var expected= Optional.of(expectedGroup1);
 
         assertEquals(expected, actual);
     }

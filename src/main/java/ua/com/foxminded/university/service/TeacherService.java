@@ -166,7 +166,7 @@ public class TeacherService {
 
 
     public List<Teacher> findBySubstring(String substring) {
-        return teacherRepository.findBySubstring(substring);
+        return teacherRepository.findByFirstNameContainingOrLastNameContainingAllIgnoreCase(substring, substring);
     }
 
     public List<Teacher> getReplacementTeachers(Lecture lecture) {

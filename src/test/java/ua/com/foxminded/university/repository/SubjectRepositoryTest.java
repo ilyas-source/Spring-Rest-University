@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import ua.com.foxminded.university.model.Subject;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ua.com.foxminded.university.repository.SubjectRepositoryTest.TestData.expectedSubject1;
 
 @DataJpaTest
 public class SubjectRepositoryTest {
@@ -14,17 +17,10 @@ public class SubjectRepositoryTest {
     SubjectRepository subjectRepository;
 
     @Test
-    void givenSubjectId_onCountAssignments_shouldReturnNumberOfAssignments() {
-        var actual = subjectRepository.countAssignments(1);
+    void givenString_onFindByName_shouldReturnOptionalWithCorrectSubject() {
+        var actual = subjectRepository.findByName("Economics");
 
-        assertEquals(1, actual);
-    }
-
-    @Test
-    void givenUnassignedSubjectId_onCountAssignments_shouldReturnZero() {
-        var actual = subjectRepository.countAssignments(5);
-
-        assertEquals(0, actual);
+        assertEquals(Optional.of(expectedSubject1), actual);
     }
 
     interface TestData {

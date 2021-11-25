@@ -175,7 +175,7 @@ public class LectureService {
 
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
-        return lectureRepository.findByGroups_NameAndDateBetween(student.getGroup().getName(), start, end);
+        return lectureRepository.findByGroupsAndDateBetween(student.getGroup(), start, end);
     }
 
     @Transactional

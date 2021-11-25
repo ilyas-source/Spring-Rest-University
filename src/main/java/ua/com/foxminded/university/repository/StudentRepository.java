@@ -1,8 +1,6 @@
 package ua.com.foxminded.university.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Student;
 
@@ -18,6 +16,5 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     Optional<Student> findByFirstNameAndLastNameAndBirthDate(String firstName, String lastName, LocalDate birthDate);
 
-    @Query("FROM Student WHERE lower(concat(firstName,' ',lastName)) like concat('%', lower(:substring), '%')")
-    List<Student> findBySubstring(@Param("substring") String substring);
+    List<Student> findByFirstNameContainingOrLastNameContainingAllIgnoreCase(String firstName, String lastName);
 }

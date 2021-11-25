@@ -9,6 +9,7 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.repository.LectureRepository;
 import ua.com.foxminded.university.repository.SubjectRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -22,10 +23,13 @@ public class SubjectService {
 
     private SubjectRepository subjectRepository;
     private LectureRepository lectureRepository;
+    private TeacherRepository teacherRepository;
 
-    public SubjectService(SubjectRepository subjectRepository, LectureRepository lectureRepository) {
+    public SubjectService(SubjectRepository subjectRepository, LectureRepository lectureRepository,
+                          TeacherRepository teacherRepository) {
         this.subjectRepository = subjectRepository;
         this.lectureRepository = lectureRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     public void create(Subject subject) {
@@ -77,7 +81,7 @@ public class SubjectService {
     }
 
     private void verifyIsNotAssigned(Subject subject) {
-        if (subjectRepository.countAssignments(subject.getId()) > 0) {
+        if (teacherRepository.findBySubjects(subject).size() > 0) {
             throw new EntityInUseException(
                     String.format("Subject %s is assigned to teacher(s), can't delete", subject.getName()));
         }
