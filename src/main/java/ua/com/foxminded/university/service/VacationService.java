@@ -3,7 +3,7 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.VacationDao;
+import ua.com.foxminded.university.repository.VacationRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.VacationIncorrectException;
 import ua.com.foxminded.university.model.Vacation;
@@ -22,25 +22,25 @@ public class VacationService {
 
     private static final Logger logger = LoggerFactory.getLogger(VacationService.class);
 
-    private VacationDao vacationDao;
+    private VacationRepository vacationRepository;
 
 
-    public VacationService(VacationDao vacationDao) {
-        this.vacationDao = vacationDao;
+    public VacationService(VacationRepository vacationRepository) {
+        this.vacationRepository = vacationRepository;
     }
 
     public void create(Vacation vacation) {
         logger.debug("Creating a new vacation: {} ", vacation);
         verifyDurationIsPositive(vacation);
-        vacationDao.create(vacation);
+        vacationRepository.save(vacation);
     }
 
     public List<Vacation> findAll() {
-        return vacationDao.findAll();
+        return vacationRepository.findAll();
     }
 
     public Optional<Vacation> findById(int id) {
-        return vacationDao.findById(id);
+        return vacationRepository.findById(id);
     }
 
     public Vacation getById(int id) {
@@ -50,13 +50,13 @@ public class VacationService {
 
     public void update(Vacation vacation) {
         logger.debug("Updating vacation: {} ", vacation);
-        vacationDao.update(vacation);
+        vacationRepository.save(vacation);
     }
 
     public void delete(int id) {
         logger.debug("Deleting vacation by id: {} ", id);
         verifyIdExists(id);
-        vacationDao.delete(getById(id));
+        vacationRepository.delete(getById(id));
     }
 
     private void verifyDurationIsPositive(Vacation vacation) {
@@ -95,7 +95,7 @@ public class VacationService {
     }
 
     private void verifyIdExists(int id) {
-        if (vacationDao.findById(id).isEmpty()) {
+        if (vacationRepository.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Vacation id:%s not found, nothing to delete", id));
         }
     }

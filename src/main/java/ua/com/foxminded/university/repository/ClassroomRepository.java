@@ -1,14 +1,12 @@
-package ua.com.foxminded.university.dao;
+package ua.com.foxminded.university.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface ClassroomDao extends GeneralDao<Classroom> {
-
-    List<Classroom> findAll();
+public interface ClassroomRepository extends JpaRepository<Classroom, Integer> {
 
     Optional<Classroom> findByName(String name);
 

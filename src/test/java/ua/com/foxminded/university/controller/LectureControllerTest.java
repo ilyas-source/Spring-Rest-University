@@ -209,9 +209,6 @@ class LectureControllerTest {
 
     @Test
     void givenTeacherAndDates_onRetrieveLecturesForCalendar_shouldReturnCorrectLecturesList() throws Exception {
-        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
-        when(lectureService.findByTeacherAndPeriod(expectedTeacher1, startDate, endDate)).thenReturn(expectedLectures);
-
         var request = get("/lectures/schedule/calendar")
                 .param("id", "1")
                 .param("entity", "teacher")
@@ -243,7 +240,7 @@ class LectureControllerTest {
         verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
-    public interface TestData {
+    interface TestData {
 
         LocalDate startDate = LocalDate.of(2000, 1, 1);
         LocalDate endDate = LocalDate.of(2000, 2, 1);

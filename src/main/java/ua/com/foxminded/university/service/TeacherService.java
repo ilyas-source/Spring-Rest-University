@@ -6,14 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.TeacherDao;
-import ua.com.foxminded.university.dao.VacationDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TeacherRepository;
+import ua.com.foxminded.university.repository.VacationRepository;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -28,17 +28,17 @@ public class TeacherService {
 
     private static final Logger logger = LoggerFactory.getLogger(TeacherService.class);
 
-    private TeacherDao teacherDao;
-    private LectureDao lectureDao;
-    private VacationDao vacationDao;
+    private TeacherRepository teacherRepository;
+    private LectureRepository lectureRepository;
+    private VacationRepository vacationRepository;
     private VacationService vacationService;
     private UniversityProperties universityProperties;
 
-    public TeacherService(TeacherDao jdbcTeacherDao, LectureDao lectureDao, VacationDao vacationDao,
+    public TeacherService(TeacherRepository jdbcTeacherRepository, LectureRepository lectureRepository, VacationRepository vacationRepository,
                           VacationService vacationService, UniversityProperties universityProperties) {
-        this.teacherDao = jdbcTeacherDao;
-        this.lectureDao = lectureDao;
-        this.vacationDao = vacationDao;
+        this.teacherRepository = jdbcTeacherRepository;
+        this.lectureRepository = lectureRepository;
+        this.vacationRepository = vacationRepository;
         this.vacationService = vacationService;
         this.universityProperties=universityProperties;
     }
@@ -47,22 +47,22 @@ public class TeacherService {
         logger.debug("Creating a new teacher: {} ", teacher);
         verifyIsUnique(teacher);
         verifyHasEnoughVacationDays(teacher);
-        teacherDao.create(teacher);
+        teacherRepository.save(teacher);
     }
 
     public Page<Teacher> findAll(Pageable pageable) {
         logger.debug("Retrieving page {}, size {}, sort {}", pageable.getPageNumber(), pageable.getPageSize(),
                 pageable.getSort());
 
-        return teacherDao.findAll(pageable);
+        return teacherRepository.findAll(pageable);
     }
 
     public List<Teacher> findAll() {
-        return teacherDao.findAll();
+        return teacherRepository.findAll();
     }
 
     public Optional<Teacher> findById(int id) {
-        return teacherDao.findById(id);
+        return teacherRepository.findById(id);
     }
 
     public Teacher getById(int id) {
@@ -75,7 +75,7 @@ public class TeacherService {
         verifyCanTeachScheduledLectures(teacher);
         verifyHasEnoughVacationDays(teacher);
         verifyHasNoIntersectingVacations(teacher);
-        teacherDao.update(teacher);
+        teacherRepository.save(teacher);
     }
 
     private void verifyHasNoIntersectingVacations(Teacher teacher) {
@@ -111,7 +111,7 @@ public class TeacherService {
         logger.debug("Deleting teacher by id: {} ", id);
         Teacher teacher = getById(id);
         verifyHasNoLectures(teacher);
-        teacherDao.delete(teacher);
+        teacherRepository.delete(teacher);
     }
 
     private void verifyHasEnoughVacationDays(Teacher teacher) {
@@ -135,7 +135,7 @@ public class TeacherService {
     }
 
     public void verifyIsUnique(Teacher teacher) {
-        if (teacherDao.findByNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
+        if (teacherRepository.findByFirstNameAndLastNameAndEmail(teacher.getFirstName(), teacher.getLastName(),
                 teacher.getEmail()).isPresent()) {
             throw new EntityNotUniqueException(
                     String.format("Teacher %s %s with email %s already exists, can't create duplicate",
@@ -144,7 +144,7 @@ public class TeacherService {
     }
 
     private void verifyCanTeachScheduledLectures(Teacher teacher) {
-        List<Subject> requiredSubjects = lectureDao.findByTeacher(teacher)
+        List<Subject> requiredSubjects = lectureRepository.findByTeacher(teacher)
                 .stream()
                 .map(Lecture::getSubject)
                 .collect(Collectors.toList());
@@ -158,7 +158,7 @@ public class TeacherService {
     }
 
     private void verifyHasNoLectures(Teacher teacher) {
-        if (!lectureDao.findByTeacher(teacher).isEmpty()) {
+        if (!lectureRepository.findByTeacher(teacher).isEmpty()) {
             throw new TeacherBusyException(String.format("Teacher %s %s has scheduled lecture(s), can't delete",
                     teacher.getFirstName(), teacher.getLastName()));
         }
@@ -166,11 +166,12 @@ public class TeacherService {
 
 
     public List<Teacher> findBySubstring(String substring) {
-        return teacherDao.findBySubstring(substring);
+        return teacherRepository.findByFirstNameContainingOrLastNameContainingAllIgnoreCase(substring, substring);
     }
 
     public List<Teacher> getReplacementTeachers(Lecture lecture) {
-        var candidates = teacherDao.getReplacementCandidates(lecture);
+        var candidates=teacherRepository.findBySubjects(lecture.getSubject());
+        candidates.remove(lecture.getTeacher());
         var suitableTeachers = new ArrayList<>(candidates);
         logger.debug("Found {} candidates from db", candidates.size());
         if (candidates.size() == 0) {
@@ -179,13 +180,13 @@ public class TeacherService {
         var date = lecture.getDate();
         var timeslot = lecture.getTimeslot();
         for (Teacher candidate : candidates) {
-            if (lectureDao.findByDateTimeTeacher(date, timeslot, candidate).isPresent()) {
+            if (lectureRepository.findByDateAndTimeslotAndTeacher(date, timeslot, candidate).isPresent()) {
                 logger.debug("{} {} is not suitable: will be reading another lecture", candidate.getFirstName(), candidate.getLastName());
                 suitableTeachers.remove(candidate);
             }
         }
         for (Teacher candidate : candidates) {
-            if (vacationDao.findByTeacher(candidate).stream()
+            if (vacationRepository.findByTeacher(candidate).stream()
                     .anyMatch(v -> (!date.isBefore(v.getStartDate()) && !date.isAfter(v.getEndDate())))) {
                 logger.debug("{} {} is not suitable: will be on vacation", candidate.getFirstName(), candidate.getLastName());
                 suitableTeachers.remove(candidate);

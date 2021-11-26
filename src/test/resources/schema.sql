@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS subjects CASCADE;
 DROP TABLE IF EXISTS teachers CASCADE;
 DROP TABLE IF EXISTS vacations CASCADE;
 DROP TABLE IF EXISTS teachers_subjects;
-DROP TABLE IF EXISTS teachers_vacations;
+DROP TABLE IF EXISTS teachers_vacations CASCADE;
 DROP TABLE IF EXISTS lectures_groups;
 
 CREATE TABLE addresses

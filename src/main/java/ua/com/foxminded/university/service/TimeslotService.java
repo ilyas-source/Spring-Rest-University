@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ua.com.foxminded.university.UniversityProperties;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.TimeslotDao;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.TimeslotRepository;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.exception.TimeslotInUseException;
 import ua.com.foxminded.university.exception.TimeslotTooShortException;
@@ -23,13 +23,13 @@ public class TimeslotService {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeslotService.class);
 
-    private TimeslotDao timeslotDao;
-    private LectureDao lectureDao;
+    private TimeslotRepository timeslotRepository;
+    private LectureRepository lectureRepository;
     private UniversityProperties universityProperties;
 
-    public TimeslotService(TimeslotDao timeslotDao, LectureDao lectureDao, UniversityProperties universityProperties) {
-        this.timeslotDao = timeslotDao;
-        this.lectureDao = lectureDao;
+    public TimeslotService(TimeslotRepository timeslotRepository, LectureRepository lectureRepository, UniversityProperties universityProperties) {
+        this.timeslotRepository = timeslotRepository;
+        this.lectureRepository = lectureRepository;
         this.universityProperties = universityProperties;
     }
 
@@ -37,15 +37,15 @@ public class TimeslotService {
         logger.debug("Creating a new timeslot: {} ", timeslot);
         verifyHasNoIntersections(timeslot);
         verifyIsLongEnough(timeslot);
-        timeslotDao.create(timeslot);
+        timeslotRepository.save(timeslot);
     }
 
     public List<Timeslot> findAll() {
-        return timeslotDao.findAll();
+        return timeslotRepository.findAll();
     }
 
     public Optional<Timeslot> findById(int id) {
-        return timeslotDao.findById(id);
+        return timeslotRepository.findById(id);
     }
 
     public Timeslot getById(int id) {
@@ -57,24 +57,26 @@ public class TimeslotService {
         logger.debug("Updating timeslot: {} ", timeslot);
         verifyHasNoIntersections(timeslot);
         verifyIsLongEnough(timeslot);
-        timeslotDao.update(timeslot);
+        timeslotRepository.save(timeslot);
     }
 
     public void delete(int id) {
         logger.debug("Deleting timeslot by id: {} ", id);
         Timeslot timeslot = getById(id);
         verifyHasNoLecturesScheduled(timeslot);
-        timeslotDao.delete(timeslot);
+        timeslotRepository.delete(timeslot);
     }
 
     private void verifyHasNoIntersections(Timeslot timeslot) {
-        if (timeslotDao.findByBothTimes(timeslot).isPresent()) {
+        if (timeslotRepository.findByBeginTimeAndEndTime(
+                timeslot.getEndTime(), timeslot.getEndTime()).isPresent()) {
             return;
         }
         int minimumBreakLength = universityProperties.getMinimumBreakLength();
         var timeslotWithBreaks = new Timeslot(timeslot.getBeginTime().minusMinutes(minimumBreakLength),
                 timeslot.getEndTime().plusMinutes(minimumBreakLength));
-        if (timeslotDao.countIntersectingTimeslots(timeslotWithBreaks) > 0) {
+        if (timeslotRepository.countByEndTimeIsGreaterThanEqualAndBeginTimeIsLessThanEqual(
+                timeslotWithBreaks.getBeginTime(), timeslotWithBreaks.getEndTime()) > 0) {
             throw new TimeslotsIntersectionException(
                     "New timeslot has intersections with existing timetable, can't create/update");
         }
@@ -90,7 +92,7 @@ public class TimeslotService {
     }
 
     private void verifyHasNoLecturesScheduled(Timeslot timeslot) {
-        if (!lectureDao.findByTimeslot(timeslot).isEmpty()) {
+        if (!lectureRepository.findByTimeslot(timeslot).isEmpty()) {
             throw new TimeslotInUseException("Timeslot has sheduled lectures, can't delete");
         }
     }

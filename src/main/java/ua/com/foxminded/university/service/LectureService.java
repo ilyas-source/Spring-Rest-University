@@ -3,14 +3,14 @@ package ua.com.foxminded.university.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ua.com.foxminded.university.dao.HolidayDao;
-import ua.com.foxminded.university.dao.LectureDao;
-import ua.com.foxminded.university.dao.StudentDao;
 import ua.com.foxminded.university.exception.*;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.model.Teacher;
 import ua.com.foxminded.university.model.Vacation;
+import ua.com.foxminded.university.repository.HolidayRepository;
+import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.StudentRepository;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
@@ -26,30 +26,30 @@ public class LectureService {
 
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
-    private LectureDao lectureDao;
-    private HolidayDao holidayDao;
-    private StudentDao studentDao;
+    private LectureRepository lectureRepository;
+    private HolidayRepository holidayRepository;
+    private StudentRepository studentRepository;
     private TeacherService teacherService;
 
-    public LectureService(LectureDao lectureDao, HolidayDao holidayDao, StudentDao studentDao, TeacherService teacherService) {
-        this.lectureDao = lectureDao;
-        this.holidayDao = holidayDao;
-        this.studentDao = studentDao;
+    public LectureService(LectureRepository lectureRepository, HolidayRepository holidayRepository, StudentRepository studentRepository, TeacherService teacherService) {
+        this.lectureRepository = lectureRepository;
+        this.holidayRepository = holidayRepository;
+        this.studentRepository = studentRepository;
         this.teacherService = teacherService;
     }
 
     public void create(Lecture lecture) {
         logger.debug("Creating a new lecture: {} ", lecture);
         verifyAllDataIsCorrect(lecture);
-        lectureDao.create(lecture);
+        lectureRepository.save(lecture);
     }
 
     public List<Lecture> findAll() {
-        return lectureDao.findAll();
+        return lectureRepository.findAll();
     }
 
     public Optional<Lecture> findById(int id) {
-        return lectureDao.findById(id);
+        return lectureRepository.findById(id);
     }
 
     public Lecture getById(int id) {
@@ -60,13 +60,13 @@ public class LectureService {
     public void update(Lecture lecture) {
         logger.debug("Updating lecture: {} ", lecture);
         verifyAllDataIsCorrect(lecture);
-        lectureDao.update(lecture);
+        lectureRepository.save(lecture);
     }
 
     public void delete(int id) {
         logger.debug("Deleting lecture by id: {} ", id);
         verifyIdExists(id);
-        lectureDao.delete(getById(id));
+        lectureRepository.delete(getById(id));
     }
 
     private void verifyAllDataIsCorrect(Lecture lecture) {
@@ -88,7 +88,7 @@ public class LectureService {
     }
 
     private void verifyClassroomIsAvailable(Lecture lecture) {
-        if (lectureDao.findByDateTimeClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
+        if (lectureRepository.findByDateAndTimeslotAndClassroom(lecture.getDate(), lecture.getTimeslot(), lecture.getClassroom())
                 .filter(l -> l.getId() != lecture.getId())
                 .isPresent()) {
             throw new ClassroomOccupiedException(
@@ -97,7 +97,7 @@ public class LectureService {
     }
 
     private void verifyAllGroupsCanAttend(Lecture lecture) {
-        if (lectureDao.findByDateTime(lecture.getDate(), lecture.getTimeslot())
+        if (lectureRepository.findByDateAndTimeslot(lecture.getDate(), lecture.getTimeslot())
                 .stream()
                 .filter(l -> l.getId() != lecture.getId())
                 .map(Lecture::getGroups)
@@ -132,7 +132,7 @@ public class LectureService {
 
     private void verifyTeacherIsNotBusy(Lecture lecture) {
         var teacher = lecture.getTeacher();
-        if (lectureDao.findByDateTimeTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
+        if (lectureRepository.findByDateAndTimeslotAndTeacher(lecture.getDate(), lecture.getTimeslot(), teacher)
                 .filter(l -> l.getId() != lecture.getId())
                 .isPresent()) {
             throw new TeacherBusyException(
@@ -142,7 +142,7 @@ public class LectureService {
     }
 
     private void verifyIsNotHoliday(Lecture lecture) {
-        if (!holidayDao.findByDate(lecture.getDate()).isEmpty()) {
+        if (!holidayRepository.findByDate(lecture.getDate()).isEmpty()) {
             throw new LectureOnHolidayException("Can't schedule lecture to a holiday");
         }
     }
@@ -158,29 +158,29 @@ public class LectureService {
     public int countStudentsInLecture(Lecture lecture) {
         return lecture.getGroups()
                 .stream()
-                .mapToInt(studentDao::countInGroup)
+                .mapToInt(studentRepository::countByGroup)
                 .sum();
     }
 
     private void verifyIdExists(int id) {
-        if (lectureDao.findById(id).isEmpty()) {
+        if (lectureRepository.findById(id).isEmpty()) {
             throw new EntityNotFoundException(String.format("Lecture id:%s not found, nothing to delete", id));
         }
     }
 
     public List<Lecture> findByTeacherAndPeriod(Teacher teacher, LocalDate start, LocalDate end) {
         logger.debug("Retrieving lectures for teacher {} {} and period {}-{}", teacher.getFirstName(), teacher.getLastName(), start, end);
-        return lectureDao.findByTeacherAndPeriod(teacher, start, end);
+        return lectureRepository.findByTeacherAndDateBetween(teacher, start, end);
     }
 
     public List<Lecture> findByStudentAndPeriod(Student student, LocalDate start, LocalDate end) {
         logger.debug("Retrieving lectures for student {} {} and period {}-{}", student.getFirstName(), student.getLastName(), start, end);
-        return lectureDao.findByStudentAndPeriod(student, start, end);
+        return lectureRepository.findByGroupsAndDateBetween(student.getGroup(), start, end);
     }
 
     @Transactional
     public void replaceTeacher(Teacher teacher, LocalDate start, LocalDate end) {
-        List<Lecture> lectures = lectureDao.findByTeacherAndPeriod(teacher, start, end);
+        List<Lecture> lectures = lectureRepository.findByTeacherAndDateBetween(teacher, start, end);
         logger.debug("Found {} lectures for this teacher and dates: {}", lectures.size(), lectures);
 
         for (Lecture lecture : lectures) {
@@ -195,7 +195,7 @@ public class LectureService {
             Teacher goodTeacher = replacementTeachers.get(0);
             logger.debug("Found good candidate: {} {}", goodTeacher.getFirstName(), goodTeacher.getLastName());
             lecture.setTeacher(goodTeacher);
-            lectureDao.update(lecture);
+            lectureRepository.save(lecture);
         }
     }
 }
