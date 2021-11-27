@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "classrooms")
@@ -19,8 +21,10 @@ public class Classroom {
     @JoinColumn(referencedColumnName = "id")
     private Location location;
     @Column
+    @NotEmpty(message = "Name should not be empty")
     private String name;
     @Column
+    @Positive(message = "Capacity should be positive")
     private int capacity;
 
     public Classroom() {

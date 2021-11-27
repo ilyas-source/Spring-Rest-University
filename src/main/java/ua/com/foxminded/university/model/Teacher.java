@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +20,10 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "first_name")
+    @NotEmpty(message = "Name should not be empty")
     private String firstName;
     @Column(name = "last_name")
+    @NotEmpty(message = "Last name should not be empty")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)

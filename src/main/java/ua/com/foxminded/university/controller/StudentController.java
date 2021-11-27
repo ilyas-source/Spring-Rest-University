@@ -6,10 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.GroupService;
 import ua.com.foxminded.university.service.StudentService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/students")
@@ -51,15 +55,21 @@ public class StudentController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("student") Student student) {
+    public String create(@ModelAttribute("student") @Valid Student student, BindingResult result) {
         logger.debug("Create student={}", student);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         studentService.create(student);
         return "redirect:/students";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("student") Student student) {
+    public String update(@ModelAttribute("student") @Valid Student student, BindingResult result) {
         logger.debug("Update student={}", student);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         studentService.update(student);
         return "redirect:/students";
     }

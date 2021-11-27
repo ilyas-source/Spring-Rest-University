@@ -4,11 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
 import ua.com.foxminded.university.service.LocationService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/classrooms")
@@ -47,16 +51,22 @@ public class ClassroomController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("classroom") Classroom classroom) {
+    public String create(@ModelAttribute("classroom") @Valid Classroom classroom, BindingResult result) {
         logger.debug("Create classroom={}", classroom);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         locationService.create(classroom.getLocation());
         classroomService.create(classroom);
         return "redirect:/classrooms";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("classroom") Classroom classroom) {
+    public String update(@ModelAttribute("classroom") @Valid Classroom classroom, BindingResult result) {
         logger.debug("Update classroom={}", classroom);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         locationService.update(classroom.getLocation());
         classroomService.update(classroom);
         return "redirect:/classrooms";

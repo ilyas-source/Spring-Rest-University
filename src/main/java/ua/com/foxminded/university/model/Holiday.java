@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -18,6 +19,7 @@ public class Holiday {
     @Column
     private LocalDate date;
     @Column
+    @NotEmpty(message = "Name should not be empty")
     private String name;
 
     public Holiday() {

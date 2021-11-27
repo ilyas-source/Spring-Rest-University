@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -20,8 +21,10 @@ public class Student {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotEmpty(message = "Name should not be empty")
     @Column(name = "first_name")
     private String firstName;
+    @NotEmpty(message = "Last name should not be empty")
     @Column(name = "last_name")
     private String lastName;
     @Column
