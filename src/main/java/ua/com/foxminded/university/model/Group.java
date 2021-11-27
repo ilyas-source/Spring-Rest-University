@@ -1,5 +1,8 @@
 package ua.com.foxminded.university.model;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 import javax.persistence.*;
 
 @Entity
@@ -16,6 +19,8 @@ public class Group {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Size(min = 2, max = 12, message = "Name should be between 2 and 12 characters")
+    @NotEmpty(message = "Name should not be empty")
     @Column
     private String name;
 
