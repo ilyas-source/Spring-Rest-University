@@ -36,7 +36,7 @@ public class Student {
     @BirthDateConstraint
     @Column(name = "birth_date")
     private LocalDate birthDate;
-    @Email
+    @Email(message = "Wrong email format")
     @Column
     private String email;
     @Column

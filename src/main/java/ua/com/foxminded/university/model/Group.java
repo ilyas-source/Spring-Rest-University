@@ -7,12 +7,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "groups")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllGroups",
-                query = "from Group order by name"),
-        @NamedQuery(name = "FindGroupByName",
-                query = "from Group where name = :name")
-})
 public class Group {
 
     @Id

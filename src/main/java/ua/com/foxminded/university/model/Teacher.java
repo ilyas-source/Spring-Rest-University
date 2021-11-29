@@ -39,6 +39,7 @@ public class Teacher {
             name = "teachers_subjects",
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @NotEmpty
     private Set<Subject> subjects;
     @Email
     @Column

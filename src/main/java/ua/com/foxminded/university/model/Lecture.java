@@ -1,6 +1,8 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -17,21 +19,26 @@ public class Lecture {
     private LocalDate date;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "Assign timeslot")
     private Timeslot timeslot;
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "lectures_groups",
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @NotEmpty(message = "Assign at least one group to lecture")
     private Set<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Subject subject;
+    @NotNull(message = "Assign subject to lecture")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "Assign teacher to lecture")
     private Teacher teacher;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "Assign classroom to lecture")
     private Classroom classroom;
 
     public static Builder builder() {
