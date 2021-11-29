@@ -1,7 +1,9 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class Teacher {
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @NotNull
     @Column
     @Enumerated(EnumType.STRING)
     private Degree degree;
@@ -37,6 +40,7 @@ public class Teacher {
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private Set<Subject> subjects;
+    @Email
     @Column
     private String email;
     @Column

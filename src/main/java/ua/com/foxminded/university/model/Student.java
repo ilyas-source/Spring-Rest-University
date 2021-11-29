@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.annotation.BirthDateConstraint;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
@@ -30,8 +33,10 @@ public class Student {
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @BirthDateConstraint
     @Column(name = "birth_date")
     private LocalDate birthDate;
+    @Email
     @Column
     private String email;
     @Column
