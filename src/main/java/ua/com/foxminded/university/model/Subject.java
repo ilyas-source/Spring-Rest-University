@@ -18,7 +18,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "{name.notempty}")
     private String name;
     @Column
     private String description;

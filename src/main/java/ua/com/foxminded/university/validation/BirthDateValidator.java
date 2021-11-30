@@ -1,6 +1,4 @@
-package ua.com.foxminded.university.validator;
-
-import ua.com.foxminded.university.annotation.BirthDateConstraint;
+package ua.com.foxminded.university.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

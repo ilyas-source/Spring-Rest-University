@@ -13,13 +13,13 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "{name.notempty}")
     private String building;
     @Column
-    @Positive(message = "Floor number should be positive")
+    @Positive(message = "{floor.positive}")
     private int floor;
     @Column(name = "room_number")
-    @Positive(message = "Room number should be positive")
+    @Positive(message = "{roomnumber.positive}")
     private int roomNumber;
 
     public Location() {

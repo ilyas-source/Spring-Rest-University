@@ -1,6 +1,6 @@
 package ua.com.foxminded.university.model;
 
-import ua.com.foxminded.university.annotation.BirthDateConstraint;
+import ua.com.foxminded.university.validation.BirthDateConstraint;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -24,19 +24,19 @@ public class Student {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "{name.notempty}")
     @Column(name = "first_name")
     private String firstName;
-    @NotEmpty(message = "Last name should not be empty")
+    @NotEmpty(message = "{lastname.notempty}")
     @Column(name = "last_name")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @BirthDateConstraint
+    @BirthDateConstraint(age = 14)
     @Column(name = "birth_date")
     private LocalDate birthDate;
-    @Email(message = "Wrong email format")
+    @Email(message = "{email.wrongformat}")
     @Column
     private String email;
     @Column

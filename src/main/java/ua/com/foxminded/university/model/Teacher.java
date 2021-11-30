@@ -21,11 +21,10 @@ public class Teacher {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "first_name")
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "{name.notempty}")
     private String firstName;
     @Column(name = "last_name")
-    @NotEmpty(message = "Last name should not be empty")
+    @NotEmpty(message = "{lastname.notempty}")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)

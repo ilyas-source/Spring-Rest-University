@@ -19,26 +19,26 @@ public class Lecture {
     private LocalDate date;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
-    @NotNull(message = "Assign timeslot")
+    @NotNull(message = "{assign.timeslot}")
     private Timeslot timeslot;
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "lectures_groups",
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
-    @NotEmpty(message = "Assign at least one group to lecture")
+    @NotEmpty(message = "{assign.group}")
     private Set<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Subject subject;
-    @NotNull(message = "Assign subject to lecture")
+    @NotNull(message = "{assign.subject}")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
-    @NotNull(message = "Assign teacher to lecture")
+    @NotNull(message = "{assign.teacher}")
     private Teacher teacher;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
-    @NotNull(message = "Assign classroom to lecture")
+    @NotNull(message = "{assign.classroom}")
     private Classroom classroom;
 
     public static Builder builder() {

@@ -9,18 +9,6 @@ university:
     MASTER: 30
   minimumtimeslotlength: 30
   minimumbreaklength: 30
-  nameIsEmptyMessage: Name should not be empty
-  lastNameIsEmptyMessage: Last name should not be empty
-  capacityNegativeMessage: Capacity should be positive
-  wrongEmailMessage: Wrong email format
-  wrongLengthMessage: Name should be between 2 and 12 characters
-  groupNotAssignedMessage: Assign at least one group to lecture
-  timeslotNotAssignedMessage: Assign the timeslot
-  classroomNotAssignedMessage: Assign a classroom to lecture
-  teacherNotAssignedMessage: Assign a teacher to lecture
-  subjectNotAssignedMessage: Assign a subject to lecture
-  floorNegativeMessage: Floor number should be positive
-  roomNumberNegativeMessage: Room number should be positive
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/university

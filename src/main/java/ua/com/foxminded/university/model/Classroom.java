@@ -16,10 +16,10 @@ public class Classroom {
     @JoinColumn(referencedColumnName = "id")
     private Location location;
     @Column
-    @NotEmpty(message = "Name should not be empty")
+    @NotEmpty(message = "{name.notempty}")
     private String name;
     @Column
-    @Positive(message = "Capacity should be positive")
+    @Positive(message = "{capacity.positive}")
     private int capacity;
 
     public Classroom() {
