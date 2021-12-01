@@ -61,7 +61,7 @@ public class TeacherController {
     @PostMapping("/update")
     public String update(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult result) {
         logger.debug("Received update data: {}", teacher);
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         refreshFieldsFromDatabase(teacher);
@@ -86,7 +86,7 @@ public class TeacherController {
     @PostMapping("/create")
     public String create(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult result) {
         logger.debug("Create teacher={}", teacher);
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
         teacherService.create(teacher);

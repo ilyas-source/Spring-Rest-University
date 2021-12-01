@@ -19,8 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,7 +39,10 @@ class ClassroomControllerTest {
 
     @BeforeEach
     public void setMocks() {
-        mockMvc = MockMvcBuilders.standaloneSetup(classroomController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(classroomController)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -101,6 +103,28 @@ class ClassroomControllerTest {
     }
 
     @Test
+    void givenInvalidClassroom_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/classrooms/create")
+                        .flashAttr("classroom", invalidCapacityClassroom))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{capacity.positive}"));;
+
+        verify(classroomService, never()).create(invalidCapacityClassroom);
+    }
+
+    @Test
+    void givenInvalidClassroom_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/classrooms/update")
+                        .flashAttr("classroom", invalidCapacityClassroom))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{capacity.positive}"));;
+
+        verify(classroomService, never()).create(invalidCapacityClassroom);
+    }
+
+    @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
         mockMvc.perform(post("/classrooms/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
@@ -116,6 +140,8 @@ class ClassroomControllerTest {
 
         Location location3 = new Location(3, "Chem building", 2, 12);
         Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
+
+        Classroom invalidCapacityClassroom = new Classroom(location3, "Chemistry laboratory", -1);
 
         List<Location> expectedLocations = new ArrayList<>(
                 Arrays.asList(location1, location2, location3));

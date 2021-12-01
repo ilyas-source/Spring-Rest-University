@@ -25,14 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.controller.StudentControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
@@ -127,6 +125,29 @@ class StudentControllerTest {
         verify(studentService).delete(1);
     }
 
+    @Test
+    void givenInvalidStudent_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/students/create")
+                        .flashAttr("student", invalidStudent))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{name.notempty}"));;
+
+        verify(studentService, never()).create(invalidStudent);
+    }
+
+    @Test
+    void givenInvalidStudent_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/students/update")
+                        .flashAttr("student", invalidStudent))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{student.tooyoung}"));;
+
+        verify(studentService, never()).create(invalidStudent);
+    }
+
+
     interface TestData {
         Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
                 .city("Perm").streetAddress("Lenina 5").build();
@@ -151,6 +172,11 @@ class StudentControllerTest {
                 .group(expectedGroup1).build();
         Student expectedStudent4 = Student.builder().firstName("Mao").lastName("Zedun")
                 .id(4).gender(Gender.MALE).birthDate(LocalDate.of(1921, 9, 14))
+                .email("qwe@no.cn").phone("1145223").address(expectedAddress6)
+                .group(expectedGroup2).build();
+
+        Student invalidStudent = Student.builder().firstName("Mao").lastName("Zedun")
+                .id(4).gender(Gender.MALE).birthDate(LocalDate.of(2013, 9, 14))
                 .email("qwe@no.cn").phone("1145223").address(expectedAddress6)
                 .group(expectedGroup2).build();
 

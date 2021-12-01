@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BirthDateConstraint {
-    String message() default "Student is too young";
+    String message() default "{student.tooyoung}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 

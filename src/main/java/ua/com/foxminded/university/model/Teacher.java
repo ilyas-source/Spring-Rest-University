@@ -28,6 +28,7 @@ public class Teacher {
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Gender gender;
     @NotNull
     @Column

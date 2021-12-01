@@ -47,7 +47,6 @@ public class GroupController {
     @PostMapping("/create")
     public String create(@ModelAttribute("group") @Valid Group group, BindingResult result) {
         logger.debug("Create group={}", group);
-        logger.debug("Result is {}", result);
         if(result.hasErrors()) {
             throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
         }
@@ -56,8 +55,11 @@ public class GroupController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("group") Group group) {
+    public String update(@ModelAttribute("group") @Valid Group group, BindingResult result) {
         logger.debug("Update group={}", group);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         groupService.update(group);
         return "redirect:/groups";
     }

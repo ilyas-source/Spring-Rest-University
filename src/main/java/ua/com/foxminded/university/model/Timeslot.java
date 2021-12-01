@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.validation.TimeRangeConstraint;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
@@ -22,6 +24,7 @@ public class Timeslot {
     public Timeslot() {
     }
 
+    @TimeRangeConstraint
     public Timeslot(LocalTime beginTime, LocalTime endTime) {
         this.beginTime = beginTime;
         this.endTime = endTime;
