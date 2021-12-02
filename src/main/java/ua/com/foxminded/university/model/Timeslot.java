@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
+@TimeRangeConstraint
 @Table(name = "timeslots")
 public class Timeslot {
 
@@ -24,7 +25,7 @@ public class Timeslot {
     public Timeslot() {
     }
 
-    @TimeRangeConstraint
+
     public Timeslot(LocalTime beginTime, LocalTime endTime) {
         this.beginTime = beginTime;
         this.endTime = endTime;

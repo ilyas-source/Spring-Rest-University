@@ -42,7 +42,7 @@ public class TimeslotControllerTest {
                         .flashAttr("timeslot", invalidTimeslot))
                 .andExpect(view().name("exceptions/error"))
            //     .andExpect(model().attribute("title", "ValidationException"))
-                .andExpect(model().attribute("message", "{name.notempty}"));;
+                .andExpect(model().attribute("message", "{timerange.invalid}"));;
 
         verify(timeslotService, never()).create(invalidTimeslot);
     }
@@ -53,7 +53,7 @@ public class TimeslotControllerTest {
                         .flashAttr("timeslot", invalidTimeslot))
                 .andExpect(view().name("exceptions/error"))
                 .andExpect(model().attribute("title", "ValidationException"))
-                .andExpect(model().attribute("message", "{name.notempty}"));;
+                .andExpect(model().attribute("message", "{timerange.invalid}"));;
 
         verify(timeslotService, never()).create(invalidTimeslot);
     }
