@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Entity
@@ -17,6 +18,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
+    @NotEmpty(message = "{name.notempty}")
     private String name;
     @Column
     private String description;

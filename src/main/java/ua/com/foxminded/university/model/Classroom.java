@@ -1,14 +1,11 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "classrooms")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllClassrooms", query = "from Classroom order by id"),
-        @NamedQuery(name = "FindClassroomByName", query = "from Classroom where name = :name"),
-        @NamedQuery(name = "FindClassroomByLocation", query = "from Classroom where location = :location")
-})
 public class Classroom {
 
     @Id
@@ -19,8 +16,10 @@ public class Classroom {
     @JoinColumn(referencedColumnName = "id")
     private Location location;
     @Column
+    @NotEmpty(message = "{name.notempty}")
     private String name;
     @Column
+    @Positive(message = "{capacity.positive}")
     private int capacity;
 
     public Classroom() {

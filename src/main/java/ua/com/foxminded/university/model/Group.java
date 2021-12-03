@@ -1,21 +1,17 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "groups")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllGroups",
-                query = "from Group order by name"),
-        @NamedQuery(name = "FindGroupByName",
-                query = "from Group where name = :name")
-})
 public class Group {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Size(min = 2, max = 12, message = "{length.between}")
     @Column
     private String name;
 

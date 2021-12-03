@@ -1,6 +1,10 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.validation.BirthDateConstraint;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
@@ -20,15 +24,19 @@ public class Student {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotEmpty(message = "{name.notempty}")
     @Column(name = "first_name")
     private String firstName;
+    @NotEmpty(message = "{lastname.notempty}")
     @Column(name = "last_name")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @BirthDateConstraint(age = 14)
     @Column(name = "birth_date")
     private LocalDate birthDate;
+    @Email(message = "{email.wrongformat}")
     @Column
     private String email;
     @Column

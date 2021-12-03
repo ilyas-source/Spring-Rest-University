@@ -19,14 +19,12 @@ import ua.com.foxminded.university.service.TeacherService;
 
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
-import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.expectedTeachers;
+import static ua.com.foxminded.university.controller.TeacherControllerTest.TestData.*;
 import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.expectedVacations1;
 import static ua.com.foxminded.university.controller.VacationControllerTest.TestData.expectedVacations2;
 
@@ -118,6 +116,28 @@ class TeacherControllerTest {
         verify(teacherService).delete(1);
     }
 
+    @Test
+    void givenInvalidTeacher_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/teachers/create")
+                        .flashAttr("teacher", invalidTeacher))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "must not be empty"));;
+
+        verify(teacherService, never()).create(invalidTeacher);
+    }
+
+    @Test
+    void givenInvalidTeacher_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/teachers/update")
+                        .flashAttr("teacher", invalidTeacher))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "must not be empty"));;
+
+        verify(teacherService, never()).create(invalidTeacher);
+    }
+
     interface TestData {
         Set<Subject> expectedSubjects1 = new HashSet<>(Arrays.asList(expectedSubject1, expectedSubject2));
         Set<Subject> expectedSubjects2 = new HashSet<>(Arrays.asList(expectedSubject3, expectedSubject4));
@@ -134,6 +154,11 @@ class TeacherControllerTest {
                 .vacations(expectedVacations1).build();
         Teacher expectedTeacher2 = Teacher.builder().firstName("Marie").lastName("Curie").id(2)
                 .gender(Gender.FEMALE).degree(Degree.MASTER).subjects(expectedSubjects2)
+                .email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
+                .vacations(expectedVacations2).build();
+
+        Teacher invalidTeacher = Teacher.builder().firstName("Marie").lastName("Curie").id(2)
+                .gender(Gender.FEMALE).degree(Degree.MASTER).subjects(new HashSet<>())
                 .email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
                 .vacations(expectedVacations2).build();
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));

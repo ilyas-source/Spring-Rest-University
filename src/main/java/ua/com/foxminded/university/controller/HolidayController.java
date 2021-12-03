@@ -4,9 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/holidays")
@@ -41,15 +45,21 @@ public class HolidayController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("holiday") Holiday holiday) {
+    public String create(@ModelAttribute("holiday") @Valid Holiday holiday, BindingResult result) {
         logger.debug("Create holiday={}", holiday);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         holidayService.create(holiday);
         return "redirect:/holidays";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("holiday") Holiday holiday) {
+    public String update(@ModelAttribute("holiday") @Valid Holiday holiday, BindingResult result) {
         logger.debug("Received update data: name {}", holiday.getName());
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         holidayService.update(holiday);
         return "redirect:/holidays";
     }

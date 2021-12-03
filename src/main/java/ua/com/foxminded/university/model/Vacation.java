@@ -3,6 +3,7 @@ package ua.com.foxminded.university.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
@@ -19,11 +20,14 @@ public class Vacation {
     private int id;
     @Column(name = "start_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     private LocalDate startDate;
     @Column(name = "end_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     private LocalDate endDate;
     @ManyToOne
+    @NotNull
     private Teacher teacher;
 
     public Vacation() {

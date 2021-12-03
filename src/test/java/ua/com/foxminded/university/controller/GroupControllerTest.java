@@ -16,13 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.controller.GroupControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -95,6 +93,28 @@ class GroupControllerTest {
     }
 
     @Test
+    void givenInvalidGroup_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/groups/create")
+                        .flashAttr("group", invalidGroup))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{length.between}"));;
+
+        verify(groupService, never()).create(invalidGroup);
+    }
+
+    @Test
+    void givenInvalidGroup_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/groups/update")
+                        .flashAttr("group", invalidGroup))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{length.between}"));;
+
+        verify(groupService, never()).create(invalidGroup);
+    }
+
+    @Test
     void givenCorrectId_onDelete_shouldCallServiceDelete() throws Exception {
         mockMvc.perform(post("/groups/delete/{id}", 1)).andExpect(status().is3xxRedirection());
 
@@ -104,6 +124,8 @@ class GroupControllerTest {
     interface TestData {
         Group expectedGroup1 = new Group(1, "AB-11");
         Group expectedGroup2 = new Group(2, "ZI-08");
+
+        Group invalidGroup = new Group("Z");
 
         List<Group> expectedGroups = new ArrayList<>(
                 Arrays.asList(expectedGroup1, expectedGroup2));

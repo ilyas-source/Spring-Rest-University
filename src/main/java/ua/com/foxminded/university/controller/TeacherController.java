@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.model.Teacher;
@@ -13,6 +14,8 @@ import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.SubjectService;
 import ua.com.foxminded.university.service.TeacherService;
 
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Set;
 
@@ -56,8 +59,11 @@ public class TeacherController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("teacher") Teacher teacher) {
+    public String update(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult result) {
         logger.debug("Received update data: {}", teacher);
+        if (result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         refreshFieldsFromDatabase(teacher);
         teacherService.update(teacher);
         return "redirect:/teachers";
@@ -78,8 +84,11 @@ public class TeacherController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("teacher") Teacher teacher) {
+    public String create(@ModelAttribute("teacher") @Valid Teacher teacher, BindingResult result) {
         logger.debug("Create teacher={}", teacher);
+        if (result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         teacherService.create(teacher);
         return "redirect:/teachers";
     }

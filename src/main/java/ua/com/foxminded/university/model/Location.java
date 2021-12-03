@@ -1,13 +1,11 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "locations")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllLocations",
-                query = "from Location")
-})
 public class Location {
 
     @Id
@@ -15,10 +13,13 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
+    @NotEmpty(message = "{name.notempty}")
     private String building;
     @Column
+    @Positive(message = "{floor.positive}")
     private int floor;
     @Column(name = "room_number")
+    @Positive(message = "{roomnumber.positive}")
     private int roomNumber;
 
     public Location() {

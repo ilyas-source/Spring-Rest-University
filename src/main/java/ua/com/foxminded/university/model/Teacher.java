@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -18,13 +21,16 @@ public class Teacher {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "first_name")
+    @NotEmpty(message = "{name.notempty}")
     private String firstName;
     @Column(name = "last_name")
+    @NotEmpty(message = "{lastname.notempty}")
     private String lastName;
     @Column
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Gender gender;
+    @NotNull
     @Column
     @Enumerated(EnumType.STRING)
     private Degree degree;
@@ -33,7 +39,9 @@ public class Teacher {
             name = "teachers_subjects",
             joinColumns = @JoinColumn(name = "teacher_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
+    @NotEmpty
     private Set<Subject> subjects;
+    @Email
     @Column
     private String email;
     @Column

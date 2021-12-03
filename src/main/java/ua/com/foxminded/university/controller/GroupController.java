@@ -4,9 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
+
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/groups")
@@ -41,15 +45,21 @@ public class GroupController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("group") Group group) {
+    public String create(@ModelAttribute("group") @Valid Group group, BindingResult result) {
         logger.debug("Create group={}", group);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         groupService.create(group);
         return "redirect:/groups";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("group") Group group) {
+    public String update(@ModelAttribute("group") @Valid Group group, BindingResult result) {
         logger.debug("Update group={}", group);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         groupService.update(group);
         return "redirect:/groups";
     }

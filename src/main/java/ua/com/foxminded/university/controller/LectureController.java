@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.*;
 
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -158,17 +161,23 @@ public class LectureController {
 
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("lecture") Lecture lecture) {
+    public String create(@ModelAttribute("lecture") @Valid Lecture lecture, BindingResult result) {
         logger.debug("Create lecture={}", lecture);
         refreshFieldsFromDatabase(lecture);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         lectureService.create(lecture);
         return "redirect:/lectures";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute("lecture") Lecture lecture) {
+    public String update(@ModelAttribute("lecture") @Valid Lecture lecture, BindingResult result) {
         logger.debug("Update lecture={}", lecture);
         refreshFieldsFromDatabase(lecture);
+        if(result.hasErrors()) {
+            throw new ValidationException(result.getAllErrors().get(0).getDefaultMessage());
+        }
         lectureService.update(lecture);
         return "redirect:/lectures";
     }

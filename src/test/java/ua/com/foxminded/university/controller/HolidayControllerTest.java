@@ -17,13 +17,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.expectedHoliday1;
-import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.controller.HolidayControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 class HolidayControllerTest {
@@ -103,10 +101,33 @@ class HolidayControllerTest {
         verify(holidayService).delete(1);
     }
 
+    @Test
+    void givenInvalidHoliday_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/holidays/create")
+                        .flashAttr("holiday", invalidHoliday))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{name.notempty}"));;
+
+        verify(holidayService, never()).create(invalidHoliday);
+    }
+
+    @Test
+    void givenInvalidHoliday_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/holidays/update")
+                        .flashAttr("holiday", invalidHoliday))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{name.notempty}"));;
+
+        verify(holidayService, never()).create(invalidHoliday);
+    }
+
     interface TestData {
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
         Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");
+        Holiday invalidHoliday = new Holiday(3, LocalDate.of(2000, 3, 8), "");
 
         List<Holiday> expectedHolidays = new ArrayList<>(
                 Arrays.asList(expectedHoliday1, expectedHoliday2, expectedHoliday3));

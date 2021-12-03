@@ -16,13 +16,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.expectedSubject1;
-import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.expectedSubjects;
+import static ua.com.foxminded.university.controller.SubjectControllerTest.TestData.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -104,12 +102,36 @@ class SubjectControllerTest {
         verify(subjectService).delete(1);
     }
 
+    @Test
+    void givenInvalidSubject_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/subjects/create")
+                        .flashAttr("subject", invalidSubject))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{name.notempty}"));;
+
+        verify(subjectService, never()).create(invalidSubject);
+    }
+
+    @Test
+    void givenInvalidSubject_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/subjects/update")
+                        .flashAttr("subject", invalidSubject))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{name.notempty}"));;
+
+        verify(subjectService, never()).create(invalidSubject);
+    }
+
     interface TestData {
 
         Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
         Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");
         Subject expectedSubject3 = new Subject(3, "Test Chemistry", "Base chemistry");
         Subject expectedSubject4 = new Subject(4, "Test Radiology", "Explore radiation");
+
+        Subject invalidSubject = new Subject("", "Explore radiation");
 
         List<Subject> expectedSubjects = new ArrayList<>(
                 Arrays.asList(expectedSubject1, expectedSubject2, expectedSubject3, expectedSubject4));

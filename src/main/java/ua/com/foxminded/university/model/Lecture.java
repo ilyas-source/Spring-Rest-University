@@ -1,26 +1,13 @@
 package ua.com.foxminded.university.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
 @Table(name = "lectures")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllLectures", query = "from Lecture order by date"),
-        @NamedQuery(name = "FindLecturesBySubject", query = "from Lecture where subject = :subject"),
-        @NamedQuery(name = "FindLecturesByClassroom", query = "from Lecture where classroom = :classroom"),
-        @NamedQuery(name = "FindLecturesByTimeslot", query = "from Lecture where timeslot = :timeslot"),
-        @NamedQuery(name = "FindLecturesByTeacher", query = "from Lecture where teacher = :teacher"),
-        @NamedQuery(name = "FindLecturesByDateTime",
-                query = "from Lecture where date = :date and timeslot = :timeslot"),
-        @NamedQuery(name = "FindLectureByDateTimeClassroom",
-                query = "from Lecture where date = :date and timeslot = :timeslot and classroom = :classroom"),
-        @NamedQuery(name = "FindLectureByDateTimeTeacher",
-                query = "from Lecture where date = :date and timeslot = :timeslot and teacher = :teacher"),
-        @NamedQuery(name = "FindLecturesByTeacherAndPeriod",
-                query = "from Lecture where date >= :startDate and date <= :endDate and teacher = :teacher")
-})
 public class Lecture {
 
     @Id
@@ -32,21 +19,26 @@ public class Lecture {
     private LocalDate date;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "{assign.timeslot}")
     private Timeslot timeslot;
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
             name = "lectures_groups",
             joinColumns = @JoinColumn(name = "lecture_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @NotEmpty(message = "{assign.group}")
     private Set<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     private Subject subject;
+    @NotNull(message = "{assign.subject}")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "{assign.teacher}")
     private Teacher teacher;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
+    @NotNull(message = "{assign.classroom}")
     private Classroom classroom;
 
     public static Builder builder() {

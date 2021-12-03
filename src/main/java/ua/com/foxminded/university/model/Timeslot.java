@@ -1,27 +1,30 @@
 package ua.com.foxminded.university.model;
 
+import ua.com.foxminded.university.validation.TimeRangeConstraint;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
+@TimeRangeConstraint
 @Table(name = "timeslots")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllTimeslots", query = "from Timeslot"),
-        @NamedQuery(name = "FindTimeslotByBothTimes", query = "from Timeslot where beginTime = : beginTime and endTime = :endTime")
-})
 public class Timeslot {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotNull
     @Column(name = "begin_time")
     private LocalTime beginTime;
+    @NotNull
     @Column(name = "end_time")
     private LocalTime endTime;
 
     public Timeslot() {
     }
+
 
     public Timeslot(LocalTime beginTime, LocalTime endTime) {
         this.beginTime = beginTime;

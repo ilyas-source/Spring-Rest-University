@@ -18,8 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -240,6 +239,28 @@ class LectureControllerTest {
         verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
 
+    @Test
+    void givenInvalidLecture_onCreate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/lectures/create")
+                        .flashAttr("lecture", invalidLecture))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{assign.group}"));;
+
+        verify(lectureService, never()).create(invalidLecture);
+    }
+
+    @Test
+    void givenInvalidLecture_onUpdate_shouldThrowValidationException() throws Exception {
+        mockMvc.perform(post("/lectures/update")
+                        .flashAttr("lecture", invalidLecture))
+                .andExpect(view().name("exceptions/error"))
+                .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("message", "{assign.group}"));;
+
+        verify(lectureService, never()).create(invalidLecture);
+    }
+
     interface TestData {
 
         LocalDate startDate = LocalDate.of(2000, 1, 1);
@@ -261,6 +282,10 @@ class LectureControllerTest {
 
         Lecture expectedLecture2 = Lecture.builder().date(LocalDate.of(2020, 1, 2)).subject(expectedSubject2)
                 .id(2).timeslot(expectedTimeslot2).groups(expectedGroups2)
+                .teacher(expectedTeacher2).classroom(expectedClassroom2).build();
+
+        Lecture invalidLecture = Lecture.builder().date(LocalDate.of(2020, 1, 2)).subject(expectedSubject2)
+                .id(2).timeslot(expectedTimeslot2).groups(new HashSet<>())
                 .teacher(expectedTeacher2).classroom(expectedClassroom2).build();
 
         List<Lecture> expectedLectures = new ArrayList<>(Arrays.asList(expectedLecture1, expectedLecture2));
