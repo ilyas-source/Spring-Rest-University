@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -20,10 +22,12 @@ public class Vacation {
     private int id;
     @Column(name = "start_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private LocalDate startDate;
     @Column(name = "end_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private LocalDate endDate;
     @ManyToOne

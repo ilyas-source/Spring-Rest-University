@@ -1,5 +1,8 @@
 package ua.com.foxminded.university.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -15,6 +18,7 @@ public class Holiday {
     private int id;
     @NotNull
     @Column
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate date;
     @Column
     @NotEmpty(message = "{name.notempty}")
