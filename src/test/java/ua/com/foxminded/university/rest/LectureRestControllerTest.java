@@ -108,7 +108,7 @@ public class LectureRestControllerTest {
     }
 
     @Test
-    void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception { // TODO
+    void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
         var request = post("/api/lectures/replacement")
