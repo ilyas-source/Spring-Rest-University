@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.rest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
@@ -27,8 +28,8 @@ public class GroupRestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Group group) {
-        group.setId(0);
         groupService.create(group);
     }
 

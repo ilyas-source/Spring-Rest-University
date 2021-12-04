@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.rest.VacationRestControllerTest.TestDa
 public class VacationRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedVacationJson;
     String expectedVacationsJson;
 
@@ -43,8 +44,8 @@ public class VacationRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(vacationRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedVacationJson = new ObjectMapper().writeValueAsString(expectedVacation1);
-        expectedVacationsJson = new ObjectMapper().writeValueAsString(expectedVacations1);
+        expectedVacationJson = objectMapper.writeValueAsString(expectedVacation1);
+        expectedVacationsJson = objectMapper.writeValueAsString(expectedVacations1);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class VacationRestControllerTest {
     void givenId_onGetVacation_shouldReturnCorrectJson() throws Exception {
         when(vacationService.getById(1)).thenReturn(expectedVacation1);
 
-        mockMvc.perform(get("/api/vacations/1"))
+        mockMvc.perform(get("/api/vacations/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedVacationJson));
 
@@ -72,8 +73,8 @@ public class VacationRestControllerTest {
         mockMvc.perform(post("/api/vacations")
                         .content(expectedVacationJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(vacationService).create(vacationToCreate);
+                .andExpect(status().isCreated());
+        verify(vacationService).create(expectedVacation1);
     }
 
     @Test

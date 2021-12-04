@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.rest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
@@ -27,8 +28,8 @@ public class SubjectRestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Subject subject) {
-        subject.setId(0);
         subjectService.create(subject);
     }
 

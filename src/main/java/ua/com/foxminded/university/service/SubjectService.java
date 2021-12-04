@@ -35,6 +35,7 @@ public class SubjectService {
     public void create(Subject subject) {
         logger.debug("Creating a new subject: {} ", subject);
         verifyNameIsUnique(subject);
+        subject.setId(0);
         subjectRepository.save(subject);
     }
 

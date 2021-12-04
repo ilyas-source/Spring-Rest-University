@@ -10,10 +10,6 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "vacations")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllVacations", query = "from Vacation"),
-        @NamedQuery(name = "FindVacationsByTeacher", query = "from Vacation where teacher = :teacher"),
-})
 public class Vacation {
 
     @Id

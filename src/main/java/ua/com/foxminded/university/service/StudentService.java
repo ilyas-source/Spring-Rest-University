@@ -34,6 +34,7 @@ public class StudentService {
         logger.debug("Creating a new student: {} ", student);
         verifyStudentIsUnique(student);
         verifyGroupIsNotOverflowed(student);
+        student.setId(0);
         studentRepository.save(student);
     }
 

@@ -41,6 +41,7 @@ public class LectureService {
     public void create(Lecture lecture) {
         logger.debug("Creating a new lecture: {} ", lecture);
         verifyAllDataIsCorrect(lecture);
+        lecture.setId(0);
         lectureRepository.save(lecture);
     }
 

@@ -40,6 +40,7 @@ import static ua.com.foxminded.university.rest.TeacherRestControllerTest.TestDat
 public class LectureRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedLectureJson;
     String expectedLecturesJson;
 
@@ -55,8 +56,8 @@ public class LectureRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(lectureRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedLectureJson = new ObjectMapper().writeValueAsString(expectedLecture1);
-        expectedLecturesJson = new ObjectMapper().writeValueAsString(expectedLectures);
+        expectedLectureJson = objectMapper.writeValueAsString(expectedLecture1);
+        expectedLecturesJson = objectMapper.writeValueAsString(expectedLectures);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class LectureRestControllerTest {
     void givenId_onGetLecture_shouldReturnCorrectJson() throws Exception {
         when(lectureService.getById(1)).thenReturn(expectedLecture1);
 
-        mockMvc.perform(get("/api/lectures/1"))
+        mockMvc.perform(get("/api/lectures/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedLectureJson));
 
@@ -84,8 +85,8 @@ public class LectureRestControllerTest {
         mockMvc.perform(post("/api/lectures")
                         .content(expectedLectureJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(lectureService).create(lectureToCreate);
+                .andExpect(status().isCreated());
+        verify(lectureService).create(expectedLecture1);
     }
 
     @Test
@@ -107,7 +108,7 @@ public class LectureRestControllerTest {
     }
 
     @Test
-    void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
+    void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception { // TODO
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
         var request = post("/api/lectures/replacement")

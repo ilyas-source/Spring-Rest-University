@@ -9,12 +9,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "teachers")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllTeachers", query = "from Teacher"),
-        @NamedQuery(name = "FindTeachersBySubject", query = "from Teacher where :subject in elements(subjects)"),
-        @NamedQuery(name = "findTeacherByNameAndEmail",
-                query = "from Teacher where firstName = :firstName AND lastName = :lastName AND email = :email")
-})
 public class Teacher {
 
     @Id

@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.rest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.VacationService;
@@ -27,8 +28,8 @@ public class VacationRestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Vacation vacation) {
-        vacation.setId(0);
         vacationService.create(vacation);
     }
 

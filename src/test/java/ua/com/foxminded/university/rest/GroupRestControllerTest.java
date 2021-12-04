@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.
 public class GroupRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedGroupJson;
     String expectedGroupsJson;
 
@@ -43,8 +44,8 @@ public class GroupRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(groupRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedGroupJson = new ObjectMapper().writeValueAsString(expectedGroup1);
-        expectedGroupsJson = new ObjectMapper().writeValueAsString(expectedGroups);
+        expectedGroupJson = objectMapper.writeValueAsString(expectedGroup1);
+        expectedGroupsJson = objectMapper.writeValueAsString(expectedGroups);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class GroupRestControllerTest {
     void givenId_onGetGroup_shouldReturnCorrectJson() throws Exception {
         when(groupService.getById(1)).thenReturn(expectedGroup1);
 
-        mockMvc.perform(get("/api/groups/1"))
+        mockMvc.perform(get("/api/groups/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedGroupJson));
 
@@ -72,8 +73,8 @@ public class GroupRestControllerTest {
         mockMvc.perform(post("/api/groups")
                         .content(expectedGroupJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(groupService).create(new Group(0, "AB-11"));
+                .andExpect(status().isCreated());
+        verify(groupService).create(expectedGroup1);
     }
 
     @Test

@@ -41,7 +41,7 @@ public class TimeslotControllerTest {
         mockMvc.perform(post("/timeslots/create")
                         .flashAttr("timeslot", invalidTimeslot))
                 .andExpect(view().name("exceptions/error"))
-           //     .andExpect(model().attribute("title", "ValidationException"))
+                .andExpect(model().attribute("title", "ValidationException"))
                 .andExpect(model().attribute("message", "{timerange.invalid}"));;
 
         verify(timeslotService, never()).create(invalidTimeslot);

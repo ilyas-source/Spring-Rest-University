@@ -34,6 +34,7 @@ import static ua.com.foxminded.university.rest.StudentRestControllerTest.TestDat
 public class StudentRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedStudentJson;
     String expectedStudentsJson;
 
@@ -47,8 +48,8 @@ public class StudentRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(studentRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedStudentJson = new ObjectMapper().writeValueAsString(expectedStudent1);
-        expectedStudentsJson = new ObjectMapper().writeValueAsString(expectedStudents);
+        expectedStudentJson = objectMapper.writeValueAsString(expectedStudent1);
+        expectedStudentsJson = objectMapper.writeValueAsString(expectedStudents);
     }
 
     @Test
@@ -76,8 +77,8 @@ public class StudentRestControllerTest {
         mockMvc.perform(post("/api/students")
                         .content(expectedStudentJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(studentService).create(studentToCreate);
+                .andExpect(status().isCreated());
+        verify(studentService).create(expectedStudent1);
     }
 
     @Test

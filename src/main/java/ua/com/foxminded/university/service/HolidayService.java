@@ -25,6 +25,7 @@ public class HolidayService {
 
     public void create(Holiday holiday) {
         logger.debug("Creating a new holiday: {} ", holiday);
+        holiday.setId(0);
         holidayRepository.save(holiday);
     }
 

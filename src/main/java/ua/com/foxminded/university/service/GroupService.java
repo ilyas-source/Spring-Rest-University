@@ -31,6 +31,7 @@ public class GroupService {
     public void create(Group group) {
         logger.debug("Creating a new group: {} ", group);
         verifyNameIsUnique(group);
+        group.setId(0);
         groupRepository.save(group);
     }
 

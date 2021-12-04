@@ -32,6 +32,7 @@ public class VacationService {
     public void create(Vacation vacation) {
         logger.debug("Creating a new vacation: {} ", vacation);
         verifyDurationIsPositive(vacation);
+        vacation.setId(0);
         vacationRepository.save(vacation);
     }
 

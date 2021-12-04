@@ -29,6 +29,7 @@ import static ua.com.foxminded.university.rest.SubjectRestControllerTest.TestDat
 public class SubjectRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedSubjectJson;
     String expectedSubjectsJson;
 
@@ -42,8 +43,8 @@ public class SubjectRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(subjectRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedSubjectJson = new ObjectMapper().writeValueAsString(expectedSubject1);
-        expectedSubjectsJson = new ObjectMapper().writeValueAsString(expectedSubjects);
+        expectedSubjectJson = objectMapper.writeValueAsString(expectedSubject1);
+        expectedSubjectsJson = objectMapper.writeValueAsString(expectedSubjects);
     }
 
     @Test
@@ -59,7 +60,7 @@ public class SubjectRestControllerTest {
     void givenId_onGetSubject_shouldReturnCorrectJson() throws Exception {
         when(subjectService.getById(1)).thenReturn(expectedSubject1);
 
-        mockMvc.perform(get("/api/subjects/1"))
+        mockMvc.perform(get("/api/subjects/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedSubjectJson));
 
@@ -71,8 +72,8 @@ public class SubjectRestControllerTest {
         mockMvc.perform(post("/api/subjects")
                         .content(expectedSubjectJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(subjectService).create(subjectToCreate);
+                .andExpect(status().isCreated());
+        verify(subjectService).create(expectedSubject1);
     }
 
     @Test

@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.rest.ClassroomRestControllerTest.TestD
 public class ClassroomRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedClassroomJson;
     String expectedClassroomsJson;
 
@@ -43,15 +44,13 @@ public class ClassroomRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(classroomRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedClassroomJson = new ObjectMapper().writeValueAsString(expectedClassroom1);
-        expectedClassroomsJson = new ObjectMapper().writeValueAsString(expectedClassrooms);
+        expectedClassroomJson = objectMapper.writeValueAsString(expectedClassroom1);
+        expectedClassroomsJson = objectMapper.writeValueAsString(expectedClassrooms);
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(classroomService.findAll()).thenReturn(expectedClassrooms);
-
-        System.out.println(expectedClassroomsJson);
 
         mockMvc.perform(get("/api/classrooms"))
                 .andExpect(status().isOk())
@@ -62,7 +61,7 @@ public class ClassroomRestControllerTest {
     void givenId_onGetClassroom_shouldReturnCorrectJson() throws Exception {
         when(classroomService.getById(1)).thenReturn(expectedClassroom1);
 
-        mockMvc.perform(get("/api/classrooms/1"))
+        mockMvc.perform(get("/api/classrooms/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedClassroomJson));
 
@@ -74,8 +73,8 @@ public class ClassroomRestControllerTest {
         mockMvc.perform(post("/api/classrooms")
                         .content(expectedClassroomJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(classroomService).create(classroomToCreate);
+                .andExpect(status().isCreated());
+        verify(classroomService).create(expectedClassroom1);
     }
 
     @Test
@@ -99,7 +98,6 @@ public class ClassroomRestControllerTest {
 
     interface TestData {
         Location location1 = new Location(1, "Phys building", 2, 22);
-        Classroom classroomToCreate = new Classroom(0, location1, "Big physics auditory", 500);
         Classroom expectedClassroom1 = new Classroom(1, location1, "Big physics auditory", 500);
 
         Location location2 = new Location(2, "Chem building", 1, 12);
@@ -107,9 +105,6 @@ public class ClassroomRestControllerTest {
 
         Location location3 = new Location(3, "Chem building", 2, 12);
         Classroom expectedClassroom3 = new Classroom(3, location3, "Chemistry laboratory", 15);
-
-        List<Location> expectedLocations = new ArrayList<>(
-                Arrays.asList(location1, location2, location3));
 
         List<Classroom> expectedClassrooms = new ArrayList<>(
                 Arrays.asList(expectedClassroom1, expectedClassroom2, expectedClassroom3));

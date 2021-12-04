@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.rest.HolidayRestControllerTest.TestDat
 public class HolidayRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedHolidayJson;
     String expectedHolidaysJson;
 
@@ -43,8 +44,8 @@ public class HolidayRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(holidayRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedHolidayJson = new ObjectMapper().writeValueAsString(expectedHoliday1);
-        expectedHolidaysJson = new ObjectMapper().writeValueAsString(expectedHolidays);
+        expectedHolidayJson = objectMapper.writeValueAsString(expectedHoliday1);
+        expectedHolidaysJson = objectMapper.writeValueAsString(expectedHolidays);
     }
 
     @Test
@@ -62,7 +63,7 @@ public class HolidayRestControllerTest {
     void givenId_onGetHoliday_shouldReturnCorrectJson() throws Exception {
         when(holidayService.getById(1)).thenReturn(expectedHoliday1);
 
-        var result = mockMvc.perform(get("/api/holidays/1"))
+        var result = mockMvc.perform(get("/api/holidays/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedHolidayJson));
 
@@ -74,8 +75,8 @@ public class HolidayRestControllerTest {
         mockMvc.perform(post("/api/holidays")
                         .content(expectedHolidayJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(holidayService).create(holidayToCreate);
+                .andExpect(status().isCreated());
+        verify(holidayService).create(expectedHoliday1);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.rest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.StudentService;
@@ -27,8 +28,8 @@ public class StudentRestController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Student student) {
-        student.setId(0);
         studentService.create(student);
     }
 

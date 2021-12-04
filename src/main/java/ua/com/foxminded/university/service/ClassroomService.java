@@ -35,6 +35,7 @@ public class ClassroomService {
         logger.debug("Creating a new classroom: {} ", classroom);
         verifyCapacityIsCorrect(classroom);
         verifyNameIsUnique(classroom);
+        classroom.setId(0);
         classroomRepository.save(classroom);
     }
 

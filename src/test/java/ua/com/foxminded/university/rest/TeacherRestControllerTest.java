@@ -30,6 +30,7 @@ import static ua.com.foxminded.university.rest.VacationRestControllerTest.TestDa
 public class TeacherRestControllerTest {
 
     private MockMvc mockMvc;
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedTeacherJson;
     String expectedTeachersJson;
 
@@ -43,8 +44,8 @@ public class TeacherRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(teacherRestController)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedTeacherJson = new ObjectMapper().writeValueAsString(expectedTeacher1);
-        expectedTeachersJson = new ObjectMapper().writeValueAsString(expectedTeachers);
+        expectedTeacherJson = objectMapper.writeValueAsString(expectedTeacher1);
+        expectedTeachersJson = objectMapper.writeValueAsString(expectedTeachers);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class TeacherRestControllerTest {
     void givenId_onGetTeacher_shouldReturnCorrectJson() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
-        mockMvc.perform(get("/api/teachers/1"))
+        mockMvc.perform(get("/api/teachers/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedTeacherJson));
 
@@ -72,8 +73,8 @@ public class TeacherRestControllerTest {
         mockMvc.perform(post("/api/teachers")
                         .content(expectedTeacherJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        verify(teacherService).create(teacherToCreate);
+                .andExpect(status().isCreated());
+        verify(teacherService).create(expectedTeacher1);
     }
 
     @Test
