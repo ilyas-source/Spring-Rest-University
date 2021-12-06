@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.rest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.service.ClassroomService;
@@ -29,18 +30,21 @@ public class ClassroomRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Classroom classroom) {
-        classroomService.create(classroom);
+    public Classroom save(@RequestBody Classroom classroom) {
+        return classroomService.create(classroom);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody Classroom classroom) {
+    @ResponseStatus(HttpStatus.OK)
+    public Classroom update(@PathVariable int id, @RequestBody Classroom classroom) {
         classroom.setId(id);
-        classroomService.update(classroom);
+        return classroomService.update(classroom);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> delete(@PathVariable int id) {
         classroomService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -31,12 +31,12 @@ public class ClassroomService {
         this.lectureService = lectureService;
     }
 
-    public void create(Classroom classroom) {
+    public Classroom create(Classroom classroom) {
         logger.debug("Creating a new classroom: {} ", classroom);
         verifyCapacityIsCorrect(classroom);
         verifyNameIsUnique(classroom);
         classroom.setId(0);
-        classroomRepository.save(classroom);
+        return classroomRepository.save(classroom);
     }
 
     public List<Classroom> findAll() {
@@ -52,11 +52,11 @@ public class ClassroomService {
                 () -> new EntityNotFoundException("Can't find classroom by id " + id));
     }
 
-    public void update(Classroom classroom) {
+    public Classroom update(Classroom classroom) {
         logger.debug("Updating classroom: {} ", classroom);
         verifyCapacityIsEnough(classroom);
         verifyNameIsUnique(classroom);
-        classroomRepository.save(classroom);
+        return classroomRepository.save(classroom);
     }
 
     public void delete(int id) {
