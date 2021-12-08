@@ -10,6 +10,7 @@ import ua.com.foxminded.university.exception.EntityNotUniqueException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.repository.ClassroomRepository;
 import ua.com.foxminded.university.repository.LectureRepository;
+import ua.com.foxminded.university.repository.LocationRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,19 +24,21 @@ public class ClassroomService {
 
     private ClassroomRepository classroomRepository;
     private LectureRepository lectureRepository;
+    private LocationRepository locationRepository;
     private LectureService lectureService;
 
-    public ClassroomService(ClassroomRepository classroomRepository, LectureRepository lectureRepository, LectureService lectureService) {
+    public ClassroomService(ClassroomRepository classroomRepository, LectureRepository lectureRepository,
+                            LectureService lectureService, LocationRepository locationRepository) {
         this.classroomRepository = classroomRepository;
         this.lectureRepository = lectureRepository;
         this.lectureService = lectureService;
+        this.locationRepository = locationRepository;
     }
 
     public Classroom create(Classroom classroom) {
         logger.debug("Creating a new classroom: {} ", classroom);
         verifyCapacityIsCorrect(classroom);
         verifyNameIsUnique(classroom);
-        classroom.setId(0);
         return classroomRepository.save(classroom);
     }
 
