@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.rest;
+package ua.com.foxminded.university.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

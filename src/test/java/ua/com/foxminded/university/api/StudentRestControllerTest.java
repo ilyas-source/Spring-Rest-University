@@ -1,7 +1,8 @@
-package ua.com.foxminded.university.rest;
+package ua.com.foxminded.university.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,12 +11,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.StudentService;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,17 +25,20 @@ import java.util.List;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.rest.StudentRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.expectedStudent1;
+import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.expectedStudents;
 
 @DataJpaTest
 public class StudentRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper mapper = new ObjectMapper();
+
     String expectedStudentJson;
     String expectedStudentsJson;
 
@@ -46,10 +50,13 @@ public class StudentRestControllerTest {
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
         mockMvc = MockMvcBuilders.standaloneSetup(studentRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
+      //          .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        expectedStudentJson = objectMapper.writeValueAsString(expectedStudent1);
-        expectedStudentsJson = objectMapper.writeValueAsString(expectedStudents);
+        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+
+        expectedStudentJson = mapper.writeValueAsString(expectedStudent1);
+        expectedStudentsJson = mapper.writeValueAsString(expectedStudents);
     }
 
     @Test
@@ -74,10 +81,14 @@ public class StudentRestControllerTest {
 
     @Test
     void givenStudent_onSave_shouldCallServiceCreate() throws Exception {
+
+        System.out.println(expectedStudentJson);
+
         mockMvc.perform(post("/api/students")
                         .content(expectedStudentJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+         //       .andExpect(status().isCreated());
+                 .andDo(print());
         verify(studentService).create(expectedStudent1);
     }
 

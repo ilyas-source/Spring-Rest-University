@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.rest;
+package ua.com.foxminded.university.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +28,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.rest.ClassroomRestControllerTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.rest.ClassroomRestControllerTest.TestData.expectedClassrooms;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassrooms;
 
 @ExtendWith(MockitoExtension.class)
 public class ClassroomRestControllerTest {
 
     private MockMvc mockMvc;
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private int classroomId = 1;
 
     @Mock
     private ClassroomService classroomService;
@@ -75,25 +76,25 @@ public class ClassroomRestControllerTest {
 
     @Test
     void givenId_onGetClassroom_shouldReturnCorrectJson() throws Exception {
-        when(classroomService.getById(1)).thenReturn(expectedClassroom1);
+        when(classroomService.getById(classroomId)).thenReturn(expectedClassroom1);
 
-        MvcResult mvcResult = mockMvc.perform(get("/api/classrooms/{id}", 1))
+        MvcResult mvcResult = mockMvc.perform(get("/api/classrooms/{id}", classroomId))
                 .andExpect(status().isOk()).andReturn();
 
         var actual = mapToObject(mvcResult, Classroom.class);
 
-        verify(classroomService).getById(1);
+        verify(classroomService).getById(classroomId);
         assertEquals(expectedClassroom1, actual);
     }
 
     @Test
     void givenWrongId_onGetClassroom_shouldReturn404() throws Exception {
-        when(classroomService.getById(1)).thenThrow(new EntityNotFoundException("Can't find classroom by id 1"));
+        when(classroomService.getById(classroomId)).thenThrow(new EntityNotFoundException("Can't find classroom by id 1"));
 
-        mockMvc.perform(get("/api/classrooms/{id}", 1))
-                .andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/api/classrooms/{id}", classroomId))
+                .andExpect(status().isNotFound());
 
-        verify(classroomService).getById(1);
+        verify(classroomService).getById(classroomId);
     }
 
     @Test
@@ -109,7 +110,7 @@ public class ClassroomRestControllerTest {
 
     @Test
     void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/classrooms/{id}", 1)
+        mockMvc.perform(put("/api/classrooms/{id}", classroomId)
                         .content(objectMapper.writeValueAsString(expectedClassroom1))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -120,10 +121,10 @@ public class ClassroomRestControllerTest {
 
     @Test
     void givenClassroom_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/classrooms/{id}", 1))
+        mockMvc.perform(delete("/api/classrooms/{id}", classroomId))
                 .andExpect(status().isNoContent());
 
-        verify(classroomService).delete(1);
+        verify(classroomService).delete(classroomId);
     }
 
     interface TestData {

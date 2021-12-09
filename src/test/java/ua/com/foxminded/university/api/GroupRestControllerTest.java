@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.rest;
+package ua.com.foxminded.university.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +23,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroups;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroups;
 
 @DataJpaTest
 public class GroupRestControllerTest {

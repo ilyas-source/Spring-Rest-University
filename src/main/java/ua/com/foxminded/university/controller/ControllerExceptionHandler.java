@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-@ControllerAdvice
+@ControllerAdvice("ua.com.foxminded.university.controller")
 public class ControllerExceptionHandler {
 
     public static final String EXCEPTION_VIEW = "exceptions/error";

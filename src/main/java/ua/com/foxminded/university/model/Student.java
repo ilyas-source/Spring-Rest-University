@@ -1,7 +1,6 @@
 package ua.com.foxminded.university.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
 import ua.com.foxminded.university.validation.BirthDateConstraint;
 
 import javax.persistence.*;
@@ -36,7 +35,8 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @BirthDateConstraint(age = 13)
-    @JsonSerialize(using = LocalDateSerializer.class)
+  //  @JsonSerialize(using = LocalDateSerializer.class)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "birth_date")
     private LocalDate birthDate;
     @Email(message = "{email.wrongformat}")

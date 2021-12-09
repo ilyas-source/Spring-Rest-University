@@ -1,4 +1,4 @@
-package ua.com.foxminded.university.rest;
+package ua.com.foxminded.university.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,15 +26,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.rest.ClassroomRestControllerTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.rest.ClassroomRestControllerTest.TestData.expectedClassroom2;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.rest.GroupRestControllerTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.rest.LectureRestControllerTest.TestData.*;
-import static ua.com.foxminded.university.rest.SubjectRestControllerTest.TestData.expectedSubject1;
-import static ua.com.foxminded.university.rest.SubjectRestControllerTest.TestData.expectedSubject2;
-import static ua.com.foxminded.university.rest.TeacherRestControllerTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.rest.TeacherRestControllerTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom1;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup1;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.api.LectureRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.expectedSubject1;
+import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.expectedSubject2;
+import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.expectedTeacher1;
+import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.expectedTeacher2;
 
 @DataJpaTest
 public class LectureRestControllerTest {
