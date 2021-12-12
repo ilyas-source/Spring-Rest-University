@@ -13,5 +13,5 @@ public class ClassroomDto {
     @Positive(message = "{capacity.positive}")
     private int capacity;
     @Valid
-    private LocationDto locationDto;
+    private LocationDto location;
 }
