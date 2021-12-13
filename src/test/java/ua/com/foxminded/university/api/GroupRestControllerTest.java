@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.mapper.GroupMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
@@ -31,11 +32,14 @@ public class GroupRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
+    private int groupId = 1;
     String expectedGroupJson;
     String expectedGroupsJson;
 
     @Mock
     private GroupService groupService;
+    @Mock
+    private GroupMapper mapper;
     @InjectMocks
     private GroupRestController groupRestController;
 

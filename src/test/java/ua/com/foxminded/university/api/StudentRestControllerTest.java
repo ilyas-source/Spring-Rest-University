@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.mapper.StudentMapper;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
@@ -37,13 +38,16 @@ import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData
 public class StudentRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
+    private int studentId = 1;
 
     String expectedStudentJson;
     String expectedStudentsJson;
 
     @Mock
     private StudentService studentService;
+    @Mock
+    private StudentMapper mapper;
     @InjectMocks
     private StudentRestController studentRestController;
 
@@ -52,11 +56,11 @@ public class StudentRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(studentRestController)
       //          .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        mapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+        objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
-        expectedStudentJson = mapper.writeValueAsString(expectedStudent1);
-        expectedStudentsJson = mapper.writeValueAsString(expectedStudents);
+        expectedStudentJson = objectMapper.writeValueAsString(expectedStudent1);
+        expectedStudentsJson = objectMapper.writeValueAsString(expectedStudents);
     }
 
     @Test

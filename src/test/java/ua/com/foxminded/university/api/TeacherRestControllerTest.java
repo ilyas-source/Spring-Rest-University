@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.mapper.TeacherMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.*;
 import ua.com.foxminded.university.service.TeacherService;
@@ -31,11 +32,14 @@ public class TeacherRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
+    private int teacherId = 1;
     String expectedTeacherJson;
     String expectedTeachersJson;
 
     @Mock
     private TeacherService teacherService;
+    @Mock
+    private TeacherMapper mapper;
     @InjectMocks
     private TeacherRestController teacherRestController;
 

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.mapper.HolidayMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
@@ -24,18 +25,22 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.expectedHoliday1;
+import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.expectedHolidays;
 
 @DataJpaTest
 public class HolidayRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
+    private int holidayId = 1;
     String expectedHolidayJson;
     String expectedHolidaysJson;
 
     @Mock
     private HolidayService holidayService;
+    @Mock
+    private HolidayMapper mapper;
     @InjectMocks
     private HolidayRestController holidayRestController;
 

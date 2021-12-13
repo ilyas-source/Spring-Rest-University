@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.mapper.SubjectMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
@@ -30,11 +31,14 @@ public class SubjectRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
+    private int subjectId = 1;
     String expectedSubjectJson;
     String expectedSubjectsJson;
 
     @Mock
     private SubjectService subjectService;
+    @Mock
+    private SubjectMapper mapper;
     @InjectMocks
     private SubjectRestController subjectRestController;
 

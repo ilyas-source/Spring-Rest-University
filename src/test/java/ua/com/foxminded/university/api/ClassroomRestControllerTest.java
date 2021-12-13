@@ -21,7 +21,6 @@ import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
 @ExtendWith(MockitoExtension.class)
 public class ClassroomRestControllerTest {
@@ -64,11 +64,6 @@ public class ClassroomRestControllerTest {
         assertEquals(expectedClassrooms, actual);
     }
 
-    static Classroom mapToObject(MvcResult mvcResult)
-            throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Classroom.class);
-    }
-
     static <T> List<T> mapToList(MvcResult mvcResult,
                                  Class<T> targetClass)
             throws IOException, ClassNotFoundException {
@@ -85,7 +80,7 @@ public class ClassroomRestControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/api/classrooms/{id}", classroomId))
                 .andExpect(status().isOk()).andReturn();
 
-        var actual = mapToObject(mvcResult);
+        var actual=mapToObject(mvcResult, Classroom.class);
 
         verify(classroomService).getById(classroomId);
         assertEquals(expectedClassroom1, actual);
@@ -122,7 +117,7 @@ public class ClassroomRestControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        var actual = mapToObject(mvcResult);
+        var actual = mapToObject(mvcResult, Classroom.class);
 
         verify(classroomService).update(expectedClassroom1);
         assertEquals(expectedClassroom1, actual);
