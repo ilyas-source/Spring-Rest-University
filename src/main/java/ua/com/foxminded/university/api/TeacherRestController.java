@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,11 @@ public class TeacherRestController {
     @GetMapping
     public List<Teacher> findAll() {
         return teacherService.findAll();
+    }
+
+    @GetMapping("/paged")
+    Page<Teacher> findAll(Pageable pageable) {
+        return teacherService.findAll(pageable);
     }
 
     @GetMapping("/{id}")

@@ -1,5 +1,7 @@
 package ua.com.foxminded.university.api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +33,12 @@ public class StudentRestController {
         return studentService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/paged")
+    Page<Student> findAll(Pageable pageable) {
+        return studentService.findAll(pageable);
+    }
+
+                          @GetMapping("/{id}")
     public Student getStudent(@PathVariable int id) {
         return studentService.getById(id);
     }
@@ -53,7 +60,6 @@ public class StudentRestController {
 
         return student;
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
