@@ -20,7 +20,6 @@ import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
 import ua.com.foxminded.university.service.ClassroomService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,18 +59,9 @@ public class ClassroomRestControllerTest {
         MvcResult mvcResult = mockMvc.perform(get("/api/classrooms"))
                 .andExpect(status().isOk())
                 .andReturn();
-        var actual = mapToList(mvcResult, Classroom.class);
+        List<Classroom> actual = mapToList(mvcResult, Classroom.class);
 
         assertEquals(expectedClassrooms, actual);
-    }
-
-    static <T> List<T> mapToList(MvcResult mvcResult,
-                                 Class<T> targetClass)
-            throws IOException, ClassNotFoundException {
-        var json = mvcResult.getResponse().getContentAsString();
-        Class<T[]> arrayClass = (Class<T[]>) Class.forName("[L" + targetClass.getName() + ";");
-        T[] objects = objectMapper.readValue(json, arrayClass);
-        return Arrays.asList(objects);
     }
 
     @Test
