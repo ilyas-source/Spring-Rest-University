@@ -8,7 +8,6 @@ import ua.com.foxminded.university.model.Location;
 
 @Mapper(componentModel = "spring")
 public interface ClassroomMapper {
-
     ClassroomDto classroomToClassroomDTO(Classroom classroom);
 
     Classroom classroomDtoToClassroom(ClassroomDto classroomDto);

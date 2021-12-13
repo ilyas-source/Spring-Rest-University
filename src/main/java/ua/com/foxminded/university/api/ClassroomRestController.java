@@ -22,12 +22,15 @@ import static org.springframework.http.ResponseEntity.created;
 public class ClassroomRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(ClassroomRestController.class);
+
     private final ClassroomService classroomService;
+    private final LocationService locationService;
     private final ClassroomMapper mapper;
 
     public ClassroomRestController(ClassroomService classroomService, LocationService locationService,
                                    ClassroomMapper mapper) {
         this.classroomService = classroomService;
+        this.locationService = locationService;
         this.mapper = mapper;
     }
 
@@ -43,7 +46,7 @@ public class ClassroomRestController {
 
     @PostMapping
     public ResponseEntity<Classroom> save(@RequestBody @Valid ClassroomDto classroomDto,
-                                       UriComponentsBuilder builder) {
+                                          UriComponentsBuilder builder) {
         Classroom classroom = mapper.classroomDtoToClassroom(classroomDto);
         classroomService.create(classroom);
 

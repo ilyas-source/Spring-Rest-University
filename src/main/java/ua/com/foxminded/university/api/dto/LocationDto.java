@@ -1,11 +1,15 @@
 package ua.com.foxminded.university.api.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LocationDto {
 
         @NotEmpty(message = "{name.notempty}")

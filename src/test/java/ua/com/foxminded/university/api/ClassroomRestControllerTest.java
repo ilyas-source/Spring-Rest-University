@@ -12,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.ClassroomDto;
+import ua.com.foxminded.university.api.dto.LocationDto;
+import ua.com.foxminded.university.api.mapper.ClassroomMapper;
 import ua.com.foxminded.university.exception.EntityNotFoundException;
 import ua.com.foxminded.university.model.Classroom;
 import ua.com.foxminded.university.model.Location;
@@ -27,9 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassrooms;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ClassroomRestControllerTest {
@@ -37,9 +40,10 @@ public class ClassroomRestControllerTest {
     private MockMvc mockMvc;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private int classroomId = 1;
-
     @Mock
     private ClassroomService classroomService;
+    @Mock
+    private ClassroomMapper mapper;
     @InjectMocks
     private ClassroomRestController classroomRestController;
 
@@ -60,13 +64,13 @@ public class ClassroomRestControllerTest {
         assertEquals(expectedClassrooms, actual);
     }
 
-    static Object mapToObject(MvcResult mvcResult, Class targetClass)
+    static Classroom mapToObject(MvcResult mvcResult)
             throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), targetClass);
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), Classroom.class);
     }
 
     static <T> List<T> mapToList(MvcResult mvcResult,
-                                        Class<T> targetClass)
+                                 Class<T> targetClass)
             throws IOException, ClassNotFoundException {
         var json = mvcResult.getResponse().getContentAsString();
         Class<T[]> arrayClass = (Class<T[]>) Class.forName("[L" + targetClass.getName() + ";");
@@ -75,13 +79,13 @@ public class ClassroomRestControllerTest {
     }
 
     @Test
-    void givenId_onGetClassroom_shouldReturnCorrectJson() throws Exception {
+    void givenId_onClassroom_shouldReturnCorrectJson() throws Exception {
         when(classroomService.getById(classroomId)).thenReturn(expectedClassroom1);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/classrooms/{id}", classroomId))
                 .andExpect(status().isOk()).andReturn();
 
-        var actual = mapToObject(mvcResult, Classroom.class);
+        var actual = mapToObject(mvcResult);
 
         verify(classroomService).getById(classroomId);
         assertEquals(expectedClassroom1, actual);
@@ -98,25 +102,30 @@ public class ClassroomRestControllerTest {
     }
 
     @Test
-    void givenClassroom_onSave_shouldCallServiceCreate() throws Exception {
+    void givenClassroomDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.classroomDtoToClassroom(classroomDto)).thenReturn(expectedClassroom1);
         mockMvc.perform(post("/api/classrooms")
-                        .content(objectMapper.writeValueAsString(expectedClassroom1))
+                        .content(objectMapper.writeValueAsString(classroomDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/classrooms/1"))
                 .andReturn();
-
         verify(classroomService).create(expectedClassroom1);
     }
 
     @Test
-    void givenClassroom_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/classrooms/{id}", classroomId)
-                        .content(objectMapper.writeValueAsString(expectedClassroom1))
+    void givenClassroomDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.classroomDtoToClassroom(classroomDto)).thenReturn(expectedClassroom1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/classrooms/{id}", classroomId)
+                        .content(objectMapper.writeValueAsString(classroomDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
+        var actual = mapToObject(mvcResult);
+
         verify(classroomService).update(expectedClassroom1);
+        assertEquals(expectedClassroom1, actual);
     }
 
     @Test
@@ -128,6 +137,9 @@ public class ClassroomRestControllerTest {
     }
 
     interface TestData {
+        LocationDto locationDto = new LocationDto("Phys building", 2, 22);
+        ClassroomDto classroomDto = new ClassroomDto("Big physics auditory", 500, locationDto);
+
         Location location1 = new Location(1, "Phys building", 2, 22);
         Classroom expectedClassroom1 = new Classroom(1, location1, "Big physics auditory", 500);
 

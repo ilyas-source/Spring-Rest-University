@@ -17,9 +17,9 @@ public class Lecture {
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column
     @JsonSerialize(using = LocalDateSerializer.class)
+    @NotNull
     private LocalDate date;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
@@ -34,8 +34,8 @@ public class Lecture {
     private Set<Group> groups;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
-    private Subject subject;
     @NotNull(message = "{assign.subject}")
+    private Subject subject;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(referencedColumnName = "id")
     @NotNull(message = "{assign.teacher}")
