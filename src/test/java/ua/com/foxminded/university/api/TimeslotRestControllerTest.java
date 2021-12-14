@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.TimeslotDto;
 import ua.com.foxminded.university.api.mapper.TimeslotMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.service.TimeslotService;
 
@@ -26,19 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
+import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestData.*;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class TimeslotRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    String expectedTimeslotJson;
-    String expectedTimeslotsJson;
-
     @Mock
     private TimeslotService timeslotService;
     @Mock
@@ -48,39 +46,43 @@ public class TimeslotRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(timeslotRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedTimeslotJson = objectMapper.writeValueAsString(expectedTimeslot1);
-        expectedTimeslotsJson = objectMapper.writeValueAsString(expectedTimeslots);
+        mockMvc = MockMvcBuilders.standaloneSetup(timeslotRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(timeslotService.findAll()).thenReturn(expectedTimeslots);
 
-        mockMvc.perform(get("/api/timeslots"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/timeslots"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedTimeslotsJson));
+                .andReturn();
+        List<Timeslot> actual = mapToList(mvcResult, Timeslot.class);
+
+        assertEquals(expectedTimeslots, actual);
     }
 
     @Test
     void givenId_onGetTimeslot_shouldReturnCorrectJson() throws Exception {
-        when(timeslotService.getById(1)).thenReturn(expectedTimeslot1);
+        when(timeslotService.getById(timeslotId)).thenReturn(expectedTimeslot1);
 
-        mockMvc.perform(get("/api/timeslots/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedTimeslotJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/timeslots/{id}", timeslotId))
+                .andExpect(status().isOk()).andReturn();
+
+        var actual = mapToObject(mvcResult, Timeslot.class);
 
         verify(timeslotService).getById(timeslotId);
+        assertEquals(expectedTimeslot1, actual);
     }
 
     @Test
-    void givenTimeslot_onSave_shouldCallServiceCreate() throws Exception {
+    void givenTimeslotDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.timeslotDtoToTimeslot(timeslotDto)).thenReturn(expectedTimeslot1);
         mockMvc.perform(post("/api/timeslots")
-                        .content(expectedTimeslotJson)
+                        .content(objectMapper.writeValueAsString(timeslotDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/timeslots/1"))
+                .andReturn();
         verify(timeslotService).create(expectedTimeslot1);
     }
 

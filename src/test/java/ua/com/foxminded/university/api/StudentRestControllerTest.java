@@ -2,11 +2,12 @@ package ua.com.foxminded.university.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +21,6 @@ import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.model.Student;
 import ua.com.foxminded.university.service.StudentService;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,22 +30,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class StudentRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-
-    String expectedStudentJson;
-    String expectedStudentsJson;
-
     @Mock
     private StudentService studentService;
     @Mock
@@ -55,45 +51,43 @@ public class StudentRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(studentRestController)
-                .build();
-        objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-
-        expectedStudentJson = objectMapper.writeValueAsString(expectedStudent1);
-        expectedStudentsJson = objectMapper.writeValueAsString(expectedStudents);
+        mockMvc = MockMvcBuilders.standaloneSetup(studentRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(studentService.findAll()).thenReturn(expectedStudents);
 
-        mockMvc.perform(get("/api/students"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/students"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedStudentsJson));
+                .andReturn();
+        List<Student> actual = mapToList(mvcResult, Student.class);
+
+        assertEquals(expectedStudents, actual);
     }
 
     @Test
     void givenId_onGetStudent_shouldReturnCorrectJson() throws Exception {
         when(studentService.getById(studentId)).thenReturn(expectedStudent1);
 
-        mockMvc.perform(get("/api/students/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedStudentJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/students/{id}", studentId))
+                .andExpect(status().isOk()).andReturn();
+
+        var actual = mapToObject(mvcResult, Student.class);
 
         verify(studentService).getById(studentId);
+        assertEquals(expectedStudent1, actual);
     }
 
     @Test
-    void givenStudent_onSave_shouldCallServiceCreate() throws Exception {
-
-        System.out.println(expectedStudentJson);
-
+    void givenStudentDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.studentDtoToStudent(studentDto)).thenReturn(expectedStudent1);
         mockMvc.perform(post("/api/students")
-                        .content(expectedStudentJson)
+                        .content(objectMapper.writeValueAsString(studentDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                //       .andExpect(status().isCreated());
-                .andDo(print());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/students/1"))
+                .andReturn();
         verify(studentService).create(expectedStudent1);
     }
 

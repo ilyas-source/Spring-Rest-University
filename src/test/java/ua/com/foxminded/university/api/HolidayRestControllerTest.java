@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.HolidayDto;
 import ua.com.foxminded.university.api.mapper.HolidayMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Holiday;
 import ua.com.foxminded.university.service.HolidayService;
 
@@ -26,19 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class HolidayRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    String expectedHolidayJson;
-    String expectedHolidaysJson;
-
     @Mock
     private HolidayService holidayService;
     @Mock
@@ -48,41 +46,43 @@ public class HolidayRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(holidayRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedHolidayJson = objectMapper.writeValueAsString(expectedHoliday1);
-        expectedHolidaysJson = objectMapper.writeValueAsString(expectedHolidays);
+        mockMvc = MockMvcBuilders.standaloneSetup(holidayRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(holidayService.findAll()).thenReturn(expectedHolidays);
 
-        mockMvc.perform(get("/api/holidays"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/holidays"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedHolidaysJson));
+                .andReturn();
+        List<Holiday> actual = mapToList(mvcResult, Holiday.class);
 
-        verify(holidayService).findAll();
+        assertEquals(expectedHolidays, actual);
     }
 
     @Test
     void givenId_onGetHoliday_shouldReturnCorrectJson() throws Exception {
-        when(holidayService.getById(1)).thenReturn(expectedHoliday1);
+        when(holidayService.getById(holidayId)).thenReturn(expectedHoliday1);
 
-        var result = mockMvc.perform(get("/api/holidays/{id}", holidayId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedHolidayJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/holidays/{id}", holidayId))
+                .andExpect(status().isOk()).andReturn();
+
+        var actual = mapToObject(mvcResult, Holiday.class);
 
         verify(holidayService).getById(holidayId);
+        assertEquals(expectedHoliday1, actual);
     }
 
     @Test
-    void givenHoliday_onSave_shouldCallServiceCreate() throws Exception {
+    void givenHolidayDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.holidayDtoToHoliday(holidayDto)).thenReturn(expectedHoliday1);
         mockMvc.perform(post("/api/holidays")
-                        .content(expectedHolidayJson)
+                        .content(objectMapper.writeValueAsString(holidayDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/holidays/1"))
+                .andReturn();
         verify(holidayService).create(expectedHoliday1);
     }
 

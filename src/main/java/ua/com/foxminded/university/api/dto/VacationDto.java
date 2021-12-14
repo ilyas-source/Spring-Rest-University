@@ -23,6 +23,6 @@ public class VacationDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private LocalDate endDate;
-    @NotNull
-    private TeacherDto teacher;
+//    @NotNull
+//    private TeacherDto teacher;
 }

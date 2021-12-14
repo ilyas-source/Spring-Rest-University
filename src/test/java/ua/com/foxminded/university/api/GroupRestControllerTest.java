@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.GroupDto;
 import ua.com.foxminded.university.api.mapper.GroupMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
 
@@ -23,19 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class GroupRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
-    String expectedGroupJson;
-    String expectedGroupsJson;
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private GroupService groupService;
     @Mock
@@ -45,39 +43,46 @@ public class GroupRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(groupRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedGroupJson = objectMapper.writeValueAsString(expectedGroup1);
-        expectedGroupsJson = objectMapper.writeValueAsString(expectedGroups);
+        mockMvc = MockMvcBuilders.standaloneSetup(groupRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(groupService.findAll()).thenReturn(expectedGroups);
 
-        mockMvc.perform(get("/api/groups"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/groups"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedGroupsJson));
+                .andReturn();
+        List<Group> actual = mapToList(mvcResult, Group.class);
+
+        assertEquals(expectedGroups, actual);
     }
 
     @Test
     void givenId_onGetGroup_shouldReturnCorrectJson() throws Exception {
-        when(groupService.getById(1)).thenReturn(expectedGroup1);
+        when(groupService.getById(groupId)).thenReturn(expectedGroup1);
 
-        mockMvc.perform(get("/api/groups/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedGroupJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/groups/{id}", groupId))
+                .andExpect(status().isOk()).andReturn();
+
+        var actual = mapToObject(mvcResult, Group.class);
 
         verify(groupService).getById(groupId);
+        assertEquals(expectedGroup1, actual);
     }
 
+
+
+
     @Test
-    void givenGroup_onSave_shouldCallServiceCreate() throws Exception {
+    void givenGroupDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.groupDtoToGroup(groupDto)).thenReturn(expectedGroup1);
         mockMvc.perform(post("/api/groups")
-                        .content(expectedGroupJson)
+                        .content(objectMapper.writeValueAsString(groupDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/groups/1"))
+                .andReturn();
         verify(groupService).create(expectedGroup1);
     }
 
@@ -101,7 +106,7 @@ public class GroupRestControllerTest {
         mockMvc.perform(delete("/api/groups/{id}", groupId))
                 .andExpect(status().isNoContent());
 
-        verify(groupService).delete(1);
+        verify(groupService).delete(groupId);
     }
 
     interface TestData {

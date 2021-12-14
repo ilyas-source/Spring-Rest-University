@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.VacationDto;
 import ua.com.foxminded.university.api.mapper.VacationMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Vacation;
 import ua.com.foxminded.university.service.VacationService;
 
@@ -26,19 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 import static ua.com.foxminded.university.api.VacationRestControllerTest.TestData.*;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class VacationRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    String expectedVacationJson;
-    String expectedVacationsJson;
-
     @Mock
     private VacationService vacationService;
     @Mock
@@ -48,39 +46,43 @@ public class VacationRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(vacationRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedVacationJson = objectMapper.writeValueAsString(expectedVacation1);
-        expectedVacationsJson = objectMapper.writeValueAsString(expectedVacations1);
+        mockMvc = MockMvcBuilders.standaloneSetup(vacationRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(vacationService.findAll()).thenReturn(expectedVacations1);
 
-        mockMvc.perform(get("/api/vacations"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/vacations"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedVacationsJson));
+                .andReturn();
+        List<Vacation> actual = mapToList(mvcResult, Vacation.class);
+
+        assertEquals(expectedVacations1, actual);
     }
 
     @Test
     void givenId_onGetVacation_shouldReturnCorrectJson() throws Exception {
-        when(vacationService.getById(1)).thenReturn(expectedVacation1);
+        when(vacationService.getById(vacationId)).thenReturn(expectedVacation1);
 
-        mockMvc.perform(get("/api/vacations/{id}", vacationId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedVacationJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/vacations/{id}", vacationId))
+                .andExpect(status().isOk()).andReturn();
 
-        verify(vacationService).getById(1);
+        var actual = mapToObject(mvcResult, Vacation.class);
+
+        verify(vacationService).getById(vacationId);
+        assertEquals(expectedVacation1, actual);
     }
 
     @Test
-    void givenVacation_onSave_shouldCallServiceCreate() throws Exception {
+    void givenVacationDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.vacationDtoToVacation(vacationDto)).thenReturn(expectedVacation1);
         mockMvc.perform(post("/api/vacations")
-                        .content(expectedVacationJson)
+                        .content(objectMapper.writeValueAsString(vacationDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/vacations/1"))
+                .andReturn();
         verify(vacationService).create(expectedVacation1);
     }
 

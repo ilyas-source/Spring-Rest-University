@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.SubjectDto;
 import ua.com.foxminded.university.api.mapper.SubjectMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
 
@@ -23,19 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class SubjectRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    String expectedSubjectJson;
-    String expectedSubjectsJson;
-
     @Mock
     private SubjectService subjectService;
     @Mock
@@ -45,39 +43,43 @@ public class SubjectRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(subjectRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedSubjectJson = objectMapper.writeValueAsString(expectedSubject1);
-        expectedSubjectsJson = objectMapper.writeValueAsString(expectedSubjects);
+        mockMvc = MockMvcBuilders.standaloneSetup(subjectRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(subjectService.findAll()).thenReturn(expectedSubjects);
 
-        mockMvc.perform(get("/api/subjects"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/subjects"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedSubjectsJson));
+                .andReturn();
+        List<Subject> actual = mapToList(mvcResult, Subject.class);
+
+        assertEquals(expectedSubjects, actual);
     }
 
     @Test
     void givenId_onGetSubject_shouldReturnCorrectJson() throws Exception {
-        when(subjectService.getById(1)).thenReturn(expectedSubject1);
+        when(subjectService.getById(subjectId)).thenReturn(expectedSubject1);
 
-        mockMvc.perform(get("/api/subjects/{id}", subjectId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedSubjectJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/subjects/{id}", subjectId))
+                .andExpect(status().isOk()).andReturn();
+
+        var actual = mapToObject(mvcResult, Subject.class);
 
         verify(subjectService).getById(subjectId);
+        assertEquals(expectedSubject1, actual);
     }
 
     @Test
-    void givenSubject_onSave_shouldCallServiceCreate() throws Exception {
+    void givenSubjectDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.subjectDtoToSubject(subjectDto)).thenReturn(expectedSubject1);
         mockMvc.perform(post("/api/subjects")
-                        .content(expectedSubjectJson)
+                        .content(objectMapper.writeValueAsString(subjectDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/subjects/1"))
+                .andReturn();
         verify(subjectService).create(expectedSubject1);
     }
 

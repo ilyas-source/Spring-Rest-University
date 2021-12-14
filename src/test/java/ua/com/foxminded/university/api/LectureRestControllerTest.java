@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -13,7 +15,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.dto.LectureDto;
 import ua.com.foxminded.university.api.mapper.LectureMapper;
-import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
 import ua.com.foxminded.university.service.LectureService;
@@ -26,24 +27,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.LectureRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToList;
 import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestData.*;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class LectureRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    String expectedLectureJson;
-    String expectedLecturesJson;
-
     @Mock
     private LectureService lectureService;
     @Mock
@@ -55,41 +54,46 @@ public class LectureRestControllerTest {
 
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
-        mockMvc = MockMvcBuilders.standaloneSetup(lectureRestController)
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
-        expectedLectureJson = objectMapper.writeValueAsString(expectedLecture1);
-        expectedLecturesJson = objectMapper.writeValueAsString(expectedLectures);
+        mockMvc = MockMvcBuilders.standaloneSetup(lectureRestController).build();
     }
 
     @Test
     void givenCorrectGetRequest_onFindAll_shouldReturnCorrectJson() throws Exception {
         when(lectureService.findAll()).thenReturn(expectedLectures);
 
-        mockMvc.perform(get("/api/lectures"))
+        MvcResult mvcResult = mockMvc.perform(get("/api/lectures"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedLecturesJson));
+                .andReturn();
+        List<Lecture> actual = mapToList(mvcResult, Lecture.class);
+
+        assertEquals(expectedLectures, actual);
     }
 
     @Test
     void givenId_onGetLecture_shouldReturnCorrectJson() throws Exception {
-        when(lectureService.getById(1)).thenReturn(expectedLecture1);
+        when(lectureService.getById(lectureId)).thenReturn(expectedLecture1);
 
-        mockMvc.perform(get("/api/lectures/{id}", lectureId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedLectureJson));
+        MvcResult mvcResult = mockMvc.perform(get("/api/lectures/{id}", lectureId))
+                .andExpect(status().isOk()).andReturn();
 
-        verify(lectureService).getById(1);
+        var actual = mapToObject(mvcResult, Lecture.class);
+
+        verify(lectureService).getById(lectureId);
+        assertEquals(expectedLecture1, actual);
     }
 
     @Test
-    void givenLecture_onSave_shouldCallServiceCreate() throws Exception {
+    void givenLectureDto_onSave_shouldCallServiceCreate() throws Exception {
+        when(mapper.lectureDtoToLecture(lectureDto)).thenReturn(expectedLecture1);
         mockMvc.perform(post("/api/lectures")
-                        .content(expectedLectureJson)
+                        .content(objectMapper.writeValueAsString(lectureDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/lectures/1"))
+                .andReturn();
         verify(lectureService).create(expectedLecture1);
     }
+
 
     @Test
     void givenLectureDto_onUpdate_shouldCallServiceUpdate() throws Exception {
