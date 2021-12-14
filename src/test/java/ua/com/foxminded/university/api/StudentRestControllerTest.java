@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.AddressDto;
+import ua.com.foxminded.university.api.dto.StudentDto;
 import ua.com.foxminded.university.api.mapper.StudentMapper;
 import ua.com.foxminded.university.model.Address;
 import ua.com.foxminded.university.model.Gender;
@@ -24,15 +26,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup1;
-import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup2;
+import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
 @DataJpaTest
 public class StudentRestControllerTest {
@@ -129,11 +132,6 @@ public class StudentRestControllerTest {
         Address expectedAddress6 = Address.builder().country("China").id(6).postalCode("20121").region("Guangdung")
                 .city("Beijin").streetAddress("Main St. 125").build();
 
-        Student studentToCreate = Student.builder().firstName("Ivan").lastName("Petrov")
-                .id(0).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
-                .email("qwe@rty.com").phone("123123123").address(expectedAddress3)
-                .group(expectedGroup1).build();
-
         Student expectedStudent1 = Student.builder().firstName("Ivan").lastName("Petrov")
                 .id(1).gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
                 .email("qwe@rty.com").phone("123123123").address(expectedAddress3)
@@ -153,5 +151,13 @@ public class StudentRestControllerTest {
 
         List<Student> expectedStudents = new ArrayList<>(
                 Arrays.asList(expectedStudent1, expectedStudent2, expectedStudent3, expectedStudent4));
+
+        AddressDto addressDto3=AddressDto.builder().country("Russia").postalCode("450080").region("Permskiy kray")
+                .city("Perm").streetAddress("Lenina 5").build();
+
+        StudentDto studentDto = StudentDto.builder().firstName("Ivan").lastName("Petrov")
+                .gender(Gender.MALE).birthDate(LocalDate.of(1980, 11, 1))
+                .email("qwe@rty.com").phone("123123123").address(addressDto3)
+                .group(groupDto).build();
     }
 }

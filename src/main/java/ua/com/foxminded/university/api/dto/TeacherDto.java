@@ -33,7 +33,7 @@ public class TeacherDto {
     private Set<SubjectDto> subjects;
     @Email
     private String email;
-    private String phone;
+    private String phoneNumber;
     private AddressDto address;
     private List<VacationDto> vacations;
 }

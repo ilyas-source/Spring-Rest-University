@@ -17,10 +17,7 @@ import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.service.GroupService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -113,7 +110,7 @@ public class GroupRestControllerTest {
         GroupDto groupDto = new GroupDto("AB-11");
         GroupDto groupDto2 = new GroupDto("ZI-08");
 
-        Set<GroupDto> expectedGroupDtos =new ArrayList<>(Arrays.asList(groupDto, groupDto2));
+        Set<GroupDto> groupDtos =new HashSet<>(Arrays.asList(groupDto, groupDto2));
 
         Group expectedGroup1 = new Group(1, "AB-11");
         Group expectedGroup2 = new Group(2, "ZI-08");

@@ -17,9 +17,7 @@ import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Subject;
 import ua.com.foxminded.university.service.SubjectService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -110,6 +108,9 @@ public class SubjectRestControllerTest {
         int subjectId = 1;
 
         SubjectDto subjectDto = new SubjectDto("Test Economics", "Base economics");
+        SubjectDto subjectDto2 = new SubjectDto("Test Philosophy", "Base philosophy");
+
+        Set<SubjectDto> subjectDtos = new HashSet<>(Arrays.asList(subjectDto, subjectDto2));
 
         Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
         Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");

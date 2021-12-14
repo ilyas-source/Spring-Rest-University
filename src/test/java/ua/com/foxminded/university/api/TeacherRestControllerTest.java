@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.AddressDto;
 import ua.com.foxminded.university.api.dto.TeacherDto;
 import ua.com.foxminded.university.api.mapper.TeacherMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
@@ -19,6 +20,7 @@ import ua.com.foxminded.university.service.TeacherService;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 import static ua.com.foxminded.university.api.VacationRestControllerTest.TestData.expectedVacations1;
 import static ua.com.foxminded.university.api.VacationRestControllerTest.TestData.expectedVacations2;
 
@@ -116,6 +119,8 @@ public class TeacherRestControllerTest {
         Address expectedAddress2 = Address.builder().country("Poland").id(2).postalCode("54321").region(
                         "Central region")
                 .city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
+        AddressDto addressDto = AddressDto.builder().country("UK").postalCode("12345").region("City-Of-Edinburgh")
+                .city("Edinburgh").streetAddress("Panmure House").build();
 
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
@@ -128,7 +133,7 @@ public class TeacherRestControllerTest {
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
 
         TeacherDto teacherDto = TeacherDto.builder().firstName("Adam").lastName("Smith")
-                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
-                .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
+                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(subjectDtos)
+                .email("adam@smith.com").phoneNumber("+223322").address(addressDto).build();
     }
 }

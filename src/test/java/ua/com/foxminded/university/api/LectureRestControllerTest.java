@@ -16,26 +16,24 @@ import ua.com.foxminded.university.api.mapper.LectureMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Group;
 import ua.com.foxminded.university.model.Lecture;
-import ua.com.foxminded.university.model.Timeslot;
 import ua.com.foxminded.university.service.LectureService;
 import ua.com.foxminded.university.service.TeacherService;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom1;
-import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.expectedClassroom2;
+import static ua.com.foxminded.university.api.ClassroomRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.LectureRestControllerTest.TestData.*;
 import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.*;
-import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.expectedTeacher1;
-import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.expectedTeacher2;
+import static ua.com.foxminded.university.api.TeacherRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestData.*;
 
 @DataJpaTest
@@ -152,7 +150,7 @@ public class LectureRestControllerTest {
         List<Lecture> expectedLectures = new ArrayList<>(Arrays.asList(expectedLecture1, expectedLecture2));
 
         LectureDto lectureDto = LectureDto.builder().date(LocalDate.of(2020, 1, 1)).subject(subjectDto)
-                .timeslot(timeslotDto).groups(expectedGroupDtos)
-                .teacher(teacherDto).classroom(expectedClassroom1).build();
+                .timeslot(timeslotDto).groups(groupDtos)
+                .teacher(teacherDto).classroom(classroomDto).build();
     }
 }

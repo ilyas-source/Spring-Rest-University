@@ -109,7 +109,8 @@ public class VacationRestControllerTest {
 
     interface TestData {
         int vacationId = 1;
-        VacationDto vacationDto = new VacationDto(LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
+        VacationDto vacationDto = new VacationDto(LocalDate.of(2000, 1, 1),
+                LocalDate.of(2000, 2, 1));
 
         Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
         Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 5, 1), LocalDate.of(2000, 6, 1));
