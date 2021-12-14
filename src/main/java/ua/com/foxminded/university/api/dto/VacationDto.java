@@ -19,10 +19,7 @@ public class VacationDto {
     @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private LocalDate startDate;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
     private LocalDate endDate;
-//    @NotNull
-//    private TeacherDto teacher;
 }

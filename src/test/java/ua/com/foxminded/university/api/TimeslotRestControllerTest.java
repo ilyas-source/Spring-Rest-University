@@ -36,7 +36,7 @@ import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestDat
 public class TimeslotRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private TimeslotService timeslotService;
     @Mock

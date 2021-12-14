@@ -36,7 +36,7 @@ import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 public class HolidayRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private HolidayService holidayService;
     @Mock
@@ -81,8 +81,8 @@ public class HolidayRestControllerTest {
                         .content(objectMapper.writeValueAsString(holidayDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost/holidays/1"))
-                .andReturn();
+                .andExpect(header().string("location", "http://localhost/holidays/1"));
+
         verify(holidayService).create(expectedHoliday1);
     }
 

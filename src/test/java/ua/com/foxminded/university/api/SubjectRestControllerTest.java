@@ -33,7 +33,7 @@ import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 public class SubjectRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private SubjectService subjectService;
     @Mock

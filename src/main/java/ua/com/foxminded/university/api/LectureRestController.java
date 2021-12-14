@@ -1,5 +1,6 @@
 package ua.com.foxminded.university.api;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +60,6 @@ public class LectureRestController {
         return lecture;
     }
 
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -68,8 +68,10 @@ public class LectureRestController {
 
     @PostMapping("/replacement")
     public void replaceTeacher(@RequestParam("teacher") int id,
-                                 @RequestParam("start") LocalDate start,
-                                 @RequestParam("end") LocalDate end) {
+                                 @RequestParam("start")
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                                 @RequestParam("end")
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
         Teacher teacher = teacherService.getById(id);
         lectureService.replaceTeacher(teacher, start, end);
     }

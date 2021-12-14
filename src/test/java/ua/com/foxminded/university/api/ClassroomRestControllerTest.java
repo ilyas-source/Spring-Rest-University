@@ -38,7 +38,7 @@ import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 public class ClassroomRestControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private ClassroomService classroomService;
     @Mock

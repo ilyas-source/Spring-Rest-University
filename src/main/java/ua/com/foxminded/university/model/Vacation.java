@@ -1,8 +1,7 @@
 package ua.com.foxminded.university.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,13 +16,11 @@ public class Vacation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "start_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull
     private LocalDate startDate;
     @Column(name = "end_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull
     private LocalDate endDate;
     @ManyToOne

@@ -1,10 +1,11 @@
 package ua.com.foxminded.university.api.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import ua.com.foxminded.university.model.Gender;
 import ua.com.foxminded.university.validation.BirthDateConstraint;
 
@@ -27,7 +28,7 @@ public class StudentDto {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @BirthDateConstraint(age = 13)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthDate;
     @Email(message = "{email.wrongformat}")
     private String email;

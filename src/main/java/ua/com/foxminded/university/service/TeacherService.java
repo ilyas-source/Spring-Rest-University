@@ -47,7 +47,6 @@ public class TeacherService {
         logger.debug("Creating a new teacher: {} ", teacher);
         verifyIsUnique(teacher);
         verifyHasEnoughVacationDays(teacher);
-        teacher.setId(0);
         teacherRepository.save(teacher);
     }
 

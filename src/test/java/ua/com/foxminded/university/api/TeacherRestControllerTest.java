@@ -37,7 +37,7 @@ import static ua.com.foxminded.university.api.VacationRestControllerTest.TestDat
 public class TeacherRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private TeacherService teacherService;
     @Mock

@@ -1,7 +1,7 @@
 package ua.com.foxminded.university.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -18,7 +18,7 @@ public class Lecture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @NotNull
     private LocalDate date;
     @OneToOne(cascade = CascadeType.ALL)

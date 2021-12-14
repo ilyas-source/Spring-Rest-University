@@ -10,6 +10,9 @@ university:
   minimumtimeslotlength: 30
   minimumbreaklength: 30
 spring:
+  mvc:
+    format:
+      date-time: iso
   datasource:
     url: jdbc:postgresql://localhost:5432/university
     username: rector

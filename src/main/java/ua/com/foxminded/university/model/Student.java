@@ -1,6 +1,7 @@
 package ua.com.foxminded.university.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import ua.com.foxminded.university.validation.BirthDateConstraint;
 
 import javax.persistence.*;
@@ -9,16 +10,6 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "students")
-@NamedQueries({
-        @NamedQuery(name = "SelectAllStudents", query = "from Student"),
-        @NamedQuery(name = "FindStudentByGroup", query = "from Student where group = :group"),
-        @NamedQuery(name = "FindStudentByAddress", query = "from Student where address = :address"),
-        @NamedQuery(name = "findStudentByNameAndBirthDate",
-                query = "from Student where firstName = :firstName AND lastName = :lastName AND birthDate = :birthDate")
-
-
-})
 public class Student {
 
     @Id
@@ -35,8 +26,7 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @BirthDateConstraint(age = 13)
-  //  @JsonSerialize(using = LocalDateSerializer.class)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @Column(name = "birth_date")
     private LocalDate birthDate;
     @Email(message = "{email.wrongformat}")

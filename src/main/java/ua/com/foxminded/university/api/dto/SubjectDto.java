@@ -14,5 +14,4 @@ public class SubjectDto {
     @NotEmpty(message = "{name.notempty}")
     private String name;
     private String description;
-  //  private List<TeacherDto> teachers;
 }

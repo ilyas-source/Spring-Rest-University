@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,7 +41,7 @@ import static ua.com.foxminded.university.api.TimeslotRestControllerTest.TestDat
 public class LectureRestControllerTest {
 
     private MockMvc mockMvc;
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private LectureService lectureService;
     @Mock
@@ -120,14 +119,14 @@ public class LectureRestControllerTest {
 
     @Test
     void givenTeacherIdAndDates_onReplaceTeacher_shouldCallServiceReplaceTeacher() throws Exception {
-        when(teacherService.getById(1)).thenReturn(expectedTeacher1);
+        when(teacherService.getById(lectureId)).thenReturn(expectedTeacher1);
 
         var request = post("/api/lectures/replacement")
                 .param("teacher", "1")
-                .param("start", "01.01.2000")
-                .param("end", "01.02.2000");
+                .param("start", "2000-01-01")
+                .param("end", "2000-02-01");
 
-        mockMvc.perform(request).andExpect(status().isOk());
+        var result = mockMvc.perform(request).andExpect(status().isOk());
 
         verify(lectureService).replaceTeacher(expectedTeacher1, startDate, endDate);
     }
@@ -140,8 +139,6 @@ public class LectureRestControllerTest {
 
         Set<Group> expectedGroups1 = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
         Set<Group> expectedGroups2 = new HashSet<>(List.of(expectedGroup1));
-
-        Set<Group> expectedGroupsDto = new HashSet<>(Arrays.asList(expectedGroup1, expectedGroup2));
 
         Lecture expectedLecture1 = Lecture.builder().date(LocalDate.of(2020, 1, 1)).subject(expectedSubject1)
                 .id(1).timeslot(expectedTimeslot1).groups(expectedGroups1)

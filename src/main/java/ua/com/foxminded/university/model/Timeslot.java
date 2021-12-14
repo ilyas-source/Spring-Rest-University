@@ -1,7 +1,7 @@
 package ua.com.foxminded.university.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import ua.com.foxminded.university.validation.TimeRangeConstraint;
 
 import javax.persistence.*;
@@ -19,11 +19,11 @@ public class Timeslot {
     private int id;
     @NotNull
     @Column(name = "begin_time")
-    @JsonSerialize(using = LocalTimeSerializer.class)
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime beginTime;
     @NotNull
     @Column(name = "end_time")
-    @JsonSerialize(using = LocalTimeSerializer.class)
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
     private LocalTime endTime;
 
     public Timeslot() {
