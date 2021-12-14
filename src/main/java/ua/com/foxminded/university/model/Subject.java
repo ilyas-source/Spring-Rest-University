@@ -22,12 +22,12 @@ public class Subject {
     private String name;
     @Column
     private String description;
-    @ManyToMany
-    @JoinTable(
-            name = "teachers_subjects",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-    private List<Teacher> teachers;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "teachers_subjects",
+//            joinColumns = @JoinColumn(name = "subject_id"),
+//            inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+//    private List<Teacher> teachers;
 
     public Subject() {
     }

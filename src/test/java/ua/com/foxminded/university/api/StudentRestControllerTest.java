@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ua.com.foxminded.university.api.mapper.StudentMapper;
 import ua.com.foxminded.university.model.Address;
@@ -31,15 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup1;
 import static ua.com.foxminded.university.api.GroupRestControllerTest.TestData.expectedGroup2;
-import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.expectedStudent1;
-import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.expectedStudents;
+import static ua.com.foxminded.university.api.StudentRestControllerTest.TestData.*;
 
 @DataJpaTest
 public class StudentRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    private int studentId = 1;
 
     String expectedStudentJson;
     String expectedStudentsJson;
@@ -54,7 +53,6 @@ public class StudentRestControllerTest {
     @BeforeEach
     public void setMocks() throws JsonProcessingException {
         mockMvc = MockMvcBuilders.standaloneSetup(studentRestController)
-      //          .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
         objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
@@ -74,13 +72,13 @@ public class StudentRestControllerTest {
 
     @Test
     void givenId_onGetStudent_shouldReturnCorrectJson() throws Exception {
-        when(studentService.getById(1)).thenReturn(expectedStudent1);
+        when(studentService.getById(studentId)).thenReturn(expectedStudent1);
 
         mockMvc.perform(get("/api/students/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedStudentJson));
 
-        verify(studentService).getById(1);
+        verify(studentService).getById(studentId);
     }
 
     @Test
@@ -91,31 +89,37 @@ public class StudentRestControllerTest {
         mockMvc.perform(post("/api/students")
                         .content(expectedStudentJson)
                         .contentType(MediaType.APPLICATION_JSON))
-         //       .andExpect(status().isCreated());
-                 .andDo(print());
+                //       .andExpect(status().isCreated());
+                .andDo(print());
         verify(studentService).create(expectedStudent1);
     }
 
     @Test
-    void givenStudent_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/students/{id}", 1)
-                        .content(expectedStudentJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+    void givenStudentDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.studentDtoToStudent(studentDto)).thenReturn(expectedStudent1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/students/{id}", studentId)
+                        .content(objectMapper.writeValueAsString(studentDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actual = mapToObject(mvcResult, Student.class);
 
         verify(studentService).update(expectedStudent1);
+        assertEquals(expectedStudent1, actual);
     }
 
     @Test
     void givenStudent_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/students/{id}", 1))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/students/{id}", studentId))
+                .andExpect(status().isNoContent());
 
-        verify(studentService).delete(1);
+        verify(studentService).delete(studentId);
     }
 
     interface TestData {
+        int studentId = 1;
+
         Address expectedAddress3 = Address.builder().country("Russia").id(3).postalCode("450080").region("Permskiy kray")
                 .city("Perm").streetAddress("Lenina 5").build();
         Address expectedAddress4 = Address.builder().country("USA").id(4).postalCode("90210").region("California")

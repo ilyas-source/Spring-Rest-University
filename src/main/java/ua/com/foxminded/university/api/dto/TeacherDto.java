@@ -1,6 +1,9 @@
 package ua.com.foxminded.university.api.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ua.com.foxminded.university.model.*;
 
 import javax.persistence.*;
@@ -11,6 +14,9 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class TeacherDto {
 
     @NotEmpty(message = "{name.notempty}")

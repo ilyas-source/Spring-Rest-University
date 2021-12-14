@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.TeacherDto;
 import ua.com.foxminded.university.api.mapper.TeacherMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.*;
@@ -32,7 +34,6 @@ public class TeacherRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    private int teacherId = 1;
     String expectedTeacherJson;
     String expectedTeachersJson;
 
@@ -65,7 +66,7 @@ public class TeacherRestControllerTest {
     void givenId_onGetTeacher_shouldReturnCorrectJson() throws Exception {
         when(teacherService.getById(1)).thenReturn(expectedTeacher1);
 
-        mockMvc.perform(get("/api/teachers/{id}", 1))
+        mockMvc.perform(get("/api/teachers/{id}", teacherId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedTeacherJson));
 
@@ -82,25 +83,31 @@ public class TeacherRestControllerTest {
     }
 
     @Test
-    void givenTeacher_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/teachers/{id}", 1)
-                        .content(expectedTeacherJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+    void givenTeacherDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.teacherDtoToTeacher(teacherDto)).thenReturn(expectedTeacher1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/teachers/{id}", teacherId)
+                        .content(objectMapper.writeValueAsString(teacherDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actual = mapToObject(mvcResult, Teacher.class);
 
         verify(teacherService).update(expectedTeacher1);
+        assertEquals(expectedTeacher1, actual);
     }
 
     @Test
     void givenTeacher_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/teachers/{id}", 1))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/teachers/{id}", teacherId))
+                .andExpect(status().isNoContent());
 
-        verify(teacherService).delete(1);
+        verify(teacherService).delete(teacherId);
     }
 
     interface TestData {
+        int teacherId = 1;
+
         Set<Subject> expectedSubjects1 = new HashSet<>(Arrays.asList(expectedSubject1, expectedSubject2));
         Set<Subject> expectedSubjects2 = new HashSet<>(Arrays.asList(expectedSubject3, expectedSubject4));
 
@@ -110,10 +117,6 @@ public class TeacherRestControllerTest {
                         "Central region")
                 .city("Warsaw").streetAddress("Urszuli Ledochowskiej 3").build();
 
-        Teacher teacherToCreate = Teacher.builder().firstName("Adam").lastName("Smith").id(0)
-                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
-                .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
-                .vacations(expectedVacations1).build();
         Teacher expectedTeacher1 = Teacher.builder().firstName("Adam").lastName("Smith").id(1)
                 .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
                 .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
@@ -123,5 +126,9 @@ public class TeacherRestControllerTest {
                 .email("marie@curie.com").phoneNumber("+322223").address(expectedAddress2)
                 .vacations(expectedVacations2).build();
         List<Teacher> expectedTeachers = new ArrayList<>(Arrays.asList(expectedTeacher1, expectedTeacher2));
+
+        TeacherDto teacherDto = TeacherDto.builder().firstName("Adam").lastName("Smith")
+                .gender(Gender.MALE).degree(Degree.DOCTOR).subjects(expectedSubjects1)
+                .email("adam@smith.com").phoneNumber("+223322").address(expectedAddress1)
     }
 }

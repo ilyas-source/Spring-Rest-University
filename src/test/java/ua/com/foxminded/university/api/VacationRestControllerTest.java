@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.VacationDto;
 import ua.com.foxminded.university.api.mapper.VacationMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Vacation;
@@ -20,11 +22,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 import static ua.com.foxminded.university.api.VacationRestControllerTest.TestData.*;
 
 @DataJpaTest
@@ -32,7 +36,6 @@ public class VacationRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    private int vacationId = 1;
     String expectedVacationJson;
     String expectedVacationsJson;
 
@@ -65,7 +68,7 @@ public class VacationRestControllerTest {
     void givenId_onGetVacation_shouldReturnCorrectJson() throws Exception {
         when(vacationService.getById(1)).thenReturn(expectedVacation1);
 
-        mockMvc.perform(get("/api/vacations/{id}", 1))
+        mockMvc.perform(get("/api/vacations/{id}", vacationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedVacationJson));
 
@@ -82,26 +85,32 @@ public class VacationRestControllerTest {
     }
 
     @Test
-    void givenVacation_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/vacations/{id}", 1)
-                        .content(expectedVacationJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+    void givenVacationDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.vacationDtoToVacation(vacationDto)).thenReturn(expectedVacation1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/vacations/{id}", vacationId)
+                        .content(objectMapper.writeValueAsString(vacationDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actual = mapToObject(mvcResult, Vacation.class);
 
         verify(vacationService).update(expectedVacation1);
+        assertEquals(expectedVacation1, actual);
     }
 
     @Test
     void givenVacation_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/vacations/{id}", 1))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/vacations/{id}", vacationId))
+                .andExpect(status().isNoContent());
 
-        verify(vacationService).delete(1);
+        verify(vacationService).delete(vacationId);
     }
 
     interface TestData {
-        Vacation vacationToCreate = new Vacation(0, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
+        int vacationId = 1;
+        VacationDto vacationDto = new VacationDto(LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
+
         Vacation expectedVacation1 = new Vacation(1, LocalDate.of(2000, 1, 1), LocalDate.of(2000, 2, 1));
         Vacation expectedVacation2 = new Vacation(2, LocalDate.of(2000, 5, 1), LocalDate.of(2000, 6, 1));
         Vacation expectedVacation3 = new Vacation(3, LocalDate.of(2000, 1, 15), LocalDate.of(2000, 2, 15));

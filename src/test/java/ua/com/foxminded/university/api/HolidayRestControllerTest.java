@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.HolidayDto;
 import ua.com.foxminded.university.api.mapper.HolidayMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Holiday;
@@ -20,20 +22,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.expectedHoliday1;
-import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.expectedHolidays;
+import static ua.com.foxminded.university.api.HolidayRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
 @DataJpaTest
 public class HolidayRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    private int holidayId = 1;
     String expectedHolidayJson;
     String expectedHolidaysJson;
 
@@ -68,11 +70,11 @@ public class HolidayRestControllerTest {
     void givenId_onGetHoliday_shouldReturnCorrectJson() throws Exception {
         when(holidayService.getById(1)).thenReturn(expectedHoliday1);
 
-        var result = mockMvc.perform(get("/api/holidays/{id}", 1))
+        var result = mockMvc.perform(get("/api/holidays/{id}", holidayId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedHolidayJson));
 
-        verify(holidayService).getById(1);
+        verify(holidayService).getById(holidayId);
     }
 
     @Test
@@ -85,26 +87,33 @@ public class HolidayRestControllerTest {
     }
 
     @Test
-    void givenHoliday_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/holidays/{id}", 1)
-                        .content(expectedHolidayJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+    void givenHolidayDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.holidayDtoToHoliday(holidayDto)).thenReturn(expectedHoliday1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/holidays/{id}", holidayId)
+                        .content(objectMapper.writeValueAsString(holidayDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actual = mapToObject(mvcResult, Holiday.class);
 
         verify(holidayService).update(expectedHoliday1);
+        assertEquals(expectedHoliday1, actual);
     }
 
     @Test
     void givenHoliday_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/holidays/{id}", 1))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/holidays/{id}", holidayId))
+                .andExpect(status().isNoContent());
 
-        verify(holidayService).delete(1);
+        verify(holidayService).delete(holidayId);
     }
 
     interface TestData {
-        Holiday holidayToCreate = new Holiday(0, LocalDate.of(2000, 12, 25), "Christmas");
+        int holidayId = 1;
+
+        HolidayDto holidayDto=new HolidayDto( LocalDate.of(2000, 12, 25), "Christmas");
+
         Holiday expectedHoliday1 = new Holiday(1, LocalDate.of(2000, 12, 25), "Christmas");
         Holiday expectedHoliday2 = new Holiday(2, LocalDate.of(2000, 10, 30), "Halloween");
         Holiday expectedHoliday3 = new Holiday(3, LocalDate.of(2000, 3, 8), "International womens day");

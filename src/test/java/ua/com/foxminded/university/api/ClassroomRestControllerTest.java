@@ -38,8 +38,7 @@ import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 public class ClassroomRestControllerTest {
 
     private MockMvc mockMvc;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-    private int classroomId = 1;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private ClassroomService classroomService;
     @Mock
@@ -65,13 +64,13 @@ public class ClassroomRestControllerTest {
     }
 
     @Test
-    void givenId_onClassroom_shouldReturnCorrectJson() throws Exception {
+    void givenId_onGetClassroom_shouldReturnCorrectJson() throws Exception {
         when(classroomService.getById(classroomId)).thenReturn(expectedClassroom1);
 
         MvcResult mvcResult = mockMvc.perform(get("/api/classrooms/{id}", classroomId))
                 .andExpect(status().isOk()).andReturn();
 
-        var actual=mapToObject(mvcResult, Classroom.class);
+        var actual = mapToObject(mvcResult, Classroom.class);
 
         verify(classroomService).getById(classroomId);
         assertEquals(expectedClassroom1, actual);
@@ -123,6 +122,8 @@ public class ClassroomRestControllerTest {
     }
 
     interface TestData {
+        int classroomId = 1;
+
         LocationDto locationDto = new LocationDto("Phys building", 2, 22);
         ClassroomDto classroomDto = new ClassroomDto("Big physics auditory", 500, locationDto);
 

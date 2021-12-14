@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ua.com.foxminded.university.api.dto.SubjectDto;
 import ua.com.foxminded.university.api.mapper.SubjectMapper;
 import ua.com.foxminded.university.controller.ControllerExceptionHandler;
 import ua.com.foxminded.university.model.Subject;
@@ -19,19 +21,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ua.com.foxminded.university.api.SubjectRestControllerTest.TestData.*;
+import static ua.com.foxminded.university.api.TestMappers.mapToObject;
 
 @DataJpaTest
 public class SubjectRestControllerTest {
 
     private MockMvc mockMvc;
     ObjectMapper objectMapper = new ObjectMapper();
-    private int subjectId = 1;
     String expectedSubjectJson;
     String expectedSubjectsJson;
 
@@ -64,11 +67,11 @@ public class SubjectRestControllerTest {
     void givenId_onGetSubject_shouldReturnCorrectJson() throws Exception {
         when(subjectService.getById(1)).thenReturn(expectedSubject1);
 
-        mockMvc.perform(get("/api/subjects/{id}", 1))
+        mockMvc.perform(get("/api/subjects/{id}", subjectId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedSubjectJson));
 
-        verify(subjectService).getById(1);
+        verify(subjectService).getById(subjectId);
     }
 
     @Test
@@ -81,27 +84,33 @@ public class SubjectRestControllerTest {
     }
 
     @Test
-    void givenSubject_onUpdate_shouldCallServiceUpdate() throws Exception {
-        mockMvc.perform(put("/api/subjects/{id}", 1)
-                        .content(expectedSubjectJson)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk());
+    void givenSubjectDto_onUpdate_shouldCallServiceUpdate() throws Exception {
+        when(mapper.subjectDtoToSubject(subjectDto)).thenReturn(expectedSubject1);
+        MvcResult mvcResult = mockMvc.perform(put("/api/subjects/{id}", subjectId)
+                        .content(objectMapper.writeValueAsString(subjectDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var actual = mapToObject(mvcResult, Subject.class);
 
         verify(subjectService).update(expectedSubject1);
+        assertEquals(expectedSubject1, actual);
     }
 
     @Test
     void givenSubject_onDelete_shouldCallServiceDelete() throws Exception {
-        mockMvc.perform(delete("/api/subjects/{id}", 1))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/api/subjects/{id}", subjectId))
+                .andExpect(status().isNoContent());
 
         verify(subjectService).delete(1);
     }
 
     interface TestData {
+        int subjectId = 1;
 
-        Subject subjectToCreate = new Subject(0, "Test Economics", "Base economics");
+        SubjectDto subjectDto = new SubjectDto("Test Economics", "Base economics");
+
         Subject expectedSubject1 = new Subject(1, "Test Economics", "Base economics");
         Subject expectedSubject2 = new Subject(2, "Test Philosophy", "Base philosophy");
         Subject expectedSubject3 = new Subject(3, "Test Chemistry", "Base chemistry");
