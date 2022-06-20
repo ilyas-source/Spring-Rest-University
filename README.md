@@ -1,6 +1,6 @@
 ## University
 
-This is my biggest project, my playground, place where I put my hands on all new technologies. Application is being sequentially transformed to use all relevant Spring-related frameworks and even has a front-end.
+This is my main learning project, my playground, place where I put my hands on all new technologies. Application is being sequentially transformed to use all relevant Spring-related frameworks and even has a front-end.
 
 All under strict code review from my mentor, who keeps me out from writing non-productional quality code.
 
